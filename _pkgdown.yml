@@ -109,8 +109,8 @@ reference:
     contents:
       - get_copd_v1_codes
       - get_copd_v1_defs
-      - get_sleep_apnea_v1_codes
-      - get_sleep_apnea_v1_defs
+      - get_osa_v1_codes
+      - get_osa_v1_defs
 
   # ── DRUG ACCESSORS ────────────────────────────────────────────────────────
 

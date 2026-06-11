@@ -53,7 +53,7 @@ NULL
 #'   `spec_diabetes_v1`, `spec_diabetes_v2`, `spec_diabetes_v3`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
-#'   `spec_sleep_apnea_v1`,
+#'   `spec_osa_v1`,
 #'   `spec_hyperlipidemia_v1`
 #'
 #' @section ASCVD composite ([CompositeCodeSpec]):
@@ -78,6 +78,6 @@ NULL
 #'   spec_hyperlipidemia_v1
 #'   spec_isch_stroke_v1
 #'   spec_obesity_v1
-#'   spec_sleep_apnea_v1
+#'   spec_osa_v1
 #' @keywords datasets
 NULL

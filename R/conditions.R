@@ -334,10 +334,10 @@ get_ckd_v1_defs <- make_def_getter(spec_ckd_v1)
 
 #' Retrieve ICD codes for sleep apnea
 #' @inheritParams get_htn_v1_codes
-#' @seealso [get_sleep_apnea_v1_defs()], \code{spec_sleep_apnea_v1}
+#' @seealso [get_osa_v1_defs()], \code{spec_osa_v1}
 #' @export
-get_sleep_apnea_v1_codes <- make_code_getter(spec_sleep_apnea_v1)
+get_osa_v1_codes <- make_code_getter(spec_osa_v1)
 
-#' @rdname get_sleep_apnea_v1_codes
+#' @rdname get_osa_v1_codes
 #' @export
-get_sleep_apnea_v1_defs <- make_def_getter(spec_sleep_apnea_v1)
+get_osa_v1_defs <- make_def_getter(spec_osa_v1)

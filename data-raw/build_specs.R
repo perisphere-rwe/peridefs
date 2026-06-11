@@ -1950,32 +1950,32 @@ spec_ckd_v1 <- CodeSpec$new(
 #
 # ICD-10 diagnosis code of G47.30, G47.31, G47.33, G47.37, G47.39.
 #
-sa_icd9  <- c("32720",
-              "32721",
+osa_icd9  <- c("32720",
               "32723",
-              "32727",
               "32729",
-              "78051",
-              "78053",
               "78057")
-sa_icd10 <- c("G4730", "G4731", "G4733", "G4737", "G4739")
 
-sa_defs_condition <- c(
+
+osa_icd10 <- c("G4730", "G4733", "G4739")
+
+osa_defs_condition <- c(
   "*" = paste0(
-    "\u22651 claim with an ICD-9 diagnosis of {.strong 327.20}, {.strong 327.21}, ",
-    "{.strong 327.23}, {.strong 327.27}, {.strong 327.29}, {.strong 780.51}, ",
-    "{.strong 780.53}, or {.strong 780.57}, or an ICD-10 diagnosis of {.strong G47.30}, ",
-    "{.strong G47.31}, {.strong G47.33}, {.strong G47.37}, or {.strong G47.39} in any ",
-    "diagnosis position from inpatient, outpatient, carrier, or line files."
+    "\u22651 claim with an ICD-9 diagnosis of {.strong 327.20}, ",
+    "{.strong 327.23}, {.strong 327.29}, or {.strong 780.57}, or an ",
+    "ICD-10 diagnosis of {.strong G47.30}, {.strong G47.33}, or ",
+    "{.strong G47.39} in any  diagnosis position from inpatient, ",
+    "outpatient, carrier, or line files."
   )
 )
 
-spec_sleep_apnea_v1 <- CodeSpec$new(
-  condition = "sleep_apnea", version = "v1", label = "Sleep Apnea",
-  defs  = list(condition = sa_defs_condition, outcome = NULL),
+spec_osa_v1 <- CodeSpec$new(
+  condition = "osa",
+  version = "v1",
+  label = "Obstructive sleep apnea",
+  defs  = list(condition = osa_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(sa_icd9),
-    dx_icd10 = make_key_condition_only(sa_icd10)
+    dx_icd9  = make_key_condition_only(osa_icd9),
+    dx_icd10 = make_key_condition_only(osa_icd10)
   )
 )
 
@@ -2637,7 +2637,7 @@ usethis::use_data(
   # CKD
   spec_ckd_v1,
   # Sleep apnea
-  spec_sleep_apnea_v1,
+  spec_osa_v1,
   # Hyperlipidemia
   spec_hyperlipidemia_v1,
   # COPD

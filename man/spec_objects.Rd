@@ -16,7 +16,7 @@
 \alias{spec_hyperlipidemia_v1}
 \alias{spec_isch_stroke_v1}
 \alias{spec_obesity_v1}
-\alias{spec_sleep_apnea_v1}
+\alias{spec_osa_v1}
 \title{Condition and Drug Code Specification Objects}
 \description{
 \code{peridefs} exports one \verb{spec_*} object per medical condition version or
@@ -44,7 +44,7 @@ available component names.
 \code{spec_diabetes_v1}, \code{spec_diabetes_v2}, \code{spec_diabetes_v3},
 \code{spec_ckd_v1},
 \code{spec_copd_v1},
-\code{spec_sleep_apnea_v1},
+\code{spec_osa_v1},
 \code{spec_hyperlipidemia_v1}
 }
 
