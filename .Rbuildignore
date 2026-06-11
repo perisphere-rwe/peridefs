@@ -1,0 +1,11 @@
+^data-raw$
+^peridefs\.Rproj$
+^\.Rproj\.user$
+^Definition of conditions and medications_11262025\.docx$
+^\.positai$
+^\.claude$
+^_pkgdown\.yml$
+^pkgdown$
+^docs$
+^\.github$
+^README\.Rmd$

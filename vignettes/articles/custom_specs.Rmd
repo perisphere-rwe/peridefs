@@ -1,0 +1,172 @@
+---
+title: "Creating Custom Specs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating Custom Specs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>"
+)
+```
+
+```{r load}
+library(peridefs)
+```
+
+All bundled specs are immutable — they are read-only data objects that ship
+with the package. When you need a code set that differs from a bundled spec
+(e.g., a project-specific algorithm, a subset of codes, or a study-defined
+version), `peridefs` provides functions to create and modify specs without
+touching the originals.
+
+## Creating a new CodeSpec
+
+`code_spec()` creates a new [`CodeSpec`](../reference/CodeSpec.html) from
+scratch. Provide a short `condition` ID, a `label`, and a named list of code
+vectors:
+
+```{r code-spec}
+my_htn <- code_spec(
+  condition = "my_htn",
+  label     = "Hypertension (study version)",
+  version   = "v1",
+  codes     = list(
+    dx_icd9  = c("4010", "4011", "4019"),
+    dx_icd10 = c("I10")
+  )
+)
+
+my_htn
+```
+
+The resulting spec object has `$get_codes()` and `$get_defs()` methods:
+
+```{r code-spec-get}
+my_htn$get_codes(code_type = "dx_icd10")
+```
+
+## Creating a new DrugSpec
+
+`drug_spec()` creates a [`DrugSpec`](../reference/DrugSpec.html) from a vector
+of generic names:
+
+```{r drug-spec}
+my_thiazide <- drug_spec(
+  drug_class    = "my_thiazide",
+  label         = "Thiazide Diuretics (study subset)",
+  version       = "v1",
+  generic_names = c("HYDROCHLOROTHIAZIDE", "CHLORTHALIDONE", "INDAPAMIDE")
+)
+
+my_thiazide$get_generics()
+```
+
+## Adding codes to a bundled spec
+
+`add_codes()` returns a modified deep clone of a spec with additional codes
+merged in. The `...` argument names must be valid code-set keys. The original
+is never modified:
+
+```{r add-codes}
+# Inspect available keys
+names(spec_htn_v1$get_codes())
+
+# Add a code and confirm the clone grew; original is unchanged
+htn_plus <- add_codes(spec_htn_v1, dx_icd10 = c("I99"))
+
+length(htn_plus$get_codes(code_type = "dx_icd10")$dx_icd10)  # clone
+length(spec_htn_v1$get_codes(code_type = "dx_icd10")$dx_icd10)  # original
+```
+
+By default, added codes are flagged for both `condition` and `outcome`.
+Use `variable_type` to restrict membership:
+
+```{r add-codes-outcome}
+htn_outcome_only <- add_codes(
+  spec_htn_v1,
+  variable_type = "outcome",
+  dx_icd10      = c("I99")
+)
+```
+
+## Removing codes from a bundled spec
+
+`remove_codes()` returns a clone with the specified codes excluded:
+
+```{r remove-codes}
+htn_trimmed <- remove_codes(spec_htn_v1, dx_icd9 = c("4019"))
+
+# Code removed from clone; original is unchanged
+"4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$dx_icd9
+"4019" %in% spec_htn_v1$get_codes(code_type = "dx_icd9")$dx_icd9
+```
+
+## Modifying a CodeSpec
+
+`modify_code_spec()` can update the label, narrative definitions, or replace
+code sets:
+
+```{r modify-code-spec}
+htn_revised <- modify_code_spec(
+  spec  = spec_htn_v1,
+  label = "Hypertension (revised)",
+  defs  = list(
+    condition = c("i" = "Study-specific hypertension definition."),
+    outcome   = NULL
+  )
+)
+
+htn_revised
+```
+
+To create a **new version**, construct a new `code_spec()` object directly
+rather than modifying an existing one. This keeps each version explicit and
+self-contained:
+
+```{r new-version}
+spec_my_htn_v2 <- code_spec(
+  condition = "my_htn",
+  label     = "Hypertension (study v2)",
+  version   = "v2",
+  defs      = list(
+    condition = c("i" = "Expanded definition including I11.x and I13.x."),
+    outcome   = NULL
+  ),
+  codes = list(
+    dx_icd10 = c("I10", "I110", "I119", "I130", "I132")
+  )
+)
+
+spec_my_htn_v2
+```
+
+## Modifying a DrugSpec
+
+`modify_drug_spec()` mirrors `modify_code_spec()` for drug classes. To work
+with a specific component from a composite, extract it first:
+
+```{r modify-drug-spec}
+# Extract a leaf spec from a composite
+acei_v1 <- spec_antihypertensive$components()$acei_v1
+
+# Build a study-specific variant
+my_acei <- modify_drug_spec(
+  spec          = acei_v1,
+  label         = "ACE Inhibitors (study subset)",
+  generic_names = c("LISINOPRIL", "RAMIPRIL", "ENALAPRIL")
+)
+
+my_acei$get_generics()
+```
+
+## Immutability
+
+All custom-spec functions return **deep clones**. Bundled spec objects
+(`spec_htn_v1`, `spec_antihypertensive`, etc.) are never modified in place,
+so you can safely build study-specific variants without affecting other code
+in your project that relies on the standard definitions.

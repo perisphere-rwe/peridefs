@@ -1,0 +1,83 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# peridefs
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define conditions such as
+hypertension, diabetes, and atherosclerotic cardiovascular disease in real world
+claims data. It also contains generic names for common drug types (e.g.,
+anti-diabetes). The purpose of the `peridefs` package is to provide safe and
+easy access to these validated definitions.
+
+## Why peridefs?
+- **Dynamic and safe**: each condition and drug class can be updated over time,
+but those updates will not break existing code or force that code to use the
+updated definitions.
+- **Built by experts**: every code set is designed by Dr Ligong Chen and Hong
+Zhao, who have decades of experience working with claims data and have developed
+each code set following a standardized, validated procedure.
+- **Adaptable**: codes are stored in pre-built specs for standard conditions,
+and they can be modified through a built-in API that allows codes to be removed
+or added. We do not recommend changing our specs, but we do want
+  that to be an option in case it's needed.
+
+## Installation
+
+``` r
+# Install from GitHub
+pak::pak("perisphere-rwe/peridefs")
+```
+
+## Quick start
+
+A quick look at how you can get relevant information from `peridefs` family of `get_` functions
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+library(peridefs)
+
+# Retrieve ICD-10 hypertension codes as a tibble
+get_htn_v1_codes(code_type = "dx_icd10", format = "tibble")
+
+# Complement with icd package to look up code explanations
+library(icd) # for as.icd9 / as.icd10 / explain_code functions
+library(tidyverse) # for map / set_names / enframe functions
+
+get_htn_v1_codes(code_type = 'dx_icd10')[[1]] %>% 
+  as.icd10() %>% 
+  set_names() %>% 
+  map_chr(~explain_code(.x)) %>% 
+  enframe(name = 'code', value = 'explanation')
+
+# Retrieve generic drug names for ACE inhibitors (version 2)
+get_antihypertensive_generics(component = 'acei_v2')
+```
+
+## Specs
+
+`peridefs` is built on an R6 back-end that provides `specs` for conditions and drug classes. You can work directly with our exported specs if the `get_` functions don't provide exactly what you're looking for
+
+```{r}
+# the spec objects all have a built-in print method that
+# gives a helpful summary and recommended method for 
+# defining the given condition.
+spec_htn_v1
+
+# just like get_htn_v1_codes() above
+spec_htn_v1$get_codes()
+```
+

@@ -1,0 +1,33 @@
+Package: peridefs
+Title: Perisphere Definitions
+Version: 0.1.0
+Authors@R: 
+    person("Perisphere", , , "info@perisphere-rwe.com", role = c("aut", "cre"))
+Description: Provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define
+    conditions such as hypertension, diabetes, and atherosclerotic cardiovascular
+    disease in real world claims data.
+License: file LICENSE
+URL: https://perisphere-rwe.github.io/peridefs, https://github.com/perisphere-rwe/peridefs
+BugReports: https://github.com/perisphere-rwe/peridefs/issues
+Encoding: UTF-8
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    cli,
+    R6,
+    rlang,
+    tibble
+Suggests: 
+    dplyr,
+    icd,
+    knitr,
+    pkgdown,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr,
+    xml2
+Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
+LazyData: true

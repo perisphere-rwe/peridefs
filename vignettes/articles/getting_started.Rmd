@@ -1,0 +1,172 @@
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>"
+)
+```
+
+```{r load}
+library(peridefs)
+```
+
+`peridefs` provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define
+conditions such as hypertension, diabetes, and atherosclerotic cardiovascular
+disease in real world claims data. It also contains generic names for common
+drug types (e.g., anti-diabetes). The purpose of the `peridefs` package is to
+provide safe and easy access to these validated definitions.
+
+## Retrieving condition codes
+
+Each condition has one or more `get_<condition>_vX_codes()` functions — one
+per algorithm version. By default the function returns a named list with one
+element per code type:
+
+```{r htn-list}
+get_htn_v1_codes()
+```
+
+Pass `format = "tibble"` to get a tidy data frame instead
+
+```{r htn-tibble}
+get_htn_v1_codes(format = "tibble")
+```
+
+### Selecting a code type
+
+By default, `get_` functions will return all relevant codes or generics. If you
+only want to return a specific type or types of codes, use the `code_type`
+argument to retrieve a filtered code list. Supprted values are `"dx_icd9"`,
+`"dx_icd10"`, `"hcpcs"`, `"proc_icd9"`, and `"proc_icd10"`:
+
+```{r htn-icd10}
+get_htn_v1_codes(code_type = "dx_icd10")
+```
+
+Note that if you ask for a code type that isn't stored in the object, you get an empty list.
+
+```{r}
+get_htn_v1_codes(code_type = 'proc_icd10')
+```
+
+
+### Adding periods to codes
+
+Codes are stored in short format (no periods, i.e., `.`) as this is a common
+format in claims data. Set `periods = TRUE` to add them to your codes:
+
+```{r htn-periods}
+get_htn_v1_codes(code_type = "dx_icd10", periods = TRUE)
+```
+
+Note that this feature is not perfect - it just adds a period after the third character. Periods appear after the third character in ICD-10 but may appear after the fourth in ICD-9. Most of our analyses focus on ICD-10 and most databases do not use periods in codes, so getting this exactly right is not a high priority at the moment.
+
+### Condition vs. outcome definitions
+
+Some `specs` carry separate code sets for identifying a **condition** (history /
+comorbidity lookback) vs. an **outcome** (new event). Use `variable_type` to
+select one:
+
+```{r hf-outcome}
+get_hf_v1_codes(variable_type = "outcome", code_type = "dx_icd10")
+```
+
+The default (`variable_type = "condition"`) retrieves the condition definition.
+
+## Composite specs and the `component` argument
+
+Some specs are **composites** — they contain several named component specs
+rather than a single code set. `spec_ascvd`, for example, groups coronary heart disease (CHD), stroke, lower extremity artery disease (LEAD) / peripheral arterial disease (PAD), and cerebrovascular disease into a single composition.
+
+For composite specs, the `component` argument is **required**. Print the spec
+to see all available component names:
+
+```{r ascvd-spec}
+spec_ascvd
+```
+
+Retrieve codes for a single component:
+
+```{r ascvd-chd}
+get_ascvd_codes(component = "chd_v1", code_type = "dx_icd10")
+```
+
+Use `component = "all"` to get the union of every component's codes:
+
+```{r ascvd-all}
+get_ascvd_codes(component = "all", code_type = "dx_icd10") |> length()
+```
+
+## Reading algorithm definitions
+
+The codes are only half of what you need to get definitions right. You also need
+to know how to apply them. `get_<condition>_vX_defs()` provides a description of
+the algorithm used to define each condition:
+
+```{r htn-defs}
+get_htn_v1_defs()
+```
+
+For composite specs, pass the component name:
+
+```{r ascvd-defs}
+get_ascvd_defs(component = "chd_v1", variable_type = "condition")
+```
+
+## Versioning
+
+Algorithm versions are encoded directly in the spec and function names using a
+`_vX` suffix. `spec_htn_v1` and `spec_htn_v2` are two distinct objects; the
+corresponding getters are `get_htn_v1_codes()` and `get_htn_v2_codes()`.
+When a condition has only one version (e.g., `spec_hf_v1`), there is only one
+getter.
+
+```{r version-compare}
+# v1 and v2 share the same code sets for HTN — only the defs differ
+identical(get_htn_v1_codes(), get_htn_v2_codes())
+
+get_htn_v1_defs()
+get_htn_v2_defs()
+```
+
+## Spec objects
+
+Behind every `get_*` function is a `spec_*` data object. You can inspect it
+directly to see codes, definitions, and (for composites) component names:
+
+```{r spec}
+spec_htn_v1
+```
+
+# Complement with `icd` package
+
+The `icd` package is not required for `peridefs`, but it can be used to complement it. In particular, if you want to look up the explanations of our diagnostic codes, `icd` is helpful and easy to apply:
+
+```{r}
+
+library(icd) # for as.icd9 / as.icd10 / explain_code functions
+library(tidyverse)
+
+peri_codes <- get_copd_v1_codes(code_type = 'dx_icd9')[[1]] 
+
+as.icd9(peri_codes) %>% 
+  set_names(peri_codes) %>% 
+  map_chr(~explain_code(.x)) %>% 
+  enframe(name = 'code', value = 'explanation')
+  
+```
+
+Note this only works for diagnostic codes and `explain_code` sometimes fails to give explanations for all codes if you pass a vector (that's why I used map in my code).
+
+## Learn more
+
+See the [Reference](../reference/index.html) for the complete list of
+conditions and drugs.

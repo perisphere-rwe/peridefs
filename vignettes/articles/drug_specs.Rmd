@@ -1,0 +1,99 @@
+---
+title: "Working with Drug Specs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with Drug Specs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>"
+)
+```
+
+```{r load}
+library(peridefs)
+```
+
+All drug specs in `peridefs` are **composites** — they contain named component
+specs (individual drug classes or versions) rather than a flat GNN list. The
+`component` argument is required on every drug `get_*` function.
+
+| Function | Returns |
+|----------|---------|
+| `get_<drug>_generics(component = ...)` | Character vector of generic nonproprietary names (GNNs) |
+| `get_<drug>_codes(component = ...)` | Character vector of NDC codes (typically empty) |
+| `get_<drug>_defs(component = ...)` | Narrative description of the component's drug class definition |
+
+Print any composite spec to see its available component names:
+
+```{r antihtn-spec}
+spec_antihypertensive
+```
+
+## Retrieving GNNs for a specific component
+
+Pass the versioned component name to `get_*_generics()`:
+
+```{r acei-v1}
+get_antihypertensive_generics(component = "acei_v1")
+```
+
+Use `component = "all"` to retrieve the union of every component's GNNs:
+
+```{r antihtn-all}
+get_antihypertensive_generics(component = "all") |> length()
+```
+
+### Comparing versions
+
+Many drug classes have two versions — v1 from the Perisphere medication list
+and v2 from First DataBank (FDB), which may add spelling variants:
+
+```{r acei-compare}
+# v1 — Perisphere source
+get_antihypertensive_generics(component = "acei_v1")
+
+# v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)
+get_antihypertensive_generics(component = "acei_v2")
+```
+
+## Algorithm definitions
+
+Each component carries a narrative description of how that drug class was
+identified:
+
+```{r acei-defs}
+get_antihypertensive_defs(component = "acei_v1")
+```
+
+## NDC codes
+
+NDC code vectors are currently empty for drug classes. They can be added in a
+future update.  The `get_<drug>_codes()` function is reserved for future use or
+for custom specs you build with `drug_spec()`. The primary identification
+mechanism at the moment is through generic names.
+
+## Antidiabetic drug classes
+
+`spec_antidiabetic` groups all oral antidiabetic agents and insulin:
+
+```{r antidiab-spec}
+spec_antidiabetic
+```
+
+```{r glp1}
+get_antidiabetic_generics(component = "glp1_v1")
+```
+
+```{r sglt2}
+get_antidiabetic_generics(component = "sglt2_v1")
+```
+
+## Creating your own drug spec
+
+Use `drug_spec()` to define a custom drug class, or `modify_drug_spec()` to
+extend an existing component. See `vignette("custom_specs")` for details.
