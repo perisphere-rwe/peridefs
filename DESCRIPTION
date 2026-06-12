@@ -20,7 +20,6 @@ Imports:
     tibble
 Suggests: 
     dplyr,
-    icd,
     knitr,
     pkgdown,
     rmarkdown,

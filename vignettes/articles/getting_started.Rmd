@@ -150,7 +150,7 @@ spec_htn_v1
 
 The `icd` package is not required for `peridefs`, but it can be used to complement it. In particular, if you want to look up the explanations of our diagnostic codes, `icd` is helpful and easy to apply:
 
-```{r}
+```{r, eval=FALSE}
 
 library(icd) # for as.icd9 / as.icd10 / explain_code functions
 library(tidyverse)
