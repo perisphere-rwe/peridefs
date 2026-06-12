@@ -31,6 +31,6 @@ add_periods_icd <- function(codes) {
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
 
-is_equivalent <- function(x, y){
+`%==%` <- function(x, y){
   all(x %in% y) & all(y %in% x)
 }
