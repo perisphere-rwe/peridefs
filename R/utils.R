@@ -29,3 +29,8 @@ add_periods_icd <- function(codes) {
 
 # Null-coalescing operator (internal)
 `%||%` <- function(x, y) if (is.null(x)) y else x
+
+
+is_equivalent <- function(x, y){
+  all(x %in% y) & all(y %in% x)
+}
