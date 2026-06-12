@@ -7,12 +7,12 @@
 
 <!-- badges: end -->
 
-Provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define conditions
-such as hypertension, diabetes, and atherosclerotic cardiovascular
-disease in real world claims data. It also contains generic names for
-common drug types (e.g., anti-diabetes). The purpose of the `peridefs`
-package is to provide safe and easy access to these validated
-definitions.
+The purpose of the `peridefs` package is to provide safe and easy access
+to validated definitions of common characteristics in real world data
+analysis. It provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define
+conditions such as hypertension, diabetes, and atherosclerotic
+cardiovascular disease, and it also contains generic names for common
+drug types (e.g., anti-diabetes).
 
 ## Why peridefs?
 
