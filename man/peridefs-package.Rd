@@ -34,6 +34,7 @@ Useful links:
 \itemize{
   \item \url{https://perisphere-rwe.github.io/peridefs}
   \item \url{https://github.com/perisphere-rwe/peridefs}
+  \item \url{https://perisphere-rwe.github.io/peridefs/}
   \item Report bugs at \url{https://github.com/perisphere-rwe/peridefs/issues}
 }
 

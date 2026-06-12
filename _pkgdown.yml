@@ -1,173 +1,138 @@
-url: https://perisphere-rwe.github.io/peridefs
-
+url: https://perisphere-rwe.github.io/peridefs/
 template:
   bootstrap: 5
   bslib:
-    primary:      "#006FBE"
-    base_font:    {google: "Source Sans Pro"}
-    heading_font: {google: "Source Sans Pro"}
-    code_font:    {google: "Source Code Pro"}
-
+    primary: '#006FBE'
+    base_font:
+      google: Source Sans Pro
+    heading_font:
+      google: Source Sans Pro
+    code_font:
+      google: Source Code Pro
 home:
-  title: "peridefs — Perisphere Medical Code Definitions"
-  description: >
-    Pre-expanded, versioned medical code definitions (ICD-9, ICD-10, HCPCS,
-    CPT, and drug generic names) for claims-based research.
-    Developed by Perisphere RWE.
-
+  title: peridefs — Perisphere Medical Code Definitions
+  description: |
+    Pre-expanded, versioned medical code definitions (ICD-9, ICD-10, HCPCS, CPT, and drug generic names) for claims-based research. Developed by Perisphere RWE.
 footer:
   structure:
     left: developed_by
     right: built_with
   components:
-    developed_by: >
-      Developed by [Perisphere RWE](https://www.perisphere-rwe.com/) —
-      health outcomes, epidemiology and biostatistics consulting.
-
+    developed_by: |
+      Developed by [Perisphere RWE](https://www.perisphere-rwe.com/) — health outcomes, epidemiology and biostatistics consulting.
 navbar:
   structure:
-    left:  [intro, reference, articles, news]
-    right: [search, github]
+    left:
+    - intro
+    - reference
+    - articles
+    - news
+    right:
+    - search
+    - github
   components:
     intro:
-      text: "Get Started"
+      text: Get Started
       href: articles/getting_started.html
     articles:
-      text: "Articles"
+      text: Articles
       menu:
-        - text: "Getting Started"
-          href: articles/getting_started.html
-        - text: "Working with Drug Specs"
-          href: articles/drug_specs.html
-        - text: "Advanced"
-        - text: "Creating Custom Specs"
-          href: articles/custom_specs.html
-        - text: "ICD-10-PCS Expansion"
-          href: articles/pcs_expansion.html
+      - text: Getting Started
+        href: articles/getting_started.html
+      - text: Working with Drug Specs
+        href: articles/drug_specs.html
+      - text: Advanced
+      - text: Creating Custom Specs
+        href: articles/custom_specs.html
+      - text: ICD-10-PCS Expansion
+        href: articles/pcs_expansion.html
     github:
       icon: fab fa-github
       href: https://github.com/perisphere-rwe/peridefs
       aria-label: GitHub
-
 news:
   releases:
-    - text: "Changelog"
-      href: news/index.html
-
+  - text: Changelog
+    href: news/index.html
 reference:
+- title: Spec Data Objects
+  desc: |
+    All exported `spec_*` data objects. Each version of a condition or drug class is a distinct `_vX`-named object. Composite specs contain named versioned components accessible via `component=` (or `component = "all"` to union everything). Print any spec to see its definitions and component names.
+  contents: spec_objects
+- title: 'Conditions: Cardiovascular'
+  desc: |
+    Hypertension (v1, v2), heart failure (v1), and the ASCVD composite. ASCVD components (`chd_v1`, `chd_v2`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`, `cerebrovasc_disease_v1`) are accessible via `get_ascvd_codes(component = ...)`.
+  contents:
+  - get_htn_v1_codes
+  - get_htn_v1_defs
+  - get_htn_v2_codes
+  - get_htn_v2_defs
+  - get_hf_v1_codes
+  - get_hf_v1_defs
+  - get_ascvd_codes
+  - get_ascvd_defs
+- title: 'Conditions: Metabolic & Renal'
+  desc: |
+    Obesity (v1), diabetes (v1–v3), hyperlipidemia (v1), and CKD (v1).
+  contents:
+  - get_obesity_v1_codes
+  - get_obesity_v1_defs
+  - get_diabetes_v1_codes
+  - get_diabetes_v1_defs
+  - get_diabetes_v2_codes
+  - get_diabetes_v2_defs
+  - get_diabetes_v3_codes
+  - get_diabetes_v3_defs
+  - get_hyperlipidemia_v1_codes
+  - get_hyperlipidemia_v1_defs
+  - get_ckd_v1_codes
+  - get_ckd_v1_defs
+- title: 'Conditions: Respiratory'
+  desc: |
+    COPD (v1) and sleep apnea (v1).
+  contents:
+  - get_copd_v1_codes
+  - get_copd_v1_defs
+  - get_osa_v1_codes
+  - get_osa_v1_defs
+- title: 'Drugs: Antihypertensives'
+  desc: |
+    ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
+  contents:
+  - get_antihypertensive_generics
+  - get_antihypertensive_codes
+  - get_antihypertensive_defs
+- title: 'Drugs: Antidiabetics'
+  desc: |
+    Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase inhibitors, DPP-4, SGLT-2,GLP-1, insulin, etc.
+  contents:
+  - get_antidiabetic_generics
+  - get_antidiabetic_codes
+  - get_antidiabetic_defs
+- title: General Accessor
+  desc: |
+    Low-level dispatcher that works on any spec object directly.
+  contents: get_defs
+- title: Custom Spec API
+  desc: |
+    Build your own code or drug specifications from scratch, or non-destructively modify any bundled spec.
+  contents:
+  - code_spec
+  - drug_spec
+  - add_codes
+  - remove_codes
+  - modify_code_spec
+  - modify_drug_spec
+- title: ICD-10-PCS Utilities
+  desc: |
+    Expand ICD-10-PCS prefix patterns (e.g., `"0210xxx"`) to all matching valid 7-character codes using the FY2026 CMS reference table.
+  contents: expand_pcs
+- title: R6 Spec Classes
+  desc: |
+    Underlying R6 classes used by all spec objects. Useful when building custom specs programmatically.
+  contents:
+  - CodeSpec
+  - DrugSpec
+  - CompositeCodeSpec
+  - CompositeDrugSpec
 
-  # ── SPEC DATA OBJECTS ─────────────────────────────────────────────────────
-
-  - title: "Spec Data Objects"
-    desc: >
-      All exported `spec_*` data objects. Each version of a condition or drug
-      class is a distinct `_vX`-named object. Composite specs contain named
-      versioned components accessible via `component=` (or `component = "all"`
-      to union everything). Print any spec to see its definitions and component
-      names.
-    contents:
-      - spec_objects
-
-  # ── CONDITION ACCESSORS ───────────────────────────────────────────────────
-
-  - title: "Conditions: Cardiovascular"
-    desc: >
-      Hypertension (v1, v2), heart failure (v1), and the ASCVD composite.
-      ASCVD components (`chd_v1`, `chd_v2`, `stroke_v1`, `isch_stroke_v1`,
-      `hf_v1`, `cerebrovasc_disease_v1`) are accessible via
-      `get_ascvd_codes(component = ...)`.
-    contents:
-      - get_htn_v1_codes
-      - get_htn_v1_defs
-      - get_htn_v2_codes
-      - get_htn_v2_defs
-      - get_hf_v1_codes
-      - get_hf_v1_defs
-      - get_ascvd_codes
-      - get_ascvd_defs
-
-  - title: "Conditions: Metabolic & Renal"
-    desc: >
-      Obesity (v1), diabetes (v1–v3), hyperlipidemia (v1), and CKD (v1).
-    contents:
-      - get_obesity_v1_codes
-      - get_obesity_v1_defs
-      - get_diabetes_v1_codes
-      - get_diabetes_v1_defs
-      - get_diabetes_v2_codes
-      - get_diabetes_v2_defs
-      - get_diabetes_v3_codes
-      - get_diabetes_v3_defs
-      - get_hyperlipidemia_v1_codes
-      - get_hyperlipidemia_v1_defs
-      - get_ckd_v1_codes
-      - get_ckd_v1_defs
-
-  - title: "Conditions: Respiratory"
-    desc: >
-      COPD (v1) and sleep apnea (v1).
-    contents:
-      - get_copd_v1_codes
-      - get_copd_v1_defs
-      - get_osa_v1_codes
-      - get_osa_v1_defs
-
-  # ── DRUG ACCESSORS ────────────────────────────────────────────────────────
-
-  - title: "Drugs: Antihypertensives"
-    desc: >
-      ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
-    contents:
-      - get_antihypertensive_generics
-      - get_antihypertensive_codes
-      - get_antihypertensive_defs
-
-  - title: "Drugs: Antidiabetics"
-    desc: >
-      Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase
-      inhibitors, DPP-4, SGLT-2,GLP-1, insulin, etc.
-    contents:
-      - get_antidiabetic_generics
-      - get_antidiabetic_codes
-      - get_antidiabetic_defs
-
-  # ── GENERAL ACCESSOR ─────────────────────────────────────────────────────
-
-  - title: "General Accessor"
-    desc: >
-      Low-level dispatcher that works on any spec object directly.
-    contents:
-      - get_defs
-
-  # ── CUSTOM SPEC API ───────────────────────────────────────────────────────
-
-  - title: "Custom Spec API"
-    desc: >
-      Build your own code or drug specifications from scratch, or
-      non-destructively modify any bundled spec.
-    contents:
-      - code_spec
-      - drug_spec
-      - add_codes
-      - remove_codes
-      - modify_code_spec
-      - modify_drug_spec
-
-  # ── UTILITIES ─────────────────────────────────────────────────────────────
-
-  - title: "ICD-10-PCS Utilities"
-    desc: >
-      Expand ICD-10-PCS prefix patterns (e.g., `"0210xxx"`) to all matching
-      valid 7-character codes using the FY2026 CMS reference table.
-    contents:
-      - expand_pcs
-
-  - title: "R6 Spec Classes"
-    desc: >
-      Underlying R6 classes used by all spec objects. Useful when building
-      custom specs programmatically.
-    contents:
-      - CodeSpec
-      - DrugSpec
-      - CompositeCodeSpec
-      - CompositeDrugSpec
