@@ -6,6 +6,33 @@ test_that("get_htn_v1_codes() returns a named list by default", {
   expect_true(length(result) > 0L)
 })
 
+test_that("get_htn_v1_codes(concatenate = TRUE) returns a character vector", {
+  result <- get_htn_v1_codes(concatenate = TRUE)
+  expect_type(result, "character")
+  expect_null(names(result))
+  expect_true(length(result) > 0L)
+})
+
+test_that("get_htn_v1_codes(concatenate = TRUE) matches unlist of list result", {
+  list_result <- get_htn_v1_codes()
+  concat_result <- get_htn_v1_codes(concatenate = TRUE)
+  expect_equal(sort(concat_result), sort(unlist(list_result, use.names = FALSE)))
+})
+
+test_that("get_htn_v1_codes(concatenate = TRUE, format = 'tibble') errors", {
+  expect_error(
+    get_htn_v1_codes(concatenate = TRUE, format = "tibble"),
+    "concatenate"
+  )
+})
+
+test_that("get_ascvd_codes(component = 'chd_v1', concatenate = TRUE) returns a character vector", {
+  result <- get_ascvd_codes(component = "chd_v1", concatenate = TRUE)
+  expect_type(result, "character")
+  expect_null(names(result))
+  expect_true(length(result) > 0L)
+})
+
 
 test_that("get_htn_v1_codes() code_type filter works", {
   result <- get_htn_v1_codes(code_type = "dx_icd9")

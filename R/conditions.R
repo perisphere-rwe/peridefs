@@ -24,9 +24,16 @@ make_code_getter <- function(spec) {
            variable_type = c("condition", "outcome"),
            periods       = FALSE,
            format        = c("list", "tibble"),
-           component     = NULL) {
+           component     = NULL,
+           concatenate   = FALSE) {
     vt  <- match.arg(variable_type)
     fmt <- match.arg(format)
+
+    if (concatenate && identical(fmt, "tibble")) {
+      cli::cli_abort(
+        "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
+      )
+    }
 
     if (inherits(spec, "CompositeCodeSpec")) {
       # composite: component= required; "all" unions every component
@@ -37,15 +44,17 @@ make_code_getter <- function(spec) {
           "i" = "Print {.code {spec$condition}} spec to see all options."
         ))
       }
-      return(spec$get_codes(component = component, code_type = code_type,
-                            variable_type = vt, periods = periods, format = fmt))
+      result <- spec$get_codes(component = component, code_type = code_type,
+                               variable_type = vt, periods = periods, format = fmt)
+    } else {
+      if (!is.null(component)) {
+        cli::cli_abort("{.arg component} is only valid for composite specs.")
+      }
+      result <- spec$get_codes(code_type = code_type, variable_type = vt,
+                               periods = periods, format = fmt)
     }
 
-    if (!is.null(component)) {
-      cli::cli_abort("{.arg component} is only valid for composite specs.")
-    }
-    spec$get_codes(code_type = code_type, variable_type = vt,
-                   periods = periods, format = fmt)
+    if (concatenate) unlist(result, use.names = FALSE) else result
   }
 }
 
@@ -153,7 +162,10 @@ make_drug_def_getter <- function(spec) {
 #'   `"tibble"` returns a long-form tibble with columns `code_type`, `code`,
 #'   and `variable_type`.
 #' @param component Not used for non-composite specs. Pass `NULL` (default).
-#' @return Named list or tibble of codes.
+#' @param concatenate Logical. `FALSE` (default) returns a named list of
+#'   character vectors. `TRUE` concatenates all code vectors into a single
+#'   unnamed character vector. Not compatible with `format = "tibble"`.
+#' @return Named list, character vector (if `concatenate = TRUE`), or tibble of codes.
 #' @seealso [get_htn_v1_defs()], [get_htn_v2_codes()], \code{spec_htn_v1}
 #' @examples
 #' get_htn_v1_codes()

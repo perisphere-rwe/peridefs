@@ -1,6 +1,6 @@
 Package: peridefs
 Title: Perisphere Definitions
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Perisphere", , , "info@perisphere-rwe.com", role = c("aut", "cre"))
 Description: Provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define
