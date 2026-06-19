@@ -91,7 +91,7 @@ get_antihypertensive_generics(component = 'acei_v2')
 `peridefs` is built on an R6 back-end that provides `specs` for
 conditions and drug classes. You can work directly with our exported
 specs if the `get_` functions don’t provide exactly what you’re looking
-for
+for.
 
 ``` r
 
@@ -125,6 +125,21 @@ spec_htn_v1$get_codes()
 #> [10] "I131"  "I1310" "I1311" "I132"  "I15"   "I150"  "I151"  "I152"  "I158" 
 #> [19] "I159"  "I16"   "I160"  "I161"  "I169"
 ```
+
+## Safety
+
+These safety features are a work in progress, but the vision is as
+follows:
+
+- We have tests for each condition that assert the code sets are equal
+  to static vectors. These tests ensure that package updates will never
+  inadvertently overwrite existing code sets, meaning your analyses will
+  never be unexplicably changed by our updates to the package.
+
+- When we make updates to a condition, we simply add a new spec (e.g.,
+  `spec_htn_v1`, `spec_htn_v2`, `spec_htn_v3`, etc. and throw a
+  once-per-session warning if you are using an older version of a
+  definition.
 
 # Package index
 
