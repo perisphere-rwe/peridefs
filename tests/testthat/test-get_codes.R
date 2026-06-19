@@ -51,9 +51,24 @@ test_that("get_htn_v1_codes() format = 'tibble' returns a tibble", {
   expect_equal(names(result), c("code_type", "code", "variable_type"))
 })
 
-test_that("get_htn_v1_codes() outcome variable_type returns empty sets", {
-  result <- get_htn_v1_codes(variable_type = "outcome")
-  expect_true(all(vapply(result, length, integer(1L)) == 0L))
+test_that("get_htn_v1_codes() outcome falls back to condition codes for condition-only spec", {
+  result_outcome   <- get_htn_v1_codes(variable_type = "outcome")
+  result_condition <- get_htn_v1_codes(variable_type = "condition")
+  expect_equal(result_outcome, result_condition)
+})
+
+test_that("get_hf_v1_codes() outcome does NOT fall back (HF has outcome codes defined)", {
+  # HF codes are flagged for both condition and outcome, so outcome is non-empty
+  # and no fallback should occur.
+  result_outcome <- get_hf_v1_codes(variable_type = "outcome")
+  expect_true(length(unlist(result_outcome)) > 0L)
+})
+
+test_that("outcome fallback works with format = 'tibble'", {
+  result <- get_htn_v1_codes(variable_type = "outcome", format = "tibble")
+  expect_s3_class(result, "tbl_df")
+  expect_true(nrow(result) > 0L)
+  expect_true(all(result$variable_type == "condition"))
 })
 
 

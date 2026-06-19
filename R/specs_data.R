@@ -51,6 +51,7 @@ NULL
 #'   `spec_hf_v1`,
 #'   `spec_obesity_v1`,
 #'   `spec_diabetes_v1`, `spec_diabetes_v2`, `spec_diabetes_v3`,
+#'   `spec_depression_v1`, `spec_depression_v2`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
 #'   `spec_osa_v1`,
@@ -62,13 +63,19 @@ NULL
 #' @section Drug class composites ([CompositeDrugSpec]):
 #'   `spec_antihypertensive`, `spec_antidiabetic`
 #'
+#' @section Drug class standalone ([DrugSpec]):
+#'   `spec_antidepressive_v1`
+#'
 #' @name spec_objects
 #' @aliases
+#'   spec_antidepressive_v1
 #'   spec_antidiabetic
 #'   spec_antihypertensive
 #'   spec_ascvd
 #'   spec_ckd_v1
 #'   spec_copd_v1
+#'   spec_depression_v1
+#'   spec_depression_v2
 #'   spec_diabetes_v1
 #'   spec_diabetes_v2
 #'   spec_diabetes_v3

@@ -44,14 +44,29 @@ make_code_getter <- function(spec) {
           "i" = "Print {.code {spec$condition}} spec to see all options."
         ))
       }
-      result <- spec$get_codes(component = component, code_type = code_type,
-                               variable_type = vt, periods = periods, format = fmt)
     } else {
       if (!is.null(component)) {
         cli::cli_abort("{.arg component} is only valid for composite specs.")
       }
-      result <- spec$get_codes(code_type = code_type, variable_type = vt,
-                               periods = periods, format = fmt)
+    }
+
+    # Local helper so we can call with a different variable_type for fallback.
+    fetch <- function(vt_inner) {
+      if (inherits(spec, "CompositeCodeSpec")) {
+        spec$get_codes(component = component, code_type = code_type,
+                       variable_type = vt_inner, periods = periods, format = fmt)
+      } else {
+        spec$get_codes(code_type = code_type, variable_type = vt_inner,
+                       periods = periods, format = fmt)
+      }
+    }
+
+    result <- fetch(vt)
+
+    # Fallback: if outcome was requested but the spec has no outcome codes,
+    # return condition codes instead.
+    if (vt == "outcome" && .result_is_empty(result, fmt)) {
+      result <- fetch("condition")
     }
 
     if (concatenate) unlist(result, use.names = FALSE) else result
@@ -155,7 +170,7 @@ make_drug_def_getter <- function(spec) {
 #'   Valid values: `"dx_icd9"`, `"dx_icd10"`, `"proc_icd9"`, `"proc_icd10"`,
 #'   `"hcpcs"`, `"cpt"`, `"rev"`. `NULL` (default) returns all code types.
 #' @param variable_type `"condition"` (default) or `"outcome"`. Hypertension
-#'   is defined as a condition only; `"outcome"` returns empty code sets.
+#'   is defined as a condition only; `"outcome"` falls back to condition codes.
 #' @param periods Logical. `FALSE` (default) returns short-format codes
 #'   (e.g., `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 #' @param format `"list"` (default) returns a named list of character vectors.
@@ -353,3 +368,38 @@ get_osa_v1_codes <- make_code_getter(spec_osa_v1)
 #' @rdname get_osa_v1_codes
 #' @export
 get_osa_v1_defs <- make_def_getter(spec_osa_v1)
+
+# ---- Depression ---------------------------------------------------------
+
+#' Retrieve ICD codes for depression
+#'
+#' @description
+#' Returns code sets from a depression [CodeSpec].
+#' Two versions are available:
+#' - **v1** (diagnosis only): `get_depression_v1_codes()`
+#' - **v2** (diagnosis + medication): `get_depression_v2_codes()`
+#'
+#' @inheritParams get_htn_v1_codes
+#' @seealso [get_depression_v1_defs()], [get_depression_v2_codes()],
+#'   \code{spec_depression_v1}
+#' @examples
+#' get_depression_v1_codes()
+#' get_depression_v1_codes(code_type = "dx_icd10")
+#' @export
+get_depression_v1_codes <- make_code_getter(spec_depression_v1)
+
+#' @rdname get_depression_v1_codes
+#' @seealso [get_depression_v1_codes()]
+#' @export
+get_depression_v1_defs <- make_def_getter(spec_depression_v1)
+
+#' @rdname get_depression_v1_codes
+#' @seealso [get_depression_v2_defs()], [get_depression_v1_codes()],
+#'   \code{spec_depression_v2}
+#' @export
+get_depression_v2_codes <- make_code_getter(spec_depression_v2)
+
+#' @rdname get_depression_v1_codes
+#' @seealso [get_depression_v2_codes()]
+#' @export
+get_depression_v2_defs <- make_def_getter(spec_depression_v2)

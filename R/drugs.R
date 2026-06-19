@@ -1,11 +1,8 @@
 # Drug-specific wrapper functions.
-# Composite drug specs (antihypertensive, betablockers, ccb, diuretics,
-# antidiabetic, statin) get a single unversioned set of get_* functions.
-# The component= argument (required) selects a specific versioned leaf spec.
-#
-# Leaf drug specs are no longer exported directly; access them via composite
-# get_* functions using component=, e.g.:
-#   get_antihypertensive_generics(component = "acei_v1")
+# Composite drug specs (antihypertensive, antidiabetic) get a single unversioned
+# set of get_* functions; component= (required) selects a specific versioned leaf.
+# Standalone drug specs (e.g., spec_antidepressive_v1) get their own get_* functions
+# with no component= argument.
 
 #' Miscellaneous drug accessor functions
 #'
@@ -71,4 +68,24 @@ get_antidiabetic_codes <- make_ndc_getter(spec_antidiabetic)
 #' @export
 get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic)
 
+# ---- Antidepressive (standalone) ----------------------------------------
+
+#' Retrieve generic drug names for antidepressive medications
+#'
+#' @description
+#' `spec_antidepressive_v1` is a standalone [DrugSpec] (not a composite).
+#' Call with no arguments to retrieve all GNNs or NDC codes.
+#'
+#' @return Character vector of GNN strings (upper-case), or NDC codes.
+#' @seealso \code{spec_antidepressive_v1}
+#' @export
+get_antidepressive_v1_generics <- make_generic_getter(spec_antidepressive_v1)
+
+#' @rdname get_antidepressive_v1_generics
+#' @export
+get_antidepressive_v1_codes <- make_ndc_getter(spec_antidepressive_v1)
+
+#' @rdname get_antidepressive_v1_generics
+#' @export
+get_antidepressive_v1_defs <- make_drug_def_getter(spec_antidepressive_v1)
 

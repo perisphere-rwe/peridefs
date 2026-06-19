@@ -34,3 +34,12 @@ add_periods_icd <- function(codes) {
 `%==%` <- function(x, y){
   all(x %in% y) & all(y %in% x)
 }
+
+# Returns TRUE if a get_codes() result contains no codes.
+.result_is_empty <- function(result, format) {
+  if (identical(format, "tibble")) {
+    is.null(result) || (inherits(result, "data.frame") && nrow(result) == 0L)
+  } else {
+    is.list(result) && all(lengths(result) == 0L)
+  }
+}
