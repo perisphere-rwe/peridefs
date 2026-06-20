@@ -20,6 +20,13 @@
   functions `get_antidepressive_v1_generics()`,
   `get_antidepressive_v1_codes()`, and `get_antidepressive_v1_defs()`.
 
+- Added `spec_antiobesity`, a composite drug spec
+  (\[CompositeDrugSpec\]) combining `non_glp1_v1` (naltrexone/bupropion,
+  orlistat) and `glp1_v1` (exenatide, dulaglutide, semaglutide,
+  liraglutide, tirzepatide) components, with accessor functions
+  `get_antiobesity_generics()`, `get_antiobesity_codes()`, and
+  `get_antiobesity_defs()`.
+
 ## peridefs 0.1.0
 
 - Initial development version.

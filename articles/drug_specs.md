@@ -106,7 +106,7 @@ was identified:
 ``` r
 
 get_antihypertensive_defs(component = "acei_v1")
-#> From the Perisphere anti-hypertensive medication list.
+#> From the Perisphere antihypertensive medication list.
 ```
 
 ## NDC codes

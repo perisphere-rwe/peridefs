@@ -53,6 +53,7 @@
 <li><p><code>get_*_codes(variable_type = "outcome")</code> now falls back to condition codes for specs that have no outcome definition, rather than returning empty code sets.</p></li>
 <li><p>Added depression (history) specs: <code>spec_depression_v1</code> (diagnosis only) and <code>spec_depression_v2</code> (diagnosis or antidepressive medication), with accessor functions <code>get_depression_v1_codes()</code>, <code>get_depression_v2_codes()</code>, and corresponding <code>_defs()</code> variants.</p></li>
 <li><p>Exported <code>spec_antidepressive_v1</code> as a standalone spec with accessor functions <code>get_antidepressive_v1_generics()</code>, <code>get_antidepressive_v1_codes()</code>, and <code>get_antidepressive_v1_defs()</code>.</p></li>
+<li><p>Added <code>spec_antiobesity</code>, a composite drug spec ([CompositeDrugSpec]) combining <code>non_glp1_v1</code> (naltrexone/bupropion, orlistat) and <code>glp1_v1</code> (exenatide, dulaglutide, semaglutide, liraglutide, tirzepatide) components, with accessor functions <code>get_antiobesity_generics()</code>, <code>get_antiobesity_codes()</code>, and <code>get_antiobesity_defs()</code>.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="peridefs-010">peridefs 0.1.0<a class="anchor" aria-label="anchor" href="#peridefs-010"></a></h2>
