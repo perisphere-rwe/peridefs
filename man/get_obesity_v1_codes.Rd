@@ -10,7 +10,8 @@ get_obesity_v1_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL
+  component = NULL,
+  concatenate = FALSE
 )
 
 get_obesity_v1_defs(
@@ -24,7 +25,7 @@ Valid values: \code{"dx_icd9"}, \code{"dx_icd10"}, \code{"proc_icd9"}, \code{"pr
 \code{"hcpcs"}, \code{"cpt"}, \code{"rev"}. \code{NULL} (default) returns all code types.}
 
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}. Hypertension
-is defined as a condition only; \code{"outcome"} returns empty code sets.}
+is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 
 \item{periods}{Logical. \code{FALSE} (default) returns short-format codes
 (e.g., \code{"4010"}). \code{TRUE} returns decimal-format codes (e.g., \code{"401.0"}).}
@@ -34,6 +35,10 @@ is defined as a condition only; \code{"outcome"} returns empty code sets.}
 and \code{variable_type}.}
 
 \item{component}{Not used for non-composite specs. Pass \code{NULL} (default).}
+
+\item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
+character vectors. \code{TRUE} concatenates all code vectors into a single
+unnamed character vector. Not compatible with \code{format = "tibble"}.}
 }
 \description{
 Returns code sets from the obesity \link{CodeSpec} (\code{spec_obesity_v1}).

@@ -2,11 +2,16 @@
 % Please edit documentation in R/specs_data.R
 \name{spec_objects}
 \alias{spec_objects}
+\alias{spec_antidepressive_v1}
 \alias{spec_antidiabetic}
+\alias{spec_asthma_v1}
 \alias{spec_antihypertensive}
+\alias{spec_antiobesity}
 \alias{spec_ascvd}
 \alias{spec_ckd_v1}
 \alias{spec_copd_v1}
+\alias{spec_depression_v1}
+\alias{spec_depression_v2}
 \alias{spec_diabetes_v1}
 \alias{spec_diabetes_v2}
 \alias{spec_diabetes_v3}
@@ -42,8 +47,10 @@ available component names.
 \code{spec_hf_v1},
 \code{spec_obesity_v1},
 \code{spec_diabetes_v1}, \code{spec_diabetes_v2}, \code{spec_diabetes_v3},
+\code{spec_depression_v1}, \code{spec_depression_v2},
 \code{spec_ckd_v1},
 \code{spec_copd_v1},
+\code{spec_asthma_v1},
 \code{spec_osa_v1},
 \code{spec_hyperlipidemia_v1}
 }
@@ -55,7 +62,12 @@ available component names.
 
 \section{Drug class composites (\link{CompositeDrugSpec})}{
 
-\code{spec_antihypertensive}, \code{spec_antidiabetic}
+\code{spec_antihypertensive}, \code{spec_antidiabetic}, \code{spec_antiobesity}
+}
+
+\section{Drug class standalone (\link{DrugSpec})}{
+
+\code{spec_antidepressive_v1}
 }
 
 \keyword{datasets}
