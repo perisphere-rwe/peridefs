@@ -54,6 +54,7 @@ NULL
 #'   `spec_depression_v1`, `spec_depression_v2`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
+#'   `spec_asthma_v1`,
 #'   `spec_osa_v1`,
 #'   `spec_hyperlipidemia_v1`
 #'
@@ -70,6 +71,7 @@ NULL
 #' @aliases
 #'   spec_antidepressive_v1
 #'   spec_antidiabetic
+#'   spec_asthma_v1
 #'   spec_antihypertensive
 #'   spec_antiobesity
 #'   spec_ascvd

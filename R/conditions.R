@@ -369,6 +369,21 @@ get_osa_v1_codes <- make_code_getter(spec_osa_v1)
 #' @export
 get_osa_v1_defs <- make_def_getter(spec_osa_v1)
 
+# ---- Asthma -------------------------------------------------------------
+
+#' Retrieve ICD codes for asthma
+#' @inheritParams get_htn_v1_codes
+#' @seealso [get_asthma_v1_defs()], \code{spec_asthma_v1}
+#' @examples
+#' get_asthma_v1_codes()
+#' get_asthma_v1_codes(code_type = "dx_icd10")
+#' @export
+get_asthma_v1_codes <- make_code_getter(spec_asthma_v1)
+
+#' @rdname get_asthma_v1_codes
+#' @export
+get_asthma_v1_defs <- make_def_getter(spec_asthma_v1)
+
 # ---- Depression ---------------------------------------------------------
 
 #' Retrieve ICD codes for depression
