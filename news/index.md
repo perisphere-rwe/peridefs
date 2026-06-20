@@ -1,6 +1,6 @@
 # Changelog
 
-## peridefs 0.2.0 (in development)
+## peridefs 0.2.0
 
 - Added `concatenate` argument (default `FALSE`) to all `get_*_codes()`
   functions. When `TRUE`, all code vectors are collapsed into a single
@@ -26,6 +26,10 @@
   liraglutide, tirzepatide) components, with accessor functions
   `get_antiobesity_generics()`, `get_antiobesity_codes()`, and
   `get_antiobesity_defs()`.
+
+- Added asthma spec `spec_asthma_v1` (ICD-9 493.xx, ICD-10 J45.xx; 20
+  and 26 codes respectively), with accessor functions
+  `get_asthma_v1_codes()` and `get_asthma_v1_defs()`.
 
 ## peridefs 0.1.0
 
