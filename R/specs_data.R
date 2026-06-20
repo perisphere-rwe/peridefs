@@ -61,7 +61,7 @@ NULL
 #'   `spec_ascvd`
 #'
 #' @section Drug class composites ([CompositeDrugSpec]):
-#'   `spec_antihypertensive`, `spec_antidiabetic`
+#'   `spec_antihypertensive`, `spec_antidiabetic`, `spec_antiobesity`
 #'
 #' @section Drug class standalone ([DrugSpec]):
 #'   `spec_antidepressive_v1`
@@ -71,6 +71,7 @@ NULL
 #'   spec_antidepressive_v1
 #'   spec_antidiabetic
 #'   spec_antihypertensive
+#'   spec_antiobesity
 #'   spec_ascvd
 #'   spec_ckd_v1
 #'   spec_copd_v1

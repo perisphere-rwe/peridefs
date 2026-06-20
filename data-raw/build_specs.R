@@ -2240,12 +2240,45 @@ spec_copd_v1 <- CodeSpec$new(
 
 # Specifications for medications ----
 
+## Antiobesity medication components ----
+
+spec_non_glp1_v1 <- DrugSpec$new(
+  'non_glp1', "Antiobesity (non GLP-1)",
+  version = 'v1',
+  defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
+  generic_names = c("NALTREXONE HCL/BUPROPION HCL", "ORLISTAT")
+)
+
+spec_glp1_v1 <- DrugSpec$new(
+  'glp1', "GLP-1",
+  version = 'v1',
+  defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
+  generic_names = c("EXENATIDE",
+                    "EXENATIDE EXTENDED-RELEASE",
+                    "DULAGLUTIDE",
+                    "SEMAGLUTIDE",
+                    "LIRAGLUTIDE",
+                    "TIRZEPATIDE")
+)
+
+## Antiobesity medication compositions ----
+
+spec_antiobesity <- CompositeDrugSpec$new(
+  drug_class = "antiobesity",
+  label      = "Antiobesity Medications",
+  defs       = "Antiobesity medication subclasses (v1): non-GLP-1 agents and GLP-1 receptor agonists.",
+  components = list(
+    non_glp1_v1 = spec_non_glp1_v1,
+    glp1_v1     = spec_glp1_v1
+  )
+)
+
 ## Antidepressive medications ----
 
 spec_antidepressive_v1 <- DrugSpec$new(
   'antidepressive', "Antidepressive",
   version = "v1",
-  defs = "",
+  defs = "From the Perisphere antidepressive (non GLP-1) medication list.",
   generic_names = c(
     "AMITRIPTYLINE", "AMOXAPINE", "BUPROPION", "CITALOPRAM", "CLOMIPRAMINE",
     "DESIPRAMINE", "DESVENLAFAXINE", "DOXEPIN", "DULOXETINE", "ESCITALOPRAM",
@@ -2264,7 +2297,7 @@ spec_antidepressive_v1 <- DrugSpec$new(
 spec_acei_v1 <- DrugSpec$new(
   "acei", "ACE Inhibitors",
   version = "v1",
-  defs    = "From the Perisphere anti-hypertensive medication list.",
+  defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c("BENAZEPRIL","CAPTOPRIL","ENALAPRIL","FOSINOPRIL","LISINOPRIL",
                     "MOEXIPRIL","PERINDOPRIL","QUINAPRIL","RAMIPRIL","TRANDOLAPRIL")
 )
@@ -2283,7 +2316,7 @@ spec_acei_v2 <- DrugSpec$new(
 spec_aldo_v1 <- DrugSpec$new(
   "aldo", "Aldosterone Antagonists",
   version = "v1",
-  defs    = "From the Perisphere anti-hypertensive medication list.",
+  defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c("EPLERENONE", "SPIRONOLACTONE")
 )
 
@@ -2292,7 +2325,7 @@ spec_aldo_v1 <- DrugSpec$new(
 spec_alpha_v1 <- DrugSpec$new(
   "alpha", "Alpha-1 Blockers",
   version = "v1",
-  defs    = "From the Perisphere anti-hypertensive medication list.",
+  defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c("DOXAZOSIN", "PRAZOSIN", "TERAZOSIN")
 )
 
@@ -2300,7 +2333,7 @@ spec_alpha_v1 <- DrugSpec$new(
 spec_alpha_beta_v1 <- DrugSpec$new(
   "alpha_beta", "Alpha-Beta Blockers",
   version = "v1",
-  defs    = "From the Perisphere anti-hypertensive medication list.",
+  defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c("CARVEDILOL", "LABETALOL")
 )
 
@@ -2315,7 +2348,7 @@ spec_alpha_beta_v2 <- DrugSpec$new(
 spec_arb_v1 <- DrugSpec$new(
   "arb", "Angiotensin Receptor Blockers (ARBs)",
   version = "v1",
-  defs    = "From the Perisphere anti-hypertensive medication list.",
+  defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c("AZILSARTAN","CANDESARTAN","EPROSARTAN","IRBESARTAN",
                     "LOSARTAN","OLMESARTAN","TELMISARTAN","VALSARTAN")
 )
@@ -2332,7 +2365,7 @@ spec_arb_v2 <- DrugSpec$new(
 spec_beta_cardio_v1 <- DrugSpec$new(
   "beta_cardio", "Beta Blockers (Cardioselective)",
   version = "v1",
-  defs    = "Cardioselective beta blockers from the Perisphere anti-hypertensive medication list.",
+  defs    = "Cardioselective beta blockers from the Perisphere antihypertensive medication list.",
   generic_names = c("ATENOLOL", "BETAXOLOL", "BISOPROLOL", "METOPROLOL")
 )
 
@@ -2340,7 +2373,7 @@ spec_beta_cardio_v1 <- DrugSpec$new(
 spec_beta_cardio_vasod_v1 <- DrugSpec$new(
   "beta_cardio_vasod", "Beta Blockers (Cardioselective, Vasodilatory)",
   version = "v1",
-  defs    = "Cardioselective vasodilatory beta blocker from the Perisphere anti-hypertensive medication list.",
+  defs    = "Cardioselective vasodilatory beta blocker from the Perisphere antihypertensive medication list.",
   generic_names = c("NEBIVOLOL")
 )
 
@@ -2348,7 +2381,7 @@ spec_beta_cardio_vasod_v1 <- DrugSpec$new(
 spec_beta_int_sym_v1 <- DrugSpec$new(
   "beta_int_sym", "Beta Blockers (Intrinsic Sympathomimetic Activity)",
   version = "v1",
-  defs    = "ISA beta blockers from the Perisphere anti-hypertensive medication list.",
+  defs    = "ISA beta blockers from the Perisphere antihypertensive medication list.",
   generic_names = c("ACEBUTOLOL", "CARTEOLOL", "PENBUTOLOL", "PINDOLOL")
 )
 
@@ -2363,7 +2396,7 @@ spec_beta_int_sym_v2 <- DrugSpec$new(
 spec_beta_noncardio_v1 <- DrugSpec$new(
   "beta_noncardio", "Beta Blockers (Noncardioselective)",
   version = "v1",
-  defs    = "Noncardioselective beta blockers from the Perisphere anti-hypertensive medication list.",
+  defs    = "Noncardioselective beta blockers from the Perisphere antihypertensive medication list.",
   generic_names = c("NADOLOL", "PROPRANOLOL")
 )
 
@@ -2372,7 +2405,7 @@ spec_beta_noncardio_v1 <- DrugSpec$new(
 spec_ccb_dhp_v1 <- DrugSpec$new(
   "ccb_dhp", "Calcium Channel Blockers (Dihydropyridines)",
   version = "v1",
-  defs    = "Dihydropyridine CCBs from the Perisphere anti-hypertensive medication list and FDB.",
+  defs    = "Dihydropyridine CCBs from the Perisphere antihypertensive medication list and FDB.",
   generic_names = c("AMLODIPINE","FELODIPINE","ISRADIPINE","NICARDIPINE",
                     "NIFEDIPINE","NISOLDIPINE")
 )
@@ -2381,7 +2414,7 @@ spec_ccb_dhp_v1 <- DrugSpec$new(
 spec_ccb_nondhp_v1 <- DrugSpec$new(
   "ccb_nondhp", "Calcium Channel Blockers (Non-Dihydropyridines)",
   version = "v1",
-  defs    = "Non-dihydropyridine CCBs from the Perisphere anti-hypertensive medication list.",
+  defs    = "Non-dihydropyridine CCBs from the Perisphere antihypertensive medication list.",
   generic_names = c("DILTIAZEM", "VERAPAMIL")
 )
 
@@ -2389,14 +2422,14 @@ spec_ccb_nondhp_v1 <- DrugSpec$new(
 spec_central_v1 <- DrugSpec$new(
   "central", "Centrally Acting Agents",
   version = "v1",
-  defs    = "Centrally acting anti-hypertensives from the Perisphere list. Note: exclude APRACLONIDINE when matching CLONIDINE.",
+  defs    = "Centrally acting antihypertensives from the Perisphere list. Note: exclude APRACLONIDINE when matching CLONIDINE.",
   generic_names = c("CLONIDINE", "METHYLDOPA", "GUANFACINE")
 )
 
 spec_central_v2 <- DrugSpec$new(
   "central", "Centrally Acting Agents",
   version = "v2",
-  defs    = "Centrally acting anti-hypertensives from FDB. Note: exclude APRACLONIDINE when matching CLONIDINE.",
+  defs    = "Centrally acting antihypertensives from FDB. Note: exclude APRACLONIDINE when matching CLONIDINE.",
   generic_names = c("CLONIDINE","GUANABENZ","GUANFACINE","METHYLDOPA","RESERPINE")
 )
 
@@ -2404,7 +2437,7 @@ spec_central_v2 <- DrugSpec$new(
 spec_diuretics_thiazide_v1 <- DrugSpec$new(
   "diuretics_thiazide", "Diuretics (Thiazide and Thiazide-Type)",
   version = "v1",
-  defs    = "Thiazide diuretics from the Perisphere anti-hypertensive medication list.",
+  defs    = "Thiazide diuretics from the Perisphere antihypertensive medication list.",
   generic_names = c("CHLOROTHIAZIDE","CHLORTHALIDONE","HYDROCHLOROTHIAZIDE",
                     "INDAPAMIDE","METOLAZONE","HCTZ")
 )
@@ -2422,7 +2455,7 @@ spec_diuretics_thiazide_v2 <- DrugSpec$new(
 spec_diuretics_loop_v1 <- DrugSpec$new(
   "diuretics_loop", "Diuretics (Loop)",
   version = "v1",
-  defs    = "Loop diuretics from the Perisphere anti-hypertensive medication list.",
+  defs    = "Loop diuretics from the Perisphere antihypertensive medication list.",
   generic_names = c("BUMETANIDE", "FUROSEMIDE", "TORSEMIDE")
 )
 
@@ -2437,7 +2470,7 @@ spec_diuretics_loop_v2 <- DrugSpec$new(
 spec_diuretics_ksparing_v1 <- DrugSpec$new(
   "diuretics_ksparing", "Diuretics (Potassium-Sparing)",
   version = "v1",
-  defs    = "Potassium-sparing diuretics from the Perisphere anti-hypertensive medication list.",
+  defs    = "Potassium-sparing diuretics from the Perisphere antihypertensive medication list.",
   generic_names = c("AMILORIDE", "TRIAMTERENE")
 )
 
@@ -2452,7 +2485,7 @@ spec_diuretics_ksparing_v2 <- DrugSpec$new(
 spec_renin_v1 <- DrugSpec$new(
   "renin", "Direct Renin Inhibitors",
   version = "v1",
-  defs    = "Direct renin inhibitors from the Perisphere anti-hypertensive medication list.",
+  defs    = "Direct renin inhibitors from the Perisphere antihypertensive medication list.",
   generic_names = c("ALISKIREN")
 )
 
@@ -2460,7 +2493,7 @@ spec_renin_v1 <- DrugSpec$new(
 spec_vasodilators_v1 <- DrugSpec$new(
   "vasodilators", "Direct Vasodilators",
   version = "v1",
-  defs    = "Direct vasodilators from the Perisphere anti-hypertensive medication list.",
+  defs    = "Direct vasodilators from the Perisphere antihypertensive medication list.",
   generic_names = c("HYDRALAZINE", "MINOXIDIL")
 )
 
@@ -2783,8 +2816,8 @@ usethis::use_data(
   spec_hyperlipidemia_v1,
   # COPD
   spec_copd_v1,
-  # Antidepressive
-  spec_antidepressive_v1,
+  # Antiobesity (non GLP-1)
+  spec_antiobesity,
   # Antihypertensive composites
   spec_antihypertensive,
   # Antidiabetic composite

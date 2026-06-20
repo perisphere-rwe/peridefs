@@ -68,6 +68,29 @@ get_antidiabetic_codes <- make_ndc_getter(spec_antidiabetic)
 #' @export
 get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic)
 
+# ---- Antiobesity (composite) --------------------------------------------
+
+#' Retrieve generic drug names for antiobesity medications
+#'
+#' @description
+#' `spec_antiobesity` is a [CompositeDrugSpec] with components `non_glp1_v1`
+#' and `glp1_v1`. Use `component = "all"` to retrieve all GNNs across both
+#' subclasses.
+#'
+#' @param component **Required.** `"non_glp1_v1"`, `"glp1_v1"`, or `"all"`.
+#' @return Character vector of GNN strings (upper-case), or NDC codes.
+#' @seealso \code{spec_antiobesity}
+#' @export
+get_antiobesity_generics <- make_generic_getter(spec_antiobesity)
+
+#' @rdname get_antiobesity_generics
+#' @export
+get_antiobesity_codes <- make_ndc_getter(spec_antiobesity)
+
+#' @rdname get_antiobesity_generics
+#' @export
+get_antiobesity_defs <- make_drug_def_getter(spec_antiobesity)
+
 # ---- Antidepressive (standalone) ----------------------------------------
 
 #' Retrieve generic drug names for antidepressive medications
