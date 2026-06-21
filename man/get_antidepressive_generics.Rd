@@ -15,10 +15,13 @@ get_antidepressive_defs(component)
 \arguments{
 \item{component}{\strong{Required.} One or more of \code{"ssri_v1"}, \code{"snri_v1"},
 \code{"tca_v1"}, \code{"maoi_v1"}, \code{"other_v1"}, or \code{"all"}.}
+
+\item{concatenate}{Logical. \code{FALSE} (default) returns a named list keyed by
+component name. \code{TRUE} flattens to an unnamed character vector.}
 }
 \value{
-Named list of GNN strings, or NDC codes (one element per component).
-Pass \code{concatenate = TRUE} to flatten to an unnamed character vector.
+Named list of GNN strings (upper-case) or NDC codes, one element per
+component. Pass \code{concatenate = TRUE} to flatten to an unnamed character vector.
 }
 \description{
 \code{spec_antidepressive} is a \link{CompositeDrugSpec} with components \code{ssri_v1},

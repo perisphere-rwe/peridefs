@@ -9,7 +9,7 @@ Accessor functions for composite drug specs."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,13 +57,13 @@ Accessor functions for composite drug specs."></head><body>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_antihypertensive_codes</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_antihypertensive_codes</span><span class="op">(</span><span class="va">component</span>, concatenate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_antihypertensive_defs</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">get_antihypertensive_defs</span><span class="op">(</span><span class="va">component</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_antidiabetic_codes</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">get_antidiabetic_codes</span><span class="op">(</span><span class="va">component</span>, concatenate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_antidiabetic_defs</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_antidiabetic_defs</span><span class="op">(</span><span class="va">component</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,6 +74,11 @@ Accessor functions for composite drug specs."></head><body>
 <dd><p><strong>Required</strong> for composite specs. A named component (e.g.
 <code>"acei_v1"</code>), or <code>"all"</code> to union all components' GNNs or NDC codes.
 Print the composite spec to see all available component names.</p></dd>
+
+
+<dt id="arg-concatenate">concatenate<a class="anchor" aria-label="anchor" href="#arg-concatenate"></a></dt>
+<dd><p>Logical. <code>FALSE</code> (default) returns a named list keyed by
+component name. <code>TRUE</code> flattens to an unnamed character vector.</p></dd>
 
 </dl></div>
 

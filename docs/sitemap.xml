@@ -43,6 +43,7 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antiarrhythmic_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antiarrhythmic_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antiarrhythmic_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidepressive_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidiabetic_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidiab_alpha_glucosidase_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidiab_alpha_glucosidase_defs.html</loc></url>
@@ -75,11 +76,13 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidiab_tzd_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antidiab_tzd_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antihypertensive_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_arb_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_arb_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_arb_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_asthma_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_betablockers_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_betablockers_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_betablockers_generics.html</loc></url>
@@ -137,6 +140,7 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_dementia_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_depression_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_depression_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.html</loc></url>
@@ -233,8 +237,10 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_obesity_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_observation_stay_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_observation_stay_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ohs_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_old_mi_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_old_mi_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_osa_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_pad_symptomatic_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_pad_symptomatic_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_pci_codes.html</loc></url>
@@ -261,6 +267,7 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_sleep_apnea_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_sleep_apnea_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_sleep_apnea_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_sleep_apnea_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_smoking_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_statin_atorvastatin_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_statin_atorvastatin_defs.html</loc></url>
@@ -395,6 +402,7 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_ras_extra.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_renin.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_sleep_apnea.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_sleep_apnea_v1.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_smoking.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_statin.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_statin_atorvastatin.html</loc></url>

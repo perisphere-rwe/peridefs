@@ -20,6 +20,9 @@ get_antidiabetic_defs(component)
 \item{component}{\strong{Required} for composite specs. A named component (e.g.
 \code{"acei_v1"}), or \code{"all"} to union all components' GNNs or NDC codes.
 Print the composite spec to see all available component names.}
+
+\item{concatenate}{Logical. \code{FALSE} (default) returns a named list keyed by
+component name. \code{TRUE} flattens to an unnamed character vector.}
 }
 \description{
 Accessor functions for composite drug specs.

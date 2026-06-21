@@ -9,9 +9,13 @@ get_antihypertensive_generics(component, concatenate = FALSE)
 \arguments{
 \item{component}{\strong{Required.} Component name. Print \code{spec_antihypertensive}
 to see all available names.}
+
+\item{concatenate}{Logical. \code{FALSE} (default) returns a named list keyed by
+component name. \code{TRUE} flattens to an unnamed character vector.}
 }
 \value{
-Character vector of GNN strings (upper-case).
+Named list of GNN strings (upper-case) or NDC codes, one element per
+component. Pass \code{concatenate = TRUE} to flatten to an unnamed character vector.
 }
 \description{
 \code{spec_antihypertensive} is a \link{CompositeDrugSpec} containing all versioned

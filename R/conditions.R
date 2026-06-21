@@ -225,7 +225,6 @@ make_drug_def_getter <- function(spec, composite = FALSE) {
 #' @param format `"list"` (default) returns a named list of character vectors.
 #'   `"tibble"` returns a long-form tibble with columns `code_type`, `code`,
 #'   and `variable_type`.
-#' @param component Not used for non-composite specs. Pass `NULL` (default).
 #' @param concatenate Logical. `FALSE` (default) returns a named list of
 #'   character vectors. `TRUE` concatenates all code vectors into a single
 #'   unnamed character vector. Not compatible with `format = "tibble"`.
@@ -240,7 +239,6 @@ get_htn_v1_codes <- make_code_getter(spec_htn_v1)
 #' Retrieve the narrative algorithm description for hypertension (v1)
 #'
 #' @param variable_type `"condition"` (default) or `"outcome"`.
-#' @param component Not used. Pass `NULL` (default).
 #' @return Character string, or `NULL`.
 #' @seealso [get_htn_v1_codes()]
 #' @examples
@@ -277,7 +275,6 @@ get_hf_v1_codes <- make_code_getter(spec_hf_v1)
 #' Retrieve the narrative algorithm description for heart failure (v1)
 #'
 #' @param variable_type `"condition"` (default) or `"outcome"`.
-#' @param component Not used. Pass `NULL` (default).
 #' @return Character string, or `NULL`.
 #' @seealso [get_hf_v1_codes()]
 #' @export

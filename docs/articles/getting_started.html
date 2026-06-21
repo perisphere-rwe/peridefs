@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -318,18 +318,6 @@ codes, <code>icd</code> is helpful and easy to apply:</p>
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jackwasey.github.io/icd/" class="external-link">icd</a></span><span class="op">)</span> <span class="co"># for as.icd9 / as.icd10 / explain_code functions</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.5.3</span></span>
-<span><span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.5.2</span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.2.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.5</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 4.0.2     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.3.0</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.1</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.4     </span></span>
-<span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
 <span></span>
 <span><span class="va">peri_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_copd_v1_codes.html">get_copd_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'dx_icd9'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> </span>
 <span></span>
@@ -337,22 +325,7 @@ codes, <code>icd</code> is helpful and easy to apply:</p>
 <span>  <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="va">peri_codes</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://jackwasey.github.io/icd//reference/explain_code.html" class="external-link">explain_code</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/enframe.html" class="external-link">enframe</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">'code'</span>, value <span class="op">=</span> <span class="st">'explanation'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 13 × 2</span></span></span>
-<span><span class="co">#&gt;    code  explanation                                             </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 490   Bronchitis, not specified as acute or chronic           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 4910  Simple chronic bronchitis                               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 4911  Mucopurulent chronic bronchitis                         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 4918  Other chronic bronchitis                                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 4919  Unspecified chronic bronchitis                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 49120 Obstructive chronic bronchitis without exacerbation     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 49121 Obstructive chronic bronchitis with (acute) exacerbation</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 49122 Obstructive chronic bronchitis with acute bronchitis    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4920  Emphysematous bleb                                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4928  Other emphysema                                         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 4940  Bronchiectasis without acute exacerbation               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 4941  Bronchiectasis with acute exacerbation                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 496   Chronic airway obstruction, not elsewhere classified</span></span></code></pre></div>
+<span>  </span></code></pre></div>
 <p>Note this only works for diagnostic codes and
 <code>explain_code</code> sometimes fails to give explanations for all
 codes if you pass a vector (that’s why I used map in my code).</p>

@@ -39,8 +39,6 @@ and \code{variable_type}.}
 \item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
 character vectors. \code{TRUE} concatenates all code vectors into a single
 unnamed character vector. Not compatible with \code{format = "tibble"}.}
-
-\item{component}{Not used for non-composite specs. Pass \code{NULL} (default).}
 }
 \value{
 Named list, character vector (if \code{concatenate = TRUE}), or tibble of codes.

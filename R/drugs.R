@@ -11,6 +11,8 @@
 #'
 #' @param component **Required.** Component name (e.g., `"acei_v1"`). Print
 #'   the composite spec to see all available names.
+#' @param concatenate Logical. `FALSE` (default) returns a named list keyed by
+#'   component name. `TRUE` flattens to an unnamed character vector.
 #' @name drug_accessors
 NULL
 
@@ -30,7 +32,9 @@ NULL
 #'
 #' @param component **Required.** Component name. Print `spec_antihypertensive`
 #'   to see all available names.
-#' @return Character vector of GNN strings (upper-case).
+#' @inheritParams drug_accessors
+#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
+#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
 #' @seealso \code{spec_antihypertensive}
 #' @export
 get_antihypertensive_generics <- make_generic_getter(spec_antihypertensive, composite = TRUE)
@@ -55,7 +59,9 @@ get_antihypertensive_defs <- make_drug_def_getter(spec_antihypertensive, composi
 #'
 #' @param component **Required.** Component name. Print `spec_antidiabetic`
 #'   to see all available names.
-#' @return Character vector of GNN strings (upper-case).
+#' @inheritParams drug_accessors
+#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
+#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
 #' @seealso \code{spec_antidiabetic}
 #' @export
 get_antidiabetic_generics <- make_generic_getter(spec_antidiabetic, composite = TRUE)
@@ -78,7 +84,9 @@ get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic, composite = TRU
 #' subclasses.
 #'
 #' @param component **Required.** `"non_glp1_v1"`, `"glp1_v1"`, or `"all"`.
-#' @return Character vector of GNN strings (upper-case), or NDC codes.
+#' @inheritParams drug_accessors
+#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
+#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
 #' @seealso \code{spec_antiobesity}
 #' @export
 get_antiobesity_generics <- make_generic_getter(spec_antiobesity, composite = TRUE)
@@ -102,8 +110,9 @@ get_antiobesity_defs <- make_drug_def_getter(spec_antiobesity, composite = TRUE)
 #'
 #' @param component **Required.** One or more of `"ssri_v1"`, `"snri_v1"`,
 #'   `"tca_v1"`, `"maoi_v1"`, `"other_v1"`, or `"all"`.
-#' @return Named list of GNN strings, or NDC codes (one element per component).
-#'   Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @inheritParams drug_accessors
+#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
+#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
 #' @seealso \code{spec_antidepressive}
 #' @export
 get_antidepressive_generics <- make_generic_getter(spec_antidepressive, composite = TRUE)

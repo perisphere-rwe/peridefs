@@ -11,8 +11,6 @@ get_htn_v2_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}.}
-
-\item{component}{Not used. Pass \code{NULL} (default).}
 }
 \value{
 Character string, or \code{NULL}.
