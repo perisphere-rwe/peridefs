@@ -67,6 +67,7 @@ Pass the versioned component name to `get_*_generics()`:
 ``` r
 
 get_antihypertensive_generics(component = "acei_v1")
+#> $acei_v1
 #>  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  
 #>  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"
 ```
@@ -76,7 +77,7 @@ Use `component = "all"` to retrieve the union of every component’s GNNs:
 ``` r
 
 get_antihypertensive_generics(component = "all") |> length()
-#> [1] 73
+#> [1] 25
 ```
 
 ### Comparing versions
@@ -88,11 +89,13 @@ list and v2 from First DataBank (FDB), which may add spelling variants:
 
 # v1 — Perisphere source
 get_antihypertensive_generics(component = "acei_v1")
+#> $acei_v1
 #>  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  
 #>  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"
 
 # v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)
 get_antihypertensive_generics(component = "acei_v2")
+#> $acei_v2
 #>  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "FOSINIPRIL"  
 #>  [6] "LISINOPRIL"   "MOEXIPRIL"    "MOEXEPRIL"    "PERINDOPRIL"  "QUINAPRIL"   
 #> [11] "RAMIPRIL"     "TRANDOLAPRIL"
@@ -133,16 +136,16 @@ spec_antidiabetic
 #> inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies,
 #> amylin analogues.
 #> 10 component(s):
-#>   `biguanide_v1`: Antidiabetics — Biguanides (3 GNNs)
-#>   `sulfonylurea_v1`: Antidiabetics — Sulfonylureas (10 GNNs)
-#>   `meglitinide_v1`: Antidiabetics — Meglitinides (3 GNNs)
-#>   `tzd_v1`: Antidiabetics — Thiazolidinediones (TZDs) (8 GNNs)
-#>   `alpha_glucosidase_v1`: Antidiabetics — Alpha-Glucosidase Inhibitors (3 GNNs)
-#>   `dpp4_v1`: Antidiabetics — DPP-4 Inhibitors (15 GNNs)
-#>   `sglt2_v1`: Antidiabetics — SGLT-2 Inhibitors (13 GNNs)
-#>   `glp1_v1`: Antidiabetics — GLP-1 Receptor Agonists (6 GNNs)
-#>   `insulin_v1`: Antidiabetics — Insulin and Supplies (71 GNNs)
-#>   `amylin_v1`: Antidiabetics — Amylin Analogues (1 GNNs)
+#>   `biguanide_v1`: Biguanides (3 GNNs)
+#>   `sulfonylurea_v1`: Sulfonylureas (10 GNNs)
+#>   `meglitinide_v1`: Meglitinides (3 GNNs)
+#>   `tzd_v1`: Thiazolidinediones (TZDs) (8 GNNs)
+#>   `alpha_glucosidase_v1`: Alpha-Glucosidase Inhibitors (3 GNNs)
+#>   `dpp4_v1`: DPP-4 Inhibitors (15 GNNs)
+#>   `sglt2_v1`: SGLT-2 Inhibitors (13 GNNs)
+#>   `glp1_v1`: GLP-1 Receptor Agonists (6 GNNs)
+#>   `insulin_v1`: Insulin and Supplies (71 GNNs)
+#>   `amylin_v1`: Amylin Analogues (1 GNNs)
 #> Use `component` = "biguanide_v1", "sulfonylurea_v1", "meglitinide_v1",
 #> "tzd_v1", "alpha_glucosidase_v1", "dpp4_v1", "sglt2_v1", "glp1_v1",
 #> "insulin_v1", and "amylin_v1" in `get_*()` functions.
@@ -151,6 +154,7 @@ spec_antidiabetic
 ``` r
 
 get_antidiabetic_generics(component = "glp1_v1")
+#> $glp1_v1
 #> [1] "DULAGLUTIDE"            "EXENATIDE"              "EXENATIDE MICROSPHERES"
 #> [4] "LIRAGLUTIDE"            "LIXISENATIDE"           "SEMAGLUTIDE"
 ```
@@ -158,6 +162,7 @@ get_antidiabetic_generics(component = "glp1_v1")
 ``` r
 
 get_antidiabetic_generics(component = "sglt2_v1")
+#> $sglt2_v1
 #>  [1] "CANAGLIFLOZIN"                       "CANAGLIFLOZIN/METFORM"              
 #>  [3] "CANAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN"                      
 #>  [5] "DAPAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN/SAXAGLIPTIN"          

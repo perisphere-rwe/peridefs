@@ -9,7 +9,7 @@ containing all versioned antidiabetic leaf specs: `biguanide_v1`,
 ## Usage
 
 ``` r
-get_antidiabetic_generics(component = NULL)
+get_antidiabetic_generics(component, concatenate = FALSE)
 ```
 
 ## Arguments
@@ -19,9 +19,16 @@ get_antidiabetic_generics(component = NULL)
   **Required.** Component name. Print `spec_antidiabetic` to see all
   available names.
 
+- concatenate:
+
+  Logical. `FALSE` (default) returns a named list keyed by component
+  name. `TRUE` flattens to an unnamed character vector.
+
 ## Value
 
-Character vector of GNN strings (upper-case).
+Named list of GNN strings (upper-case) or NDC codes, one element per
+component. Pass `concatenate = TRUE` to flatten to an unnamed character
+vector.
 
 ## See also
 

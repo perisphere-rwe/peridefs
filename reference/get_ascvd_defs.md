@@ -5,7 +5,7 @@ Retrieve the narrative algorithm description for an ASCVD component
 ## Usage
 
 ``` r
-get_ascvd_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_ascvd_defs(variable_type = c("condition", "outcome"), component)
 ```
 
 ## Arguments

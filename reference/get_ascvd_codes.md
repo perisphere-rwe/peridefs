@@ -16,7 +16,8 @@ get_ascvd_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL
+  component,
+  concatenate = FALSE
 )
 ```
 
@@ -31,7 +32,7 @@ get_ascvd_codes(
 - variable_type:
 
   `"condition"` (default) or `"outcome"`. Hypertension is defined as a
-  condition only; `"outcome"` returns empty code sets.
+  condition only; `"outcome"` falls back to condition codes.
 
 - periods:
 
@@ -48,6 +49,12 @@ get_ascvd_codes(
 
   **Required.** Component name, e.g. `"chd_v1"`, `"stroke_v1"`,
   `"isch_stroke_v1"`, `"hf_v1"`, `"cerebrovasc_disease_v1"`.
+
+- concatenate:
+
+  Logical. `FALSE` (default) returns a named list of character vectors.
+  `TRUE` concatenates all code vectors into a single unnamed character
+  vector. Not compatible with `format = "tibble"`.
 
 ## See also
 

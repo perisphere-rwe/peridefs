@@ -71,7 +71,7 @@ Two versions are available:</p><ul><li><p><strong>v1</strong> (diagnosis only): 
 <span>  variable_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition"</span>, <span class="st">"outcome"</span><span class="op">)</span>,</span>
 <span>  periods <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"tibble"</span><span class="op">)</span>,</span>
-<span>  component <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  concatenate <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_htn_v2_codes</span><span class="op">(</span></span>
@@ -79,7 +79,7 @@ Two versions are available:</p><ul><li><p><strong>v1</strong> (diagnosis only): 
 <span>  variable_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition"</span>, <span class="st">"outcome"</span><span class="op">)</span>,</span>
 <span>  periods <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"tibble"</span><span class="op">)</span>,</span>
-<span>  component <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  concatenate <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,7 +95,7 @@ Valid values: <code>"dx_icd9"</code>, <code>"dx_icd10"</code>, <code>"proc_icd9"
 
 <dt id="arg-variable-type">variable_type<a class="anchor" aria-label="anchor" href="#arg-variable-type"></a></dt>
 <dd><p><code>"condition"</code> (default) or <code>"outcome"</code>. Hypertension
-is defined as a condition only; <code>"outcome"</code> returns empty code sets.</p></dd>
+is defined as a condition only; <code>"outcome"</code> falls back to condition codes.</p></dd>
 
 
 <dt id="arg-periods">periods<a class="anchor" aria-label="anchor" href="#arg-periods"></a></dt>
@@ -109,13 +109,15 @@ is defined as a condition only; <code>"outcome"</code> returns empty code sets.<
 and <code>variable_type</code>.</p></dd>
 
 
-<dt id="arg-component">component<a class="anchor" aria-label="anchor" href="#arg-component"></a></dt>
-<dd><p>Not used for non-composite specs. Pass <code>NULL</code> (default).</p></dd>
+<dt id="arg-concatenate">concatenate<a class="anchor" aria-label="anchor" href="#arg-concatenate"></a></dt>
+<dd><p>Logical. <code>FALSE</code> (default) returns a named list of
+character vectors. <code>TRUE</code> concatenates all code vectors into a single
+unnamed character vector. Not compatible with <code>format = "tibble"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Named list or tibble of codes.</p>
+    <p>Named list, character vector (if <code>concatenate = TRUE</code>), or tibble of codes.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

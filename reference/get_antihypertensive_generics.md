@@ -13,7 +13,7 @@ intermediate composites): `acei_v1`, `acei_v2`, `arb_v1`, `arb_v2`,
 ## Usage
 
 ``` r
-get_antihypertensive_generics(component = NULL)
+get_antihypertensive_generics(component, concatenate = FALSE)
 ```
 
 ## Arguments
@@ -23,9 +23,16 @@ get_antihypertensive_generics(component = NULL)
   **Required.** Component name. Print `spec_antihypertensive` to see all
   available names.
 
+- concatenate:
+
+  Logical. `FALSE` (default) returns a named list keyed by component
+  name. `TRUE` flattens to an unnamed character vector.
+
 ## Value
 
-Character vector of GNN strings (upper-case).
+Named list of GNN strings (upper-case) or NDC codes, one element per
+component. Pass `concatenate = TRUE` to flatten to an unnamed character
+vector.
 
 ## See also
 

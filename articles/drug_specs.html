@@ -159,13 +159,14 @@
 <code>get_*_generics()</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $acei_v1</span></span>
 <span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  </span></span>
 <span><span class="co">#&gt;  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"</span></span></code></pre></div>
 <p>Use <code>component = "all"</code> to retrieve the union of every
 component’s GNNs:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 73</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 25</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="comparing-versions">Comparing versions<a class="anchor" aria-label="anchor" href="#comparing-versions"></a>
 </h3>
@@ -175,11 +176,13 @@ variants:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># v1 — Perisphere source</span></span>
 <span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $acei_v1</span></span>
 <span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  </span></span>
 <span><span class="co">#&gt;  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"</span></span>
 <span></span>
 <span><span class="co"># v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)</span></span>
 <span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $acei_v2</span></span>
 <span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "FOSINIPRIL"  </span></span>
 <span><span class="co">#&gt;  [6] "LISINOPRIL"   "MOEXIPRIL"    "MOEXEPRIL"    "PERINDOPRIL"  "QUINAPRIL"   </span></span>
 <span><span class="co">#&gt; [11] "RAMIPRIL"     "TRANDOLAPRIL"</span></span></code></pre></div>
@@ -218,25 +221,27 @@ and insulin:</p>
 <span><span class="co">#&gt; inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies,</span></span>
 <span><span class="co">#&gt; amylin analogues.</span></span>
 <span><span class="co">#&gt; 10 component(s):</span></span>
-<span><span class="co">#&gt;   `biguanide_v1`: Antidiabetics — Biguanides (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `sulfonylurea_v1`: Antidiabetics — Sulfonylureas (10 GNNs)</span></span>
-<span><span class="co">#&gt;   `meglitinide_v1`: Antidiabetics — Meglitinides (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `tzd_v1`: Antidiabetics — Thiazolidinediones (TZDs) (8 GNNs)</span></span>
-<span><span class="co">#&gt;   `alpha_glucosidase_v1`: Antidiabetics — Alpha-Glucosidase Inhibitors (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `dpp4_v1`: Antidiabetics — DPP-4 Inhibitors (15 GNNs)</span></span>
-<span><span class="co">#&gt;   `sglt2_v1`: Antidiabetics — SGLT-2 Inhibitors (13 GNNs)</span></span>
-<span><span class="co">#&gt;   `glp1_v1`: Antidiabetics — GLP-1 Receptor Agonists (6 GNNs)</span></span>
-<span><span class="co">#&gt;   `insulin_v1`: Antidiabetics — Insulin and Supplies (71 GNNs)</span></span>
-<span><span class="co">#&gt;   `amylin_v1`: Antidiabetics — Amylin Analogues (1 GNNs)</span></span>
+<span><span class="co">#&gt;   `biguanide_v1`: Biguanides (3 GNNs)</span></span>
+<span><span class="co">#&gt;   `sulfonylurea_v1`: Sulfonylureas (10 GNNs)</span></span>
+<span><span class="co">#&gt;   `meglitinide_v1`: Meglitinides (3 GNNs)</span></span>
+<span><span class="co">#&gt;   `tzd_v1`: Thiazolidinediones (TZDs) (8 GNNs)</span></span>
+<span><span class="co">#&gt;   `alpha_glucosidase_v1`: Alpha-Glucosidase Inhibitors (3 GNNs)</span></span>
+<span><span class="co">#&gt;   `dpp4_v1`: DPP-4 Inhibitors (15 GNNs)</span></span>
+<span><span class="co">#&gt;   `sglt2_v1`: SGLT-2 Inhibitors (13 GNNs)</span></span>
+<span><span class="co">#&gt;   `glp1_v1`: GLP-1 Receptor Agonists (6 GNNs)</span></span>
+<span><span class="co">#&gt;   `insulin_v1`: Insulin and Supplies (71 GNNs)</span></span>
+<span><span class="co">#&gt;   `amylin_v1`: Amylin Analogues (1 GNNs)</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"biguanide_v1"</span>, <span style="color: #0000BB;">"sulfonylurea_v1"</span>, <span style="color: #0000BB;">"meglitinide_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"tzd_v1"</span>, <span style="color: #0000BB;">"alpha_glucosidase_v1"</span>, <span style="color: #0000BB;">"dpp4_v1"</span>, <span style="color: #0000BB;">"sglt2_v1"</span>, <span style="color: #0000BB;">"glp1_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"insulin_v1"</span>, and <span style="color: #0000BB;">"amylin_v1"</span> in `get_*()` functions.</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antidiabetic_generics.html">get_antidiabetic_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"glp1_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $glp1_v1</span></span>
 <span><span class="co">#&gt; [1] "DULAGLUTIDE"            "EXENATIDE"              "EXENATIDE MICROSPHERES"</span></span>
 <span><span class="co">#&gt; [4] "LIRAGLUTIDE"            "LIXISENATIDE"           "SEMAGLUTIDE"</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antidiabetic_generics.html">get_antidiabetic_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $sglt2_v1</span></span>
 <span><span class="co">#&gt;  [1] "CANAGLIFLOZIN"                       "CANAGLIFLOZIN/METFORM"              </span></span>
 <span><span class="co">#&gt;  [3] "CANAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN"                      </span></span>
 <span><span class="co">#&gt;  [5] "DAPAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN/SAXAGLIPTIN"          </span></span>

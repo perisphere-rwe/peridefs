@@ -10,13 +10,10 @@ get_hyperlipidemia_v1_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL
+  concatenate = FALSE
 )
 
-get_hyperlipidemia_v1_defs(
-  variable_type = c("condition", "outcome"),
-  component = NULL
-)
+get_hyperlipidemia_v1_defs(variable_type = c("condition", "outcome"))
 ```
 
 ## Arguments
@@ -30,7 +27,7 @@ get_hyperlipidemia_v1_defs(
 - variable_type:
 
   `"condition"` (default) or `"outcome"`. Hypertension is defined as a
-  condition only; `"outcome"` returns empty code sets.
+  condition only; `"outcome"` falls back to condition codes.
 
 - periods:
 
@@ -43,9 +40,11 @@ get_hyperlipidemia_v1_defs(
   `"tibble"` returns a long-form tibble with columns `code_type`,
   `code`, and `variable_type`.
 
-- component:
+- concatenate:
 
-  Not used for non-composite specs. Pass `NULL` (default).
+  Logical. `FALSE` (default) returns a named list of character vectors.
+  `TRUE` concatenates all code vectors into a single unnamed character
+  vector. Not compatible with `format = "tibble"`.
 
 ## See also
 

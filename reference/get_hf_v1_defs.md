@@ -5,7 +5,7 @@ Retrieve the narrative algorithm description for heart failure (v1)
 ## Usage
 
 ``` r
-get_hf_v1_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_hf_v1_defs(variable_type = c("condition", "outcome"))
 ```
 
 ## Arguments
@@ -13,10 +13,6 @@ get_hf_v1_defs(variable_type = c("condition", "outcome"), component = NULL)
 - variable_type:
 
   `"condition"` (default) or `"outcome"`.
-
-- component:
-
-  Not used. Pass `NULL` (default).
 
 ## Value
 

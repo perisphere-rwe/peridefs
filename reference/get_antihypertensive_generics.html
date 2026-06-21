@@ -75,7 +75,7 @@ antihypertensive leaf specs directly (no intermediate composites):
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_antihypertensive_generics</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_antihypertensive_generics</span><span class="op">(</span><span class="va">component</span>, concatenate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -86,10 +86,16 @@ antihypertensive leaf specs directly (no intermediate composites):
 <dd><p><strong>Required.</strong> Component name. Print <code>spec_antihypertensive</code>
 to see all available names.</p></dd>
 
+
+<dt id="arg-concatenate">concatenate<a class="anchor" aria-label="anchor" href="#arg-concatenate"></a></dt>
+<dd><p>Logical. <code>FALSE</code> (default) returns a named list keyed by
+component name. <code>TRUE</code> flattens to an unnamed character vector.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Character vector of GNN strings (upper-case).</p>
+    <p>Named list of GNN strings (upper-case) or NDC codes, one element per
+component. Pass <code>concatenate = TRUE</code> to flatten to an unnamed character vector.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

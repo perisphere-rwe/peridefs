@@ -13,8 +13,10 @@
 
 - Added depression (history) specs: `spec_depression_v1` (diagnosis
   only) and `spec_depression_v2` (diagnosis or antidepressive
-  medication), with accessor functions `get_depression_v1_codes()`,
-  `get_depression_v2_codes()`, and corresponding `_defs()` variants.
+  medication), with accessor functions
+  [`get_depression_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md),
+  [`get_depression_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md),
+  and corresponding `_defs()` variants.
 
 - Exported `spec_antidepressive_v1` as a standalone spec with accessor
   functions `get_antidepressive_v1_generics()`,
@@ -24,12 +26,40 @@
   (\[CompositeDrugSpec\]) combining `non_glp1_v1` (naltrexone/bupropion,
   orlistat) and `glp1_v1` (exenatide, dulaglutide, semaglutide,
   liraglutide, tirzepatide) components, with accessor functions
-  `get_antiobesity_generics()`, `get_antiobesity_codes()`, and
-  `get_antiobesity_defs()`.
+  [`get_antiobesity_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md),
+  [`get_antiobesity_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md),
+  and
+  [`get_antiobesity_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md).
 
 - Added asthma spec `spec_asthma_v1` (ICD-9 493.xx, ICD-10 J45.xx; 20
   and 26 codes respectively), with accessor functions
-  `get_asthma_v1_codes()` and `get_asthma_v1_defs()`.
+  [`get_asthma_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_asthma_v1_codes.md)
+  and
+  [`get_asthma_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_asthma_v1_codes.md).
+
+- Added obesity hypoventilation syndrome spec `spec_ohs_v1` (ICD-9
+  278.03, ICD-10 E66.2; also covers Pickwickian syndrome), with accessor
+  functions
+  [`get_ohs_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ohs_v1_codes.md)
+  and
+  [`get_ohs_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ohs_v1_codes.md).
+
+- All composite spec getter functions (`get_*_codes()`,
+  `get_*_generics()`, `get_*_codes()` for drug specs) now accept a
+  vector of component names to retrieve and union multiple components in
+  one call (e.g.,
+  `get_ascvd_codes(component = c("chd_v1", "stroke_v1"))`). Errors
+  informatively if any component name is invalid.
+
+- `get_*_generics()` and `get_*_codes()` for drug specs now return a
+  **named list** by default (keyed by component name), consistent with
+  the behaviour of `get_*_codes()` for condition specs. Pass
+  `concatenate = TRUE` to flatten to an unnamed character vector (the
+  previous default behaviour).
+
+- `component` is no longer a visible parameter on getter functions for
+  non-composite specs; it only appears in the signature of getters that
+  actually require it.
 
 ## peridefs 0.1.0
 
