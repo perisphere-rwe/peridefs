@@ -72,6 +72,54 @@ test_that("outcome fallback works with format = 'tibble'", {
 })
 
 
+# ---- multi-component tests ----
+
+test_that("get_ascvd_codes() multi-component returns union of keys", {
+  multi  <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"))
+  single_chd    <- get_ascvd_codes(component = "chd_v1")
+  single_stroke <- get_ascvd_codes(component = "stroke_v1")
+  expect_type(multi, "list")
+  expect_true(all(names(single_chd)    %in% names(multi)))
+  expect_true(all(names(single_stroke) %in% names(multi)))
+})
+
+test_that("get_ascvd_codes() multi-component codes are union of individual components", {
+  multi  <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"), concatenate = TRUE)
+  single <- unique(c(
+    get_ascvd_codes(component = "chd_v1",    concatenate = TRUE),
+    get_ascvd_codes(component = "stroke_v1", concatenate = TRUE)
+  ))
+  expect_equal(sort(multi), sort(single))
+})
+
+test_that("get_ascvd_codes() multi-component with format = 'tibble' returns tibble", {
+  result <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"), format = "tibble")
+  expect_s3_class(result, "tbl_df")
+  expect_true(nrow(result) > 0L)
+})
+
+test_that("get_ascvd_codes() invalid component in vector errors informatively", {
+  expect_error(
+    get_ascvd_codes(component = c("chd_v1", "bad_component")),
+    "bad_component"
+  )
+})
+
+test_that("get_antihypertensive_generics() multi-component returns named list", {
+  result <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"))
+  expect_type(result, "list")
+  expect_named(result, c("acei_v1", "arb_v1"))
+})
+
+test_that("get_antihypertensive_generics() multi-component concatenate matches individual union", {
+  multi  <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"), concatenate = TRUE)
+  single <- unique(c(
+    get_antihypertensive_generics(component = "acei_v1", concatenate = TRUE),
+    get_antihypertensive_generics(component = "arb_v1",  concatenate = TRUE)
+  ))
+  expect_equal(sort(multi), sort(single))
+})
+
 # ---- component= argument tests ----
 
 test_that("get_ascvd_codes(component = 'chd_v1') returns non-empty codes", {
@@ -86,10 +134,11 @@ test_that("get_ascvd_codes(component = 'cerebrovasc_disease_v1') returns codes",
   expect_true(length(unlist(result)) > 0L)
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v1') returns GNNs", {
+test_that("get_antihypertensive_generics(component = 'acei_v1') returns named list", {
   result <- get_antihypertensive_generics(component = "acei_v1")
-  expect_type(result, "character")
-  expect_true(length(result) > 0L)
+  expect_type(result, "list")
+  expect_named(result, "acei_v1")
+  expect_true(length(result$acei_v1) > 0L)
 })
 
 

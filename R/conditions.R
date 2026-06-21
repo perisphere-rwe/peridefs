@@ -20,80 +20,109 @@
 
 #' @noRd
 make_code_getter <- function(spec) {
-  function(code_type     = NULL,
-           variable_type = c("condition", "outcome"),
-           periods       = FALSE,
-           format        = c("list", "tibble"),
-           component     = NULL,
-           concatenate   = FALSE) {
-    vt  <- match.arg(variable_type)
-    fmt <- match.arg(format)
 
-    if (concatenate && identical(fmt, "tibble")) {
-      cli::cli_abort(
-        "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
-      )
+  # Shared implementation; component is only passed for composite specs.
+  .impl <- function(code_type, vt, fmt, periods, concatenate, component = NULL) {
+    fetch_list <- function(vt_inner, comp = component) {
+      if (!is.null(comp)) {
+        spec$get_codes(component = comp, code_type = code_type,
+                       variable_type = vt_inner, periods = periods, format = "list")
+      } else {
+        spec$get_codes(code_type = code_type, variable_type = vt_inner,
+                       periods = periods, format = "list")
+      }
     }
 
-    if (inherits(spec, "CompositeCodeSpec")) {
-      # composite: component= required; "all" unions every component
-      if (is.null(component)) {
+    multi <- !is.null(component) && !identical(component, "all") && length(component) > 1L
+
+    fetch <- function(vt_inner) {
+      if (multi) {
+        .union_code_lists(lapply(component, function(comp) fetch_list(vt_inner, comp)))
+      } else {
+        fetch_list(vt_inner)
+      }
+    }
+
+    result <- fetch(vt)
+
+    effective_vt <- vt
+    if (vt == "outcome" && .result_is_empty(result, "list")) {
+      result       <- fetch("condition")
+      effective_vt <- "condition"
+    }
+
+    if (identical(fmt, "tibble")) {
+      rows <- lapply(names(result), function(k) {
+        cd <- result[[k]]
+        if (!length(cd)) return(NULL)
+        tibble::tibble(code_type = k, code = cd, variable_type = effective_vt)
+      })
+      return(do.call(rbind, Filter(Negate(is.null), rows)))
+    }
+
+    if (concatenate) unlist(result, use.names = FALSE) else result
+  }
+
+  if (inherits(spec, "CompositeCodeSpec")) {
+    function(code_type     = NULL,
+             variable_type = c("condition", "outcome"),
+             periods       = FALSE,
+             format        = c("list", "tibble"),
+             component,
+             concatenate   = FALSE) {
+      vt  <- match.arg(variable_type)
+      fmt <- match.arg(format)
+      if (concatenate && identical(fmt, "tibble")) {
+        cli::cli_abort(
+          "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
+        )
+      }
+      if (missing(component)) {
         cli::cli_abort(c(
           "{.arg component} is required for composite specs.",
           "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}",
           "i" = "Print {.code {spec$condition}} spec to see all options."
         ))
       }
-    } else {
-      if (!is.null(component)) {
-        cli::cli_abort("{.arg component} is only valid for composite specs.")
+      .validate_components(component, spec)
+      .impl(code_type, vt, fmt, periods, concatenate, component)
+    }
+  } else {
+    function(code_type     = NULL,
+             variable_type = c("condition", "outcome"),
+             periods       = FALSE,
+             format        = c("list", "tibble"),
+             concatenate   = FALSE) {
+      vt  <- match.arg(variable_type)
+      fmt <- match.arg(format)
+      if (concatenate && identical(fmt, "tibble")) {
+        cli::cli_abort(
+          "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
+        )
       }
+      .impl(code_type, vt, fmt, periods, concatenate)
     }
-
-    # Local helper so we can call with a different variable_type for fallback.
-    fetch <- function(vt_inner) {
-      if (inherits(spec, "CompositeCodeSpec")) {
-        spec$get_codes(component = component, code_type = code_type,
-                       variable_type = vt_inner, periods = periods, format = fmt)
-      } else {
-        spec$get_codes(code_type = code_type, variable_type = vt_inner,
-                       periods = periods, format = fmt)
-      }
-    }
-
-    result <- fetch(vt)
-
-    # Fallback: if outcome was requested but the spec has no outcome codes,
-    # return condition codes instead.
-    if (vt == "outcome" && .result_is_empty(result, fmt)) {
-      result <- fetch("condition")
-    }
-
-    if (concatenate) unlist(result, use.names = FALSE) else result
   }
 }
 
 #' @noRd
 make_def_getter <- function(spec) {
-  function(variable_type = c("condition", "outcome"),
-           component     = NULL) {
-    vt <- match.arg(variable_type)
-
-    if (inherits(spec, "CompositeCodeSpec")) {
-      if (is.null(component)) {
+  if (inherits(spec, "CompositeCodeSpec")) {
+    function(variable_type = c("condition", "outcome"), component) {
+      vt <- match.arg(variable_type)
+      if (missing(component)) {
         cli::cli_abort(c(
           "{.arg component} is required for composite specs.",
           "i" = "Available: {.val {names(spec$components())}}"
         ))
       }
       cd <- .get_condition_component(spec, component, vt)
-      return(.render_def(cd$get_defs(variable_type = vt)))
+      .render_def(cd$get_defs(variable_type = vt))
     }
-
-    if (!is.null(component)) {
-      cli::cli_abort("{.arg component} is only valid for composite specs.")
+  } else {
+    function(variable_type = c("condition", "outcome")) {
+      .render_def(spec$get_defs(variable_type = match.arg(variable_type)))
     }
-    .render_def(spec$get_defs(variable_type = vt))
   }
 }
 
@@ -101,58 +130,73 @@ make_def_getter <- function(spec) {
 
 #' @noRd
 make_generic_getter <- function(spec) {
-  function(component = NULL) {
-    if (inherits(spec, "CompositeDrugSpec")) {
-      if (is.null(component)) {
+  if (inherits(spec, "CompositeDrugSpec")) {
+    function(component, concatenate = FALSE) {
+      if (missing(component)) {
         cli::cli_abort(c(
           "{.arg component} is required for composite specs.",
           "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
         ))
       }
-      return(spec$get_generics(component = component))
+      .validate_components(component, spec)
+      comps  <- if (identical(component, "all")) names(spec$components()) else component
+      result <- lapply(stats::setNames(comps, comps),
+                       function(comp) spec$get_generics(component = comp))
+      if (concatenate) unlist(result, use.names = FALSE) else result
     }
-    if (!is.null(component)) {
-      cli::cli_abort("{.arg component} is only valid for composite specs.")
+  } else {
+    key <- paste(spec$drug_class, spec$version, sep = "_")
+    function(concatenate = FALSE) {
+      result <- stats::setNames(list(spec$get_generics()), key)
+      if (concatenate) unlist(result, use.names = FALSE) else result
     }
-    spec$get_generics()
   }
 }
 
 #' @noRd
 make_ndc_getter <- function(spec) {
-  function(component = NULL) {
-    if (inherits(spec, "CompositeDrugSpec")) {
-      if (is.null(component)) {
+  if (inherits(spec, "CompositeDrugSpec")) {
+    function(component, concatenate = FALSE) {
+      if (missing(component)) {
         cli::cli_abort(c(
           "{.arg component} is required for composite specs.",
           "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
         ))
       }
-      return(spec$get_codes(component = component))
+      .validate_components(component, spec)
+      comps  <- if (identical(component, "all")) names(spec$components()) else component
+      result <- lapply(stats::setNames(comps, comps),
+                       function(comp) spec$get_codes(component = comp))
+      if (concatenate) unlist(result, use.names = FALSE) else result
     }
-    if (!is.null(component)) {
-      cli::cli_abort("{.arg component} is only valid for composite specs.")
+  } else {
+    key <- paste(spec$drug_class, spec$version, sep = "_")
+    function(concatenate = FALSE) {
+      result <- stats::setNames(list(spec$get_codes()), key)
+      if (concatenate) unlist(result, use.names = FALSE) else result
     }
-    spec$get_codes()
   }
 }
 
 #' @noRd
 make_drug_def_getter <- function(spec) {
-  function(component = NULL) {
-    if (inherits(spec, "CompositeDrugSpec")) {
-      if (is.null(component)) {
+  if (inherits(spec, "CompositeDrugSpec")) {
+    function(component) {
+      if (missing(component)) {
         cli::cli_abort(c(
           "{.arg component} is required for composite specs.",
           "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
         ))
       }
-      return(spec$get_defs(component = component))
+      .validate_components(component, spec)
+      if (!identical(component, "all") && length(component) > 1L) {
+        return(lapply(stats::setNames(component, component),
+                      function(comp) spec$get_defs(component = comp)))
+      }
+      spec$get_defs(component = component)
     }
-    if (!is.null(component)) {
-      cli::cli_abort("{.arg component} is only valid for composite specs.")
-    }
-    spec$get_defs()
+  } else {
+    function() spec$get_defs()
   }
 }
 
@@ -368,6 +412,20 @@ get_osa_v1_codes <- make_code_getter(spec_osa_v1)
 #' @rdname get_osa_v1_codes
 #' @export
 get_osa_v1_defs <- make_def_getter(spec_osa_v1)
+
+# ---- Obesity Hypoventilation Syndrome -----------------------------------
+
+#' Retrieve ICD codes for obesity hypoventilation syndrome
+#' @inheritParams get_htn_v1_codes
+#' @seealso [get_ohs_v1_defs()], \code{spec_ohs_v1}
+#' @examples
+#' get_ohs_v1_codes()
+#' @export
+get_ohs_v1_codes <- make_code_getter(spec_ohs_v1)
+
+#' @rdname get_ohs_v1_codes
+#' @export
+get_ohs_v1_defs <- make_def_getter(spec_ohs_v1)
 
 # ---- Asthma -------------------------------------------------------------
 

@@ -56,6 +56,7 @@ NULL
 #'   `spec_copd_v1`,
 #'   `spec_asthma_v1`,
 #'   `spec_osa_v1`,
+#'   `spec_ohs_v1`,
 #'   `spec_hyperlipidemia_v1`
 #'
 #' @section ASCVD composite ([CompositeCodeSpec]):
@@ -88,6 +89,7 @@ NULL
 #'   spec_hyperlipidemia_v1
 #'   spec_isch_stroke_v1
 #'   spec_obesity_v1
+#'   spec_ohs_v1
 #'   spec_osa_v1
 #' @keywords datasets
 NULL

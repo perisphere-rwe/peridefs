@@ -2103,6 +2103,35 @@ spec_osa_v1 <- CodeSpec$new(
 )
 
 
+## Obesity hypoventilation syndrome ----
+
+# ICD-9 278.03 is the only specific code for OHS (a leaf node with no children).
+# ICD-10 E66.2 (Morbid (severe) obesity with alveolar hypoventilation) is the
+# direct map; it also covers Pickwickian syndrome as an included term.
+
+ohs_icd9  <- "27803"   # 278.03 — Obesity hypoventilation syndrome
+ohs_icd10 <- "E662"    # E66.2  — Morbid (severe) obesity with alveolar hypoventilation
+
+ohs_defs_condition <- c(
+  "*" = paste0(
+    "\u22651 claim with an ICD-9 diagnosis of {.strong 278.03}, or an ICD-10 ",
+    "diagnosis of {.strong E66.2} in any diagnosis position from inpatient, ",
+    "outpatient, carrier, or line files."
+  )
+)
+
+spec_ohs_v1 <- CodeSpec$new(
+  condition = "ohs",
+  version   = "v1",
+  label     = "Obesity Hypoventilation Syndrome",
+  defs  = list(condition = ohs_defs_condition, outcome = NULL),
+  codes = list(
+    dx_icd9  = make_key_condition_only(ohs_icd9),
+    dx_icd10 = make_key_condition_only(ohs_icd10)
+  )
+)
+
+
 ## Hyperlipidemia ----
 
 ### history, version 1 ----
@@ -2779,16 +2808,16 @@ antidiab_defs <- list(
   amylin            = "Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list."
 )
 
-spec_antidiab_biguanide_v1         <- DrugSpec$new("antidiab_biguanide",         "Antidiabetics \u2014 Biguanides",                  version = "v1", defs = antidiab_defs$biguanide,         generic_names = antidiab_gnns$biguanide)
-spec_antidiab_sulfonylurea_v1      <- DrugSpec$new("antidiab_sulfonylurea",      "Antidiabetics \u2014 Sulfonylureas",               version = "v1", defs = antidiab_defs$sulfonylurea,      generic_names = antidiab_gnns$sulfonylurea)
-spec_antidiab_meglitinide_v1       <- DrugSpec$new("antidiab_meglitinide",       "Antidiabetics \u2014 Meglitinides",                version = "v1", defs = antidiab_defs$meglitinide,       generic_names = antidiab_gnns$meglitinide)
-spec_antidiab_tzd_v1               <- DrugSpec$new("antidiab_tzd",               "Antidiabetics \u2014 Thiazolidinediones (TZDs)",   version = "v1", defs = antidiab_defs$tzd,               generic_names = antidiab_gnns$tzd)
-spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new("antidiab_alpha_glucosidase", "Antidiabetics \u2014 Alpha-Glucosidase Inhibitors", version = "v1", defs = antidiab_defs$alpha_glucosidase, generic_names = antidiab_gnns$alpha_glucosidase)
-spec_antidiab_dpp4_v1              <- DrugSpec$new("antidiab_dpp4",              "Antidiabetics \u2014 DPP-4 Inhibitors",            version = "v1", defs = antidiab_defs$dpp4,              generic_names = antidiab_gnns$dpp4)
-spec_antidiab_sglt2_v1             <- DrugSpec$new("antidiab_sglt2",             "Antidiabetics \u2014 SGLT-2 Inhibitors",           version = "v1", defs = antidiab_defs$sglt2,             generic_names = antidiab_gnns$sglt2)
-spec_antidiab_glp1_v1              <- DrugSpec$new("antidiab_glp1",              "Antidiabetics \u2014 GLP-1 Receptor Agonists",     version = "v1", defs = antidiab_defs$glp1,              generic_names = antidiab_gnns$glp1)
-spec_antidiab_insulin_v1           <- DrugSpec$new("antidiab_insulin",           "Antidiabetics \u2014 Insulin and Supplies",        version = "v1", defs = antidiab_defs$insulin,           generic_names = antidiab_gnns$insulin)
-spec_antidiab_amylin_v1            <- DrugSpec$new("antidiab_amylin",            "Antidiabetics \u2014 Amylin Analogues",            version = "v1", defs = antidiab_defs$amylin,            generic_names = antidiab_gnns$amylin)
+spec_antidiab_biguanide_v1         <- DrugSpec$new("antidiab_biguanide",         "Biguanides",                   version = "v1", defs = antidiab_defs$biguanide,         generic_names = antidiab_gnns$biguanide)
+spec_antidiab_sulfonylurea_v1      <- DrugSpec$new("antidiab_sulfonylurea",      "Sulfonylureas",                version = "v1", defs = antidiab_defs$sulfonylurea,      generic_names = antidiab_gnns$sulfonylurea)
+spec_antidiab_meglitinide_v1       <- DrugSpec$new("antidiab_meglitinide",       "Meglitinides",                 version = "v1", defs = antidiab_defs$meglitinide,       generic_names = antidiab_gnns$meglitinide)
+spec_antidiab_tzd_v1               <- DrugSpec$new("antidiab_tzd",               "Thiazolidinediones (TZDs)",    version = "v1", defs = antidiab_defs$tzd,               generic_names = antidiab_gnns$tzd)
+spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new("antidiab_alpha_glucosidase", "Alpha-Glucosidase Inhibitors", version = "v1", defs = antidiab_defs$alpha_glucosidase, generic_names = antidiab_gnns$alpha_glucosidase)
+spec_antidiab_dpp4_v1              <- DrugSpec$new("antidiab_dpp4",              "DPP-4 Inhibitors",             version = "v1", defs = antidiab_defs$dpp4,              generic_names = antidiab_gnns$dpp4)
+spec_antidiab_sglt2_v1             <- DrugSpec$new("antidiab_sglt2",             "SGLT-2 Inhibitors",            version = "v1", defs = antidiab_defs$sglt2,             generic_names = antidiab_gnns$sglt2)
+spec_antidiab_glp1_v1              <- DrugSpec$new("antidiab_glp1",              "GLP-1 Receptor Agonists",      version = "v1", defs = antidiab_defs$glp1,              generic_names = antidiab_gnns$glp1)
+spec_antidiab_insulin_v1           <- DrugSpec$new("antidiab_insulin",           "Insulin and Supplies",         version = "v1", defs = antidiab_defs$insulin,           generic_names = antidiab_gnns$insulin)
+spec_antidiab_amylin_v1            <- DrugSpec$new("antidiab_amylin",            "Amylin Analogues",             version = "v1", defs = antidiab_defs$amylin,            generic_names = antidiab_gnns$amylin)
 
 # Antidiabetic drugs composite ----
 
@@ -2839,6 +2868,8 @@ usethis::use_data(
   spec_ckd_v1,
   # Sleep apnea
   spec_osa_v1,
+  # Obesity hypoventilation syndrome
+  spec_ohs_v1,
   # Hyperlipidemia
   spec_hyperlipidemia_v1,
   # COPD

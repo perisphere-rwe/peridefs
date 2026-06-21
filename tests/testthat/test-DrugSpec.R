@@ -51,14 +51,20 @@ test_that("spec_antihypertensive has versioned leaf components", {
   expect_true("vasodilators_v1" %in% comp_names)
 })
 
+test_that("get_antihypertensive_generics(component = 'acei_v1') returns a named list", {
+  result <- get_antihypertensive_generics(component = "acei_v1")
+  expect_type(result, "list")
+  expect_named(result, "acei_v1")
+})
+
 test_that("get_antihypertensive_generics(component = 'acei_v1') includes expected GNNs", {
-  gnns <- get_antihypertensive_generics(component = "acei_v1")
+  gnns <- get_antihypertensive_generics(component = "acei_v1", concatenate = TRUE)
   expect_true("LISINOPRIL"  %in% gnns)
   expect_true("RAMIPRIL"    %in% gnns)
 })
 
 test_that("get_antihypertensive_generics(component = 'acei_v2') has FDB variants", {
-  gnns <- get_antihypertensive_generics(component = "acei_v2")
+  gnns <- get_antihypertensive_generics(component = "acei_v2", concatenate = TRUE)
   expect_true("FOSINIPRIL"  %in% gnns)
   expect_true("MOEXEPRIL"   %in% gnns)
 })
@@ -68,13 +74,33 @@ test_that("get_antihypertensive_generics() requires component=", {
 })
 
 test_that("get_antihypertensive_generics(component = 'int_sym_v1') includes CARTEOLOL", {
-  gnns <- get_antihypertensive_generics(component = "int_sym_v1")
+  gnns <- get_antihypertensive_generics(component = "int_sym_v1", concatenate = TRUE)
   expect_true("CARTEOLOL" %in% gnns)
 })
 
 test_that("get_antihypertensive_generics(component = 'int_sym_v2') excludes CARTEOLOL", {
-  gnns <- get_antihypertensive_generics(component = "int_sym_v2")
+  gnns <- get_antihypertensive_generics(component = "int_sym_v2", concatenate = TRUE)
   expect_false("CARTEOLOL" %in% gnns)
+})
+
+test_that("get_antihypertensive_generics(component = 'all') returns named list of all components", {
+  result <- get_antihypertensive_generics(component = "all")
+  expect_type(result, "list")
+  expect_true("acei_v1" %in% names(result))
+  expect_equal(names(result), names(spec_antihypertensive$components()))
+})
+
+test_that("get_antidepressive_v1_generics() returns a named list by default", {
+  result <- get_antidepressive_v1_generics()
+  expect_type(result, "list")
+  expect_named(result, "antidepressive_v1")
+  expect_true("BUPROPION" %in% result$antidepressive_v1)
+})
+
+test_that("get_antidepressive_v1_generics(concatenate = TRUE) returns a flat vector", {
+  result <- get_antidepressive_v1_generics(concatenate = TRUE)
+  expect_type(result, "character")
+  expect_null(names(result))
 })
 
 

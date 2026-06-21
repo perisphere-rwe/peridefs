@@ -43,3 +43,26 @@ add_periods_icd <- function(codes) {
     is.list(result) && all(lengths(result) == 0L)
   }
 }
+
+# Union a list of named code lists (each a list of character vectors keyed by
+# code type) into a single named list with unique codes per key.
+.union_code_lists <- function(lists) {
+  all_keys <- unique(unlist(lapply(lists, names)))
+  lapply(stats::setNames(all_keys, all_keys), function(k) {
+    unique(unlist(lapply(lists, \(x) x[[k]] %||% character(0L))))
+  })
+}
+
+# Validate that all elements of `component` exist in `components`, erroring
+# with an informative message if not. Skips validation for "all".
+.validate_components <- function(component, spec) {
+  if (identical(component, "all")) return(invisible(NULL))
+  invalid <- setdiff(component, names(spec$components()))
+  if (length(invalid)) {
+    cli::cli_abort(c(
+      "Component(s) {.val {invalid}} not found in {.val {spec$label}}.",
+      "i" = "Available: {.val {names(spec$components())}}"
+    ))
+  }
+  invisible(NULL)
+}

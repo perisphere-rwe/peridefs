@@ -26,6 +26,25 @@
   codes respectively), with accessor functions `get_asthma_v1_codes()` and
   `get_asthma_v1_defs()`.
 
+* Added obesity hypoventilation syndrome spec `spec_ohs_v1` (ICD-9 278.03,
+  ICD-10 E66.2; also covers Pickwickian syndrome), with accessor functions
+  `get_ohs_v1_codes()` and `get_ohs_v1_defs()`.
+
+* All composite spec getter functions (`get_*_codes()`, `get_*_generics()`,
+  `get_*_codes()` for drug specs) now accept a vector of component names to
+  retrieve and union multiple components in one call (e.g.,
+  `get_ascvd_codes(component = c("chd_v1", "stroke_v1"))`). Errors
+  informatively if any component name is invalid.
+
+* `get_*_generics()` and `get_*_codes()` for drug specs now return a **named
+  list** by default (keyed by component name), consistent with the behaviour of
+  `get_*_codes()` for condition specs. Pass `concatenate = TRUE` to flatten to
+  an unnamed character vector (the previous default behaviour).
+
+* `component` is no longer a visible parameter on getter functions for
+  non-composite specs; it only appears in the signature of getters that
+  actually require it.
+
 # peridefs 0.1.0
 
 * Initial development version.
