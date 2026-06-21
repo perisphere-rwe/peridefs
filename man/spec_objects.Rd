@@ -2,7 +2,7 @@
 % Please edit documentation in R/specs_data.R
 \name{spec_objects}
 \alias{spec_objects}
-\alias{spec_antidepressive_v1}
+\alias{spec_antidepressive}
 \alias{spec_antidiabetic}
 \alias{spec_asthma_v1}
 \alias{spec_antihypertensive}
@@ -21,6 +21,7 @@
 \alias{spec_hyperlipidemia_v1}
 \alias{spec_isch_stroke_v1}
 \alias{spec_obesity_v1}
+\alias{spec_ohs_v1}
 \alias{spec_osa_v1}
 \title{Condition and Drug Code Specification Objects}
 \description{
@@ -52,6 +53,7 @@ available component names.
 \code{spec_copd_v1},
 \code{spec_asthma_v1},
 \code{spec_osa_v1},
+\code{spec_ohs_v1},
 \code{spec_hyperlipidemia_v1}
 }
 
@@ -62,12 +64,8 @@ available component names.
 
 \section{Drug class composites (\link{CompositeDrugSpec})}{
 
-\code{spec_antihypertensive}, \code{spec_antidiabetic}, \code{spec_antiobesity}
-}
-
-\section{Drug class standalone (\link{DrugSpec})}{
-
-\code{spec_antidepressive_v1}
+\code{spec_antihypertensive}, \code{spec_antidiabetic}, \code{spec_antiobesity},
+\code{spec_antidepressive}
 }
 
 \keyword{datasets}

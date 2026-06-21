@@ -12,28 +12,20 @@ get_depression_v1_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL,
   concatenate = FALSE
 )
 
-get_depression_v1_defs(
-  variable_type = c("condition", "outcome"),
-  component = NULL
-)
+get_depression_v1_defs(variable_type = c("condition", "outcome"))
 
 get_depression_v2_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL,
   concatenate = FALSE
 )
 
-get_depression_v2_defs(
-  variable_type = c("condition", "outcome"),
-  component = NULL
-)
+get_depression_v2_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{code_type}{Optional character vector of code types to return.
@@ -49,8 +41,6 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \item{format}{\code{"list"} (default) returns a named list of character vectors.
 \code{"tibble"} returns a long-form tibble with columns \code{code_type}, \code{code},
 and \code{variable_type}.}
-
-\item{component}{Not used for non-composite specs. Pass \code{NULL} (default).}
 
 \item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
 character vectors. \code{TRUE} concatenates all code vectors into a single

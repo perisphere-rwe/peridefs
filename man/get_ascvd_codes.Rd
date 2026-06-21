@@ -9,7 +9,7 @@ get_ascvd_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL,
+  component,
   concatenate = FALSE
 )
 }

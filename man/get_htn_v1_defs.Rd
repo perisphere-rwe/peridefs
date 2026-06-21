@@ -5,9 +5,9 @@
 \alias{get_htn_v2_defs}
 \title{Retrieve the narrative algorithm description for hypertension (v1)}
 \usage{
-get_htn_v1_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_htn_v1_defs(variable_type = c("condition", "outcome"))
 
-get_htn_v2_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_htn_v2_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}.}

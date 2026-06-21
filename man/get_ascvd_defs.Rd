@@ -4,7 +4,7 @@
 \alias{get_ascvd_defs}
 \title{Retrieve the narrative algorithm description for an ASCVD component}
 \usage{
-get_ascvd_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_ascvd_defs(variable_type = c("condition", "outcome"), component)
 }
 \arguments{
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}.}

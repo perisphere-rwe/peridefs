@@ -4,7 +4,7 @@
 \alias{get_antidiabetic_generics}
 \title{Retrieve generic drug names for antidiabetic medications}
 \usage{
-get_antidiabetic_generics(component = NULL)
+get_antidiabetic_generics(component, concatenate = FALSE)
 }
 \arguments{
 \item{component}{\strong{Required.} Component name. Print \code{spec_antidiabetic}

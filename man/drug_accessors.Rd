@@ -8,13 +8,13 @@
 \alias{get_antidiabetic_defs}
 \title{Miscellaneous drug accessor functions}
 \usage{
-get_antihypertensive_codes(component = NULL)
+get_antihypertensive_codes(component, concatenate = FALSE)
 
-get_antihypertensive_defs(component = NULL)
+get_antihypertensive_defs(component)
 
-get_antidiabetic_codes(component = NULL)
+get_antidiabetic_codes(component, concatenate = FALSE)
 
-get_antidiabetic_defs(component = NULL)
+get_antidiabetic_defs(component)
 }
 \arguments{
 \item{component}{\strong{Required} for composite specs. A named component (e.g.

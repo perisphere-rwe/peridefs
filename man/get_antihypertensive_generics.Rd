@@ -4,7 +4,7 @@
 \alias{get_antihypertensive_generics}
 \title{Retrieve generic drug names for antihypertensive medications}
 \usage{
-get_antihypertensive_generics(component = NULL)
+get_antihypertensive_generics(component, concatenate = FALSE)
 }
 \arguments{
 \item{component}{\strong{Required.} Component name. Print \code{spec_antihypertensive}

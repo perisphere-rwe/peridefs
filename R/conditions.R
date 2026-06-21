@@ -18,8 +18,13 @@
 
 # --- Condition factories ---
 
+# `composite = FALSE` tells the factory which function signature to return without
+# forcing `spec` at source time. R lazy-loads data AFTER sourcing R files, so
+# accessing `spec` in the factory outer body causes "object not found" errors.
+# With this flag, `spec` remains a promise and is only forced at call time.
+
 #' @noRd
-make_code_getter <- function(spec) {
+make_code_getter <- function(spec, composite = FALSE) {
 
   # Shared implementation; component is only passed for composite specs.
   .impl <- function(code_type, vt, fmt, periods, concatenate, component = NULL) {
@@ -63,7 +68,7 @@ make_code_getter <- function(spec) {
     if (concatenate) unlist(result, use.names = FALSE) else result
   }
 
-  if (inherits(spec, "CompositeCodeSpec")) {
+  if (composite) {
     function(code_type     = NULL,
              variable_type = c("condition", "outcome"),
              periods       = FALSE,
@@ -106,8 +111,8 @@ make_code_getter <- function(spec) {
 }
 
 #' @noRd
-make_def_getter <- function(spec) {
-  if (inherits(spec, "CompositeCodeSpec")) {
+make_def_getter <- function(spec, composite = FALSE) {
+  if (composite) {
     function(variable_type = c("condition", "outcome"), component) {
       vt <- match.arg(variable_type)
       if (missing(component)) {
@@ -129,8 +134,8 @@ make_def_getter <- function(spec) {
 # --- Drug factories ---
 
 #' @noRd
-make_generic_getter <- function(spec) {
-  if (inherits(spec, "CompositeDrugSpec")) {
+make_generic_getter <- function(spec, composite = FALSE) {
+  if (composite) {
     function(component, concatenate = FALSE) {
       if (missing(component)) {
         cli::cli_abort(c(
@@ -145,8 +150,8 @@ make_generic_getter <- function(spec) {
       if (concatenate) unlist(result, use.names = FALSE) else result
     }
   } else {
-    key <- paste(spec$drug_class, spec$version, sep = "_")
     function(concatenate = FALSE) {
+      key    <- paste(spec$drug_class, spec$version, sep = "_")
       result <- stats::setNames(list(spec$get_generics()), key)
       if (concatenate) unlist(result, use.names = FALSE) else result
     }
@@ -154,8 +159,8 @@ make_generic_getter <- function(spec) {
 }
 
 #' @noRd
-make_ndc_getter <- function(spec) {
-  if (inherits(spec, "CompositeDrugSpec")) {
+make_ndc_getter <- function(spec, composite = FALSE) {
+  if (composite) {
     function(component, concatenate = FALSE) {
       if (missing(component)) {
         cli::cli_abort(c(
@@ -170,8 +175,8 @@ make_ndc_getter <- function(spec) {
       if (concatenate) unlist(result, use.names = FALSE) else result
     }
   } else {
-    key <- paste(spec$drug_class, spec$version, sep = "_")
     function(concatenate = FALSE) {
+      key    <- paste(spec$drug_class, spec$version, sep = "_")
       result <- stats::setNames(list(spec$get_codes()), key)
       if (concatenate) unlist(result, use.names = FALSE) else result
     }
@@ -179,8 +184,8 @@ make_ndc_getter <- function(spec) {
 }
 
 #' @noRd
-make_drug_def_getter <- function(spec) {
-  if (inherits(spec, "CompositeDrugSpec")) {
+make_drug_def_getter <- function(spec, composite = FALSE) {
+  if (composite) {
     function(component) {
       if (missing(component)) {
         cli::cli_abort(c(
@@ -301,7 +306,7 @@ get_hf_v1_defs <- make_def_getter(spec_hf_v1)
 #' # See all available components
 #' spec_ascvd
 #' @export
-get_ascvd_codes <- make_code_getter(spec_ascvd)
+get_ascvd_codes <- make_code_getter(spec_ascvd, composite = TRUE)
 
 #' Retrieve the narrative algorithm description for an ASCVD component
 #'
@@ -309,7 +314,7 @@ get_ascvd_codes <- make_code_getter(spec_ascvd)
 #' @param component **Required.** Component name. See [get_ascvd_codes()].
 #' @seealso [get_ascvd_codes()], \code{spec_ascvd}
 #' @export
-get_ascvd_defs <- make_def_getter(spec_ascvd)
+get_ascvd_defs <- make_def_getter(spec_ascvd, composite = TRUE)
 
 # ---- Obesity ------------------------------------------------------------
 

@@ -10,7 +10,6 @@ get_htn_v1_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL,
   concatenate = FALSE
 )
 
@@ -19,7 +18,6 @@ get_htn_v2_codes(
   variable_type = c("condition", "outcome"),
   periods = FALSE,
   format = c("list", "tibble"),
-  component = NULL,
   concatenate = FALSE
 )
 }
@@ -38,11 +36,11 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \code{"tibble"} returns a long-form tibble with columns \code{code_type}, \code{code},
 and \code{variable_type}.}
 
-\item{component}{Not used for non-composite specs. Pass \code{NULL} (default).}
-
 \item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
 character vectors. \code{TRUE} concatenates all code vectors into a single
 unnamed character vector. Not compatible with \code{format = "tibble"}.}
+
+\item{component}{Not used for non-composite specs. Pass \code{NULL} (default).}
 }
 \value{
 Named list, character vector (if \code{concatenate = TRUE}), or tibble of codes.

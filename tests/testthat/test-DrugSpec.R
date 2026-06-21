@@ -90,17 +90,25 @@ test_that("get_antihypertensive_generics(component = 'all') returns named list o
   expect_equal(names(result), names(spec_antihypertensive$components()))
 })
 
-test_that("get_antidepressive_v1_generics() returns a named list by default", {
-  result <- get_antidepressive_v1_generics()
-  expect_type(result, "list")
-  expect_named(result, "antidepressive_v1")
-  expect_true("BUPROPION" %in% result$antidepressive_v1)
+test_that("spec_antidepressive is a CompositeDrugSpec with 5 components", {
+  expect_s3_class(spec_antidepressive, "CompositeDrugSpec")
+  expect_equal(names(spec_antidepressive$components()),
+               c("ssri_v1", "snri_v1", "tca_v1", "maoi_v1", "other_v1"))
 })
 
-test_that("get_antidepressive_v1_generics(concatenate = TRUE) returns a flat vector", {
-  result <- get_antidepressive_v1_generics(concatenate = TRUE)
+test_that("get_antidepressive_generics(component = 'ssri_v1') returns named list", {
+  result <- get_antidepressive_generics(component = "ssri_v1")
+  expect_type(result, "list")
+  expect_named(result, "ssri_v1")
+  expect_true("SERTRALINE" %in% result$ssri_v1)
+})
+
+test_that("get_antidepressive_generics(component = 'all', concatenate = TRUE) returns flat vector with all 32 GNNs", {
+  result <- get_antidepressive_generics(component = "all", concatenate = TRUE)
   expect_type(result, "character")
-  expect_null(names(result))
+  expect_equal(length(result), 32L)
+  expect_true("BUPROPION"   %in% result)
+  expect_true("TRANYLCYPROMINE" %in% result)
 })
 
 

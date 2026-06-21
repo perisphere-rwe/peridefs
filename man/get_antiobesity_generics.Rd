@@ -6,11 +6,11 @@
 \alias{get_antiobesity_defs}
 \title{Retrieve generic drug names for antiobesity medications}
 \usage{
-get_antiobesity_generics(component = NULL)
+get_antiobesity_generics(component, concatenate = FALSE)
 
-get_antiobesity_codes(component = NULL)
+get_antiobesity_codes(component, concatenate = FALSE)
 
-get_antiobesity_defs(component = NULL)
+get_antiobesity_defs(component)
 }
 \arguments{
 \item{component}{\strong{Required.} \code{"non_glp1_v1"}, \code{"glp1_v1"}, or \code{"all"}.}

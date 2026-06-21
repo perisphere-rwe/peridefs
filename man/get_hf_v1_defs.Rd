@@ -4,7 +4,7 @@
 \alias{get_hf_v1_defs}
 \title{Retrieve the narrative algorithm description for heart failure (v1)}
 \usage{
-get_hf_v1_defs(variable_type = c("condition", "outcome"), component = NULL)
+get_hf_v1_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}.}

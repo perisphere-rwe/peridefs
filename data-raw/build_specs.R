@@ -1633,7 +1633,7 @@ spec_depression_v2 <- CodeSpec$new(
       depress_defs_base,
       "*" = paste0(
         "\u22652 pharmacy claims for a depression medication ",
-        "(see {.strong spec_antidepressive_v1}); 2 different GNNs on the same day are permitted."
+        "(see {.strong spec_antidepressive}); 2 different GNNs on the same day are permitted."
       )
     ),
     outcome = NULL
@@ -2329,20 +2329,76 @@ spec_antiobesity <- CompositeDrugSpec$new(
   )
 )
 
-## Antidepressive medications ----
+## Antidepressive medication components ----
 
-spec_antidepressive_v1 <- DrugSpec$new(
-  'antidepressive', "Antidepressive",
+spec_antidep_ssri_v1 <- DrugSpec$new(
+  "ssri", "SSRIs",
   version = "v1",
-  defs = "From the Perisphere antidepressive (non GLP-1) medication list.",
+  defs    = "Selective serotonin reuptake inhibitors (SSRIs).",
   generic_names = c(
-    "AMITRIPTYLINE", "AMOXAPINE", "BUPROPION", "CITALOPRAM", "CLOMIPRAMINE",
-    "DESIPRAMINE", "DESVENLAFAXINE", "DOXEPIN", "DULOXETINE", "ESCITALOPRAM",
-    "FLUOXETINE", "FLUVOXAMINE", "IMIPRAMINE", "ISOCARBOXAZID",
-    "LEVOMILNACIPRAN", "MAPROTILINE", "MILNACIPRAN",   "MIRTAZAPINE",
-    "NEFAZODONE", "NORTRIPTYLINE", "PAROXETINE", "PERPHENAZINE", "PHENELZINE",
-    "PROTRIPTYLINE", "SELEGILINE", "SERTRALINE", "TRANYLCYPROMINE", "TRAZODONE",
-    "TRIMIPRAMINE", "VENLAFAXINE", "VILAZODONE", "VORTIOXETINE"
+    "CITALOPRAM", "ESCITALOPRAM", "FLUOXETINE",
+    "FLUVOXAMINE", "PAROXETINE", "SERTRALINE"
+  )
+)
+
+spec_antidep_snri_v1 <- DrugSpec$new(
+  "snri", "SNRIs",
+  version = "v1",
+  defs    = "Serotonin-norepinephrine reuptake inhibitors (SNRIs).",
+  generic_names = c(
+    "DESVENLAFAXINE", "DULOXETINE", "LEVOMILNACIPRAN",
+    "MILNACIPRAN", "VENLAFAXINE"
+  )
+)
+
+spec_antidep_tca_v1 <- DrugSpec$new(
+  "tca", "Tricyclic Antidepressants",
+  version = "v1",
+  defs    = "Tricyclic and tetracyclic antidepressants (TCAs).",
+  generic_names = c(
+    "AMITRIPTYLINE", "AMOXAPINE", "CLOMIPRAMINE", "DESIPRAMINE",
+    "DOXEPIN", "IMIPRAMINE", "MAPROTILINE", "NORTRIPTYLINE",
+    "PROTRIPTYLINE", "TRIMIPRAMINE"
+  )
+)
+
+spec_antidep_maoi_v1 <- DrugSpec$new(
+  "maoi", "MAOIs",
+  version = "v1",
+  defs    = "Monoamine oxidase inhibitors (MAOIs).",
+  generic_names = c(
+    "ISOCARBOXAZID", "PHENELZINE", "SELEGILINE", "TRANYLCYPROMINE"
+  )
+)
+
+spec_antidep_other_v1 <- DrugSpec$new(
+  "other", "Other Antidepressants",
+  version = "v1",
+  defs    = paste0(
+    "Atypical and other-mechanism antidepressants, including NDRIs (bupropion), ",
+    "NaSSAs (mirtazapine), SARIs (trazodone, nefazodone), serotonin modulators ",
+    "(vilazodone, vortioxetine), and perphenazine (included for the ",
+    "perphenazine/amitriptyline fixed-dose combination product)."
+  ),
+  generic_names = c(
+    "BUPROPION", "MIRTAZAPINE", "NEFAZODONE",
+    "PERPHENAZINE", "TRAZODONE", "VILAZODONE", "VORTIOXETINE"
+  )
+)
+
+spec_antidepressive <- CompositeDrugSpec$new(
+  drug_class = "antidepressive",
+  label      = "Antidepressive Medications",
+  defs       = paste0(
+    "Antidepressive medication subclasses (v1): SSRIs, SNRIs, tricyclic ",
+    "antidepressants, MAOIs, and other/atypical agents."
+  ),
+  components = list(
+    ssri_v1  = spec_antidep_ssri_v1,
+    snri_v1  = spec_antidep_snri_v1,
+    tca_v1   = spec_antidep_tca_v1,
+    maoi_v1  = spec_antidep_maoi_v1,
+    other_v1 = spec_antidep_other_v1
   )
 )
 
@@ -2882,8 +2938,8 @@ usethis::use_data(
   spec_antihypertensive,
   # Antidiabetic composite
   spec_antidiabetic,
-  # Antidepressive (standalone)
-  spec_antidepressive_v1,
+  # Antidepressive composite
+  spec_antidepressive,
   overwrite = TRUE
 )
 
