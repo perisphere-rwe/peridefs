@@ -99,6 +99,34 @@ get_antiobesity_codes <- make_ndc_getter(spec_antiobesity, composite = TRUE)
 #' @export
 get_antiobesity_defs <- make_drug_def_getter(spec_antiobesity, composite = TRUE)
 
+# ---- Lipid-lowering (composite) -----------------------------------------
+
+#' Retrieve generic drug names for lipid-lowering medications
+#'
+#' @description
+#' `spec_lipid_lowering` is a [CompositeDrugSpec] with components `statin_v1`,
+#' `ezetimibe_v1`, `pcsk9_v1`, `fibrate_v1`, `bile_acid_seq_v1`, and
+#' `niacin_v1`. Use `component = "all"` to retrieve all GNNs across every
+#' subclass.
+#'
+#' @param component **Required.** One or more of `"statin_v1"`,
+#'   `"ezetimibe_v1"`, `"pcsk9_v1"`, `"fibrate_v1"`, `"bile_acid_seq_v1"`,
+#'   `"niacin_v1"`, or `"all"`.
+#' @inheritParams drug_accessors
+#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
+#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @seealso \code{spec_lipid_lowering}
+#' @export
+get_lipid_lowering_generics <- make_generic_getter(spec_lipid_lowering, composite = TRUE)
+
+#' @rdname get_lipid_lowering_generics
+#' @export
+get_lipid_lowering_codes <- make_ndc_getter(spec_lipid_lowering, composite = TRUE)
+
+#' @rdname get_lipid_lowering_generics
+#' @export
+get_lipid_lowering_defs <- make_drug_def_getter(spec_lipid_lowering, composite = TRUE)
+
 # ---- Antidepressive (composite) -----------------------------------------
 
 #' Retrieve generic drug names for antidepressive medications

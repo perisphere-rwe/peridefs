@@ -2899,6 +2899,106 @@ spec_antidiabetic <- CompositeDrugSpec$new(
   )
 )
 
+## Lipid-lowering medication components ----
+
+### Statins ----
+#
+# GNN matching: ATORVASTATIN (incl. AMLODIPINE/ATORVASTATIN combination),
+# FLUVASTATIN, LOVASTATIN, PITAVASTATIN, PRAVASTATIN, ROSUVASTATIN, SIMVASTATIN.
+# Note: NDC 54569595100 maps to AMLODIPINE/ATORVASTATIN and NDC 55887036990 to
+# LOVASTATIN in some pharmacy files; those mappings are handled upstream.
+
+spec_ll_statin_v1 <- DrugSpec$new(
+  "ll_statin", "Statins (HMG-CoA Reductase Inhibitors)",
+  version = "v1",
+  defs    = "From the Perisphere lipid-lowering medication list.",
+  generic_names = c(
+    "ATORVASTATIN",
+    "AMLODIPINE/ATORVASTATIN",
+    "FLUVASTATIN",
+    "LOVASTATIN",
+    "PITAVASTATIN",
+    "PRAVASTATIN",
+    "ROSUVASTATIN",
+    "SIMVASTATIN"
+  )
+)
+
+### Ezetimibe ----
+
+spec_ll_ezetimibe_v1 <- DrugSpec$new(
+  "ll_ezetimibe", "Ezetimibe",
+  version = "v1",
+  defs    = "From the Perisphere lipid-lowering medication list.",
+  generic_names = c("EZETIMIBE", "EZETIMIBE/SIMVASTATIN")
+)
+
+### PCSK9 inhibitors ----
+
+spec_ll_pcsk9_v1 <- DrugSpec$new(
+  "ll_pcsk9", "PCSK9 Inhibitors",
+  version = "v1",
+  defs    = "From the Perisphere lipid-lowering medication list.",
+  generic_names = c("ALIROCUMAB", "EVOLOCUMAB", "INCLISIRAN")
+)
+
+### Fibrates ----
+#
+# GNN matching: FENOFIBRATE, FENOFIBRIC ACID (active metabolite of fenofibrate),
+# CLOFIBRATE, GEMFIBROZIL.
+
+spec_ll_fibrate_v1 <- DrugSpec$new(
+  "ll_fibrate", "Fibrates",
+  version = "v1",
+  defs    = "From the Perisphere lipid-lowering medication list.",
+  generic_names = c("FENOFIBRATE", "FENOFIBRIC ACID", "CLOFIBRATE", "GEMFIBROZIL")
+)
+
+### Bile acid sequestrants ----
+
+spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
+  "ll_bile_acid_seq", "Bile Acid Sequestrants",
+  version = "v1",
+  defs    = "From the Perisphere lipid-lowering medication list.",
+  generic_names = c("CHOLESTYRAMINE", "COLESTIPOL", "COLESEVELAM")
+)
+
+### Niacin ----
+#
+# GNN matching: strings containing "NIACIN" (excluding "NIACINA" / niacinamide)
+# or "NICOTINIC" (for nicotinic acid forms). Niacinamide (NIACINA-) is a B-vitamin
+# supplement without lipid-lowering activity and is excluded.
+
+spec_ll_niacin_v1 <- DrugSpec$new(
+  "ll_niacin", "Niacin",
+  version = "v1",
+  defs    = paste0(
+    "From the Perisphere lipid-lowering medication list. ",
+    "Includes GNNs containing 'NIACIN' (excluding niacinamide / 'NIACINA-') ",
+    "or 'NICOTINIC' (for nicotinic acid preparations)."
+  ),
+  generic_names = c("NIACIN", "NIACIN EXTENDED-RELEASE", "NICOTINIC ACID")
+)
+
+## Lipid-lowering medication composite ----
+
+spec_lipid_lowering <- CompositeDrugSpec$new(
+  drug_class = "lipid_lowering",
+  label      = "Lipid-Lowering Medications",
+  defs       = paste0(
+    "Lipid-lowering medication subclasses (v1): statins (HMG-CoA reductase inhibitors), ",
+    "ezetimibe, PCSK9 inhibitors, fibrates, bile acid sequestrants, and niacin."
+  ),
+  components = list(
+    statin_v1        = spec_ll_statin_v1,
+    ezetimibe_v1     = spec_ll_ezetimibe_v1,
+    pcsk9_v1         = spec_ll_pcsk9_v1,
+    fibrate_v1       = spec_ll_fibrate_v1,
+    bile_acid_seq_v1 = spec_ll_bile_acid_seq_v1,
+    niacin_v1        = spec_ll_niacin_v1
+  )
+)
+
 ## Save all public specs ----
 # Only composite specs and standalone leaf specs are saved to data/.
 # Component-only specs (leaf specs that are components of a composite) are
@@ -2940,6 +3040,8 @@ usethis::use_data(
   spec_antidiabetic,
   # Antidepressive composite
   spec_antidepressive,
+  # Lipid-lowering composite
+  spec_lipid_lowering,
   overwrite = TRUE
 )
 
