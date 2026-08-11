@@ -42,5 +42,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Perisphere \email{info@perisphere-rwe.com}
 
+Authors:
+\itemize{
+  \item Perisphere \email{info@perisphere-rwe.com}
+}
+
 }
 \keyword{internal}

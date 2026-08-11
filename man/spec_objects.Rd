@@ -3,6 +3,7 @@
 \name{spec_objects}
 \alias{spec_objects}
 \alias{spec_antidepressive}
+\alias{spec_lipid_lowering}
 \alias{spec_antidiabetic}
 \alias{spec_asthma_v1}
 \alias{spec_antihypertensive}
@@ -65,7 +66,7 @@ available component names.
 \section{Drug class composites (\link{CompositeDrugSpec})}{
 
 \code{spec_antihypertensive}, \code{spec_antidiabetic}, \code{spec_antiobesity},
-\code{spec_antidepressive}
+\code{spec_antidepressive}, \code{spec_lipid_lowering}
 }
 
 \keyword{datasets}

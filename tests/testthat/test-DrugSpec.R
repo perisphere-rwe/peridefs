@@ -103,10 +103,10 @@ test_that("get_antidepressive_generics(component = 'ssri_v1') returns named list
   expect_true("SERTRALINE" %in% result$ssri_v1)
 })
 
-test_that("get_antidepressive_generics(component = 'all', concatenate = TRUE) returns flat vector with all 32 GNNs", {
+test_that("get_antidepressive_generics(component = 'all', concatenate = TRUE) returns flat vector with all GNNs", {
   result <- get_antidepressive_generics(component = "all", concatenate = TRUE)
   expect_type(result, "character")
-  expect_equal(length(result), 32L)
+  expect_equal(length(result), 71L)
   expect_true("BUPROPION"   %in% result)
   expect_true("TRANYLCYPROMINE" %in% result)
 })

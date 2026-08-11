@@ -9,34 +9,35 @@ for a single version of a drug class definition. Each version is a distinct
 object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{drug_class}}{Short drug class identifier (read-only).}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{drug_class}}{Short drug class identifier (read-only).}
 
-\item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
+    \item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
 
-\item{\code{label}}{Human-readable drug class label (read-only).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{label}}{Human-readable drug class label (read-only).}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DrugSpec-new}{\code{DrugSpec$new()}}
-\item \href{#method-DrugSpec-print}{\code{DrugSpec$print()}}
-\item \href{#method-DrugSpec-get_generics}{\code{DrugSpec$get_generics()}}
-\item \href{#method-DrugSpec-get_codes}{\code{DrugSpec$get_codes()}}
-\item \href{#method-DrugSpec-get_defs}{\code{DrugSpec$get_defs()}}
-\item \href{#method-DrugSpec-clone}{\code{DrugSpec$clone()}}
-}
+  \itemize{
+    \item \href{#method-DrugSpec-initialize}{\code{DrugSpec$new()}}
+    \item \href{#method-DrugSpec-print}{\code{DrugSpec$print()}}
+    \item \href{#method-DrugSpec-get_generics}{\code{DrugSpec$get_generics()}}
+    \item \href{#method-DrugSpec-get_codes}{\code{DrugSpec$get_codes()}}
+    \item \href{#method-DrugSpec-get_defs}{\code{DrugSpec$get_defs()}}
+    \item \href{#method-DrugSpec-clone}{\code{DrugSpec$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DrugSpec-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DrugSpec-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{DrugSpec}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$new(
+\if{html}{\out{<a id="method-DrugSpec-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DrugSpec-initialize}{}}}
+\subsection{\code{DrugSpec$new()}}{
+  Create a new \code{DrugSpec}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$new(
   drug_class,
   label,
   defs = NULL,
@@ -44,93 +45,98 @@ Create a new \code{DrugSpec}.
   ndc = character(0L),
   version = NULL,
   versions = NULL
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{drug_class}}{Short identifier string, e.g. \code{"acei"}.}
+      \item{\code{label}}{Human-readable label.}
+      \item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
+      \item{\code{generic_names}}{Character vector of GNN drug names.}
+      \item{\code{ndc}}{Character vector of NDC codes.}
+      \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
+      \item{\code{versions}}{Deprecated. Use \code{defs}/\code{generic_names}/\code{version} directly.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{drug_class}}{Short identifier string, e.g. \code{"acei"}.}
-
-\item{\code{label}}{Human-readable label.}
-
-\item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
-
-\item{\code{generic_names}}{Character vector of GNN drug names.}
-
-\item{\code{ndc}}{Character vector of NDC codes.}
-
-\item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
-
-\item{\code{versions}}{Deprecated. Use \code{defs}/\code{generic_names}/\code{version} directly.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-print"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-print}{}}}
-\subsection{Method \code{print()}}{
-Print a summary of the spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$print()}}{
+  Print a summary of the spec.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$print(...)}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-get_generics"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_generics}{}}}
-\subsection{Method \code{get_generics()}}{
-Retrieve generic drug names (GNNs).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_generics()}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$get_generics()}}{
+  Retrieve generic drug names (GNNs).
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$get_generics()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of GNN strings.
+  }
 }
 
-\subsection{Returns}{
-Character vector of GNN strings.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-get_codes"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_codes}{}}}
-\subsection{Method \code{get_codes()}}{
-Retrieve NDC codes.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_codes()}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$get_codes()}}{
+  Retrieve NDC codes.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$get_codes()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of NDC codes (empty until populated).
+  }
 }
 
-\subsection{Returns}{
-Character vector of NDC codes (empty until populated).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_defs}{}}}
-\subsection{Method \code{get_defs()}}{
-Retrieve the narrative drug class description.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_defs()}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$get_defs()}}{
+  Retrieve the narrative drug class description.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$get_defs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string, or \code{NULL}.
+  }
 }
 
-\subsection{Returns}{
-Character string, or \code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
