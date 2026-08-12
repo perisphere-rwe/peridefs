@@ -2545,7 +2545,7 @@ spec_acei_v2 <- DrugSpec$new(
 )
 
 ### Aldosterone antagonists ----
-# (v1 only — no FDB expansion)
+
 spec_aldo_v1 <- DrugSpec$new(
   "aldo", "Aldosterone Antagonists",
   version = "v1",
@@ -2560,7 +2560,7 @@ spec_aldo_v1 <- DrugSpec$new(
 )
 
 ### Alpha-1 blockers ----
-# v1 only
+
 spec_alpha_v1 <- DrugSpec$new(
   "alpha", "Alpha-1 Blockers",
   version = "v1",
@@ -2585,9 +2585,9 @@ spec_alpha_beta_v1 <- DrugSpec$new(
     "CARVEDILOL",  # n=191,074,509 in MC Rx table
     "CARVEDILOL PHOSPHATE",  # n=3,747,156 in MC Rx table
     "LABETALOL",
-    "LABETALOL HCL",  # n=24,814,249 in MC Rx table
-    "LABETALOL IN DEXTROSE 5 %",  # n=5 in MC Rx table
-    "LABETALOL IN NACL, ISO-OSMOTIC"  # n=27 in MC Rx table
+    "LABETALOL HCL"  # n=24,814,249 in MC Rx table
+    # "LABETALOL IN DEXTROSE 5 %",  # n=5 in MC Rx table (this is an IV)
+    # "LABETALOL IN NACL, ISO-OSMOTIC"  # n=27 in MC Rx table (this is an IV)
   )
 )
 

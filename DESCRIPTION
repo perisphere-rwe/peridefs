@@ -6,7 +6,7 @@ Authors@R:
 Description: Provides code sets (ICD-9, ICD-10, and HCPCS/CPT) to define
     conditions such as hypertension, diabetes, and atherosclerotic cardiovascular
     disease in real world claims data.
-License: file LICENSE
+License: MIT + file LICENSE
 URL: https://perisphere-rwe.github.io/peridefs, https://github.com/perisphere-rwe/peridefs, https://perisphere-rwe.github.io/peridefs/
 BugReports: https://github.com/perisphere-rwe/peridefs/issues
 Encoding: UTF-8

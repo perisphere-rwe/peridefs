@@ -135,6 +135,13 @@ reference:
   - get_antidepressive_generics
   - get_antidepressive_codes
   - get_antidepressive_defs
+- title: 'Drugs: Lipid-Lowering'
+  desc: |
+    Statins (`statin_v1`), ezetimibe (`ezetimibe_v1`), PCSK9 inhibitors (`pcsk9_v1`), fibrates (`fibrate_v1`), bile acid sequestrants (`bile_acid_seq_v1`), and niacin (`niacin_v1`).
+  contents:
+  - get_lipid_lowering_generics
+  - get_lipid_lowering_codes
+  - get_lipid_lowering_defs
 - title: General Accessor
   desc: |
     Low-level dispatcher that works on any spec object directly.

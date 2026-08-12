@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://perisphere-rwe.github.io/peridefs/404.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/AGENTS.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/articles/articles/versioning.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/articles/custom_specs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/articles/drug_specs.html</loc></url>
@@ -217,6 +218,7 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lab_tests_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_lowering_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_panel_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_panel_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_liver_disease_codes.html</loc></url>
