@@ -10,17 +10,45 @@ re-trained on the project, but also serves as a developer reference.
 
 `peridefs` exposes Perisphere medical code definitions through a consistent R6
 API. Every condition and drug class is a **spec object** — an R6 instance
-exported as `spec_{name}`. Users call `get_{name}_codes()`, `get_{name}_defs()`,
-and `get_{name}_generics()` to retrieve the data.
+exported as `spec_{name}`. Users call `get_{name}_codes()` and
+`get_{name}_defs()` for conditions, or `get_{name}_generics()` and
+`get_{name}_defs()` for drug classes, to retrieve the data.
+
+**Every `get_*` accessor returns a tibble.** There is no list/vector output
+format and no `concatenate` argument — this was a deliberate simplification;
+earlier versions of the package supported `format = "list"` and
+`concatenate = TRUE`, but these have been removed entirely.
+
+- Condition tibbles (`get_*_codes()`) have columns `type`, `code`, `priority`,
+  `version`.
+- Drug tibbles (`get_*_generics()`) have columns `generic`, `brand`,
+  `priority`, `class`, `version`.
+
+`priority` is an integer confidence tier (`1` = core, `2` = probable — the
+generic/code has more than one indication, `3` = cautious — the generic/code
+lacks its expected indication in the US). It defaults to `1` in every
+accessor; pass e.g. `priority = 1:3` or `priority = c(1, 3)` to widen the
+result. Condition codes are currently all tagged `priority = 1`; drug generics
+are gradually being reviewed and tagged with `2`/`3` where appropriate (see
+`AGENTS.md` for what's been reviewed so far).
+
+DrugSpec objects **no longer carry NDC codes.** The `ndc` field, the
+`get_ndc()` dispatcher, and all `get_*_codes()` drug wrappers were removed —
+generic (and, eventually, brand) names are the primary identification
+mechanism.
 
 The four R6 classes are:
 
 | Class | Use |
 |---|---|
 | `CodeSpec` | A single condition with ICD/HCPCS/CPT codes, organised by version |
-| `DrugSpec` | A single drug class with GNN names and NDC codes, organised by version |
+| `DrugSpec` | A single drug class with GNN (and brand) names, organised by version |
 | `CompositeCodeSpec` | A condition whose codes are the union of several `CodeSpec` objects (e.g. ASCVD) |
 | `CompositeDrugSpec` | A drug class whose GNNs are the union of several `DrugSpec` objects (e.g. antihypertensive) |
+
+For composite specs, `component` is **optional** on every accessor — omit it
+(or pass `"all"`) to retrieve every component at once, distinguished by a
+`class` column (and, for conditions, still tagged `version`).
 
 ---
 
@@ -277,8 +305,14 @@ Some sections specify individual NDC (product service ID) overrides:
 If PROD_SRVC_ID in ("54569595100") then gnn="AMLODIPINE/ATORVASTATIN";
 ```
 
-Include the overridden GNN (`AMLODIPINE/ATORVASTATIN`) as an explicit entry and
-document the NDC override in the defs text.
+`DrugSpec` no longer has an `ndc` field — there is nowhere to store the raw
+NDC value. Include the overridden GNN (`AMLODIPINE/ATORVASTATIN`) as an
+explicit `generic_names` entry and document the NDC override in the `defs`
+text instead, e.g.:
+
+```r
+defs = "... NDC 54569-595-100 is coded under GNN AMLODIPINE/ATORVASTATIN per the source document."
+```
 
 ### 5.4 Drug exclusion notes
 
@@ -308,7 +342,10 @@ outcome   = TRUE   →   code belongs to the outcome definition
 
 A single code can be `condition=TRUE, outcome=TRUE` (appears in both), or just
 one of them. This is used when `get_*_codes(variable_type = "condition")` vs
-`"outcome"` is called.
+`"outcome"` is called. If a spec has no codes flagged `outcome = TRUE`,
+`get_codes(variable_type = "outcome")` automatically falls back to returning
+the condition codes (this fallback lives in `CodeSpec`/`CompositeCodeSpec`
+directly, not in the wrapper functions).
 
 **When condition and outcome use identical codes** (common), set both to `TRUE`:
 
@@ -340,7 +377,8 @@ dx_icd9 <- make_key(
 
 ## 7. Key-naming convention for CodeSpec codes
 
-Code-set keys follow the pattern `{code_type}` (no encounter suffix):
+Code-set keys follow the pattern `{code_type}` (no encounter suffix). These
+keys become the `type` column values in `get_*_codes()` output:
 
 | Key | Description |
 |---|---|
@@ -388,7 +426,9 @@ cat("ICD-9:", length(my_icd9), "| ICD-10:", length(my_icd10), "\n")
 
 ### Step 3 — Write the spec in `data-raw/build_specs.R`
 
-Add the new spec **before** the `# Save all specs` section at the bottom:
+Add the new spec **before** the `usethis::use_data(...)` call at the bottom.
+Each version is its own `CodeSpec$new()` call (there is no `versions = list()`
+wrapper in the current API):
 
 ```r
 # ---------------------------------------------------------------------------
@@ -402,28 +442,29 @@ my_icd10 <- ...
 spec_my_condition <- CodeSpec$new(
   condition = "my_condition",
   label     = "My Condition",
-  versions  = list(
-    v1 = list(
-      defs = list(
-        condition = paste0(
-          "≥1 inpatient claim with ICD-9 diagnosis of ... or ICD-10 diagnosis of ..."
-        ),
-        outcome = NULL   # or paste0(...) if an outcome definition exists
-      ),
-      codes = list(
-        dx_icd9  = make_key(
-          my_icd9,  c("580.xx-588.xx"),   # abbreviated form for display
-          condition = rep(TRUE, length(my_icd9)),
-          outcome   = rep(FALSE, length(my_icd9))
-        ),
-        dx_icd10 = make_key(
-          my_icd10, my_icd10             # ICD-10 often already specific; use as-is
-        )
-      )
+  version   = "v1",
+  defs      = list(
+    condition = paste0(
+      "\u22651 inpatient claim with ICD-9 diagnosis of ... or ICD-10 diagnosis of ..."
+    ),
+    outcome = NULL   # or a string if an outcome definition exists
+  ),
+  codes = list(
+    dx_icd9  = make_key(
+      my_icd9,  c("580.xx-588.xx"),   # abbreviated form for display
+      condition = rep(TRUE, length(my_icd9)),
+      outcome   = rep(FALSE, length(my_icd9))
+    ),
+    dx_icd10 = make_key(
+      my_icd10, my_icd10             # ICD-10 often already specific; use as-is
     )
   )
 )
 ```
+
+If a v2 exists with the same codes but a different narrative, construct a
+second `CodeSpec$new(..., version = "v2", ...)` object reusing the same code
+vectors (see Section 11).
 
 ### Step 4 — Add to `usethis::use_data()` at the bottom of build_specs.R
 
@@ -446,11 +487,16 @@ source("data-raw/build_specs.R")
 **Always detach + reload before sourcing.** R6 private methods are copied into
 each instance at creation time. If you modify a class and rebuild without
 reloading, old instances (from the previous `.rda` files) still use the old
-method code.
+method code. This applies just as much to *running the test suite*: after any
+change to `R/CodeSpec.R`, `R/DrugSpec.R`, `R/CompositeCodeSpec.R`, or
+`R/CompositeDrugSpec.R`, you must reload the package **and** re-run
+`build_specs.R` to regenerate `data/*.rda`, or the tests will exercise stale,
+pre-serialized method code.
 
 ### Step 6 — Add wrapper functions to `R/conditions.R`
 
-Append to the end of `conditions.R`:
+Append to the end of `conditions.R`, using the `make_code_getter()` /
+`make_def_getter()` factories (see Section 1 for the return-shape contract):
 
 ```r
 # ---- My Condition -------------------------------------------------------
@@ -460,27 +506,20 @@ Append to the end of `conditions.R`:
 #' @description
 #' Returns code sets from the my condition [CodeSpec] (`spec_my_condition`).
 #'
-#' @inheritParams get_htn_codes
+#' @inheritParams get_htn_v1_codes
 #' @seealso [get_my_condition_defs()], \code{spec_my_condition}
 #' @export
-get_my_condition_codes <- function(version       = "latest",
-                                   code_type     = NULL,
-                                   variable_type = c("condition", "outcome"),
-                                   periods       = FALSE,
-                                   format        = c("list", "tibble")) {
-  get_codes(spec_my_condition, version, code_type, match.arg(variable_type),
-            periods, match.arg(format))
-}
+get_my_condition_codes <- make_code_getter(spec_my_condition)
 
 #' Retrieve the narrative algorithm description for my condition
-#' @inheritParams get_htn_defs
+#' @param variable_type `"condition"` (default) or `"outcome"`.
 #' @seealso [get_my_condition_codes()], \code{spec_my_condition}
 #' @export
-get_my_condition_defs <- function(version       = "latest",
-                                  variable_type = c("condition", "outcome")) {
-  get_defs(spec_my_condition, version, match.arg(variable_type))
-}
+get_my_condition_defs <- make_def_getter(spec_my_condition)
 ```
+
+For a composite condition, pass `composite = TRUE` to both factories (see
+Section 10).
 
 ### Step 7 — Add the spec name to `utils::globalVariables()` in `R/peridefs-package.R`
 
@@ -529,57 +568,60 @@ Determine which format is used (Section 5.1) and collect GNNs accordingly.
 
 ### Step 2 — Write the DrugSpec in `data-raw/build_specs.R`
 
+Each version is its own `DrugSpec$new()` call. There is no `ndc` argument —
+`DrugSpec` no longer carries NDC codes:
+
 ```r
 # ---------------------------------------------------------------------------
 # spec_my_drug — My Drug Class
 # ---------------------------------------------------------------------------
 spec_my_drug <- DrugSpec$new(
-  drug_class = "my_drug",
-  label      = "My Drug Class",
-  versions   = list(
-    v1 = list(
-      defs          = "From the Perisphere definitions document. GNNs: DRUGONE, DRUGTWO.",
-      generic_names = c("DRUGONE", "DRUGTWO"),
-      ndc           = character(0L)    # empty until NDC data is available
-    )
-  )
+  drug_class    = "my_drug",
+  label         = "My Drug Class",
+  version       = "v1",
+  defs          = "From the Perisphere definitions document. GNNs: DRUGONE, DRUGTWO.",
+  generic_names = c("DRUGONE", "DRUGTWO")
 )
 ```
 
-If the document lists a v2 from FDB with additional/variant GNNs, use
-`drug_spec_v1v2()` helper (already defined in `build_specs.R`):
+If the document lists a v2 from FDB with additional/variant GNNs, construct a
+second object directly:
 
 ```r
-spec_my_drug <- drug_spec_v1v2(
-  "my_drug", "My Drug Class",
-  defs_v1 = "From anti-hypertensive medication list.",
-  gnns_v1 = c("DRUGONE"),
-  defs_v2 = "From FDB. Adds DRUGONE_VARIANT.",
-  gnns_v2 = c("DRUGONE", "DRUGONE_VARIANT")
+spec_my_drug_v2 <- DrugSpec$new(
+  drug_class    = "my_drug",
+  label         = "My Drug Class",
+  version       = "v2",
+  defs          = "From FDB. Adds DRUGONE_VARIANT.",
+  generic_names = c("DRUGONE", "DRUGONE_VARIANT")
 )
 ```
+
+Every `generic_names` entry is stored at `priority = 1` (core) by default.
+There is not yet an authoring convention for tagging `priority = 2`/`3`
+entries directly in `DrugSpec$new()` — until that lands, keep lower-confidence
+candidates out of `generic_names` and note them in a comment for follow-up
+(see `AGENTS.md` for drug classes already reviewed for indication concerns).
 
 ### Step 3 — Add to `use_data()`, add wrappers, globalVariables, reload, test
 
-Append to `R/drugs.R`:
+Append to `R/drugs.R`, using `make_generic_getter()` / `make_drug_def_getter()`:
 
 ```r
 #' Retrieve generic drug names for my drug class
-#' @param version Version to use. Defaults to `"latest"`.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`, `version`.
 #' @seealso \code{spec_my_drug}
 #' @export
-get_my_drug_generics <- function(version = "latest") get_generics(spec_my_drug, version)
-
-#' Retrieve NDC codes for my drug class
-#' @param version Version to use. Defaults to `"latest"`.
-#' @export
-get_my_drug_codes <- function(version = "latest") get_ndc(spec_my_drug, version)
+get_my_drug_generics <- make_generic_getter(spec_my_drug)
 
 #' Retrieve the narrative description for my drug class
-#' @param version Version to use. Defaults to `"latest"`.
 #' @export
-get_my_drug_defs <- function(version = "latest") get_defs(spec_my_drug, version)
+get_my_drug_defs <- make_drug_def_getter(spec_my_drug)
 ```
+
+For a composite drug class, pass `composite = TRUE` to both factories and
+`component` becomes an optional argument on the resulting function (see
+Section 10).
 
 ---
 
@@ -587,39 +629,32 @@ get_my_drug_defs <- function(version = "latest") get_defs(spec_my_drug, version)
 
 ### CompositeCodeSpec (condition whose codes = union of other conditions)
 
-Use when the document defines a condition as "defined by a history of X or Y or Z":
+Use when the document defines a condition as "defined by a history of X or Y
+or Z". `components` is a **flat named list** keyed by `"name_vX"` — there is
+no `comp()` helper and no nested `versions = list()` wrapper:
 
 ```r
 spec_my_composite <- CompositeCodeSpec$new(
   condition = "my_composite",
   label     = "My Composite Condition",
-  versions  = list(
-    v1 = list(
-      defs = list(
-        condition = "History of condition A or condition B.",
-        outcome   = "Event of condition A or condition B."
-      ),
-      components = list(
-        # condition: which component specs and variable_type to draw from
-        condition = list(
-          a = comp(spec_a, variable_type = "condition"),
-          b = comp(spec_b, variable_type = "condition")
-        ),
-        # outcome: can use DIFFERENT specs from condition (e.g. ASCVD v2)
-        outcome = list(
-          a = comp(spec_a, variable_type = "outcome"),
-          b = comp(spec_b, variable_type = "outcome")
-        )
-      )
-    )
+  defs      = "History of condition A or condition B.",
+  components = list(
+    a_v1 = spec_a_v1,
+    b_v1 = spec_b_v1
   )
 )
 ```
 
-**Key design decision:** The condition and outcome component lists CAN differ.
-For ASCVD v2, the history definition uses cerebrovascular disease but the
-outcome uses stroke — different specs for condition vs outcome. Always check
-the document carefully to see if this applies.
+Wire up the exported wrappers with `composite = TRUE`:
+
+```r
+get_my_composite_codes <- make_code_getter(spec_my_composite, composite = TRUE)
+get_my_composite_defs  <- make_def_getter(spec_my_composite, composite = TRUE)
+```
+
+`get_my_composite_codes()` and `get_my_composite_generics()`-style functions
+take an optional `component` argument; omitting it (or passing `"all"`)
+returns every component's rows, tagged with a `class` column.
 
 ### CompositeDrugSpec (drug class = union of sub-classes)
 
@@ -627,36 +662,32 @@ the document carefully to see if this applies.
 spec_my_drug_composite <- CompositeDrugSpec$new(
   drug_class = "my_drug_composite",
   label      = "My Drug Composite",
-  versions   = list(
-    v1 = list(
-      defs       = "Union of sub-classes.",
-      components = list(
-        sub_a = comp(spec_sub_a, "v1"),
-        sub_b = comp(spec_sub_b, "v1")
-      )
-    )
+  defs       = "Union of sub-classes.",
+  components = list(
+    sub_a_v1 = spec_sub_a_v1,
+    sub_b_v1 = spec_sub_b_v1
   )
 )
-```
 
-The `comp()` helper (defined in `build_specs.R`) builds a component descriptor:
-
-```r
-comp <- function(spec, version = "latest") list(spec = spec, version = version)
+get_my_drug_composite_generics <- make_generic_getter(spec_my_drug_composite, composite = TRUE)
+get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, composite = TRUE)
 ```
 
 ---
 
 ## 11. Versioning rules
 
-- Use `v1`, `v2`, `v3` as version keys (not integers).
+- Use `v1`, `v2`, `v3` as version keys (not integers), passed as the `version`
+  argument to `CodeSpec$new()` / `DrugSpec$new()`.
 - The document signals version differences with "(with medications)", "(without
   medications)", "from anti-hypertensive medication list", "from FDB", etc.
-- When v1 and v2 codes are identical, store one version only.
+- When v1 and v2 codes/generics are identical, store one version only.
 - When the only difference between versions is the narrative algorithm (not the
-  code set itself — e.g., diabetes v1 vs v2), store the same codes in both
-  versions but with different `defs` text.
-- `"latest"` resolves to the highest-numbered version key.
+  code set itself — e.g., diabetes v1 vs v2), construct two `CodeSpec` objects
+  that share the same underlying code vectors but pass different `defs` text.
+- There is no `"latest"` version resolution mechanism — every exported wrapper
+  function (`get_htn_v1_codes()`, `get_htn_v2_codes()`, etc.) is bound to one
+  specific spec object at `R/conditions.R`/`R/drugs.R` authoring time.
 
 ---
 
@@ -697,7 +728,11 @@ Some TOC items are not representable as code/drug specs:
 
 If you change a class definition (e.g., fix a bug in `get_codes_impl`), you
 **must** detach the package, reload, and re-run `build_specs.R` to create new
-spec objects. Old `.rda` instances carry the old method code.
+spec objects. Old `.rda` instances carry the old method code. This bit us
+during the tibble-output migration: after rewriting `CodeSpec`/`DrugSpec`, the
+committed `data/*.rda` files still returned old-shaped output (missing the
+`priority`/`type`/`class` columns, or erroring on the new `priority=` argument)
+until `build_specs.R` was re-run.
 
 ### Pitfall 2: `range9()` / `range10()` failing on undefined endpoints
 
@@ -729,6 +764,14 @@ NOTE in `R CMD check`.
 
 `spec_*` objects are package data, not function topics, so they cannot be
 hyperlinked with `[spec_X]` syntax in roxygen. Use `\code{spec_X}` instead.
+
+### Pitfall 7: Treating `get_*()` output as a vector or list
+
+Every accessor returns a tibble now. Code like `get_htn_v1_codes()$dx_icd9` or
+`unlist(get_antihypertensive_generics(component = "all"))` from older examples
+no longer works — filter the `type`/`class` column instead
+(`df$code[df$type == "dx_icd9"]`), and there is no `concatenate` argument to
+flatten results.
 
 ---
 
@@ -767,24 +810,25 @@ i <- tail(idx, 1)
 | `data-raw/build_specs.R` | **Main build script.** Add new spec definitions here, then run it. |
 | `data-raw/download_pcs_codes.R` | Downloads FY ICD-10-PCS reference from CMS. Run when updating fiscal year. |
 | `data-raw/parse_docx.R` | Helper functions for reading the Word document XML. |
-| `R/CodeSpec.R` | R6 class for condition code specs. |
-| `R/DrugSpec.R` | R6 class for drug class specs. |
-| `R/CompositeCodeSpec.R` | R6 class for composite condition specs. |
-| `R/CompositeDrugSpec.R` | R6 class for composite drug specs. |
-| `R/conditions.R` | All exported `get_*_codes()` and `get_*_defs()` wrapper functions. |
-| `R/drugs.R` | All exported `get_*_generics()`, `get_*_codes()`, `get_*_defs()` drug wrappers. |
-| `R/utils.R` | Internal helpers: `resolve_version()`, `parse_key()`, `add_periods_icd()`. |
+| `R/CodeSpec.R` | R6 class for condition code specs. `get_codes()` returns a tibble (`type`, `code`, `priority`, `version`) and handles outcome→condition fallback internally. |
+| `R/DrugSpec.R` | R6 class for drug class specs. `get_generics()` returns a tibble (`generic`, `brand`, `priority`, `class`, `version`). No NDC support. |
+| `R/CompositeCodeSpec.R` | R6 class for composite condition specs. `component` is optional on `get_codes()`/`get_defs()`. |
+| `R/CompositeDrugSpec.R` | R6 class for composite drug specs. `component` is optional on `get_generics()`/`get_defs()`. |
+| `R/conditions.R` | Factories (`make_code_getter()`, `make_def_getter()`) plus all exported `get_*_codes()`/`get_*_defs()` wrapper functions. |
+| `R/drugs.R` | All exported `get_*_generics()`/`get_*_defs()` drug wrapper functions, built from `make_generic_getter()`/`make_drug_def_getter()` in `conditions.R`. |
+| `R/utils.R` | Internal helpers: `.resolve_component()`, `.validate_components()`, `add_periods_icd()`. |
 | `R/expand_pcs.R` | Exported `expand_pcs()` for ICD-10-PCS expansion. |
 | `R/peridefs-package.R` | Package-level docs, `@importFrom`, `utils::globalVariables()`. |
-| `R/specs_data.R` | Roxygen documentation for all `spec_*` package data objects. |
+| `R/specs_data.R` | Roxygen documentation for all `spec_*` package data objects and the shared `condition_accessors`/`drug_accessors` parameter docs. |
 | `R/code_spec_api.R` | Exported user API: `code_spec()`, `drug_spec()`, `add_codes()`, `remove_codes()`, `modify_code_spec()`, `modify_drug_spec()`. |
-| `R/get_codes.R` | Internal `get_codes()` dispatcher. |
-| `R/get_defs.R` | Internal `get_defs()` dispatcher. |
-| `R/get_generics.R` | Internal `get_generics()` dispatcher. |
-| `R/get_ndc.R` | Internal `get_ndc()` dispatcher. |
-| `data/spec_*.rda` | Pre-built spec objects (one file per spec). |
+| `data/spec_*.rda` | Pre-built spec objects (one file per spec). **Must be regenerated by re-running `build_specs.R` after any class change** — see Pitfall 1. |
 | `R/sysdata.rda` | Internal: `pcs_codes` (79,115 valid ICD-10-PCS codes, FY2026). |
 | `tests/testthat/` | Test files. Run `devtools::test()` after every change. |
+
+There is no longer a `get_codes()`/`get_generics()`/`get_ndc()` top-level
+dispatcher file — those were dead, unexported code from an earlier design and
+were deleted. Wrapper functions call `spec$get_codes()`/`spec$get_generics()`
+methods directly via the `make_*_getter()` factories.
 
 ---
 
@@ -865,6 +909,13 @@ candidate GNN is genuinely in the target drug class.
 - Supplement or compounded products with non-drug fillers
   (e.g., `BUPROPION HCL/DIET SUPP. NO.15`; `METFORMIN/BLOOD SUGAR DIAGNOST`).
 - Blood glucose meters and other diagnostic devices (e.g., `BLOOD GLUC MTR/...`).
+
+**Uncertain candidates (multiple indications, or off-label/non-US-indicated
+use) should not simply be dropped.** These are exactly the cases the
+`priority` tiering system (Section 1) is meant to capture — as a
+`generic_names` authoring convention for tagging `priority = 2`/`3` entries
+lands, use it here instead of silently excluding a plausible candidate. Until
+then, note the concern in a comment and leave it out of `generic_names`.
 
 **Combination products that span two sub-specs within the same composite:**
 Assign to exactly one sub-spec — the one whose component is the most clinically

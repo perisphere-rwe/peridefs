@@ -4,8 +4,8 @@
 \alias{DrugSpec}
 \title{R6 class for drug class specifications}
 \description{
-Stores the generic drug names (GNNs), NDC codes, and narrative description
-for a single version of a drug class definition. Each version is a distinct
+Stores the generic drug names (GNNs) and narrative description for a
+single version of a drug class definition. Each version is a distinct
 object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 }
 \section{Active bindings}{
@@ -25,7 +25,6 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
     \item \href{#method-DrugSpec-initialize}{\code{DrugSpec$new()}}
     \item \href{#method-DrugSpec-print}{\code{DrugSpec$print()}}
     \item \href{#method-DrugSpec-get_generics}{\code{DrugSpec$get_generics()}}
-    \item \href{#method-DrugSpec-get_codes}{\code{DrugSpec$get_codes()}}
     \item \href{#method-DrugSpec-get_defs}{\code{DrugSpec$get_defs()}}
     \item \href{#method-DrugSpec-clone}{\code{DrugSpec$clone()}}
   }
@@ -42,9 +41,7 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
   label,
   defs = NULL,
   generic_names = character(0L),
-  ndc = character(0L),
-  version = NULL,
-  versions = NULL
+  version = NULL
 )}
     \if{html}{\out{</div>}}
   }
@@ -55,9 +52,7 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
       \item{\code{label}}{Human-readable label.}
       \item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
       \item{\code{generic_names}}{Character vector of GNN drug names.}
-      \item{\code{ndc}}{Character vector of NDC codes.}
       \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
-      \item{\code{versions}}{Deprecated. Use \code{defs}/\code{generic_names}/\code{version} directly.}
     }
     \if{html}{\out{</div>}}
   }
@@ -79,29 +74,24 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 \if{html}{\out{<a id="method-DrugSpec-get_generics"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_generics}{}}}
 \subsection{\code{DrugSpec$get_generics()}}{
-  Retrieve generic drug names (GNNs).
+  Retrieve generic (and brand) drug names as a tidy data
+frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{DrugSpec$get_generics()}
+    \preformatted{DrugSpec$get_generics(priority = 1L)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
+    }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Character vector of GNN strings.
-  }
-}
-
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DrugSpec-get_codes"></a>}}
-\if{latex}{\out{\hypertarget{method-DrugSpec-get_codes}{}}}
-\subsection{\code{DrugSpec$get_codes()}}{
-  Retrieve NDC codes.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{DrugSpec$get_codes()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    Character vector of NDC codes (empty until populated).
+    A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
+and \code{version}.
   }
 }
 

@@ -72,7 +72,7 @@ code_spec <- function(condition,
 #' @param version Optional version label string, e.g. `"v1"`.
 #' @param defs Character string describing the drug class. May be `NULL`.
 #' @param generic_names Character vector of GNN drug names.
-#' @param ndc Character vector of NDC codes. Defaults to `character(0)`.
+
 #' @return A [DrugSpec] R6 object.
 #' @examples
 #' my_drug <- drug_spec(
@@ -87,10 +87,9 @@ drug_spec <- function(drug_class,
                       label,
                       version       = NULL,
                       defs          = NULL,
-                      generic_names = character(0L),
-                      ndc           = character(0L)) {
+                      generic_names = character(0L)) {
   DrugSpec$new(drug_class = drug_class, label = label, version = version,
-               defs = defs, generic_names = generic_names, ndc = ndc)
+               defs = defs, generic_names = generic_names)
 }
 
 
@@ -232,14 +231,12 @@ modify_code_spec <- function(spec,
 #' @param label Optional replacement label string.
 #' @param defs Optional replacement narrative string.
 #' @param generic_names Optional replacement GNN character vector.
-#' @param ndc Optional replacement NDC character vector.
 #' @return A modified deep clone of `spec`.
 #' @export
 modify_drug_spec <- function(spec,
                               label         = NULL,
                               defs          = NULL,
-                              generic_names = NULL,
-                              ndc           = NULL) {
+                              generic_names = NULL) {
   if (!inherits(spec, "DrugSpec")) {
     cli::cli_abort("{.arg spec} must be a {.cls DrugSpec} object.")
   }
@@ -248,8 +245,7 @@ modify_drug_spec <- function(spec,
 
   if (!is.null(label))         priv$.label         <- label
   if (!is.null(defs))          priv$.defs          <- defs
-  if (!is.null(generic_names)) priv$.generic_names <- generic_names
-  if (!is.null(ndc))           priv$.ndc           <- ndc
+  if (!is.null(generic_names)) priv$.generics <- tibble::tibble(generic = generic_names, brand = NA_character_, priority = 1L)
 
   cloned
 }

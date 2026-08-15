@@ -27,18 +27,17 @@ provide safe and easy access to these validated definitions.
 ## Retrieving condition codes
 
 Each condition has one or more `get_<condition>_vX_codes()` functions — one
-per algorithm version. By default the function returns a named list with one
-element per code type:
+per algorithm version. Every `get_*` function in `peridefs` returns a tidy
+data frame:
 
-```{r htn-list}
+```{r htn-tibble}
 get_htn_v1_codes()
 ```
 
-Pass `format = "tibble"` to get a tidy data frame instead
-
-```{r htn-tibble}
-get_htn_v1_codes(format = "tibble")
-```
+The `priority` column reflects our confidence that a code belongs in the
+definition (`1` = core, `2` = probable, `3` = cautious); by default only
+`priority = 1` rows are returned. The `version` column identifies which
+version of the spec produced each row.
 
 ### Selecting a code type
 
@@ -51,7 +50,7 @@ argument to retrieve a filtered code list. Supprted values are `"dx_icd9"`,
 get_htn_v1_codes(code_type = "dx_icd10")
 ```
 
-Note that if you ask for a code type that isn't stored in the object, you get an empty list.
+Note that if you ask for a code type that isn't stored in the object, you get an empty tibble.
 
 ```{r}
 get_htn_v1_codes(code_type = 'proc_icd10')
@@ -86,8 +85,9 @@ The default (`variable_type = "condition"`) retrieves the condition definition.
 Some specs are **composites** — they contain several named component specs
 rather than a single code set. `spec_ascvd`, for example, groups coronary heart disease (CHD), stroke, lower extremity artery disease (LEAD) / peripheral arterial disease (PAD), and cerebrovascular disease into a single composition.
 
-For composite specs, the `component` argument is **required**. Print the spec
-to see all available component names:
+For composite specs, the `component` argument is optional. Omitting it (or
+passing `"all"`) returns every component at once, distinguished by a `class`
+column. Print the spec to see all available component names:
 
 ```{r ascvd-spec}
 spec_ascvd
@@ -99,10 +99,10 @@ Retrieve codes for a single component:
 get_ascvd_codes(component = "chd_v1", code_type = "dx_icd10")
 ```
 
-Use `component = "all"` to get the union of every component's codes:
+Omit `component` (or pass `"all"`) to get every component's codes at once:
 
 ```{r ascvd-all}
-get_ascvd_codes(component = "all", code_type = "dx_icd10") |> length()
+get_ascvd_codes(code_type = "dx_icd10") |> nrow()
 ```
 
 ## Reading algorithm definitions
@@ -130,8 +130,8 @@ When a condition has only one version (e.g., `spec_hf_v1`), there is only one
 getter.
 
 ```{r version-compare}
-# v1 and v2 share the same code sets for HTN — only the defs differ
-identical(get_htn_v1_codes(), get_htn_v2_codes())
+# v1 and v2 share the same codes for HTN — only the version tag and defs differ
+identical(get_htn_v1_codes()$code, get_htn_v2_codes()$code)
 
 get_htn_v1_defs()
 get_htn_v2_defs()
@@ -155,7 +155,7 @@ The `icd` package is not required for `peridefs`, but it can be used to compleme
 library(icd) # for as.icd9 / as.icd10 / explain_code functions
 library(tidyverse)
 
-peri_codes <- get_copd_v1_codes(code_type = 'dx_icd9')[[1]] 
+peri_codes <- get_copd_v1_codes(code_type = 'dx_icd9')$code
 
 as.icd9(peri_codes) %>% 
   set_names(peri_codes) %>% 

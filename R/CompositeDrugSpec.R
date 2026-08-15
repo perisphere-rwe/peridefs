@@ -17,7 +17,8 @@
 #' )
 #' ```
 #'
-#' The `component` argument is **required** when calling any `get_*` method.
+#' The `component` argument is optional when calling `get_generics()`;
+#' omitting it (or passing `"all"`) returns every component.
 #'
 #' @export
 CompositeDrugSpec <- R6::R6Class(
@@ -48,26 +49,8 @@ CompositeDrugSpec <- R6::R6Class(
     #' @param components Named list of [DrugSpec] objects, keyed by
     #'   `"name_vX"` strings.
     #' @param version Optional version label (typically `NULL`).
-    #' @param versions Deprecated. Use `defs`/`components` directly.
     initialize = function(drug_class, label, defs = NULL, components = list(),
-                          version = NULL, versions = NULL) {
-      # Backward compat with old multi-version API
-      if (!is.null(versions)) {
-        vk <- names(versions)[length(names(versions))]
-        v  <- versions[[vk]]
-        if (is.null(defs)) defs <- v$defs
-        if (!length(components)) {
-          # Old components stored as list(name = list(spec = ..., version = ...))
-          old_comps <- v$components
-          flat <- list()
-          for (nm in names(old_comps)) {
-            cd <- old_comps[[nm]]
-            flat[[nm]] <- if (is.list(cd) && !is.null(cd$spec)) cd$spec else cd
-          }
-          components <- flat
-        }
-        if (is.null(version)) version <- vk
-      }
+                          version = NULL) {
       private$.drug_class <- drug_class
       private$.version    <- version
       private$.label      <- label
@@ -87,7 +70,7 @@ CompositeDrugSpec <- R6::R6Class(
         cli::cli_text("{length(comps)} component(s):")
         for (nm in names(comps)) {
           s <- comps[[nm]]
-          n <- length(s$get_generics())
+          n <- nrow(s$get_generics(priority = 1:3))
           cli::cli_bullets(c(" " = "{.code {nm}}: {s$label} ({n} GNNs)"))
         }
         cli::cli_text(cli::col_grey(
@@ -101,50 +84,39 @@ CompositeDrugSpec <- R6::R6Class(
     #' @return Named list of [DrugSpec] objects.
     components = function() private$.components,
 
-    #' @description Retrieve GNNs from a named component.
-    #' @param component **Required.** Component name, e.g. `"acei_v1"`.
-    #' @return Character vector of GNN strings.
-    get_generics = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(private$.components)}}"
-        ))
+    #' @description Retrieve generic (and brand) drug names from one or more
+    #'   components as a tidy data frame.
+    #' @param component Optional component name(s), e.g. `"acei_v1"`. `NULL`
+    #'   (default) or `"all"` returns every component.
+    #' @param priority Integer vector subsetting confidence tiers to include.
+    #'   Default `1`.
+    #' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+    #'   and `version`.
+    get_generics = function(component = NULL, priority = 1L) {
+      if (!is.null(component) && !identical(component, "all")) {
+        .validate_components(component, self)
       }
-      if (identical(component, "all")) {
-        return(unique(unlist(lapply(private$.components, function(s) s$get_generics()))))
+      comps <- if (is.null(component) || identical(component, "all")) {
+        names(private$.components)
+      } else {
+        component
       }
-      .resolve_component(private$.components, component, self$label)$get_generics()
+
+      rows <- lapply(comps, function(nm) {
+        .resolve_component(private$.components, nm, self$label)$get_generics(priority = priority)
+      })
+
+      unique(do.call(rbind, rows))
     },
 
-    #' @description Retrieve NDC codes from a named component.
-    #' @param component **Required.** Component name, or `"all"` for the union
-    #'   across all components.
-    #' @return Character vector of NDC codes.
-    get_codes = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(private$.components)}}"
-        ))
-      }
-      if (identical(component, "all")) {
-        return(unique(unlist(lapply(private$.components, function(s) s$get_codes()))))
-      }
-      .resolve_component(private$.components, component, self$label)$get_codes()
-    },
-
-    #' @description Retrieve the narrative description for a named component.
-    #' @param component **Required.** Component name.
-    #' @return Character string, or `NULL`.
+    #' @description Retrieve the narrative description for one or more
+    #'   components.
+    #' @param component Optional component name. `NULL` (default) or `"all"`
+    #'   renders every component's description.
+    #' @return Character string, or (for `"all"`/`NULL`) an invisible named
+    #'   list rendered to the console.
     get_defs = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to see all component defs, or specify one: {.val {names(private$.components)}}"
-        ))
-      }
-      if (identical(component, "all")) {
+      if (is.null(component) || identical(component, "all")) {
         defs <- lapply(stats::setNames(names(private$.components),
                                        names(private$.components)),
                        function(nm) {

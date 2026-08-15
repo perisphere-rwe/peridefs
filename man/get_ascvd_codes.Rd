@@ -5,15 +5,18 @@
 \title{Retrieve codes for a named ASCVD component}
 \usage{
 get_ascvd_codes(
+  component = NULL,
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  component,
-  concatenate = FALSE
+  priority = 1L
 )
 }
 \arguments{
+\item{component}{Optional component name(s), e.g. \code{"chd_v1"},
+\code{"stroke_v1"}, \code{"isch_stroke_v1"}, \code{"hf_v1"}, \code{"cerebrovasc_disease_v1"}.
+\code{NULL} (default) or \code{"all"} returns every component.}
+
 \item{code_type}{Optional character vector of code types to return.
 Valid values: \code{"dx_icd9"}, \code{"dx_icd10"}, \code{"proc_icd9"}, \code{"proc_icd10"},
 \code{"hcpcs"}, \code{"cpt"}, \code{"rev"}. \code{NULL} (default) returns all code types.}
@@ -24,24 +27,17 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \item{periods}{Logical. \code{FALSE} (default) returns short-format codes
 (e.g., \code{"4010"}). \code{TRUE} returns decimal-format codes (e.g., \code{"401.0"}).}
 
-\item{format}{\code{"list"} (default) returns a named list of character vectors.
-\code{"tibble"} returns a long-form tibble with columns \code{code_type}, \code{code},
-and \code{variable_type}.}
-
-\item{component}{\strong{Required.} Component name, e.g. \code{"chd_v1"},
-\code{"stroke_v1"}, \code{"isch_stroke_v1"}, \code{"hf_v1"}, \code{"cerebrovasc_disease_v1"}.}
-
-\item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
-character vectors. \code{TRUE} concatenates all code vectors into a single
-unnamed character vector. Not compatible with \code{format = "tibble"}.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \description{
 \code{spec_ascvd} is a \link{CompositeCodeSpec} containing all versioned components
 used across ASCVD definitions:
 \code{chd_v1}, \code{chd_v2}, \code{stroke_v1}, \code{cerebrovasc_disease_v1}.
 
-The \code{component} argument is \strong{required}. Print \code{spec_ascvd} to see all
-available component names.
+The \code{component} argument is optional; omit it (or pass \code{"all"}) to
+retrieve every component at once, distinguished by the \code{class} column.
+Print \code{spec_ascvd} to see all available component names.
 }
 \examples{
 get_ascvd_codes(component = "chd_v1")

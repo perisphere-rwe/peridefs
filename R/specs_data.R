@@ -8,9 +8,11 @@
 #' @param code_type Optional code type filter.
 #' @param variable_type `"condition"` (default) or `"outcome"`.
 #' @param periods Logical. Return decimal-format codes.
-#' @param format `"list"` (default) or `"tibble"`.
-#' @param component For composite specs: a named component (e.g. `"chd_v1"`),
-#'   or `"all"` to union all components. For leaf specs, not used.
+#' @param priority Integer vector subsetting confidence tiers to include
+#'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
+#' @param component For composite specs: optional named component (e.g.
+#'   `"chd_v1"`). `NULL` (default) or `"all"` returns every component. For
+#'   leaf specs, not used.
 #' @name condition_accessors
 #' @keywords internal
 NULL
@@ -20,8 +22,8 @@ NULL
 #' @description
 #' Accessor functions for composite drug specs.
 #'
-#' @param component **Required** for composite specs. A named component (e.g.
-#'   `"acei_v1"`), or `"all"` to union all components' GNNs or NDC codes.
+#' @param component Optional named component (e.g. `"acei_v1"`) for composite
+#'   specs. `NULL` (default) or `"all"` returns every component's generics.
 #'   Print the composite spec to see all available component names.
 #' @name drug_accessors
 NULL
@@ -40,8 +42,8 @@ NULL
 #'   of standalong specs for coronary heart disease, stroke, and cerebrovascular
 #'   disease. Composite specs are not versioned because they have multiple
 #'   components that each have versions. Use `component=` to access individual
-#'   components and their respective versions, or `component = "all"` to get
-#'   a union of all the components.
+#'   components and their respective versions, or omit `component` (or pass
+#'   `"all"`) to get a union of all the components.
 #'
 #' Print any spec to see its definition, code sets, and (for composites)
 #' available component names.

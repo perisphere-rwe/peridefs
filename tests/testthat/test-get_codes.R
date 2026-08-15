@@ -1,54 +1,20 @@
+.codes_of <- function(df, type) df$code[df$type == type]
 
-
-test_that("get_htn_v1_codes() returns a named list by default", {
+test_that("get_htn_v1_codes() returns a tibble with the expected columns", {
   result <- get_htn_v1_codes()
-  expect_type(result, "list")
-  expect_true(length(result) > 0L)
+  expect_s3_class(result, "tbl_df")
+  expect_equal(names(result), c("type", "code", "priority", "version"))
 })
-
-test_that("get_htn_v1_codes(concatenate = TRUE) returns a character vector", {
-  result <- get_htn_v1_codes(concatenate = TRUE)
-  expect_type(result, "character")
-  expect_null(names(result))
-  expect_true(length(result) > 0L)
-})
-
-test_that("get_htn_v1_codes(concatenate = TRUE) matches unlist of list result", {
-  list_result <- get_htn_v1_codes()
-  concat_result <- get_htn_v1_codes(concatenate = TRUE)
-  expect_equal(sort(concat_result), sort(unlist(list_result, use.names = FALSE)))
-})
-
-test_that("get_htn_v1_codes(concatenate = TRUE, format = 'tibble') errors", {
-  expect_error(
-    get_htn_v1_codes(concatenate = TRUE, format = "tibble"),
-    "concatenate"
-  )
-})
-
-test_that("get_ascvd_codes(component = 'chd_v1', concatenate = TRUE) returns a character vector", {
-  result <- get_ascvd_codes(component = "chd_v1", concatenate = TRUE)
-  expect_type(result, "character")
-  expect_null(names(result))
-  expect_true(length(result) > 0L)
-})
-
 
 test_that("get_htn_v1_codes() code_type filter works", {
   result <- get_htn_v1_codes(code_type = "dx_icd9")
-  expect_equal(names(result), "dx_icd9")
+  expect_true(all(result$type == "dx_icd9"))
 })
 
 test_that("get_htn_v1_codes() periods = TRUE adds decimal points to 4+ char codes", {
   result <- get_htn_v1_codes(code_type = "dx_icd9", periods = TRUE)
-  codes  <- unlist(result)
+  codes  <- result$code
   expect_true(all(grepl("\\.", codes[nchar(codes) > 3L])))
-})
-
-test_that("get_htn_v1_codes() format = 'tibble' returns a tibble", {
-  result <- get_htn_v1_codes(format = "tibble")
-  expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("code_type", "code", "variable_type"))
 })
 
 test_that("get_htn_v1_codes() outcome falls back to condition codes for condition-only spec", {
@@ -61,39 +27,35 @@ test_that("get_hf_v1_codes() outcome does NOT fall back (HF has outcome codes de
   # HF codes are flagged for both condition and outcome, so outcome is non-empty
   # and no fallback should occur.
   result_outcome <- get_hf_v1_codes(variable_type = "outcome")
-  expect_true(length(unlist(result_outcome)) > 0L)
+  expect_true(nrow(result_outcome) > 0L)
 })
 
-test_that("outcome fallback works with format = 'tibble'", {
-  result <- get_htn_v1_codes(variable_type = "outcome", format = "tibble")
-  expect_s3_class(result, "tbl_df")
-  expect_true(nrow(result) > 0L)
-  expect_true(all(result$variable_type == "condition"))
+test_that("get_htn_v1_codes() priority defaults to 1", {
+  result <- get_htn_v1_codes()
+  expect_true(all(result$priority == 1L))
 })
-
 
 # ---- multi-component tests ----
 
-test_that("get_ascvd_codes() multi-component returns union of keys", {
-  multi  <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"))
+test_that("get_ascvd_codes() multi-component returns union of types", {
+  multi         <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"))
   single_chd    <- get_ascvd_codes(component = "chd_v1")
   single_stroke <- get_ascvd_codes(component = "stroke_v1")
-  expect_type(multi, "list")
-  expect_true(all(names(single_chd)    %in% names(multi)))
-  expect_true(all(names(single_stroke) %in% names(multi)))
+  expect_true(all(unique(single_chd$type)    %in% unique(multi$type)))
+  expect_true(all(unique(single_stroke$type) %in% unique(multi$type)))
 })
 
 test_that("get_ascvd_codes() multi-component codes are union of individual components", {
-  multi  <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"), concatenate = TRUE)
+  multi  <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"))$code
   single <- unique(c(
-    get_ascvd_codes(component = "chd_v1",    concatenate = TRUE),
-    get_ascvd_codes(component = "stroke_v1", concatenate = TRUE)
+    get_ascvd_codes(component = "chd_v1")$code,
+    get_ascvd_codes(component = "stroke_v1")$code
   ))
-  expect_equal(sort(multi), sort(single))
+  expect_equal(sort(unique(multi)), sort(single))
 })
 
-test_that("get_ascvd_codes() multi-component with format = 'tibble' returns tibble", {
-  result <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"), format = "tibble")
+test_that("get_ascvd_codes() multi-component returns a tibble", {
+  result <- get_ascvd_codes(component = c("chd_v1", "stroke_v1"))
   expect_s3_class(result, "tbl_df")
   expect_true(nrow(result) > 0L)
 })
@@ -105,46 +67,41 @@ test_that("get_ascvd_codes() invalid component in vector errors informatively", 
   )
 })
 
-test_that("get_antihypertensive_generics() multi-component returns named list", {
+test_that("get_antihypertensive_generics() multi-component returns tagged rows for each", {
   result <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"))
-  expect_type(result, "list")
-  expect_named(result, c("acei_v1", "arb_v1"))
+  expect_true(all(c("acei", "arb") %in% result$class))
 })
 
-test_that("get_antihypertensive_generics() multi-component concatenate matches individual union", {
-  multi  <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"), concatenate = TRUE)
+test_that("get_antihypertensive_generics() multi-component matches individual union", {
+  multi  <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"))$generic
   single <- unique(c(
-    get_antihypertensive_generics(component = "acei_v1", concatenate = TRUE),
-    get_antihypertensive_generics(component = "arb_v1",  concatenate = TRUE)
+    get_antihypertensive_generics(component = "acei_v1")$generic,
+    get_antihypertensive_generics(component = "arb_v1")$generic
   ))
-  expect_equal(sort(multi), sort(single))
+  expect_equal(sort(unique(multi)), sort(single))
 })
 
 # ---- component= argument tests ----
 
 test_that("get_ascvd_codes(component = 'chd_v1') returns non-empty codes", {
   result <- get_ascvd_codes(component = "chd_v1")
-  expect_type(result, "list")
-  expect_true(length(unlist(result)) > 0L)
+  expect_true(nrow(result) > 0L)
 })
 
 test_that("get_ascvd_codes(component = 'cerebrovasc_disease_v1') returns codes", {
   result <- get_ascvd_codes(component = "cerebrovasc_disease_v1")
-  expect_type(result, "list")
-  expect_true(length(unlist(result)) > 0L)
+  expect_true(nrow(result) > 0L)
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v1') returns named list", {
+test_that("get_antihypertensive_generics(component = 'acei_v1') returns tagged tibble", {
   result <- get_antihypertensive_generics(component = "acei_v1")
-  expect_type(result, "list")
-  expect_named(result, "acei_v1")
-  expect_true(length(result$acei_v1) > 0L)
+  expect_true(all(result$class == "acei"))
+  expect_true(nrow(result) > 0L)
 })
 
-
-test_that("component= required for composite — error without it", {
-  expect_error(get_ascvd_codes(), "component")
-  expect_error(get_antihypertensive_generics(), "component")
+test_that("component= is optional for composite specs — omitting it returns everything", {
+  expect_true(nrow(get_ascvd_codes()) > 0L)
+  expect_true(nrow(get_antihypertensive_generics()) > 0L)
 })
 
 test_that("component= on a non-composite spec throws an informative error", {
@@ -206,10 +163,10 @@ test_that("expected code sets: hypertension", {
   v1 <- get_htn_v1_codes()
   v2 <- get_htn_v2_codes()
 
-  expect_true(v1$dx_icd9  %==%  dx_icd9)
-  expect_true(v1$dx_icd10 %==%  dx_icd10)
-  expect_true(v1$dx_icd9  %==%  v2$dx_icd9)
-  expect_true(v1$dx_icd10 %==%  v2$dx_icd10)
+  expect_true(.codes_of(v1, "dx_icd9")  %==%  dx_icd9)
+  expect_true(.codes_of(v1, "dx_icd10") %==%  dx_icd10)
+  expect_true(.codes_of(v1, "dx_icd9")  %==%  .codes_of(v2, "dx_icd9"))
+  expect_true(.codes_of(v1, "dx_icd10") %==%  .codes_of(v2, "dx_icd10"))
 
 })
 
@@ -402,20 +359,15 @@ test_that("expected code sets: CHD", {
   chd_v1 <- get_ascvd_codes(component = 'chd_v1')
   chd_v2 <- get_ascvd_codes(component = 'chd_v2')
 
-  expect_true(chd_v1$dx_icd9 %==% dx_icd9)
-  expect_true(chd_v1$dx_icd10 %==% dx_icd10)
-  expect_true(chd_v1$proc_icd9 %==% proc_icd9)
-  expect_true(chd_v1$proc_icd10 %==% proc_icd10)
+  expect_true(.codes_of(chd_v1, "dx_icd9")   %==% dx_icd9)
+  expect_true(.codes_of(chd_v1, "dx_icd10")  %==% dx_icd10)
+  expect_true(.codes_of(chd_v1, "proc_icd9") %==% proc_icd9)
+  expect_true(.codes_of(chd_v1, "proc_icd10") %==% proc_icd10)
 
-  expect_true(chd_v1$dx_icd9 %==% chd_v2$dx_icd9)
-  expect_true(chd_v1$dx_icd10 %==% chd_v2$dx_icd10)
-  expect_true(chd_v1$proc_icd9 %==% chd_v2$proc_icd9)
-  expect_true(chd_v1$proc_icd10 %==% chd_v2$proc_icd10)
+  expect_true(.codes_of(chd_v1, "dx_icd9")   %==% .codes_of(chd_v2, "dx_icd9"))
+  expect_true(.codes_of(chd_v1, "dx_icd10")  %==% .codes_of(chd_v2, "dx_icd10"))
+  expect_true(.codes_of(chd_v1, "proc_icd9") %==% .codes_of(chd_v2, "proc_icd9"))
+  expect_true(.codes_of(chd_v1, "proc_icd10") %==% .codes_of(chd_v2, "proc_icd10"))
 
 
 })
-
-
-
-
-

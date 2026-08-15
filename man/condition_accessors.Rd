@@ -10,10 +10,12 @@
 
 \item{periods}{Logical. Return decimal-format codes.}
 
-\item{format}{\code{"list"} (default) or \code{"tibble"}.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 
-\item{component}{For composite specs: a named component (e.g. \code{"chd_v1"}),
-or \code{"all"} to union all components. For leaf specs, not used.}
+\item{component}{For composite specs: optional named component (e.g.
+\code{"chd_v1"}). \code{NULL} (default) or \code{"all"} returns every component. For
+leaf specs, not used.}
 }
 \description{
 Accessor functions for condition specs.

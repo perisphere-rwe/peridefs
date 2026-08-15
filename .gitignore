@@ -6,4 +6,4 @@
 .quarto
 docs
 AGENTS.md
-^market_clarity*
+market_clarity*

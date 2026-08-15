@@ -2,27 +2,14 @@
 % Please edit documentation in R/drugs.R, R/specs_data.R
 \name{drug_accessors}
 \alias{drug_accessors}
-\alias{get_antihypertensive_codes}
-\alias{get_antihypertensive_defs}
-\alias{get_antidiabetic_codes}
-\alias{get_antidiabetic_defs}
 \title{Miscellaneous drug accessor functions}
-\usage{
-get_antihypertensive_codes(component, concatenate = FALSE)
-
-get_antihypertensive_defs(component)
-
-get_antidiabetic_codes(component, concatenate = FALSE)
-
-get_antidiabetic_defs(component)
-}
 \arguments{
-\item{component}{\strong{Required} for composite specs. A named component (e.g.
-\code{"acei_v1"}), or \code{"all"} to union all components' GNNs or NDC codes.
-Print the composite spec to see all available component names.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 
-\item{concatenate}{Logical. \code{FALSE} (default) returns a named list keyed by
-component name. \code{TRUE} flattens to an unnamed character vector.}
+\item{component}{Optional named component (e.g. \code{"acei_v1"}) for composite
+specs. \code{NULL} (default) or \code{"all"} returns every component's generics.
+Print the composite spec to see all available component names.}
 }
 \description{
 Accessor functions for composite drug specs.

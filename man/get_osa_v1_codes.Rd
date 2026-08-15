@@ -9,8 +9,7 @@ get_osa_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_osa_v1_defs(variable_type = c("condition", "outcome"))
@@ -26,13 +25,8 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \item{periods}{Logical. \code{FALSE} (default) returns short-format codes
 (e.g., \code{"4010"}). \code{TRUE} returns decimal-format codes (e.g., \code{"401.0"}).}
 
-\item{format}{\code{"list"} (default) returns a named list of character vectors.
-\code{"tibble"} returns a long-form tibble with columns \code{code_type}, \code{code},
-and \code{variable_type}.}
-
-\item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
-character vectors. \code{TRUE} concatenates all code vectors into a single
-unnamed character vector. Not compatible with \code{format = "tibble"}.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \description{
 Retrieve ICD codes for sleep apnea

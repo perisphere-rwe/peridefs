@@ -83,7 +83,7 @@ reflect the FY2026 reference table.
 
 # ICD-10-PCS codes bundled in spec_chd_v1
 spec_chd_v1 <- spec_ascvd$components()[['chd_v1']]
-spec_chd_v1$get_codes(code_type = "proc_icd10")$proc_icd10 |> length()
+spec_chd_v1$get_codes(code_type = "proc_icd10") |> nrow()
 
 ```
 

@@ -2,31 +2,28 @@
 % Please edit documentation in R/drugs.R
 \name{get_antidepressive_generics}
 \alias{get_antidepressive_generics}
-\alias{get_antidepressive_codes}
 \alias{get_antidepressive_defs}
 \title{Retrieve generic drug names for antidepressive medications}
 \usage{
-get_antidepressive_generics(component, concatenate = FALSE)
+get_antidepressive_generics(component = NULL, priority = 1L)
 
-get_antidepressive_codes(component, concatenate = FALSE)
-
-get_antidepressive_defs(component)
+get_antidepressive_defs(component = NULL)
 }
 \arguments{
-\item{component}{\strong{Required.} One or more of \code{"ssri_v1"}, \code{"snri_v1"},
-\code{"tca_v1"}, \code{"maoi_v1"}, \code{"other_v1"}, or \code{"all"}.}
+\item{component}{Optional named component (e.g. \code{"acei_v1"}) for composite
+specs. \code{NULL} (default) or \code{"all"} returns every component's generics.
+Print the composite spec to see all available component names.}
 
-\item{concatenate}{Logical. \code{FALSE} (default) returns a named list keyed by
-component name. \code{TRUE} flattens to an unnamed character vector.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \value{
-Named list of GNN strings (upper-case) or NDC codes, one element per
-component. Pass \code{concatenate = TRUE} to flatten to an unnamed character vector.
+A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
+and \code{version}.
 }
 \description{
 \code{spec_antidepressive} is a \link{CompositeDrugSpec} with components \code{ssri_v1},
-\code{snri_v1}, \code{tca_v1}, \code{maoi_v1}, and \code{other_v1}. Use \code{component = "all"} to
-retrieve all GNNs across every subclass.
+\code{snri_v1}, \code{tca_v1}, \code{maoi_v1}, and \code{other_v1}.
 }
 \seealso{
 \code{spec_antidepressive}

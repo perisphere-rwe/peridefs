@@ -109,14 +109,14 @@ strings or \code{NULL}).}
 \if{html}{\out{<a id="method-CodeSpec-get_codes"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-get_codes}{}}}
 \subsection{\code{CodeSpec$get_codes()}}{
-  Retrieve codes from the spec.
+  Retrieve codes from the spec as a tidy data frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{CodeSpec$get_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble")
+  priority = 1L
 )}
     \if{html}{\out{</div>}}
   }
@@ -126,16 +126,17 @@ strings or \code{NULL}).}
       \item{\code{code_type}}{Optional character vector of code types to return.
 Valid values: \code{"dx_icd9"}, \code{"dx_icd10"}, \code{"proc_icd9"},
 \code{"proc_icd10"}, \code{"hcpcs"}, \code{"cpt"}, \code{"rev"}. \code{NULL} returns all.}
-      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
+      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}. If the
+spec has no codes flagged for \code{"outcome"}, falls back to \code{"condition"}.}
       \item{\code{periods}}{Logical. If \code{TRUE}, return codes with decimal periods
 (e.g., \code{"401.0"}). Default \code{FALSE} returns short format (\code{"4010"}).}
-      \item{\code{format}}{\code{"list"} (default) returns a named list of character
-vectors; \code{"tibble"} returns a long-form tibble.}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Named list or tibble of codes.
+    A tibble with columns \code{type}, \code{code}, \code{priority}, and \code{version}.
   }
 }
 

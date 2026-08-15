@@ -1,18 +1,18 @@
 # Drug-specific wrapper functions.
 # Composite drug specs (antihypertensive, antidiabetic) get a single unversioned
-# set of get_* functions; component= (required) selects a specific versioned leaf.
-# Standalone drug specs get their own get_* functions
-# with no component= argument.
+# set of get_* functions; component is optional (defaults to all components).
+# Standalone drug specs get their own get_* functions with no component argument.
 
 #' Miscellaneous drug accessor functions
 #'
 #' @description
 #' Accessor functions for composite drug specs.
 #'
-#' @param component **Required.** Component name (e.g., `"acei_v1"`). Print
-#'   the composite spec to see all available names.
-#' @param concatenate Logical. `FALSE` (default) returns a named list keyed by
-#'   component name. `TRUE` flattens to an unnamed character vector.
+#' @param component Optional component name (e.g., `"acei_v1"`). `NULL`
+#'   (default) or `"all"` returns every component, distinguished by the
+#'   `class` column. Print the composite spec to see all available names.
+#' @param priority Integer vector subsetting confidence tiers to include
+#'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
 #' @name drug_accessors
 NULL
 
@@ -30,20 +30,14 @@ NULL
 #' `ksparing_v2`, `aldo_v1`, `central_v1`, `central_v2`, `renin_v1`,
 #' `vasodilators_v1`.
 #'
-#' @param component **Required.** Component name. Print `spec_antihypertensive`
-#'   to see all available names.
 #' @inheritParams drug_accessors
-#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
-#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#'   and `version`.
 #' @seealso \code{spec_antihypertensive}
 #' @export
 get_antihypertensive_generics <- make_generic_getter(spec_antihypertensive, composite = TRUE)
 
-#' @rdname drug_accessors
-#' @export
-get_antihypertensive_codes <- make_ndc_getter(spec_antihypertensive, composite = TRUE)
-
-#' @rdname drug_accessors
+#' @rdname get_antihypertensive_generics
 #' @export
 get_antihypertensive_defs <- make_drug_def_getter(spec_antihypertensive, composite = TRUE)
 
@@ -57,20 +51,14 @@ get_antihypertensive_defs <- make_drug_def_getter(spec_antihypertensive, composi
 #' `meglitinide_v1`, `tzd_v1`, `alpha_glucosidase_v1`, `dpp4_v1`,
 #' `sglt2_v1`, `glp1_v1`, `insulin_v1`, `amylin_v1`.
 #'
-#' @param component **Required.** Component name. Print `spec_antidiabetic`
-#'   to see all available names.
 #' @inheritParams drug_accessors
-#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
-#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#'   and `version`.
 #' @seealso \code{spec_antidiabetic}
 #' @export
 get_antidiabetic_generics <- make_generic_getter(spec_antidiabetic, composite = TRUE)
 
-#' @rdname drug_accessors
-#' @export
-get_antidiabetic_codes <- make_ndc_getter(spec_antidiabetic, composite = TRUE)
-
-#' @rdname drug_accessors
+#' @rdname get_antidiabetic_generics
 #' @export
 get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic, composite = TRUE)
 
@@ -80,20 +68,14 @@ get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic, composite = TRU
 #'
 #' @description
 #' `spec_antiobesity` is a [CompositeDrugSpec] with components `non_glp1_v1`
-#' and `glp1_v1`. Use `component = "all"` to retrieve all GNNs across both
-#' subclasses.
+#' and `glp1_v1`.
 #'
-#' @param component **Required.** `"non_glp1_v1"`, `"glp1_v1"`, or `"all"`.
 #' @inheritParams drug_accessors
-#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
-#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#'   and `version`.
 #' @seealso \code{spec_antiobesity}
 #' @export
 get_antiobesity_generics <- make_generic_getter(spec_antiobesity, composite = TRUE)
-
-#' @rdname get_antiobesity_generics
-#' @export
-get_antiobesity_codes <- make_ndc_getter(spec_antiobesity, composite = TRUE)
 
 #' @rdname get_antiobesity_generics
 #' @export
@@ -106,22 +88,14 @@ get_antiobesity_defs <- make_drug_def_getter(spec_antiobesity, composite = TRUE)
 #' @description
 #' `spec_lipid_lowering` is a [CompositeDrugSpec] with components `statin_v1`,
 #' `ezetimibe_v1`, `pcsk9_v1`, `fibrate_v1`, `bile_acid_seq_v1`, and
-#' `niacin_v1`. Use `component = "all"` to retrieve all GNNs across every
-#' subclass.
+#' `niacin_v1`.
 #'
-#' @param component **Required.** One or more of `"statin_v1"`,
-#'   `"ezetimibe_v1"`, `"pcsk9_v1"`, `"fibrate_v1"`, `"bile_acid_seq_v1"`,
-#'   `"niacin_v1"`, or `"all"`.
 #' @inheritParams drug_accessors
-#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
-#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#'   and `version`.
 #' @seealso \code{spec_lipid_lowering}
 #' @export
 get_lipid_lowering_generics <- make_generic_getter(spec_lipid_lowering, composite = TRUE)
-
-#' @rdname get_lipid_lowering_generics
-#' @export
-get_lipid_lowering_codes <- make_ndc_getter(spec_lipid_lowering, composite = TRUE)
 
 #' @rdname get_lipid_lowering_generics
 #' @export
@@ -133,23 +107,15 @@ get_lipid_lowering_defs <- make_drug_def_getter(spec_lipid_lowering, composite =
 #'
 #' @description
 #' `spec_antidepressive` is a [CompositeDrugSpec] with components `ssri_v1`,
-#' `snri_v1`, `tca_v1`, `maoi_v1`, and `other_v1`. Use `component = "all"` to
-#' retrieve all GNNs across every subclass.
+#' `snri_v1`, `tca_v1`, `maoi_v1`, and `other_v1`.
 #'
-#' @param component **Required.** One or more of `"ssri_v1"`, `"snri_v1"`,
-#'   `"tca_v1"`, `"maoi_v1"`, `"other_v1"`, or `"all"`.
 #' @inheritParams drug_accessors
-#' @return Named list of GNN strings (upper-case) or NDC codes, one element per
-#'   component. Pass `concatenate = TRUE` to flatten to an unnamed character vector.
+#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#'   and `version`.
 #' @seealso \code{spec_antidepressive}
 #' @export
 get_antidepressive_generics <- make_generic_getter(spec_antidepressive, composite = TRUE)
 
 #' @rdname get_antidepressive_generics
 #' @export
-get_antidepressive_codes <- make_ndc_getter(spec_antidepressive, composite = TRUE)
-
-#' @rdname get_antidepressive_generics
-#' @export
 get_antidepressive_defs <- make_drug_def_getter(spec_antidepressive, composite = TRUE)
-

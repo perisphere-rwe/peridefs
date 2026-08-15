@@ -20,7 +20,8 @@ The \code{components} list is a flat named list mapping \code{"name_vX"} keys to
 )
 }\if{html}{\out{</div>}}
 
-The \code{component} argument is \strong{required} when calling any \verb{get_*} method.
+The \code{component} argument is optional when calling \code{get_generics()};
+omitting it (or passing \code{"all"}) returns every component.
 }
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
@@ -40,7 +41,6 @@ The \code{component} argument is \strong{required} when calling any \verb{get_*}
     \item \href{#method-CompositeDrugSpec-print}{\code{CompositeDrugSpec$print()}}
     \item \href{#method-CompositeDrugSpec-components}{\code{CompositeDrugSpec$components()}}
     \item \href{#method-CompositeDrugSpec-get_generics}{\code{CompositeDrugSpec$get_generics()}}
-    \item \href{#method-CompositeDrugSpec-get_codes}{\code{CompositeDrugSpec$get_codes()}}
     \item \href{#method-CompositeDrugSpec-get_defs}{\code{CompositeDrugSpec$get_defs()}}
     \item \href{#method-CompositeDrugSpec-clone}{\code{CompositeDrugSpec$clone()}}
   }
@@ -57,8 +57,7 @@ The \code{component} argument is \strong{required} when calling any \verb{get_*}
   label,
   defs = NULL,
   components = list(),
-  version = NULL,
-  versions = NULL
+  version = NULL
 )}
     \if{html}{\out{</div>}}
   }
@@ -71,7 +70,6 @@ The \code{component} argument is \strong{required} when calling any \verb{get_*}
       \item{\code{components}}{Named list of \link{DrugSpec} objects, keyed by
 \code{"name_vX"} strings.}
       \item{\code{version}}{Optional version label (typically \code{NULL}).}
-      \item{\code{versions}}{Deprecated. Use \code{defs}/\code{components} directly.}
     }
     \if{html}{\out{</div>}}
   }
@@ -108,44 +106,26 @@ The \code{component} argument is \strong{required} when calling any \verb{get_*}
 \if{html}{\out{<a id="method-CompositeDrugSpec-get_generics"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_generics}{}}}
 \subsection{\code{CompositeDrugSpec$get_generics()}}{
-  Retrieve GNNs from a named component.
+  Retrieve generic (and brand) drug names from one or more
+components as a tidy data frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{CompositeDrugSpec$get_generics(component = NULL)}
+    \preformatted{CompositeDrugSpec$get_generics(component = NULL, priority = 1L)}
     \if{html}{\out{</div>}}
   }
   \subsection{Arguments}{
     \if{html}{\out{<div class="arguments">}}
     \describe{
-      \item{\code{component}}{\strong{Required.} Component name, e.g. \code{"acei_v1"}.}
+      \item{\code{component}}{Optional component name(s), e.g. \code{"acei_v1"}. \code{NULL}
+(default) or \code{"all"} returns every component.}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include.
+Default \code{1}.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Character vector of GNN strings.
-  }
-}
-
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CompositeDrugSpec-get_codes"></a>}}
-\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_codes}{}}}
-\subsection{\code{CompositeDrugSpec$get_codes()}}{
-  Retrieve NDC codes from a named component.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{CompositeDrugSpec$get_codes(component = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{component}}{\strong{Required.} Component name, or \code{"all"} for the union
-across all components.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    Character vector of NDC codes.
+    A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
+and \code{version}.
   }
 }
 
@@ -153,7 +133,8 @@ across all components.}
 \if{html}{\out{<a id="method-CompositeDrugSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_defs}{}}}
 \subsection{\code{CompositeDrugSpec$get_defs()}}{
-  Retrieve the narrative description for a named component.
+  Retrieve the narrative description for one or more
+components.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{CompositeDrugSpec$get_defs(component = NULL)}
@@ -162,12 +143,14 @@ across all components.}
   \subsection{Arguments}{
     \if{html}{\out{<div class="arguments">}}
     \describe{
-      \item{\code{component}}{\strong{Required.} Component name.}
+      \item{\code{component}}{Optional component name. \code{NULL} (default) or \code{"all"}
+renders every component's description.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Character string, or \code{NULL}.
+    Character string, or (for \code{"all"}/\code{NULL}) an invisible named
+list rendered to the console.
   }
 }
 

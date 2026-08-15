@@ -4,13 +4,7 @@
 \alias{modify_drug_spec}
 \title{Modify a drug class specification}
 \usage{
-modify_drug_spec(
-  spec,
-  label = NULL,
-  defs = NULL,
-  generic_names = NULL,
-  ndc = NULL
-)
+modify_drug_spec(spec, label = NULL, defs = NULL, generic_names = NULL)
 }
 \arguments{
 \item{spec}{A \link{DrugSpec} object.}
@@ -20,8 +14,6 @@ modify_drug_spec(
 \item{defs}{Optional replacement narrative string.}
 
 \item{generic_names}{Optional replacement GNN character vector.}
-
-\item{ndc}{Optional replacement NDC character vector.}
 }
 \value{
 A modified deep clone of \code{spec}.

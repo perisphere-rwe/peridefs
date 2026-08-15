@@ -25,87 +25,24 @@
 
 #' @noRd
 make_code_getter <- function(spec, composite = FALSE) {
-
-  # Shared implementation; component is only passed for composite specs.
-  .impl <- function(code_type, vt, fmt, periods, concatenate, component = NULL) {
-    fetch_list <- function(vt_inner, comp = component) {
-      if (!is.null(comp)) {
-        spec$get_codes(component = comp, code_type = code_type,
-                       variable_type = vt_inner, periods = periods, format = "list")
-      } else {
-        spec$get_codes(code_type = code_type, variable_type = vt_inner,
-                       periods = periods, format = "list")
-      }
-    }
-
-    multi <- !is.null(component) && !identical(component, "all") && length(component) > 1L
-
-    fetch <- function(vt_inner) {
-      if (multi) {
-        .union_code_lists(lapply(component, function(comp) fetch_list(vt_inner, comp)))
-      } else {
-        fetch_list(vt_inner)
-      }
-    }
-
-    result <- fetch(vt)
-
-    effective_vt <- vt
-    if (vt == "outcome" && .result_is_empty(result, "list")) {
-      result       <- fetch("condition")
-      effective_vt <- "condition"
-    }
-
-    if (identical(fmt, "tibble")) {
-      rows <- lapply(names(result), function(k) {
-        cd <- result[[k]]
-        if (!length(cd)) return(NULL)
-        tibble::tibble(code_type = k, code = cd, variable_type = effective_vt)
-      })
-      return(do.call(rbind, Filter(Negate(is.null), rows)))
-    }
-
-    if (concatenate) unlist(result, use.names = FALSE) else result
-  }
-
   if (composite) {
-    function(code_type     = NULL,
+    function(component     = NULL,
+             code_type     = NULL,
              variable_type = c("condition", "outcome"),
              periods       = FALSE,
-             format        = c("list", "tibble"),
-             component,
-             concatenate   = FALSE) {
-      vt  <- match.arg(variable_type)
-      fmt <- match.arg(format)
-      if (concatenate && identical(fmt, "tibble")) {
-        cli::cli_abort(
-          "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
-        )
-      }
-      if (missing(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}",
-          "i" = "Print {.code {spec$condition}} spec to see all options."
-        ))
-      }
-      .validate_components(component, spec)
-      .impl(code_type, vt, fmt, periods, concatenate, component)
+             priority      = 1L) {
+      spec$get_codes(component = component, code_type = code_type,
+                     variable_type = match.arg(variable_type),
+                     periods = periods, priority = priority)
     }
   } else {
     function(code_type     = NULL,
              variable_type = c("condition", "outcome"),
              periods       = FALSE,
-             format        = c("list", "tibble"),
-             concatenate   = FALSE) {
-      vt  <- match.arg(variable_type)
-      fmt <- match.arg(format)
-      if (concatenate && identical(fmt, "tibble")) {
-        cli::cli_abort(
-          "{.arg concatenate} = TRUE is not compatible with {.arg format} = {.val tibble}."
-        )
-      }
-      .impl(code_type, vt, fmt, periods, concatenate)
+             priority      = 1L) {
+      spec$get_codes(code_type = code_type,
+                     variable_type = match.arg(variable_type),
+                     periods = periods, priority = priority)
     }
   }
 }
@@ -113,13 +50,10 @@ make_code_getter <- function(spec, composite = FALSE) {
 #' @noRd
 make_def_getter <- function(spec, composite = FALSE) {
   if (composite) {
-    function(variable_type = c("condition", "outcome"), component) {
+    function(variable_type = c("condition", "outcome"), component = NULL) {
       vt <- match.arg(variable_type)
-      if (missing(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Available: {.val {names(spec$components())}}"
-        ))
+      if (is.null(component) || identical(component, "all")) {
+        return(spec$get_defs(component = component, variable_type = vt))
       }
       cd <- .get_condition_component(spec, component, vt)
       .render_def(cd$get_defs(variable_type = vt))
@@ -136,49 +70,12 @@ make_def_getter <- function(spec, composite = FALSE) {
 #' @noRd
 make_generic_getter <- function(spec, composite = FALSE) {
   if (composite) {
-    function(component, concatenate = FALSE) {
-      if (missing(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
-        ))
-      }
-      .validate_components(component, spec)
-      comps  <- if (identical(component, "all")) names(spec$components()) else component
-      result <- lapply(stats::setNames(comps, comps),
-                       function(comp) spec$get_generics(component = comp))
-      if (concatenate) unlist(result, use.names = FALSE) else result
+    function(component = NULL, priority = 1L) {
+      spec$get_generics(component = component, priority = priority)
     }
   } else {
-    function(concatenate = FALSE) {
-      key    <- paste(spec$drug_class, spec$version, sep = "_")
-      result <- stats::setNames(list(spec$get_generics()), key)
-      if (concatenate) unlist(result, use.names = FALSE) else result
-    }
-  }
-}
-
-#' @noRd
-make_ndc_getter <- function(spec, composite = FALSE) {
-  if (composite) {
-    function(component, concatenate = FALSE) {
-      if (missing(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
-        ))
-      }
-      .validate_components(component, spec)
-      comps  <- if (identical(component, "all")) names(spec$components()) else component
-      result <- lapply(stats::setNames(comps, comps),
-                       function(comp) spec$get_codes(component = comp))
-      if (concatenate) unlist(result, use.names = FALSE) else result
-    }
-  } else {
-    function(concatenate = FALSE) {
-      key    <- paste(spec$drug_class, spec$version, sep = "_")
-      result <- stats::setNames(list(spec$get_codes()), key)
-      if (concatenate) unlist(result, use.names = FALSE) else result
+    function(priority = 1L) {
+      spec$get_generics(priority = priority)
     }
   }
 }
@@ -186,18 +83,7 @@ make_ndc_getter <- function(spec, composite = FALSE) {
 #' @noRd
 make_drug_def_getter <- function(spec, composite = FALSE) {
   if (composite) {
-    function(component) {
-      if (missing(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(spec$components())}}"
-        ))
-      }
-      .validate_components(component, spec)
-      if (!identical(component, "all") && length(component) > 1L) {
-        return(lapply(stats::setNames(component, component),
-                      function(comp) spec$get_defs(component = comp)))
-      }
+    function(component = NULL) {
       spec$get_defs(component = component)
     }
   } else {
@@ -222,13 +108,9 @@ make_drug_def_getter <- function(spec, composite = FALSE) {
 #'   is defined as a condition only; `"outcome"` falls back to condition codes.
 #' @param periods Logical. `FALSE` (default) returns short-format codes
 #'   (e.g., `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
-#' @param format `"list"` (default) returns a named list of character vectors.
-#'   `"tibble"` returns a long-form tibble with columns `code_type`, `code`,
-#'   and `variable_type`.
-#' @param concatenate Logical. `FALSE` (default) returns a named list of
-#'   character vectors. `TRUE` concatenates all code vectors into a single
-#'   unnamed character vector. Not compatible with `format = "tibble"`.
-#' @return Named list, character vector (if `concatenate = TRUE`), or tibble of codes.
+#' @param priority Integer vector subsetting confidence tiers to include
+#'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
+#' @return A tibble with columns `type`, `code`, `priority`, and `version`.
 #' @seealso [get_htn_v1_defs()], [get_htn_v2_codes()], \code{spec_htn_v1}
 #' @examples
 #' get_htn_v1_codes()
@@ -289,12 +171,14 @@ get_hf_v1_defs <- make_def_getter(spec_hf_v1)
 #' used across ASCVD definitions:
 #' `chd_v1`, `chd_v2`, `stroke_v1`, `cerebrovasc_disease_v1`.
 #'
-#' The `component` argument is **required**. Print `spec_ascvd` to see all
-#' available component names.
+#' The `component` argument is optional; omit it (or pass `"all"`) to
+#' retrieve every component at once, distinguished by the `class` column.
+#' Print `spec_ascvd` to see all available component names.
 #'
 #' @inheritParams get_htn_v1_codes
-#' @param component **Required.** Component name, e.g. `"chd_v1"`,
+#' @param component Optional component name(s), e.g. `"chd_v1"`,
 #'   `"stroke_v1"`, `"isch_stroke_v1"`, `"hf_v1"`, `"cerebrovasc_disease_v1"`.
+#'   `NULL` (default) or `"all"` returns every component.
 #' @seealso [get_ascvd_defs()], \code{spec_ascvd}
 #' @examples
 #' get_ascvd_codes(component = "chd_v1")
@@ -308,7 +192,8 @@ get_ascvd_codes <- make_code_getter(spec_ascvd, composite = TRUE)
 #' Retrieve the narrative algorithm description for an ASCVD component
 #'
 #' @param variable_type `"condition"` (default) or `"outcome"`.
-#' @param component **Required.** Component name. See [get_ascvd_codes()].
+#' @param component Optional component name. `NULL` (default) or `"all"`
+#'   renders every component. See [get_ascvd_codes()].
 #' @seealso [get_ascvd_codes()], \code{spec_ascvd}
 #' @export
 get_ascvd_defs <- make_def_getter(spec_ascvd, composite = TRUE)

@@ -9,8 +9,7 @@ drug_spec(
   label,
   version = NULL,
   defs = NULL,
-  generic_names = character(0L),
-  ndc = character(0L)
+  generic_names = character(0L)
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ drug_spec(
 \item{defs}{Character string describing the drug class. May be \code{NULL}.}
 
 \item{generic_names}{Character vector of GNN drug names.}
-
-\item{ndc}{Character vector of NDC codes. Defaults to \code{character(0)}.}
 }
 \value{
 A \link{DrugSpec} R6 object.

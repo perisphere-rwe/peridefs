@@ -20,9 +20,10 @@ The \code{components} list is a flat named list mapping \code{"name_vX"} keys to
 )
 }\if{html}{\out{</div>}}
 
-The \code{component} argument is \strong{required} when calling \code{get_codes()} or
-\code{get_defs()}. The \code{variable_type} argument is forwarded to the component
-spec, so both condition and outcome codes are accessible.
+The \code{component} argument is optional when calling \code{get_codes()} or
+\code{get_defs()}; omitting it (or passing \code{"all"}) returns every component.
+The \code{variable_type} argument is forwarded to the component spec, so both
+condition and outcome codes are accessible.
 }
 \section{Active bindings}{
   \if{html}{\out{<div class="r6-active-bindings">}}
@@ -123,7 +124,8 @@ spec, so both condition and outcome codes are accessible.
 \if{html}{\out{<a id="method-CompositeCodeSpec-get_codes"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-get_codes}{}}}
 \subsection{\code{CompositeCodeSpec$get_codes()}}{
-  Retrieve codes from a named component.
+  Retrieve codes from one or more components as a tidy
+data frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{CompositeCodeSpec$get_codes(
@@ -131,24 +133,27 @@ spec, so both condition and outcome codes are accessible.
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble")
+  priority = 1L
 )}
     \if{html}{\out{</div>}}
   }
   \subsection{Arguments}{
     \if{html}{\out{<div class="arguments">}}
     \describe{
-      \item{\code{component}}{\strong{Required.} Name of a component, e.g. \code{"chd_v1"}.
-Print the spec to see available names.}
+      \item{\code{component}}{Optional component name(s), e.g. \code{"chd_v1"}. \code{NULL}
+(default) or \code{"all"} returns every component, with a \code{class} column
+distinguishing them.}
       \item{\code{code_type}}{Optional character vector of code types to filter.}
       \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
       \item{\code{periods}}{Logical. \code{FALSE} (default) = short format.}
-      \item{\code{format}}{\code{"list"} (default) or \code{"tibble"}.}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include.
+Default \code{1}.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Named list or tibble of codes.
+    A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version},
+and \code{class} (the component name).
   }
 }
 
@@ -156,8 +161,8 @@ Print the spec to see available names.}
 \if{html}{\out{<a id="method-CompositeCodeSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-get_defs}{}}}
 \subsection{\code{CompositeCodeSpec$get_defs()}}{
-  Retrieve the narrative algorithm description from a
-named component.
+  Retrieve the narrative algorithm description from one or
+more components.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
     \preformatted{CompositeCodeSpec$get_defs(
@@ -169,13 +174,15 @@ named component.
   \subsection{Arguments}{
     \if{html}{\out{<div class="arguments">}}
     \describe{
-      \item{\code{component}}{\strong{Required.} Component name.}
+      \item{\code{component}}{Optional component name. \code{NULL} (default) or \code{"all"}
+renders every component's description.}
       \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    Character string, or \code{NULL}.
+    Character string, or (for \code{"all"}/\code{NULL}) an invisible named
+list rendered to the console.
   }
 }
 

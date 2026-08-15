@@ -19,8 +19,8 @@ test_that("get_antihypertensive_defs(component = 'acei_v1') returns a non-empty 
   expect_gt(nchar(result), 0L)
 })
 
-test_that("get_antihypertensive_defs() errors without component=", {
-  expect_error(get_antihypertensive_defs(), "component")
+test_that("get_antihypertensive_defs() with no component renders all components", {
+  expect_invisible(get_antihypertensive_defs())
 })
 
 test_that("get_defs() rejects non-spec objects", {

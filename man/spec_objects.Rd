@@ -36,8 +36,8 @@ spec. For example, atherosclerotic cardiovascular disease is a composition
 of standalong specs for coronary heart disease, stroke, and cerebrovascular
 disease. Composite specs are not versioned because they have multiple
 components that each have versions. Use \verb{component=} to access individual
-components and their respective versions, or \code{component = "all"} to get
-a union of all the components.
+components and their respective versions, or omit \code{component} (or pass
+\code{"all"}) to get a union of all the components.
 }
 
 Print any spec to see its definition, code sets, and (for composites)

@@ -44,7 +44,7 @@ my_htn <- code_spec(
 my_htn
 ```
 
-The resulting spec object has `$get_codes()` and `$get_defs()` methods:
+The resulting spec object has a `$get_codes()` method that returns a tibble:
 
 ```{r code-spec-get}
 my_htn$get_codes(code_type = "dx_icd10")
@@ -74,13 +74,13 @@ is never modified:
 
 ```{r add-codes}
 # Inspect available keys
-names(spec_htn_v1$get_codes())
+spec_htn_v1$keys()
 
 # Add a code and confirm the clone grew; original is unchanged
 htn_plus <- add_codes(spec_htn_v1, dx_icd10 = c("I99"))
 
-length(htn_plus$get_codes(code_type = "dx_icd10")$dx_icd10)  # clone
-length(spec_htn_v1$get_codes(code_type = "dx_icd10")$dx_icd10)  # original
+nrow(htn_plus$get_codes(code_type = "dx_icd10"))     # clone
+nrow(spec_htn_v1$get_codes(code_type = "dx_icd10"))  # original
 ```
 
 By default, added codes are flagged for both `condition` and `outcome`.
@@ -102,8 +102,8 @@ htn_outcome_only <- add_codes(
 htn_trimmed <- remove_codes(spec_htn_v1, dx_icd9 = c("4019"))
 
 # Code removed from clone; original is unchanged
-"4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$dx_icd9
-"4019" %in% spec_htn_v1$get_codes(code_type = "dx_icd9")$dx_icd9
+"4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$code
+"4019" %in% spec_htn_v1$get_codes(code_type = "dx_icd9")$code
 ```
 
 ## Modifying a CodeSpec
