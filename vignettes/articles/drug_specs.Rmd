@@ -25,7 +25,7 @@ pass `"all"`) to retrieve every component at once.
 
 | Function | Returns |
 |----------|---------|
-| `get_<drug>_generics(component = ...)` | Tibble of generic (and brand) names, with `priority`, `class`, and `version` columns |
+| `get_<drug>_generics(component = ...)` | Tibble of generic (and brand, as a list-column) names, with `priority`, `class`, and `version` columns |
 | `get_<drug>_defs(component = ...)` | Narrative description of the component's drug class definition |
 
 Print any composite spec to see its available component names:
@@ -79,6 +79,46 @@ conservative tier, `2` (probable) covers generics with more than one
 indication, and `3` (cautious) covers generics without their expected
 indication in the US. Pass `priority = 1:3` to widen the result and include
 lower-confidence matches.
+
+## Brand names
+
+Some generics genuinely correspond to more than one brand product — most
+often because the same `GNRC_NM` covers formulations approved for different
+indications (e.g., semaglutide as Ozempic for type 2 diabetes vs. Wegovy for
+chronic weight management). Because a single generic can map to zero, one, or
+multiple brands, `brand` is stored as a **list-column**: each row's `brand`
+value is a character vector, empty (`character(0)`) when no brand is on
+record.
+
+Build a small example with `drug_spec()` to see this in action:
+
+```{r brand-example}
+example_spec <- drug_spec(
+  drug_class    = "example",
+  label         = "Example GLP-1s",
+  generic_names_probable = c("SEMAGLUTIDE", "TIRZEPATIDE"),
+  generic_names_cautious = c("DULAGLUTIDE"),
+  brand_names = list(
+    SEMAGLUTIDE = "Ozempic",
+    TIRZEPATIDE = "Mounjaro"
+    # DULAGLUTIDE has no brand_names entry, so its brand is character(0)
+  )
+)
+
+example_spec$get_generics(priority = 1:3)
+```
+
+Printing the tibble shows `<chr [1]>`/`<chr [0]>` for the list-column rather
+than the brand text itself — that's expected; `str()` or indexing into the
+column (e.g., `result$brand[[1]]`) shows the actual value(s). To get a
+one-row-per-brand tibble instead, use `tidyr::unnest()` with
+`keep_empty = TRUE` — **without** `keep_empty = TRUE`, `unnest()` silently
+drops every row with no recorded brand, which is most of them:
+
+```{r brand-unnest}
+example_spec$get_generics(priority = 1:3) |>
+  tidyr::unnest(brand, keep_empty = TRUE)
+```
 
 ## Antidiabetic drug classes
 

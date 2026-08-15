@@ -114,11 +114,18 @@ test_that("get_antidepressive_generics(component = 'ssri_v1') includes SERTRALIN
   expect_true("SERTRALINE" %in% result$generic)
 })
 
-test_that("get_antidepressive_generics(component = 'all') returns all GNNs", {
-  result <- get_antidepressive_generics(component = "all")
+test_that("get_antidepressive_generics(component = 'all') returns all GNNs across priority tiers", {
+  result <- get_antidepressive_generics(component = "all", priority = 1:3)
   expect_type(result$generic, "character")
-  expect_equal(nrow(result), 62L)
-  expect_true("BUPROPION"   %in% result$generic)
+  expect_equal(nrow(result), 70L)
+  expect_true("BUPROPION"   %in% result$generic)      # priority 2 (also approved for smoking cessation)
+  expect_true("TRANYLCYPROMINE" %in% result$generic)  # priority 1
+})
+
+test_that("get_antidepressive_generics(component = 'all') defaults to priority = 1 (core) only", {
+  result <- get_antidepressive_generics(component = "all")
+  expect_true(all(result$priority == 1L))
+  expect_false("BUPROPION" %in% result$generic)
   expect_true("TRANYLCYPROMINE" %in% result$generic)
 })
 

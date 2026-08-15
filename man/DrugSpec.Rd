@@ -41,6 +41,9 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
   label,
   defs = NULL,
   generic_names = character(0L),
+  generic_names_probable = character(0L),
+  generic_names_cautious = character(0L),
+  brand_names = list(),
   version = NULL
 )}
     \if{html}{\out{</div>}}
@@ -51,7 +54,24 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
       \item{\code{drug_class}}{Short identifier string, e.g. \code{"acei"}.}
       \item{\code{label}}{Human-readable label.}
       \item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
-      \item{\code{generic_names}}{Character vector of GNN drug names.}
+      \item{\code{generic_names}}{Character vector of GNN drug names that are
+single-indication and aligned with, and FDA-approved for, this drug
+class's indication. Stored at \code{priority = 1} (core).}
+      \item{\code{generic_names_probable}}{Character vector of GNN drug names that
+have more than one indication (e.g., also FDA-approved, or widely
+used off-label, for a different condition) in addition to this drug
+class's indication. Stored at \code{priority = 2} (probable).}
+      \item{\code{generic_names_cautious}}{Character vector of GNN drug names that
+are included in this drug class despite not having their expected
+indication approved in the US (e.g., approved for a related but
+distinct condition, or not marketed in the US at all). Stored at
+\code{priority = 3} (cautious).}
+      \item{\code{brand_names}}{Optional named list mapping a GNN drug name (must
+appear in \code{generic_names}, \code{generic_names_probable}, or
+\code{generic_names_cautious}) to one or more brand name strings, e.g.
+\code{list(SEMAGLUTIDE = "Ozempic", "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva"))}. Generics with no entry get an empty brand vector.
+Stored as a list-column (\code{brand}) in \code{get_generics()} output, since a
+single generic can map to zero, one, or multiple brands.}
       \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
     }
     \if{html}{\out{</div>}}
@@ -90,8 +110,12 @@ frame.
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
-and \code{version}.
+    A tibble with columns \code{generic}, \code{brand} (a list-column of
+character vectors — \code{character(0)} when a generic has no known
+brand, length 1+ otherwise), \code{priority}, \code{class}, and \code{version}. Use
+\code{tidyr::unnest(result, brand, keep_empty = TRUE)} to get one row per
+brand (this drops the generic entirely for a plain \code{unnest()} without
+\code{keep_empty = TRUE}, since most generics have no brand on record).
   }
 }
 

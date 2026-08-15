@@ -2316,20 +2316,36 @@ spec_non_glp1_v1 <- DrugSpec$new(
   )
 )
 
+# Dual-indication GLP-1s: separate brand names cover T2D and chronic weight
+# management, so each GNN spans both the antidiabetic and antiobesity classes
+# (e.g., Ozempic/T2D vs. Wegovy/weight for SEMAGLUTIDE). Priority 2 (probable)
+# in both specs.
+glp1_dual_indication_gnns <- c("SEMAGLUTIDE", "TIRZEPATIDE", "LIRAGLUTIDE")
+
 spec_glp1_v1 <- DrugSpec$new(
   'glp1', "GLP-1",
   version = 'v1',
   defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
-  generic_names = c(
-    "ALBIGLUTIDE",  # n=1,136,292 in MC Rx table
-    # "DULAGLUTIDE",  # T2D-only approval (Trulicity); no FDA obesity indication. n=64,108,557
-    # "EXENATIDE",  # T2D-only approval (Byetta); no FDA obesity indication. n=2,709,695
-    # "EXENATIDE EXTENDED-RELEASE",  # T2D-only approval (Bydureon); no FDA obesity indication.
-    # "EXENATIDE MICROSPHERES",  # T2D-only approval (Bydureon BCise); no FDA obesity indication. n=8,332,389
-    "LIRAGLUTIDE",  # n=37,296,377 in MC Rx table
-    # "LIXISENATIDE",  # T2D-only approval (Adlyxin); no FDA obesity indication. n=16,469
-    "SEMAGLUTIDE",  # n=140,453,217 in MC Rx table
-    "TIRZEPATIDE"  # n=79,868,142 in MC Rx table
+  generic_names_probable = c(
+    "LIRAGLUTIDE",  # n=37,296,377 in MC Rx table; dual-approved: Victoza (T2D) / Saxenda (chronic weight mgmt)
+    "SEMAGLUTIDE",  # n=140,453,217 in MC Rx table; dual-approved: Ozempic (T2D) / Wegovy (chronic weight mgmt)
+    "TIRZEPATIDE"  # n=79,868,142 in MC Rx table; dual-approved: Mounjaro (T2D) / Zepbound (chronic weight mgmt)
+  ),
+  generic_names_cautious = c(
+    "ALBIGLUTIDE",  # n=1,136,292 in MC Rx table; T2D-only approval (Tanzeum, withdrawn 2018); no FDA obesity indication — retained for historical claims capture
+    "DULAGLUTIDE",  # T2D-only approval (Trulicity); no FDA obesity indication. n=64,108,557
+    "EXENATIDE",  # T2D-only approval (Byetta); no FDA obesity indication. n=2,709,695
+    "EXENATIDE EXTENDED-RELEASE",  # T2D-only approval (Bydureon); no FDA obesity indication.
+    "EXENATIDE MICROSPHERES",  # T2D-only approval (Bydureon BCise); no FDA obesity indication. n=8,332,389
+    "LIXISENATIDE"  # T2D-only approval (Adlyxin); no FDA obesity indication. n=16,469
+  ),
+  # Brand names reflect the chronic weight management approval, since this
+  # is the antiobesity spec (contrast with spec_antidiab_glp1_v1, where the
+  # same three generics map to their T2D brand names instead).
+  brand_names = list(
+    LIRAGLUTIDE = "Saxenda",
+    SEMAGLUTIDE = "Wegovy",
+    TIRZEPATIDE = "Zepbound"
   )
 )
 
@@ -2358,13 +2374,27 @@ spec_antidep_ssri_v1 <- DrugSpec$new(
     "ESCITALOPRAM OXALATE",  # n=293,715,823 in MC Rx table
     "FLUOXETINE",  # n=2,368 in MC Rx table
     "FLUOXETINE HCL",  # n=229,522,546 in MC Rx table
-    # "FLUVOXAMINE",  # US approval is OCD/social anxiety disorder only; no US MDD approval (MDD approval exists in Europe but not the US).
-    # "FLUVOXAMINE MALEATE",  # US approval is OCD/social anxiety disorder only; no US MDD approval. n=10,691,902
     "PAROXETINE",
     "PAROXETINE HCL",  # n=87,014,857 in MC Rx table
-    # "PAROXETINE MESYLATE",  # FDA-approved only for menopausal vasomotor symptoms (Brisdelle 7.5 mg); FDA label explicitly states it should not be used for MDD. n=977,517
     "SERTRALINE",
     "SERTRALINE HCL"  # n=361,607,336 in MC Rx table
+  ),
+  generic_names_probable = c(
+    # Same GNRC_NM covers both the MDD-approved (Pexeva) and VMS-only,
+    # non-MDD-approved (Brisdelle 7.5 mg) paroxetine mesylate products.
+    "PAROXETINE MESYLATE"  # n=977,517 in MC Rx table
+  ),
+  brand_names = list(
+    # Both brands share this GNRC_NM; dose distinguishes them (7.5mg
+    # Brisdelle for VMS vs. 7.5-25mg Pexeva for MDD) — see bkbellows's PR #1
+    # review comment.
+    "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva")
+  ),
+  generic_names_cautious = c(
+    # US approval is OCD/social anxiety disorder only; no US MDD approval
+    # (MDD approval exists in Europe but not the US).
+    "FLUVOXAMINE",
+    "FLUVOXAMINE MALEATE"  # n=10,691,902 in MC Rx table
   )
 )
 
@@ -2376,16 +2406,21 @@ spec_antidep_snri_v1 <- DrugSpec$new(
     "DESVENLAFAXINE",  # n=824,794 in MC Rx table
     "DESVENLAFAXINE FUMARATE",  # n=4,680 in MC Rx table
     "DESVENLAFAXINE SUCCINATE",  # n=33,049,132 in MC Rx table
-    "DULOXETINE",  # NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
-    "DULOXETINE HCL",  # n=214,463,588; NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
     "LEVOMILNACIPRAN",
     "LEVOMILNACIPRAN HCL",  # n=1,616,535 in MC Rx table
     "LEVOMILNACIPRAN HYDROCHLORIDE",  # n=583,942 in MC Rx table
-    # "MILNACIPRAN",  # US approval is fibromyalgia only (Savella); no US antidepressant indication.
-    # "MILNACIPRAN HCL",  # US approval is fibromyalgia only (Savella); no US antidepressant indication. n=3,639,057
     "VENLAFAXINE",
     "VENLAFAXINE BESYLATE",  # n=23,174 in MC Rx table
     "VENLAFAXINE HCL"  # n=165,131,988 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "DULOXETINE",  # NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
+    "DULOXETINE HCL"  # n=214,463,588; NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
+  ),
+  generic_names_cautious = c(
+    # US approval is fibromyalgia only (Savella); no US antidepressant indication.
+    "MILNACIPRAN",
+    "MILNACIPRAN HCL"  # n=3,639,057 in MC Rx table
   )
 )
 
@@ -2428,10 +2463,19 @@ spec_antidep_maoi_v1 <- DrugSpec$new(
     "ISOCARBOXAZID",  # n=15,320 in MC Rx table
     "PHENELZINE",
     "PHENELZINE SULFATE",  # n=314,051 in MC Rx table
-    "SELEGILINE",  # n=247,338 in MC Rx table
-    # "SELEGILINE HCL",  # Oral pill is for Parkinson's disease only; the MDD-approved form is the transdermal patch (Emsam), whose GNRC_NM is "SELEGILINE" (retained above). n=806,042
     "TRANYLCYPROMINE",
     "TRANYLCYPROMINE SULFATE"  # n=316,001 in MC Rx table
+  ),
+  generic_names_probable = c(
+    # GNRC_NM "SELEGILINE" covers both the oral (Parkinson's-only) and
+    # transdermal Emsam patch (MDD-approved) forms.
+    "SELEGILINE"  # n=247,338 in MC Rx table
+  ),
+  generic_names_cautious = c(
+    # "SELEGILINE HCL" denotes the oral hydrochloride salt, which is
+    # Parkinson's-only; the MDD-approved form is the transdermal patch
+    # (Emsam), whose GNRC_NM is plain "SELEGILINE" (see probable, above).
+    "SELEGILINE HCL"  # n=806,042 in MC Rx table
   )
 )
 
@@ -2440,30 +2484,32 @@ spec_antidep_other_v1 <- DrugSpec$new(
   version = "v1",
   defs    = paste0(
     "Atypical and other-mechanism antidepressants, including NDRIs (bupropion), ",
-    "NaSSAs (mirtazapine), SARIs (nefazodone), and serotonin modulators ",
-    "(vilazodone, vortioxetine). Note: trazodone (SARI) and perphenazine are ",
-    "intentionally excluded — see commented-out entries in generic_names."
+    "NaSSAs (mirtazapine), SARIs (nefazodone, trazodone), and serotonin ",
+    "modulators (vilazodone, vortioxetine). Note: perphenazine is intentionally ",
+    "excluded — see commented-out entry in generic_names."
   ),
   generic_names = c(
-    "BUPROPION",  # NOTE: also approved for smoking cessation (Zyban)
-    "BUPROPION HBR",  # n=492,497; NOTE: also approved for smoking cessation (Zyban)
-    "BUPROPION HCL",  # n=290,468,738; NOTE: also approved for smoking cessation (Zyban)
     "DEXTROMETHORPHAN HBR/BUPROPION",  # n=1,469,999 in MC Rx table
     "MIRTAZAPINE",  # n=88,176,986 in MC Rx table
     "NEFAZODONE",
     "NEFAZODONE HCL",  # n=831,947 in MC Rx table
     # "PERPHENAZINE",  # First-generation antipsychotic (Trilafon); no antidepressant FDA indication — standalone claims reflect antipsychotic use. Combo products (amitriptyline/perphenazine) are captured in the TCA spec. n=3,639,397
-    # "TRAZODONE",      # Commented out: trazodone is FDA-approved for MDD, but
-    # "TRAZODONE HCL",  # nationally ~85% of prescriptions (~20M of ~24M in 2019)
-    #                   # are off-label for insomnia — it is the #1 prescribed sleep
-    #                   # aid in the US by volume. Including it here would primarily
-    #                   # capture insomnia patients, not antidepressant users.
-    #                   # n=265,385,791 in MC Rx table
     "VILAZODONE",
     "VILAZODONE HCL",  # n=12,478,041 in MC Rx table
     "VILAZODONE HYDROCHLORIDE",  # n=3,003,724 in MC Rx table
     "VORTIOXETINE",
     "VORTIOXETINE HYDROBROMIDE"  # n=18,701,850 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "BUPROPION",  # NOTE: also approved for smoking cessation (Zyban)
+    "BUPROPION HBR",  # n=492,497; NOTE: also approved for smoking cessation (Zyban)
+    "BUPROPION HCL",  # n=290,468,738; NOTE: also approved for smoking cessation (Zyban)
+    # FDA-approved for MDD, but nationally ~85% of prescriptions (~20M of ~24M
+    # in 2019) are off-label for insomnia — it is the #1 prescribed sleep aid
+    # in the US by volume, so standalone claims often reflect insomnia, not
+    # depression, treatment.
+    "TRAZODONE",
+    "TRAZODONE HCL"  # n=265,385,791 in MC Rx table
   )
 )
 
@@ -2551,11 +2597,22 @@ spec_aldo_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c(
-    "EPLERENONE",  # n=4,270,119; NOTE: also approved for post-MI heart failure with LV dysfunction (Inspra)
     "HCTZ/SPIRONOLACTONE",  # n=27 in MC Rx table
-    "SPIRONOLACTONE",  # n=134,722,193; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
-    "SPIRONOLACTONE, MICRONIZED",  # n=2,803; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
     "SPIRONOLACTONE/HCTZ"  # n=9 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "EPLERENONE",  # n=4,270,119; NOTE: also approved for post-MI heart failure with LV dysfunction (Inspra)
+    "SPIRONOLACTONE",  # n=134,722,193; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
+    "SPIRONOLACTONE, MICRONIZED"  # n=2,803; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
+  ),
+  generic_names_cautious = c(
+    # Non-steroidal MRA; FDA-approved for CKD in T2D (Kerendia), not
+    # hypertension. Included per bkbellows review comment (2026-08-12).
+    "FINERENONE"
+  ),
+  brand_names = list(
+    EPLERENONE = "Inspra",
+    FINERENONE = "Kerendia"
   )
 )
 
@@ -2566,11 +2623,13 @@ spec_alpha_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
   generic_names = c(
+    "PRAZOSIN HCL/POLYTHIAZIDE"  # n=9 in MC Rx table; fixed-dose antihypertensive combo, not prescribed for PTSD
+  ),
+  generic_names_probable = c(
     "DOXAZOSIN",  # NOTE: also approved for BPH; ER formulation is BPH-only (not HTN)
     "DOXAZOSIN MESYLATE",  # n=30,006,202; NOTE: also approved for BPH; ER formulation is BPH-only (not HTN)
     "PRAZOSIN",  # NOTE: also used for PTSD-related nightmares (VA/DoD guideline first-line)
     "PRAZOSIN HCL",  # n=27,727,643; NOTE: also used for PTSD-related nightmares (VA/DoD guideline first-line)
-    "PRAZOSIN HCL/POLYTHIAZIDE",  # n=9 in MC Rx table
     "TERAZOSIN",  # NOTE: also approved for BPH
     "TERAZOSIN HCL"  # n=18,490,325; NOTE: also approved for BPH
   )
@@ -2733,13 +2792,15 @@ spec_beta_noncardio_v1 <- DrugSpec$new(
     "HCTZ/PROPRANOLOL HCL",  # n=1 in MC Rx table
     "NADOLOL",  # n=8,721,728 in MC Rx table
     "NADOLOL/BENDROFLUMETHIAZIDE",  # n=39,079 in MC Rx table
-    "PROPRANOLOL",  # NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
-    "PROPRANOLOL HCL",  # n=90,513,340; NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
     "PROPRANOLOL HCL/HCTZ",  # n=45 in MC Rx table
     "PROPRANOLOL/HYDROCHLOROTHIAZID",  # n=104,281 in MC Rx table
-    "TIMOLOL",  # n=766,670; NOTE: also approved for angina and migraine prevention
-    "TIMOLOL MALEATE",  # n=33,785,241; NOTE: also approved for angina and migraine prevention
     "TIMOLOL/HYDROCHLOROTHIAZIDE"  # n=2 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "PROPRANOLOL",  # NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
+    "PROPRANOLOL HCL",  # n=90,513,340; NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
+    "TIMOLOL",  # n=766,670; NOTE: also approved for angina and migraine prevention
+    "TIMOLOL MALEATE"  # n=33,785,241; NOTE: also approved for angina and migraine prevention
   )
 )
 
@@ -2775,7 +2836,7 @@ spec_ccb_nondhp_v1 <- DrugSpec$new(
   "ccb_nondhp", "Calcium Channel Blockers (Non-Dihydropyridines)",
   version = "v1",
   defs    = "Non-dihydropyridine CCBs from the Perisphere antihypertensive medication list.",
-  generic_names = c(
+  generic_names_probable = c(
     "DILTIAZEM",  # NOTE: also widely used for AF rate control and angina
     "DILTIAZEM HCL",  # n=97,751,376; NOTE: also widely used for AF rate control and angina
     "DILTIAZEM MALATE",  # n=1; NOTE: also widely used for AF rate control and angina
@@ -2790,9 +2851,18 @@ spec_central_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Centrally acting antihypertensives from the Perisphere list. Note: exclude APRACLONIDINE when matching CLONIDINE.",
   generic_names = c(
+    "METHYLDOPA"  # n=1,313,741 in MC Rx table
+  ),
+  generic_names_probable = c(
     "CLONIDINE",  # n=7,489,006; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
-    "METHYLDOPA",  # n=1,313,741 in MC Rx table
     "GUANFACINE"  # NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+  ),
+  brand_names = list(
+    # ADHD-approved ER brands; the HTN-indicated brands (Catapres, Tenex)
+    # were never discussed in the PR review, so only the ADHD brand is
+    # recorded here for now.
+    CLONIDINE  = "Kapvay",
+    GUANFACINE = "Intuniv"
   )
 )
 
@@ -2801,13 +2871,9 @@ spec_central_v2 <- DrugSpec$new(
   version = "v2",
   defs    = "Centrally acting antihypertensives from FDB. Note: exclude APRACLONIDINE when matching CLONIDINE.",
   generic_names = c(
-    "CLONIDINE",  # n=7,489,006; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
-    "CLONIDINE HCL",  # n=96,485,351; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
     "CLONIDINE HCL/CHLORTHALIDONE",  # n=8,778 in MC Rx table
     "GUANABENZ",
     "GUANABENZ ACETATE",  # n=808 in MC Rx table
-    "GUANFACINE",  # NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
-    "GUANFACINE HCL",  # n=40,070,257; NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
     "HYDRALAZINE HCL/RESERPINE/HCTZ",  # n=5 in MC Rx table
     "HYDRALAZINE/RESERPIN/HCTHIAZID",  # n=4 in MC Rx table
     "HYDRALAZINE/RESERPIN/HCTZ",  # n=13 in MC Rx table
@@ -2821,6 +2887,18 @@ spec_central_v2 <- DrugSpec$new(
     "RESERPINE/HYDROCHLOROTHIAZIDE",  # n=46 in MC Rx table
     "RESERPINE/HYDROFLUMETHIAZIDE",  # n=10 in MC Rx table
     "RESERPINE/TRICHLORMETHIAZIDE"  # n=1 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CLONIDINE",  # n=7,489,006; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
+    "CLONIDINE HCL",  # n=96,485,351; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
+    "GUANFACINE",  # NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+    "GUANFACINE HCL"  # n=40,070,257; NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+  ),
+  brand_names = list(
+    CLONIDINE      = "Kapvay",
+    "CLONIDINE HCL" = "Kapvay",
+    GUANFACINE     = "Intuniv",
+    "GUANFACINE HCL" = "Intuniv"
   )
 )
 
@@ -2865,7 +2943,7 @@ spec_diuretics_loop_v1 <- DrugSpec$new(
   "diuretics_loop", "Diuretics (Loop)",
   version = "v1",
   defs    = "Loop diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c(
+  generic_names_probable = c(
     "BUMETANIDE",  # n=22,577,818; NOTE: primarily prescribed for heart failure/edema in US practice
     "FUROSEMIDE",  # n=280,141,596; NOTE: primarily prescribed for heart failure/edema in US practice
     "TORSEMIDE"  # n=24,278,347; NOTE: primarily prescribed for heart failure/edema in US practice
@@ -2877,10 +2955,12 @@ spec_diuretics_loop_v2 <- DrugSpec$new(
   version = "v2",
   defs    = "Loop diuretics from FDB. Adds ETHACRYNIC ACID.",
   generic_names = c(
-    "BUMETANIDE",  # n=22,577,818; NOTE: primarily prescribed for heart failure/edema in US practice
     "ETHACRYNIC ACID",  # n=356,706 in MC Rx table
+    "FUROSEMIDE IN 0.9 % NACL"  # n=234; NOTE: IV infusion — inpatient-only; antihypertensive use is negligible
+  ),
+  generic_names_probable = c(
+    "BUMETANIDE",  # n=22,577,818; NOTE: primarily prescribed for heart failure/edema in US practice
     "FUROSEMIDE",  # n=280,141,596; NOTE: primarily prescribed for heart failure/edema in US practice
-    "FUROSEMIDE IN 0.9 % NACL",  # n=234; NOTE: IV infusion — inpatient-only; antihypertensive use is negligible
     "TORSEMIDE"  # n=24,278,347; NOTE: primarily prescribed for heart failure/edema in US practice
   )
 )
@@ -2938,10 +3018,12 @@ spec_vasodilators_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Direct vasodilators from the Perisphere antihypertensive medication list.",
   generic_names = c(
+    "HYDRALAZINE HCL/HCTZ",  # n=17 in MC Rx table
+    "HYDRALAZINE/HYDROCHLOROTHIAZID"  # n=1,585 in MC Rx table
+  ),
+  generic_names_probable = c(
     "HYDRALAZINE",  # NOTE: also used for heart failure (isosorbide dinitrate + hydralazine regimen)
     "HYDRALAZINE HCL",  # n=59,439,978; NOTE: also used for heart failure (isosorbide dinitrate + hydralazine regimen)
-    "HYDRALAZINE HCL/HCTZ",  # n=17 in MC Rx table
-    "HYDRALAZINE/HYDROCHLOROTHIAZID",  # n=1,585 in MC Rx table
     "MINOXIDIL"  # n=8,870,133; NOTE: also prescribed at low doses (off-label) for androgenic alopecia
   )
 )
@@ -3079,8 +3161,7 @@ antidiab_gnns <- list(
   ),
   alpha_glucosidase = c(
     "ACARBOSE",  # n=2,695,084 in MC Rx table
-    "MIGLITOL",  # n=110,276 in MC Rx table
-    "VOGLIBOSE"
+    "MIGLITOL"  # n=110,276 in MC Rx table
   ),
   dpp4 = c(
     "ALOGLIPTIN BENZ/METFORMIN HCL",  # n=687,166 in MC Rx table
@@ -3324,10 +3405,30 @@ spec_antidiab_biguanide_v1         <- DrugSpec$new("antidiab_biguanide",        
 spec_antidiab_sulfonylurea_v1      <- DrugSpec$new("antidiab_sulfonylurea",      "Sulfonylureas",                version = "v1", defs = antidiab_defs$sulfonylurea,      generic_names = antidiab_gnns$sulfonylurea)
 spec_antidiab_meglitinide_v1       <- DrugSpec$new("antidiab_meglitinide",       "Meglitinides",                 version = "v1", defs = antidiab_defs$meglitinide,       generic_names = antidiab_gnns$meglitinide)
 spec_antidiab_tzd_v1               <- DrugSpec$new("antidiab_tzd",               "Thiazolidinediones (TZDs)",    version = "v1", defs = antidiab_defs$tzd,               generic_names = antidiab_gnns$tzd)
-spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new("antidiab_alpha_glucosidase", "Alpha-Glucosidase Inhibitors", version = "v1", defs = antidiab_defs$alpha_glucosidase, generic_names = antidiab_gnns$alpha_glucosidase)
+spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new(
+  "antidiab_alpha_glucosidase", "Alpha-Glucosidase Inhibitors", version = "v1",
+  defs = antidiab_defs$alpha_glucosidase,
+  generic_names = antidiab_gnns$alpha_glucosidase,
+  generic_names_cautious = c(
+    "VOGLIBOSE"  # Not FDA-approved or marketed in the US (approved in Japan/India)
+  )
+)
 spec_antidiab_dpp4_v1              <- DrugSpec$new("antidiab_dpp4",              "DPP-4 Inhibitors",             version = "v1", defs = antidiab_defs$dpp4,              generic_names = antidiab_gnns$dpp4)
 spec_antidiab_sglt2_v1             <- DrugSpec$new("antidiab_sglt2",             "SGLT-2 Inhibitors",            version = "v1", defs = antidiab_defs$sglt2,             generic_names = antidiab_gnns$sglt2)
-spec_antidiab_glp1_v1              <- DrugSpec$new("antidiab_glp1",              "GLP-1 Receptor Agonists",      version = "v1", defs = antidiab_defs$glp1,              generic_names = antidiab_gnns$glp1)
+spec_antidiab_glp1_v1 <- DrugSpec$new(
+  "antidiab_glp1", "GLP-1 Receptor Agonists", version = "v1",
+  defs = antidiab_defs$glp1,
+  generic_names          = setdiff(antidiab_gnns$glp1, glp1_dual_indication_gnns),
+  generic_names_probable = intersect(antidiab_gnns$glp1, glp1_dual_indication_gnns),
+  # Brand names reflect the T2D approval here (contrast with spec_glp1_v1,
+  # the antiobesity spec, where these same generics map to their chronic
+  # weight management brand names instead).
+  brand_names = list(
+    LIRAGLUTIDE = "Victoza",
+    SEMAGLUTIDE = "Ozempic",
+    TIRZEPATIDE = "Mounjaro"
+  )
+)
 spec_antidiab_insulin_v1           <- DrugSpec$new("antidiab_insulin",           "Insulin and Supplies",         version = "v1", defs = antidiab_defs$insulin,           generic_names = antidiab_gnns$insulin)
 spec_antidiab_amylin_v1            <- DrugSpec$new("antidiab_amylin",            "Amylin Analogues",             version = "v1", defs = antidiab_defs$amylin,            generic_names = antidiab_gnns$amylin)
 

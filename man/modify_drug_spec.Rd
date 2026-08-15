@@ -4,7 +4,15 @@
 \alias{modify_drug_spec}
 \title{Modify a drug class specification}
 \usage{
-modify_drug_spec(spec, label = NULL, defs = NULL, generic_names = NULL)
+modify_drug_spec(
+  spec,
+  label = NULL,
+  defs = NULL,
+  generic_names = NULL,
+  generic_names_probable = NULL,
+  generic_names_cautious = NULL,
+  brand_names = NULL
+)
 }
 \arguments{
 \item{spec}{A \link{DrugSpec} object.}
@@ -13,7 +21,13 @@ modify_drug_spec(spec, label = NULL, defs = NULL, generic_names = NULL)
 
 \item{defs}{Optional replacement narrative string.}
 
-\item{generic_names}{Optional replacement GNN character vector.}
+\item{generic_names}{Optional replacement GNN character vector for priority 1 (core).}
+
+\item{generic_names_probable}{Optional replacement GNN character vector for priority 2 (probable).}
+
+\item{generic_names_cautious}{Optional replacement GNN character vector for priority 3 (cautious).}
+
+\item{brand_names}{Optional named list mapping a GNN drug name to one or more brand name strings (replaces the full brand mapping for the resulting generic set; unspecified generics keep their existing brand assignment).}
 }
 \value{
 A modified deep clone of \code{spec}.
