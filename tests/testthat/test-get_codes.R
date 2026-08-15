@@ -1,25 +1,25 @@
 .codes_of <- function(df, type) df$code[df$type == type]
 
-test_that("get_htn_v1_codes() returns a tibble with the expected columns", {
-  result <- get_htn_v1_codes()
+test_that("get_hypertension_v1_codes() returns a tibble with the expected columns", {
+  result <- get_hypertension_v1_codes()
   expect_s3_class(result, "tbl_df")
   expect_equal(names(result), c("type", "code", "priority", "version"))
 })
 
-test_that("get_htn_v1_codes() code_type filter works", {
-  result <- get_htn_v1_codes(code_type = "dx_icd9")
+test_that("get_hypertension_v1_codes() code_type filter works", {
+  result <- get_hypertension_v1_codes(code_type = "dx_icd9")
   expect_true(all(result$type == "dx_icd9"))
 })
 
-test_that("get_htn_v1_codes() periods = TRUE adds decimal points to 4+ char codes", {
-  result <- get_htn_v1_codes(code_type = "dx_icd9", periods = TRUE)
+test_that("get_hypertension_v1_codes() periods = TRUE adds decimal points to 4+ char codes", {
+  result <- get_hypertension_v1_codes(code_type = "dx_icd9", periods = TRUE)
   codes  <- result$code
   expect_true(all(grepl("\\.", codes[nchar(codes) > 3L])))
 })
 
-test_that("get_htn_v1_codes() outcome falls back to condition codes for condition-only spec", {
-  result_outcome   <- get_htn_v1_codes(variable_type = "outcome")
-  result_condition <- get_htn_v1_codes(variable_type = "condition")
+test_that("get_hypertension_v1_codes() outcome falls back to condition codes for condition-only spec", {
+  result_outcome   <- get_hypertension_v1_codes(variable_type = "outcome")
+  result_condition <- get_hypertension_v1_codes(variable_type = "condition")
   expect_equal(result_outcome, result_condition)
 })
 
@@ -30,8 +30,8 @@ test_that("get_hf_v1_codes() outcome does NOT fall back (HF has outcome codes de
   expect_true(nrow(result_outcome) > 0L)
 })
 
-test_that("get_htn_v1_codes() priority defaults to 1", {
-  result <- get_htn_v1_codes()
+test_that("get_hypertension_v1_codes() priority defaults to 1", {
+  result <- get_hypertension_v1_codes()
   expect_true(all(result$priority == 1L))
 })
 
@@ -67,16 +67,16 @@ test_that("get_ascvd_codes() invalid component in vector errors informatively", 
   )
 })
 
-test_that("get_antihypertensive_generics() multi-component returns tagged rows for each", {
-  result <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"))
+test_that("get_hypertension_generics() multi-component returns tagged rows for each", {
+  result <- get_hypertension_generics(component = c("acei_v1", "arb_v1"))
   expect_true(all(c("acei", "arb") %in% result$class))
 })
 
-test_that("get_antihypertensive_generics() multi-component matches individual union", {
-  multi  <- get_antihypertensive_generics(component = c("acei_v1", "arb_v1"))$generic
+test_that("get_hypertension_generics() multi-component matches individual union", {
+  multi  <- get_hypertension_generics(component = c("acei_v1", "arb_v1"))$generic
   single <- unique(c(
-    get_antihypertensive_generics(component = "acei_v1")$generic,
-    get_antihypertensive_generics(component = "arb_v1")$generic
+    get_hypertension_generics(component = "acei_v1")$generic,
+    get_hypertension_generics(component = "arb_v1")$generic
   ))
   expect_equal(sort(unique(multi)), sort(single))
 })
@@ -93,20 +93,20 @@ test_that("get_ascvd_codes(component = 'cerebrovasc_disease_v1') returns codes",
   expect_true(nrow(result) > 0L)
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v1') returns tagged tibble", {
-  result <- get_antihypertensive_generics(component = "acei_v1")
+test_that("get_hypertension_generics(component = 'acei_v1') returns tagged tibble", {
+  result <- get_hypertension_generics(component = "acei_v1")
   expect_true(all(result$class == "acei"))
   expect_true(nrow(result) > 0L)
 })
 
 test_that("component= is optional for composite specs — omitting it returns everything", {
   expect_true(nrow(get_ascvd_codes()) > 0L)
-  expect_true(nrow(get_antihypertensive_generics()) > 0L)
+  expect_true(nrow(get_hypertension_generics()) > 0L)
 })
 
 test_that("component= on a non-composite spec throws an informative error", {
   expect_error(
-    get_htn_v1_codes(component = "anything"),
+    get_hypertension_v1_codes(component = "anything"),
     "component"
   )
 })
@@ -160,13 +160,10 @@ test_that("expected code sets: hypertension", {
     "I169"
   )
 
-  v1 <- get_htn_v1_codes()
-  v2 <- get_htn_v2_codes()
+  v1 <- get_hypertension_v1_codes()
 
   expect_true(.codes_of(v1, "dx_icd9")  %==%  dx_icd9)
   expect_true(.codes_of(v1, "dx_icd10") %==%  dx_icd10)
-  expect_true(.codes_of(v1, "dx_icd9")  %==%  .codes_of(v2, "dx_icd9"))
-  expect_true(.codes_of(v1, "dx_icd10") %==%  .codes_of(v2, "dx_icd10"))
 
 })
 
@@ -357,17 +354,10 @@ test_that("expected code sets: CHD", {
   )
 
   chd_v1 <- get_ascvd_codes(component = 'chd_v1')
-  chd_v2 <- get_ascvd_codes(component = 'chd_v2')
 
   expect_true(.codes_of(chd_v1, "dx_icd9")   %==% dx_icd9)
   expect_true(.codes_of(chd_v1, "dx_icd10")  %==% dx_icd10)
   expect_true(.codes_of(chd_v1, "proc_icd9") %==% proc_icd9)
   expect_true(.codes_of(chd_v1, "proc_icd10") %==% proc_icd10)
-
-  expect_true(.codes_of(chd_v1, "dx_icd9")   %==% .codes_of(chd_v2, "dx_icd9"))
-  expect_true(.codes_of(chd_v1, "dx_icd10")  %==% .codes_of(chd_v2, "dx_icd10"))
-  expect_true(.codes_of(chd_v1, "proc_icd9") %==% .codes_of(chd_v2, "proc_icd9"))
-  expect_true(.codes_of(chd_v1, "proc_icd10") %==% .codes_of(chd_v2, "proc_icd10"))
-
 
 })

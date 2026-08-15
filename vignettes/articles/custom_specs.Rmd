@@ -74,13 +74,13 @@ is never modified:
 
 ```{r add-codes}
 # Inspect available keys
-spec_htn_v1$keys()
+spec_hypertension_v1$keys()
 
 # Add a code and confirm the clone grew; original is unchanged
-htn_plus <- add_codes(spec_htn_v1, dx_icd10 = c("I99"))
+htn_plus <- add_codes(spec_hypertension_v1, dx_icd10 = c("I99"))
 
 nrow(htn_plus$get_codes(code_type = "dx_icd10"))     # clone
-nrow(spec_htn_v1$get_codes(code_type = "dx_icd10"))  # original
+nrow(spec_hypertension_v1$get_codes(code_type = "dx_icd10"))  # original
 ```
 
 By default, added codes are flagged for both `condition` and `outcome`.
@@ -88,7 +88,7 @@ Use `variable_type` to restrict membership:
 
 ```{r add-codes-outcome}
 htn_outcome_only <- add_codes(
-  spec_htn_v1,
+  spec_hypertension_v1,
   variable_type = "outcome",
   dx_icd10      = c("I99")
 )
@@ -99,11 +99,11 @@ htn_outcome_only <- add_codes(
 `remove_codes()` returns a clone with the specified codes excluded:
 
 ```{r remove-codes}
-htn_trimmed <- remove_codes(spec_htn_v1, dx_icd9 = c("4019"))
+htn_trimmed <- remove_codes(spec_hypertension_v1, dx_icd9 = c("4019"))
 
 # Code removed from clone; original is unchanged
 "4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$code
-"4019" %in% spec_htn_v1$get_codes(code_type = "dx_icd9")$code
+"4019" %in% spec_hypertension_v1$get_codes(code_type = "dx_icd9")$code
 ```
 
 ## Modifying a CodeSpec
@@ -113,7 +113,7 @@ code sets:
 
 ```{r modify-code-spec}
 htn_revised <- modify_code_spec(
-  spec  = spec_htn_v1,
+  spec  = spec_hypertension_v1,
   label = "Hypertension (revised)",
   defs  = list(
     condition = c("i" = "Study-specific hypertension definition."),
@@ -152,7 +152,7 @@ with a specific component from a composite, extract it first:
 
 ```{r modify-drug-spec}
 # Extract a leaf spec from a composite
-acei_v1 <- spec_antihypertensive$components()$acei_v1
+acei_v1 <- spec_hypertension$components()$acei_v1
 
 # Build a study-specific variant
 my_acei <- modify_drug_spec(
@@ -167,6 +167,6 @@ my_acei$get_generics()
 ## Immutability
 
 All custom-spec functions return **deep clones**. Bundled spec objects
-(`spec_htn_v1`, `spec_antihypertensive`, etc.) are never modified in place,
+(`spec_hypertension_v1`, `spec_hypertension`, etc.) are never modified in place,
 so you can safely build study-specific variants without affecting other code
 in your project that relies on the standard definitions.

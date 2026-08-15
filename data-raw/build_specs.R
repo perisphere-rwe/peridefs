@@ -137,7 +137,7 @@ htn_v2_defs_condition <- c(
   htn_v1_defs_condition,
   "*" = paste0(
     "\u22652 pharmacy fills for an antihypertensive medication ",
-    "(see spec_antihypertensive)"
+    "(see spec_hypertension)"
   )
 )
 
@@ -146,18 +146,13 @@ htn_codes <- list(
   dx_icd10 = make_key_condition_only(htn_icd10)
 )
 
-spec_htn_v1 <- CodeSpec$new(
-  condition = "htn",
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 previously
+# shared identical codes and differed only in the condition definition
+# narrative (v2 added the medication criterion). Now there's a single
+# version carrying the more complete (formerly v2) narrative.
+spec_hypertension_v1 <- CodeSpec$new(
+  condition = "hypertension",
   version = "v1",
-  label = "Hypertension",
-  defs  = list(condition = htn_v1_defs_condition,
-               outcome = NULL),
-  codes = htn_codes
-)
-
-spec_htn_v2 <- CodeSpec$new(
-  condition = "htn",
-  version = "v2",
   label = "Hypertension",
   defs  = list(condition = htn_v2_defs_condition,
                outcome = NULL),
@@ -340,6 +335,12 @@ chd_hcpcs <- c(
   "G0291"
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 shared
+# identical codes and differed only in the outcome definition narrative
+# (v2 extended the outcome definition to include coronary
+# revascularizations within 60 days of MI, linked to qualifying
+# non-elective CHD-related primary discharge diagnoses). Now there's a
+# single version carrying the more complete (formerly v2) narrative.
 spec_chd_v1 <- CodeSpec$new(
   condition = "chd",
   version = "v1",
@@ -372,6 +373,21 @@ spec_chd_v1 <- CodeSpec$new(
       "*" = paste0(
         "Inpatient or outpatient claim with a procedure code for coronary ",
         "revascularization (see condition definition for procedure codes)."
+      ),
+      "i" = paste0(
+        "Also includes coronary revascularizations occurring within 60 days ",
+        "of an MI hospitalization, if linked to a {.emph primary} discharge ",
+        "diagnosis for a non-elective CHD-related condition:"
+      ),
+      "*" = paste0(
+        "ICD-9: {.strong 427.xx}, {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, ",
+        "{.strong 404.01}\u2013{.strong 404.93}, {.strong 428.x}, {.strong 411.xx}"
+      ),
+      "*" = paste0(
+        "ICD-10: {.strong I47.1}, {.strong I47.2}, {.strong I47.9}, {.strong I48.91}, ",
+        "{.strong I48.92}, {.strong I49.x}, {.strong R00.1}, {.strong I46.9}, HF codes ",
+        "({.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.x}), ",
+        "{.strong I20.0}, {.strong I24.0}, {.strong I24.1}, {.strong I24.8}"
       )
     )
   ),
@@ -386,37 +402,6 @@ spec_chd_v1 <- CodeSpec$new(
     proc_icd10 = make_key(chd_proc_icd10),
     hcpcs      = make_key(chd_hcpcs)
   )
-)
-
-#### outcome, version 2 ----
-# Same codes as v1; the outcome definition is extended to include coronary
-# revascularizations within 60 days of MI when linked to a qualifying
-# non-elective CHD-related primary discharge diagnosis.
-
-spec_chd_v2 <- CodeSpec$new(
-  condition = "chd", version = "v2", label = "Coronary Heart Disease",
-  defs = list(
-    condition = spec_chd_v1$get_defs("condition"),
-    outcome = c(
-      spec_chd_v1$get_defs("outcome"),
-      "i" = paste0(
-        "Version 2 additionally includes coronary revascularizations occurring ",
-        "within 60 days of an MI hospitalization, if linked to a {.emph primary} ",
-        "discharge diagnosis for a non-elective CHD-related condition:"
-      ),
-      "*" = paste0(
-        "ICD-9: {.strong 427.xx}, {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, ",
-        "{.strong 404.01}\u2013{.strong 404.93}, {.strong 428.x}, {.strong 411.xx}"
-      ),
-      "*" = paste0(
-        "ICD-10: {.strong I47.1}, {.strong I47.2}, {.strong I47.9}, {.strong I48.91}, ",
-        "{.strong I48.92}, {.strong I49.x}, {.strong R00.1}, {.strong I46.9}, HF codes ",
-        "({.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.x}), ",
-        "{.strong I20.0}, {.strong I24.0}, {.strong I24.1}, {.strong I24.8}"
-      )
-    )
-  ),
-  codes = spec_chd_v1$.__enclos_env__$private$.codes
 )
 
 ### Stroke ----
@@ -1368,7 +1353,6 @@ spec_ascvd <- CompositeCodeSpec$new(
   ),
   components = list(
     chd_v1                 = spec_chd_v1,
-    chd_v2                 = spec_chd_v2,
     stroke_v1              = spec_stroke_v1,
     lead_pad_v1            = spec_lead_pad_v1,
     cerebrovasc_disease_v1 = spec_cerebrovasc_disease_v1
@@ -1610,6 +1594,10 @@ depress_defs_base <- c(
   )
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 shared
+# identical codes and differed only in the condition definition narrative
+# (v2 added the medication criterion). Now there's a single version
+# carrying the more complete (formerly v2) narrative.
 spec_depression_v1 <- CodeSpec$new(
   condition = "depression",
   version   = "v1",
@@ -1617,23 +1605,9 @@ spec_depression_v1 <- CodeSpec$new(
   defs = list(
     condition = c(
       depress_defs_base,
-      "i" = "Medication use is not required (diagnosis-based only)."
-    ),
-    outcome = NULL
-  ),
-  codes = depress_codes
-)
-
-spec_depression_v2 <- CodeSpec$new(
-  condition = "depression",
-  version   = "v2",
-  label     = "Depression",
-  defs = list(
-    condition = c(
-      depress_defs_base,
       "*" = paste0(
         "\u22652 pharmacy claims for a depression medication ",
-        "(see {.strong spec_antidepressive}); 2 different GNNs on the same day are permitted."
+        "(see {.strong spec_depression}); 2 different GNNs on the same day are permitted."
       )
     ),
     outcome = NULL
@@ -1825,6 +1799,11 @@ diab_defs_base <- c(
   )
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2/v3 shared
+# identical codes (diab_codes) and differed only in the condition
+# definition narrative (v2 added the medication criterion; v3 added the
+# four-category sub-classification note). Now there's a single version
+# carrying the most complete (formerly v3) narrative.
 spec_diabetes_v1 <- CodeSpec$new(
   condition = "diabetes",
   version = "v1",
@@ -1832,29 +1811,7 @@ spec_diabetes_v1 <- CodeSpec$new(
   defs  = list(
     condition = c(
       diab_defs_base,
-      "i" = "Medication use is not required (diagnosis-based only)."
-    ),
-    outcome = NULL
-  ),
-  codes = diab_codes
-)
-
-spec_diabetes_v2 <- CodeSpec$new(
-  condition = "diabetes", version = "v2", label = "Diabetes Mellitus",
-  defs  = list(
-    condition = c(diab_defs_base,
-                  "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_antidiabetic})."),
-    outcome = NULL
-  ),
-  codes = diab_codes
-)
-
-spec_diabetes_v3 <- CodeSpec$new(
-  condition = "diabetes", version = "v3", label = "Diabetes Mellitus",
-  defs  = list(
-    condition = c(
-      diab_defs_base,
-      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_antidiabetic}).",
+      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes}).",
       "i" = paste0(
         "Patients are then classified into four mutually exclusive categories: ",
         "no diabetes; diabetes without antidiabetic medication; ",
@@ -2320,41 +2277,67 @@ spec_non_glp1_v1 <- DrugSpec$new(
 # management, so each GNN spans both the antidiabetic and antiobesity classes
 # (e.g., Ozempic/T2D vs. Wegovy/weight for SEMAGLUTIDE). Priority 2 (probable)
 # in both specs.
-glp1_dual_indication_gnns <- c("SEMAGLUTIDE", "TIRZEPATIDE", "LIRAGLUTIDE")
-
+# Shared across the antiobesity and antidiabetic composites (2026-08-15):
+# previously two separate DrugSpec objects (spec_glp1_v1 here and
+# spec_antidiab_glp1_v1, defined near the antidiabetic components) listed
+# these generics independently, with independently-maintained priority
+# tiers and brand names — a duplication/drift risk. Now a single spec
+# carries every generic's priority/brand *per condition* via generic_defs;
+# spec_obesity and spec_diabetes both reference this one object as
+# their "glp1_v1" component, and each composite's own `condition` field
+# filters it down to the relevant rows automatically.
+#
+# RESOLVED (2026-08-15): EXENATIDE EXTENDED-RELEASE previously only had an
+# "obesity" row, matching a pre-merge asymmetry between the two original
+# specs (present in the old obesity spec's cautious list but absent from
+# the old diabetes spec's generic list). Confirmed via FDA labeling that
+# it (Bydureon) is indicated as an adjunct to diet/exercise to improve
+# glycemic control in adults with T2D, no obesity indication — the same
+# profile as its sibling formulations EXENATIDE and EXENATIDE
+# MICROSPHERES, which already have diabetes/priority-1 rows below. Added
+# the missing diabetes row to match.
 spec_glp1_v1 <- DrugSpec$new(
   'glp1', "GLP-1",
   version = 'v1',
-  defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
-  generic_names_probable = c(
-    "LIRAGLUTIDE",  # n=37,296,377 in MC Rx table; dual-approved: Victoza (T2D) / Saxenda (chronic weight mgmt)
-    "SEMAGLUTIDE",  # n=140,453,217 in MC Rx table; dual-approved: Ozempic (T2D) / Wegovy (chronic weight mgmt)
-    "TIRZEPATIDE"  # n=79,868,142 in MC Rx table; dual-approved: Mounjaro (T2D) / Zepbound (chronic weight mgmt)
-  ),
-  generic_names_cautious = c(
-    "ALBIGLUTIDE",  # n=1,136,292 in MC Rx table; T2D-only approval (Tanzeum, withdrawn 2018); no FDA obesity indication — retained for historical claims capture
-    "DULAGLUTIDE",  # T2D-only approval (Trulicity); no FDA obesity indication. n=64,108,557
-    "EXENATIDE",  # T2D-only approval (Byetta); no FDA obesity indication. n=2,709,695
-    "EXENATIDE EXTENDED-RELEASE",  # T2D-only approval (Bydureon); no FDA obesity indication.
-    "EXENATIDE MICROSPHERES",  # T2D-only approval (Bydureon BCise); no FDA obesity indication. n=8,332,389
-    "LIXISENATIDE"  # T2D-only approval (Adlyxin); no FDA obesity indication. n=16,469
-  ),
-  # Brand names reflect the chronic weight management approval, since this
-  # is the antiobesity spec (contrast with spec_antidiab_glp1_v1, where the
-  # same three generics map to their T2D brand names instead).
-  brand_names = list(
-    LIRAGLUTIDE = "Saxenda",
-    SEMAGLUTIDE = "Wegovy",
-    TIRZEPATIDE = "Zepbound"
+  defs = "GLP-1 receptor agonists, shared across the antiobesity and antidiabetic composites.",
+  generic_defs = tibble::tribble(
+    ~generic,                      ~priority, ~condition, ~brand,
+    "LIRAGLUTIDE",                 2L,        "obesity",  "Saxenda",
+    "LIRAGLUTIDE",                 2L,        "diabetes", "Victoza",
+    "SEMAGLUTIDE",                 2L,        "obesity",  "Wegovy",
+    "SEMAGLUTIDE",                 2L,        "diabetes", "Ozempic",
+    "TIRZEPATIDE",                 2L,        "obesity",  "Zepbound",
+    "TIRZEPATIDE",                 2L,        "diabetes", "Mounjaro",
+    "ALBIGLUTIDE",                 3L,        "obesity",  NA,
+    "ALBIGLUTIDE",                 1L,        "diabetes", NA,
+    "DULAGLUTIDE",                 3L,        "obesity",  NA,
+    "DULAGLUTIDE",                 1L,        "diabetes", NA,
+    "EXENATIDE",                   3L,        "obesity",  NA,
+    "EXENATIDE",                   1L,        "diabetes", NA,
+    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",  NA,
+    "EXENATIDE EXTENDED-RELEASE",  1L,        "diabetes", NA,
+    "EXENATIDE MICROSPHERES",      3L,        "obesity",  NA,
+    "EXENATIDE MICROSPHERES",      1L,        "diabetes", NA,
+    "LIXISENATIDE",                3L,        "obesity",  NA,
+    "LIXISENATIDE",                1L,        "diabetes", NA,
+    "INSULIN DEGLUDEC/LIRAGLUTIDE",  1L, "diabetes", NA,
+    "INSULIN GLARGINE/LIXISENATIDE", 1L, "diabetes", NA
   )
 )
+# Rx counts (for reference): LIRAGLUTIDE n=37,296,377; SEMAGLUTIDE
+# n=140,453,217; TIRZEPATIDE n=79,868,142; ALBIGLUTIDE n=1,136,292
+# (Tanzeum, withdrawn 2018 — retained for historical claims capture);
+# DULAGLUTIDE n=64,108,557; EXENATIDE n=2,709,695; EXENATIDE MICROSPHERES
+# n=8,332,389; LIXISENATIDE n=16,469; INSULIN DEGLUDEC/LIRAGLUTIDE
+# n=796,110; INSULIN GLARGINE/LIXISENATIDE n=2,515,845.
 
 ## Antiobesity medication compositions ----
 
-spec_antiobesity <- CompositeDrugSpec$new(
+spec_obesity <- CompositeDrugSpec$new(
   drug_class = "antiobesity",
   label      = "Antiobesity Medications",
   defs       = "Antiobesity medication subclasses (v1): non-GLP-1 agents and GLP-1 receptor agonists.",
+  condition  = "obesity",
   components = list(
     non_glp1_v1 = spec_non_glp1_v1,
     glp1_v1     = spec_glp1_v1
@@ -2513,13 +2496,14 @@ spec_antidep_other_v1 <- DrugSpec$new(
   )
 )
 
-spec_antidepressive <- CompositeDrugSpec$new(
+spec_depression <- CompositeDrugSpec$new(
   drug_class = "antidepressive",
   label      = "Antidepressive Medications",
   defs       = paste0(
     "Antidepressive medication subclasses (v1): SSRIs, SNRIs, tricyclic ",
     "antidepressants, MAOIs, and other/atypical agents."
   ),
+  condition  = "depression",
   components = list(
     ssri_v1  = spec_antidep_ssri_v1,
     snri_v1  = spec_antidep_snri_v1,
@@ -2601,15 +2585,18 @@ spec_aldo_v1 <- DrugSpec$new(
   # "hypertension" for now (no behavior change — see AGENTS.md).
   generic_defs = tibble::tribble(
     ~generic,                     ~priority, ~condition,     ~brand,
-    "HCTZ/SPIRONOLACTONE",        1L,        "hypertension", NA,  # n=27 in MC Rx table
-    "SPIRONOLACTONE/HCTZ",        1L,        "hypertension", NA,  # n=9 in MC Rx table
-    "EPLERENONE",                 2L,        "hypertension", "Inspra",  # n=4,270,119; NOTE: also approved for post-MI heart failure with LV dysfunction
-    "SPIRONOLACTONE",             2L,        "hypertension", NA,  # n=134,722,193; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
-    "SPIRONOLACTONE, MICRONIZED", 2L,        "hypertension", NA,  # n=2,803; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
-    # Non-steroidal MRA; FDA-approved for CKD in T2D (Kerendia), not
-    # hypertension. Included per bkbellows review comment (2026-08-12).
+    "HCTZ/SPIRONOLACTONE",        1L,        "hypertension", NA,
+    "SPIRONOLACTONE/HCTZ",        1L,        "hypertension", NA,
+    "EPLERENONE",                 2L,        "hypertension", "Inspra",
+    "SPIRONOLACTONE",             2L,        "hypertension", NA,
+    "SPIRONOLACTONE, MICRONIZED", 2L,        "hypertension", NA,
     "FINERENONE",                 3L,        "hypertension", "Kerendia"
-  )
+  ),
+  # HCTZ/SPIRONOLACTONE: n=27 in MC Rx table
+  # SPIRONOLACTONE/HCTZ: n=9 in MC Rx table
+  # EPLERENONE: n=4,270,119; also approved for post-MI heart failure with LV dysfunction
+  # SPIRONOLACTONE: n=134,722,193; also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
+  # SPIRONOLACTONE, MICRONIZED: n=2,803; also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
 )
 
 ### Alpha-1 blockers ----
@@ -3026,48 +3013,13 @@ spec_vasodilators_v1 <- DrugSpec$new(
 
 ## Antihypertensive medication compositions ----
 
-### beta blockers ----
-
-spec_betablockers <- CompositeDrugSpec$new(
-  drug_class = "betablockers",
-  label      = "Beta Blockers",
-  defs       = "All beta blocker subclasses across versions. Use component= to select a specific version.",
-  components = list(
-    cardio_v1       = spec_beta_cardio_v1,
-    cardio_vasod_v1 = spec_beta_cardio_vasod_v1,
-    int_sym_v1      = spec_beta_int_sym_v1,
-    int_sym_v2      = spec_beta_int_sym_v2,
-    noncardio_v1    = spec_beta_noncardio_v1
-  )
-)
-
-### CCBs ----
-spec_ccb <- CompositeDrugSpec$new(
-  drug_class = "ccb",
-  label      = "Calcium Channel Blockers",
-  defs       = "Dihydropyridine and non-dihydropyridine CCBs across versions.",
-  components = list(
-    dhp_v1    = spec_ccb_dhp_v1,
-    nondhp_v1 = spec_ccb_nondhp_v1
-  )
-)
-
-### diuretics ----
-# (incl. aldosterone antagonists)
-spec_diuretics <- CompositeDrugSpec$new(
-  drug_class = "diuretics",
-  label      = "Diuretics",
-  defs       = "Thiazide, loop, potassium-sparing, and aldosterone antagonist diuretics across versions.",
-  components = list(
-    thiazide_v1  = spec_diuretics_thiazide_v1,
-    thiazide_v2  = spec_diuretics_thiazide_v2,
-    loop_v1      = spec_diuretics_loop_v1,
-    loop_v2      = spec_diuretics_loop_v2,
-    ksparing_v1  = spec_diuretics_ksparing_v1,
-    ksparing_v2  = spec_diuretics_ksparing_v2,
-    aldo_v1      = spec_aldo_v1
-  )
-)
+# Removed 2026-08-15: spec_betablockers, spec_ccb, and spec_diuretics were
+# unused, unexported intermediate composites (drug-class groupings within
+# antihypertensives) — every leaf they reference is already flattened
+# directly into spec_hypertension below, and nothing else in this file
+# referenced them. Deleted as dead code as part of formalizing that
+# CompositeDrugSpec objects are always condition-scoped (a single
+# `condition`), not drug-class-scoped.
 
 ### All antihypertensives ----
 
@@ -3076,13 +3028,14 @@ spec_diuretics <- CompositeDrugSpec$new(
 # If we nested, it would mean you'd have to run get_codes more than once,
 # which would make the package feel too clunky.
 
-spec_antihypertensive <- CompositeDrugSpec$new(
+spec_hypertension <- CompositeDrugSpec$new(
   drug_class = "antihypertensive",
   label      = "Antihypertensive Medications",
   defs       = paste0(
     "All antihypertensive leaf components across versions (v1 = Perisphere list; ",
     "v2 = FDB). Note for central agents: exclude APRACLONIDINE when matching CLONIDINE."
   ),
+  condition  = "hypertension",
   components = list(
     acei_v1         = spec_acei_v1,
     acei_v2         = spec_acei_v2,
@@ -3112,21 +3065,31 @@ spec_antihypertensive <- CompositeDrugSpec$new(
   )
 )
 
-
-
-
-# Antidiabetic drug components ----
+## Antidiabetic medication components ----
+#
 # Source: "Definition of conditions and medications_11262025.docx"
 # Section: Diabetes, history, version 2 (with medication) — GNN list
 
-# All GNNs from the document's antidiabetic medication list, version 1
-antidiab_gnns <- list(
-  biguanide = c(
+### Biguanides ----
+
+spec_antidiab_biguanide_v1 <- DrugSpec$new(
+  "biguanide", "Biguanides",
+  version = "v1",
+  defs    = "Biguanide antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "METFORMIN HCL",  # n=582,684,970 in MC Rx table
     "METFORMIN/AA COMB.#7/HC#125/CH",  # n=11 in MC Rx table
     "METFORMIN/CAFF/AA7/HRB125/CHOL"  # n=32 in MC Rx table
-  ),
-  sulfonylurea = c(
+  )
+)
+
+### Sulfonylureas ----
+
+spec_antidiab_sulfonylurea_v1 <- DrugSpec$new(
+  "sulfonylurea", "Sulfonylureas",
+  version = "v1",
+  defs    = "Sulfonylurea antidiabetic agents (first- and second-generation). From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "ACETOHEXAMIDE",  # n=20 in MC Rx table
     "CHLORPROPAMIDE",  # n=26,284 in MC Rx table
     "GLIMEPIRIDE",  # n=82,220,866 in MC Rx table
@@ -3138,13 +3101,29 @@ antidiab_gnns <- list(
     "TOLAZAMIDE",  # n=8,179 in MC Rx table
     "TOLBUTAMIDE",  # n=9,967 in MC Rx table
     "GLYBURIDE, MICRO/METFORMIN HCL"  # n=221,920 in MC Rx table
-  ),
-  meglitinide = c(
+  )
+)
+
+### Meglitinides ----
+
+spec_antidiab_meglitinide_v1 <- DrugSpec$new(
+  "meglitinide", "Meglitinides",
+  version = "v1",
+  defs    = "Meglitinide (glinide) antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "NATEGLINIDE",  # n=2,678,863 in MC Rx table
     "REPAGLINIDE",  # n=4,841,685 in MC Rx table
     "REPAGLINIDE/METFORMIN HCL"  # n=11,197 in MC Rx table
-  ),
-  tzd = c(
+  )
+)
+
+### Thiazolidinediones (TZDs) ----
+
+spec_antidiab_tzd_v1 <- DrugSpec$new(
+  "tzd", "Thiazolidinediones (TZDs)",
+  version = "v1",
+  defs    = "Thiazolidinedione (TZD / glitazone) antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "PIOGLITAZONE HCL",  # n=45,499,575 in MC Rx table
     "PIOGLITAZONE HCL/GLIMEPIRIDE",  # n=161,285 in MC Rx table
     "PIOGLITAZONE HCL/METFORMIN HCL",  # n=2,772,081 in MC Rx table
@@ -3154,12 +3133,31 @@ antidiab_gnns <- list(
     "ROSIGLITAZONE/METFORMIN HCL",  # n=162,687 in MC Rx table
     "TROGLITAZONE",  # n=13 in MC Rx table
     "ROSIGLITAZONE MALEATE/GLIMEPIR"  # n=6,885 in MC Rx table
-  ),
-  alpha_glucosidase = c(
+  )
+)
+
+### Alpha-glucosidase inhibitors ----
+
+spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new(
+  "alpha_glucosidase", "Alpha-Glucosidase Inhibitors",
+  version = "v1",
+  defs    = "Alpha-glucosidase inhibitor antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "ACARBOSE",  # n=2,695,084 in MC Rx table
     "MIGLITOL"  # n=110,276 in MC Rx table
   ),
-  dpp4 = c(
+  generic_names_cautious = c(
+    "VOGLIBOSE"  # Not FDA-approved or marketed in the US (approved in Japan/India)
+  )
+)
+
+### DPP-4 inhibitors ----
+
+spec_antidiab_dpp4_v1 <- DrugSpec$new(
+  "dpp4", "DPP-4 Inhibitors",
+  version = "v1",
+  defs    = "DPP-4 inhibitor (gliptin) antidiabetic agents, including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "ALOGLIPTIN BENZ/METFORMIN HCL",  # n=687,166 in MC Rx table
     "ALOGLIPTIN BENZ/PIOGLITAZONE",  # n=333,008 in MC Rx table
     "ALOGLIPTIN BENZ/PIOGLITZONE",  # n=30,071 in MC Rx table
@@ -3178,8 +3176,16 @@ antidiab_gnns <- list(
     "SITAGLIPTIN",  # n=148,377 in MC Rx table
     "SITAGLIPTIN HCL",  # n=32 in MC Rx table
     "SITAGLIPTIN/METFORMIN HCL"  # n=55,672 in MC Rx table
-  ),
-  sglt2 = c(
+  )
+)
+
+### SGLT-2 inhibitors ----
+
+spec_antidiab_sglt2_v1 <- DrugSpec$new(
+  "sglt2", "SGLT-2 Inhibitors",
+  version = "v1",
+  defs    = "SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "CANAGLIFLOZIN",  # n=17,633,966 in MC Rx table
     "CANAGLIFLOZIN/METFORM",
     "CANAGLIFLOZIN/METFORMIN",
@@ -3203,20 +3209,22 @@ antidiab_gnns <- list(
     "EMPAGLIFLOZIN/METFORMIN HCL",  # n=5,909,272 in MC Rx table
     "ERTUGLIFLOZIN PIDOLATE",  # n=3,094,383 in MC Rx table
     "ERTUGLIFLOZIN/SITAGLIPTIN PHOS"  # n=29,822 in MC Rx table
-  ),
-  glp1 = c(
-    "DULAGLUTIDE",  # n=64,108,557 in MC Rx table
-    "EXENATIDE",  # n=2,709,695 in MC Rx table
-    "EXENATIDE MICROSPHERES",  # n=8,332,389 in MC Rx table
-    "LIRAGLUTIDE",  # n=37,296,377 in MC Rx table
-    "LIXISENATIDE",  # n=16,469 in MC Rx table
-    "SEMAGLUTIDE",  # n=140,453,217 in MC Rx table
-    "ALBIGLUTIDE",  # n=1,136,292 in MC Rx table
-    "INSULIN DEGLUDEC/LIRAGLUTIDE",  # n=796,110 in MC Rx table
-    "INSULIN GLARGINE/LIXISENATIDE",  # n=2,515,845 in MC Rx table
-    "TIRZEPATIDE"  # n=79,868,142 in MC Rx table
-  ),
-  insulin = c(
+  )
+)
+
+### GLP-1 ----
+#
+# spec_antidiab_glp1_v1 was merged into spec_glp1_v1 (2026-08-15, see the
+# comment near its definition); the antidiabetic composite below now
+# references that shared object directly as its "glp1_v1" component.
+
+### Insulin and supplies ----
+
+spec_antidiab_insulin_v1 <- DrugSpec$new(
+  "insulin", "Insulin and Supplies",
+  version = "v1",
+  defs    = "Insulin preparations and insulin administration supplies. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
     "HUM INSULIN NPH/REG INSULIN HM",  # n=3,296,175 in MC Rx table
     "INS ZN,BF (P)/INS ZN,PK (P),",
     "INSUL,PK PURE/INSUL NPH,PK-P",  # n=3 in MC Rx table
@@ -3380,57 +3388,23 @@ antidiab_gnns <- list(
     "SYRINGE,NEEDLE,INSULN,SF 0.5ML",  # n=36,144 in MC Rx table
     "SYRINGE,NEEDLE,INSULN,SF,0.3ML",  # n=6,025 in MC Rx table
     "SYRINGE-NEEDLE,INSULIN,0.5 ML"  # n=9,392,895 in MC Rx table
-  ),
-  amylin = c("PRAMLINTIDE ACETATE")  # n=344,852 in MC Rx table
-)
-
-antidiab_defs <- list(
-  biguanide         = "Biguanide antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  sulfonylurea      = "Sulfonylurea antidiabetic agents (first- and second-generation). From the Perisphere antidiabetic medication list.",
-  meglitinide       = "Meglitinide (glinide) antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  tzd               = "Thiazolidinedione (TZD / glitazone) antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  alpha_glucosidase = "Alpha-glucosidase inhibitor antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  dpp4              = "DPP-4 inhibitor (gliptin) antidiabetic agents, including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
-  sglt2             = "SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
-  glp1              = "GLP-1 receptor agonist antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  insulin           = "Insulin preparations and insulin administration supplies. From the Perisphere antidiabetic medication list.",
-  amylin            = "Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list."
-)
-
-spec_antidiab_biguanide_v1         <- DrugSpec$new("antidiab_biguanide",         "Biguanides",                   version = "v1", defs = antidiab_defs$biguanide,         generic_names = antidiab_gnns$biguanide)
-spec_antidiab_sulfonylurea_v1      <- DrugSpec$new("antidiab_sulfonylurea",      "Sulfonylureas",                version = "v1", defs = antidiab_defs$sulfonylurea,      generic_names = antidiab_gnns$sulfonylurea)
-spec_antidiab_meglitinide_v1       <- DrugSpec$new("antidiab_meglitinide",       "Meglitinides",                 version = "v1", defs = antidiab_defs$meglitinide,       generic_names = antidiab_gnns$meglitinide)
-spec_antidiab_tzd_v1               <- DrugSpec$new("antidiab_tzd",               "Thiazolidinediones (TZDs)",    version = "v1", defs = antidiab_defs$tzd,               generic_names = antidiab_gnns$tzd)
-spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new(
-  "antidiab_alpha_glucosidase", "Alpha-Glucosidase Inhibitors", version = "v1",
-  defs = antidiab_defs$alpha_glucosidase,
-  generic_names = antidiab_gnns$alpha_glucosidase,
-  generic_names_cautious = c(
-    "VOGLIBOSE"  # Not FDA-approved or marketed in the US (approved in Japan/India)
   )
 )
-spec_antidiab_dpp4_v1              <- DrugSpec$new("antidiab_dpp4",              "DPP-4 Inhibitors",             version = "v1", defs = antidiab_defs$dpp4,              generic_names = antidiab_gnns$dpp4)
-spec_antidiab_sglt2_v1             <- DrugSpec$new("antidiab_sglt2",             "SGLT-2 Inhibitors",            version = "v1", defs = antidiab_defs$sglt2,             generic_names = antidiab_gnns$sglt2)
-spec_antidiab_glp1_v1 <- DrugSpec$new(
-  "antidiab_glp1", "GLP-1 Receptor Agonists", version = "v1",
-  defs = antidiab_defs$glp1,
-  generic_names          = setdiff(antidiab_gnns$glp1, glp1_dual_indication_gnns),
-  generic_names_probable = intersect(antidiab_gnns$glp1, glp1_dual_indication_gnns),
-  # Brand names reflect the T2D approval here (contrast with spec_glp1_v1,
-  # the antiobesity spec, where these same generics map to their chronic
-  # weight management brand names instead).
-  brand_names = list(
-    LIRAGLUTIDE = "Victoza",
-    SEMAGLUTIDE = "Ozempic",
-    TIRZEPATIDE = "Mounjaro"
+
+### Amylin analogues ----
+
+spec_antidiab_amylin_v1 <- DrugSpec$new(
+  "amylin", "Amylin Analogues",
+  version = "v1",
+  defs    = "Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "PRAMLINTIDE ACETATE"  # n=344,852 in MC Rx table
   )
 )
-spec_antidiab_insulin_v1           <- DrugSpec$new("antidiab_insulin",           "Insulin and Supplies",         version = "v1", defs = antidiab_defs$insulin,           generic_names = antidiab_gnns$insulin)
-spec_antidiab_amylin_v1            <- DrugSpec$new("antidiab_amylin",            "Amylin Analogues",             version = "v1", defs = antidiab_defs$amylin,            generic_names = antidiab_gnns$amylin)
 
-# Antidiabetic drugs composite ----
+## Antidiabetic medication composite ----
 
-spec_antidiabetic <- CompositeDrugSpec$new(
+spec_diabetes <- CompositeDrugSpec$new(
   drug_class = "antidiabetic",
   label      = "Antidiabetic Medications",
   defs       = paste0(
@@ -3438,6 +3412,7 @@ spec_antidiabetic <- CompositeDrugSpec$new(
     "meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4 inhibitors, ",
     "SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies, amylin analogues."
   ),
+  condition  = "diabetes",
   components = list(
     biguanide_v1         = spec_antidiab_biguanide_v1,
     sulfonylurea_v1      = spec_antidiab_sulfonylurea_v1,
@@ -3446,7 +3421,7 @@ spec_antidiabetic <- CompositeDrugSpec$new(
     alpha_glucosidase_v1 = spec_antidiab_alpha_glucosidase_v1,
     dpp4_v1              = spec_antidiab_dpp4_v1,
     sglt2_v1             = spec_antidiab_sglt2_v1,
-    glp1_v1              = spec_antidiab_glp1_v1,
+    glp1_v1              = spec_glp1_v1,
     insulin_v1           = spec_antidiab_insulin_v1,
     amylin_v1            = spec_antidiab_amylin_v1
   )
@@ -3462,7 +3437,7 @@ spec_antidiabetic <- CompositeDrugSpec$new(
 # LOVASTATIN in some pharmacy files; those mappings are handled upstream.
 
 spec_ll_statin_v1 <- DrugSpec$new(
-  "ll_statin", "Statins (HMG-CoA Reductase Inhibitors)",
+  "statin", "Statins (HMG-CoA Reductase Inhibitors)",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
@@ -3490,7 +3465,7 @@ spec_ll_statin_v1 <- DrugSpec$new(
 ### Ezetimibe ----
 
 spec_ll_ezetimibe_v1 <- DrugSpec$new(
-  "ll_ezetimibe", "Ezetimibe",
+  "ezetimibe", "Ezetimibe",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
@@ -3505,7 +3480,7 @@ spec_ll_ezetimibe_v1 <- DrugSpec$new(
 ### PCSK9 inhibitors ----
 
 spec_ll_pcsk9_v1 <- DrugSpec$new(
-  "ll_pcsk9", "PCSK9 Inhibitors",
+  "pcsk9", "PCSK9 Inhibitors",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
@@ -3522,7 +3497,7 @@ spec_ll_pcsk9_v1 <- DrugSpec$new(
 # CLOFIBRATE, GEMFIBROZIL.
 
 spec_ll_fibrate_v1 <- DrugSpec$new(
-  "ll_fibrate", "Fibrates",
+  "fibrate", "Fibrates",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
@@ -3539,7 +3514,7 @@ spec_ll_fibrate_v1 <- DrugSpec$new(
 ### Bile acid sequestrants ----
 
 spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
-  "ll_bile_acid_seq", "Bile Acid Sequestrants",
+  "bile_acid_seq", "Bile Acid Sequestrants",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
@@ -3562,7 +3537,7 @@ spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
 # supplement without lipid-lowering activity and is excluded.
 
 spec_ll_niacin_v1 <- DrugSpec$new(
-  "ll_niacin", "Niacin",
+  "niacin", "Niacin",
   version = "v1",
   defs    = paste0(
     "From the Perisphere lipid-lowering medication list. ",
@@ -3580,13 +3555,14 @@ spec_ll_niacin_v1 <- DrugSpec$new(
 
 ## Lipid-lowering medication composite ----
 
-spec_lipid_lowering <- CompositeDrugSpec$new(
+spec_hyperlipidemia <- CompositeDrugSpec$new(
   drug_class = "lipid_lowering",
   label      = "Lipid-Lowering Medications",
   defs       = paste0(
     "Lipid-lowering medication subclasses (v1): statins (HMG-CoA reductase inhibitors), ",
     "ezetimibe, PCSK9 inhibitors, fibrates, bile acid sequestrants, and niacin."
   ),
+  condition  = "hyperlipidemia",
   components = list(
     statin_v1        = spec_ll_statin_v1,
     ezetimibe_v1     = spec_ll_ezetimibe_v1,
@@ -3605,7 +3581,7 @@ spec_lipid_lowering <- CompositeDrugSpec$new(
 
 usethis::use_data(
   # Hypertension
-  spec_htn_v1, spec_htn_v2,
+  spec_hypertension_v1,
   # Ischemic stroke (not included b/c its in stroke)
   # spec_isch_stroke_v1,
   # ASCVD composite
@@ -3615,9 +3591,9 @@ usethis::use_data(
   # Obesity
   spec_obesity_v1,
   # Depression
-  spec_depression_v1, spec_depression_v2,
+  spec_depression_v1,
   # Diabetes
-  spec_diabetes_v1, spec_diabetes_v2, spec_diabetes_v3,
+  spec_diabetes_v1,
   # CKD
   spec_ckd_v1,
   # Sleep apnea
@@ -3631,15 +3607,15 @@ usethis::use_data(
   # Asthma
   spec_asthma_v1,
   # Antiobesity (non GLP-1)
-  spec_antiobesity,
+  spec_obesity,
   # Antihypertensive composites
-  spec_antihypertensive,
+  spec_hypertension,
   # Antidiabetic composite
-  spec_antidiabetic,
+  spec_diabetes,
   # Antidepressive composite
-  spec_antidepressive,
+  spec_depression,
   # Lipid-lowering composite
-  spec_lipid_lowering,
+  spec_hyperlipidemia,
   overwrite = TRUE
 )
 

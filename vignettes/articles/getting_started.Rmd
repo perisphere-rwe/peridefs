@@ -31,7 +31,7 @@ per algorithm version. Every `get_*` function in `peridefs` returns a tidy
 data frame:
 
 ```{r htn-tibble}
-get_htn_v1_codes()
+get_hypertension_v1_codes()
 ```
 
 The `priority` column reflects our confidence that a code belongs in the
@@ -47,13 +47,13 @@ argument to retrieve a filtered code list. Supprted values are `"dx_icd9"`,
 `"dx_icd10"`, `"hcpcs"`, `"proc_icd9"`, and `"proc_icd10"`:
 
 ```{r htn-icd10}
-get_htn_v1_codes(code_type = "dx_icd10")
+get_hypertension_v1_codes(code_type = "dx_icd10")
 ```
 
 Note that if you ask for a code type that isn't stored in the object, you get an empty tibble.
 
 ```{r}
-get_htn_v1_codes(code_type = 'proc_icd10')
+get_hypertension_v1_codes(code_type = 'proc_icd10')
 ```
 
 
@@ -63,7 +63,7 @@ Codes are stored in short format (no periods, i.e., `.`) as this is a common
 format in claims data. Set `periods = TRUE` to add them to your codes:
 
 ```{r htn-periods}
-get_htn_v1_codes(code_type = "dx_icd10", periods = TRUE)
+get_hypertension_v1_codes(code_type = "dx_icd10", periods = TRUE)
 ```
 
 Note that this feature is not perfect - it just adds a period after the third character. Periods appear after the third character in ICD-10 but may appear after the fourth in ICD-9. Most of our analyses focus on ICD-10 and most databases do not use periods in codes, so getting this exactly right is not a high priority at the moment.
@@ -112,7 +112,7 @@ to know how to apply them. `get_<condition>_vX_defs()` provides a description of
 the algorithm used to define each condition:
 
 ```{r htn-defs}
-get_htn_v1_defs()
+get_hypertension_v1_defs()
 ```
 
 For composite specs, pass the component name:
@@ -124,18 +124,13 @@ get_ascvd_defs(component = "chd_v1", variable_type = "condition")
 ## Versioning
 
 Algorithm versions are encoded directly in the spec and function names using a
-`_vX` suffix. `spec_htn_v1` and `spec_htn_v2` are two distinct objects; the
-corresponding getters are `get_htn_v1_codes()` and `get_htn_v2_codes()`.
-When a condition has only one version (e.g., `spec_hf_v1`), there is only one
-getter.
-
-```{r version-compare}
-# v1 and v2 share the same codes for HTN — only the version tag and defs differ
-identical(get_htn_v1_codes()$code, get_htn_v2_codes()$code)
-
-get_htn_v1_defs()
-get_htn_v2_defs()
-```
+`_vX` suffix (e.g., `spec_acei_v1`, `spec_acei_v2`), used when a spec's codes
+or generics genuinely change between versions. Conditions like hypertension
+previously had multiple versions that shared identical codes and differed
+only in the narrative definition (e.g., whether a medication criterion was
+included) — those have been collapsed into a single version, so
+`spec_hypertension_v1`/`get_hypertension_v1_codes()`/`get_hypertension_v1_defs()` always reflect the
+most current definition.
 
 ## Spec objects
 
@@ -143,7 +138,7 @@ Behind every `get_*` function is a `spec_*` data object. You can inspect it
 directly to see codes, definitions, and (for composites) component names:
 
 ```{r spec}
-spec_htn_v1
+spec_hypertension_v1
 ```
 
 # Complement with `icd` package

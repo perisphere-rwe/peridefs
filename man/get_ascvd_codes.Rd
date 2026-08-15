@@ -33,7 +33,7 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \description{
 \code{spec_ascvd} is a \link{CompositeCodeSpec} containing all versioned components
 used across ASCVD definitions:
-\code{chd_v1}, \code{chd_v2}, \code{stroke_v1}, \code{cerebrovasc_disease_v1}.
+\code{chd_v1}, \code{stroke_v1}, \code{cerebrovasc_disease_v1}.
 
 The \code{component} argument is optional; omit it (or pass \code{"all"}) to
 retrieve every component at once, distinguished by the \code{class} column.

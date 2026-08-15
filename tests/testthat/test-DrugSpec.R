@@ -49,13 +49,13 @@ test_that("get_defs() returns correct narrative text", {
   expect_equal(toy_drug_v2$get_defs(), "From FDB.")
 })
 
-test_that("spec_antihypertensive is a CompositeDrugSpec", {
-  expect_s3_class(spec_antihypertensive, "CompositeDrugSpec")
-  expect_equal(spec_antihypertensive$drug_class, "antihypertensive")
+test_that("spec_hypertension is a CompositeDrugSpec", {
+  expect_s3_class(spec_hypertension, "CompositeDrugSpec")
+  expect_equal(spec_hypertension$drug_class, "antihypertensive")
 })
 
-test_that("spec_antihypertensive has versioned leaf components", {
-  comp_names <- names(spec_antihypertensive$components())
+test_that("spec_hypertension has versioned leaf components", {
+  comp_names <- names(spec_hypertension$components())
   expect_true("acei_v1"       %in% comp_names)
   expect_true("acei_v2"       %in% comp_names)
   expect_true("cardio_v1"     %in% comp_names)
@@ -64,73 +64,73 @@ test_that("spec_antihypertensive has versioned leaf components", {
   expect_true("vasodilators_v1" %in% comp_names)
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v1') returns tibble tagged with that class", {
-  result <- get_antihypertensive_generics(component = "acei_v1")
+test_that("get_hypertension_generics(component = 'acei_v1') returns tibble tagged with that class", {
+  result <- get_hypertension_generics(component = "acei_v1")
   expect_s3_class(result, "tbl_df")
   expect_true(all(result$class == "acei"))
   expect_true(all(result$version == "v1"))
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v1') includes expected GNNs", {
-  gnns <- get_antihypertensive_generics(component = "acei_v1")$generic
+test_that("get_hypertension_generics(component = 'acei_v1') includes expected GNNs", {
+  gnns <- get_hypertension_generics(component = "acei_v1")$generic
   expect_true("LISINOPRIL"  %in% gnns)
   expect_true("RAMIPRIL"    %in% gnns)
 })
 
-test_that("get_antihypertensive_generics(component = 'acei_v2') has FDB variants", {
-  gnns <- get_antihypertensive_generics(component = "acei_v2")$generic
+test_that("get_hypertension_generics(component = 'acei_v2') has FDB variants", {
+  gnns <- get_hypertension_generics(component = "acei_v2")$generic
   expect_true("FOSINIPRIL"  %in% gnns)
   expect_true("MOEXEPRIL"   %in% gnns)
 })
 
-test_that("get_antihypertensive_generics() with no component returns every component", {
-  result <- get_antihypertensive_generics()
+test_that("get_hypertension_generics() with no component returns every component", {
+  result <- get_hypertension_generics()
   expect_true("acei_v1" %in% unique(paste(result$class, result$version, sep = "_")))
 })
 
-test_that("get_antihypertensive_generics(component = 'int_sym_v1') includes CARTEOLOL", {
-  gnns <- get_antihypertensive_generics(component = "int_sym_v1")$generic
+test_that("get_hypertension_generics(component = 'int_sym_v1') includes CARTEOLOL", {
+  gnns <- get_hypertension_generics(component = "int_sym_v1")$generic
   expect_true("CARTEOLOL" %in% gnns)
 })
 
-test_that("get_antihypertensive_generics(component = 'int_sym_v2') excludes CARTEOLOL", {
-  gnns <- get_antihypertensive_generics(component = "int_sym_v2")$generic
+test_that("get_hypertension_generics(component = 'int_sym_v2') excludes CARTEOLOL", {
+  gnns <- get_hypertension_generics(component = "int_sym_v2")$generic
   expect_false("CARTEOLOL" %in% gnns)
 })
 
-test_that("get_antihypertensive_generics(component = 'all') returns every component", {
-  result <- get_antihypertensive_generics(component = "all")
+test_that("get_hypertension_generics(component = 'all') returns every component", {
+  result <- get_hypertension_generics(component = "all")
   expect_true("acei_v1" %in% unique(paste(result$class, result$version, sep = "_")))
 })
 
-test_that("spec_antidepressive is a CompositeDrugSpec with 5 components", {
-  expect_s3_class(spec_antidepressive, "CompositeDrugSpec")
-  expect_equal(names(spec_antidepressive$components()),
+test_that("spec_depression is a CompositeDrugSpec with 5 components", {
+  expect_s3_class(spec_depression, "CompositeDrugSpec")
+  expect_equal(names(spec_depression$components()),
                c("ssri_v1", "snri_v1", "tca_v1", "maoi_v1", "other_v1"))
 })
 
-test_that("get_antidepressive_generics(component = 'ssri_v1') includes SERTRALINE", {
-  result <- get_antidepressive_generics(component = "ssri_v1")
+test_that("get_depression_generics(component = 'ssri_v1') includes SERTRALINE", {
+  result <- get_depression_generics(component = "ssri_v1")
   expect_true("SERTRALINE" %in% result$generic)
 })
 
-test_that("get_antidepressive_generics(component = 'all') returns all GNNs across priority tiers", {
-  result <- get_antidepressive_generics(component = "all", priority = 1:3)
+test_that("get_depression_generics(component = 'all') returns all GNNs across priority tiers", {
+  result <- get_depression_generics(component = "all", priority = 1:3)
   expect_type(result$generic, "character")
   expect_equal(nrow(result), 70L)
   expect_true("BUPROPION"   %in% result$generic)      # priority 2 (also approved for smoking cessation)
   expect_true("TRANYLCYPROMINE" %in% result$generic)  # priority 1
 })
 
-test_that("get_antidepressive_generics(component = 'all') defaults to priority = 1 (core) only", {
-  result <- get_antidepressive_generics(component = "all")
+test_that("get_depression_generics(component = 'all') defaults to priority = 1 (core) only", {
+  result <- get_depression_generics(component = "all")
   expect_true(all(result$priority == 1L))
   expect_false("BUPROPION" %in% result$generic)
   expect_true("TRANYLCYPROMINE" %in% result$generic)
 })
 
-test_that("spec_antidiabetic has expected components", {
-  comp_names <- names(spec_antidiabetic$components())
+test_that("spec_diabetes has expected components", {
+  comp_names <- names(spec_diabetes$components())
   expect_true("biguanide_v1"    %in% comp_names)
   expect_true("sglt2_v1"        %in% comp_names)
   expect_true("insulin_v1"      %in% comp_names)
@@ -144,7 +144,7 @@ test_that("antihypertensive union-of-components test with versioned names", {
                         "central_v1", "renin_v1", "vasodilators_v1")
   all_comp <- unique(unlist(lapply(
     component_names,
-    \(nm) get_antihypertensive_generics(component = nm)$generic
+    \(nm) get_hypertension_generics(component = nm)$generic
   )))
   # v1 components only — should equal the explicit v1 subset
   expect_true(length(all_comp) > 0L)

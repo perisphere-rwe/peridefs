@@ -26,7 +26,7 @@ given key(s). The original spec is never modified.
 }
 \examples{
 my_htn <- add_codes(
-  spec_htn_v1,
+  spec_hypertension_v1,
   dx_icd10 = c("I119", "I130")
 )
 }

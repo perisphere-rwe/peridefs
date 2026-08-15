@@ -2,23 +2,19 @@
 % Please edit documentation in R/specs_data.R
 \name{spec_objects}
 \alias{spec_objects}
-\alias{spec_antidepressive}
-\alias{spec_lipid_lowering}
-\alias{spec_antidiabetic}
+\alias{spec_depression}
+\alias{spec_hyperlipidemia}
+\alias{spec_diabetes}
 \alias{spec_asthma_v1}
-\alias{spec_antihypertensive}
-\alias{spec_antiobesity}
+\alias{spec_hypertension}
+\alias{spec_obesity}
 \alias{spec_ascvd}
 \alias{spec_ckd_v1}
 \alias{spec_copd_v1}
 \alias{spec_depression_v1}
-\alias{spec_depression_v2}
 \alias{spec_diabetes_v1}
-\alias{spec_diabetes_v2}
-\alias{spec_diabetes_v3}
 \alias{spec_hf_v1}
-\alias{spec_htn_v1}
-\alias{spec_htn_v2}
+\alias{spec_hypertension_v1}
 \alias{spec_hyperlipidemia_v1}
 \alias{spec_isch_stroke_v1}
 \alias{spec_obesity_v1}
@@ -30,7 +26,8 @@
 drug class. Each is an \link[R6:R6Class]{R6} object:
 \itemize{
 \item \strong{Standalone conditions}: a \code{spec} for a single condition. These
-specs are versioned (e.g., \code{spec_htn_v1}, \code{spec_htn_v2}).
+specs are versioned when codes/generics genuinely differ (e.g.,
+\code{spec_acei_v1}, \code{spec_acei_v2}).
 \item \strong{Composite specs}: a collection of standalone conditions in a single
 spec. For example, atherosclerotic cardiovascular disease is a composition
 of standalong specs for coronary heart disease, stroke, and cerebrovascular
@@ -45,11 +42,11 @@ available component names.
 }
 \section{Condition specs (standalone, \link{CodeSpec})}{
 
-\code{spec_htn_v1}, \code{spec_htn_v2},
+\code{spec_hypertension_v1},
 \code{spec_hf_v1},
 \code{spec_obesity_v1},
-\code{spec_diabetes_v1}, \code{spec_diabetes_v2}, \code{spec_diabetes_v3},
-\code{spec_depression_v1}, \code{spec_depression_v2},
+\code{spec_diabetes_v1},
+\code{spec_depression_v1},
 \code{spec_ckd_v1},
 \code{spec_copd_v1},
 \code{spec_asthma_v1},
@@ -65,8 +62,8 @@ available component names.
 
 \section{Drug class composites (\link{CompositeDrugSpec})}{
 
-\code{spec_antihypertensive}, \code{spec_antidiabetic}, \code{spec_antiobesity},
-\code{spec_antidepressive}, \code{spec_lipid_lowering}
+\code{spec_hypertension}, \code{spec_diabetes}, \code{spec_obesity},
+\code{spec_depression}, \code{spec_hyperlipidemia}
 }
 
 \keyword{datasets}

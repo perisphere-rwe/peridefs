@@ -7,12 +7,28 @@
 \item{priority}{Integer vector subsetting confidence tiers to include
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 
+\item{condition}{Optional character vector subsetting to specific
+condition(s). \code{NULL} (default) uses the composite's own condition
+(e.g. \code{get_obesity_generics()} defaults to \code{"obesity"}), so a leaf
+component shared across composites (e.g. a GLP-1 spec used by both
+the obesity and diabetes composites) only contributes its rows for
+\emph{this} composite's condition. Pass a value explicitly to widen or
+otherwise override the default.}
+
 \item{component}{Optional named component (e.g. \code{"acei_v1"}) for composite
 specs. \code{NULL} (default) or \code{"all"} returns every component's generics.
 Print the composite spec to see all available component names.}
 }
 \description{
-Accessor functions for composite drug specs.
+Accessor functions for composite drug specs. For each composite,
+\verb{get_*_generics()} returns the tidy tibble of generic (and brand) drug
+names, and \verb{get_*_meds_labels()} returns a tibble of each component's
+\code{name} (its key, e.g. \code{"acei_v1"}) and human-readable \code{label} (e.g.
+\code{"ACE Inhibitors"}) — not a narrative definition. Composite drug specs
+don't carry a clinically meaningful "definition" the way condition specs
+do (see \code{\link[=get_hypertension_v1_defs]{get_hypertension_v1_defs()}} for that); a drug leaf's \code{defs}
+field is just an internal sourcing note, so \verb{get_*_meds_labels()}
+surfaces the more useful per-component label instead.
 
 Accessor functions for composite drug specs.
 }

@@ -74,33 +74,32 @@ test_that("get_defs() returns correct text", {
   expect_null(toy_spec$get_defs("outcome"))
 })
 
-test_that("spec_htn_v1 is a CodeSpec with expected structure", {
-  expect_s3_class(spec_htn_v1, "CodeSpec")
-  expect_equal(spec_htn_v1$condition, "htn")
-  expect_equal(spec_htn_v1$version,   "v1")
-  expect_true(all(c("dx_icd9", "dx_icd10") %in% spec_htn_v1$keys()))
+test_that("spec_hypertension_v1 is a CodeSpec with expected structure", {
+  expect_s3_class(spec_hypertension_v1, "CodeSpec")
+  expect_equal(spec_hypertension_v1$condition, "hypertension")
+  expect_equal(spec_hypertension_v1$version,   "v1")
+  expect_true(all(c("dx_icd9", "dx_icd10") %in% spec_hypertension_v1$keys()))
 })
 
-test_that("spec_htn_v1 ICD-9 codes are non-empty and short-format", {
-  codes <- .codes_of(spec_htn_v1$get_codes(code_type = "dx_icd9"), "dx_icd9")
+test_that("spec_hypertension_v1 ICD-9 codes are non-empty and short-format", {
+  codes <- .codes_of(spec_hypertension_v1$get_codes(code_type = "dx_icd9"), "dx_icd9")
   expect_true(length(codes) > 0L)
   expect_true(all(!grepl("\\.", codes)))
 })
 
-test_that("spec_htn_v1 ICD-10 codes include I10", {
-  codes <- .codes_of(spec_htn_v1$get_codes(code_type = "dx_icd10"), "dx_icd10")
+test_that("spec_hypertension_v1 ICD-10 codes include I10", {
+  codes <- .codes_of(spec_hypertension_v1$get_codes(code_type = "dx_icd10"), "dx_icd10")
   expect_true("I10" %in% codes)
 })
 
-test_that("spec_htn_v1 outcome falls back to condition codes (HTN is condition-only)", {
-  outcome_result   <- spec_htn_v1$get_codes(variable_type = "outcome")
-  condition_result <- spec_htn_v1$get_codes(variable_type = "condition")
+test_that("spec_hypertension_v1 outcome falls back to condition codes (hypertension is condition-only)", {
+  outcome_result   <- spec_hypertension_v1$get_codes(variable_type = "outcome")
+  condition_result <- spec_hypertension_v1$get_codes(variable_type = "condition")
   expect_equal(outcome_result, condition_result)
 })
 
-test_that("spec_htn_v1 and spec_htn_v2 have same codes but different defs", {
-  strip_version <- function(df) df[setdiff(names(df), "version")]
-  expect_equal(strip_version(spec_htn_v1$get_codes()), strip_version(spec_htn_v2$get_codes()))
-  expect_false(identical(spec_htn_v1$get_defs("condition"),
-                          spec_htn_v2$get_defs("condition")))
+test_that("spec_hypertension_v1's condition def includes the medication criterion", {
+  # Versions were collapsed (issue #4); spec_hypertension_v1 now carries the more
+  # complete (formerly v2) narrative, which mentions spec_hypertension.
+  expect_true(any(grepl("spec_hypertension", spec_hypertension_v1$get_defs("condition"))))
 })

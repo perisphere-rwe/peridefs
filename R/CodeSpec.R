@@ -3,7 +3,7 @@
 #' @description
 #' Stores the code sets and narrative algorithm description for a single
 #' version of a medical condition definition. Each version is a distinct
-#' object (e.g., `spec_htn_v1`, `spec_htn_v2`).
+#' object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 #'
 #' The spec stores:
 #' - `defs`: named list with elements `condition` and `outcome`, each holding

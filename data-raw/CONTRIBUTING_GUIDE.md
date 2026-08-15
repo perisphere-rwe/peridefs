@@ -506,7 +506,7 @@ Append to the end of `conditions.R`, using the `make_code_getter()` /
 #' @description
 #' Returns code sets from the my condition [CodeSpec] (`spec_my_condition`).
 #'
-#' @inheritParams get_htn_v1_codes
+#' @inheritParams get_hypertension_v1_codes
 #' @seealso [get_my_condition_defs()], \code{spec_my_condition}
 #' @export
 get_my_condition_codes <- make_code_getter(spec_my_condition)
@@ -681,12 +681,14 @@ get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, c
   argument to `CodeSpec$new()` / `DrugSpec$new()`.
 - The document signals version differences with "(with medications)", "(without
   medications)", "from anti-hypertensive medication list", "from FDB", etc.
-- When v1 and v2 codes/generics are identical, store one version only.
-- When the only difference between versions is the narrative algorithm (not the
-  code set itself — e.g., diabetes v1 vs v2), construct two `CodeSpec` objects
-  that share the same underlying code vectors but pass different `defs` text.
+- Only bump the version number (`_v2`, `_v3`, ...) when the code set or
+  generic list actually changes. If two candidate versions would share
+  identical codes/generics and differ only in the narrative `defs` text
+  (e.g., whether a medication criterion is mentioned), do **not** create a
+  second version — just update the single version's `defs` in place to the
+  most current narrative (see issue #4).
 - There is no `"latest"` version resolution mechanism — every exported wrapper
-  function (`get_htn_v1_codes()`, `get_htn_v2_codes()`, etc.) is bound to one
+  function (`get_hypertension_v1_codes()`, `get_acei_v2_codes()`, etc.) is bound to one
   specific spec object at `R/conditions.R`/`R/drugs.R` authoring time.
 
 ---
@@ -697,7 +699,7 @@ get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, c
   ≥2), file types (inpatient, outpatient, carrier, SNF, HHA), position
   (primary, any, discharge), minimum days apart, look-back window.
 - Reference other specs by name where applicable:
-  `"... see spec_antihypertensive for the medication list."`
+  `"... see spec_hypertension for the medication list."`
 - For definitions that can't be represented as code sets (BETOS codes, discharge
   status codes, Medicaid enrollment flags), set `codes = list()` and put the
   full algorithm in `defs`.
@@ -767,8 +769,8 @@ hyperlinked with `[spec_X]` syntax in roxygen. Use `\code{spec_X}` instead.
 
 ### Pitfall 7: Treating `get_*()` output as a vector or list
 
-Every accessor returns a tibble now. Code like `get_htn_v1_codes()$dx_icd9` or
-`unlist(get_antihypertensive_generics(component = "all"))` from older examples
+Every accessor returns a tibble now. Code like `get_hypertension_v1_codes()$dx_icd9` or
+`unlist(get_hypertension_generics(component = "all"))` from older examples
 no longer works — filter the `type`/`class` column instead
 (`df$code[df$type == "dx_icd9"]`), and there is no `concatenate` argument to
 flatten results.

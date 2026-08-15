@@ -3,10 +3,6 @@
 \name{get_diabetes_v1_codes}
 \alias{get_diabetes_v1_codes}
 \alias{get_diabetes_v1_defs}
-\alias{get_diabetes_v2_codes}
-\alias{get_diabetes_v2_defs}
-\alias{get_diabetes_v3_codes}
-\alias{get_diabetes_v3_defs}
 \title{Retrieve ICD codes for diabetes mellitus}
 \usage{
 get_diabetes_v1_codes(
@@ -17,24 +13,6 @@ get_diabetes_v1_codes(
 )
 
 get_diabetes_v1_defs(variable_type = c("condition", "outcome"))
-
-get_diabetes_v2_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  priority = 1L
-)
-
-get_diabetes_v2_defs(variable_type = c("condition", "outcome"))
-
-get_diabetes_v3_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  priority = 1L
-)
-
-get_diabetes_v3_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{code_type}{Optional character vector of code types to return.
@@ -51,9 +29,12 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \description{
-Returns code sets from a diabetes \link{CodeSpec}.
-Three versions are available: \code{get_diabetes_v1_codes()},
-\code{get_diabetes_v2_codes()}, \code{get_diabetes_v3_codes()}.
+Returns code sets from a diabetes \link{CodeSpec}. The condition definition
+is diagnosis-based, with a medication criterion (see
+\code{spec_diabetes}) as an alternative qualifying path, and patients are
+further classified into four mutually exclusive categories (no diabetes;
+diabetes without antidiabetic medication; diabetes with oral
+antidiabetic; diabetes with insulin).
 }
 \seealso{
 \code{\link[=get_diabetes_v1_defs]{get_diabetes_v1_defs()}}, \code{spec_diabetes_v1}

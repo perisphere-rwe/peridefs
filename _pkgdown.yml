@@ -61,28 +61,22 @@ reference:
   contents: spec_objects
 - title: 'Conditions: Cardiovascular'
   desc: |
-    Hypertension (v1, v2), heart failure (v1), and the ASCVD composite. ASCVD components (`chd_v1`, `chd_v2`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`, `cerebrovasc_disease_v1`) are accessible via `get_ascvd_codes(component = ...)`.
+    Hypertension, heart failure, and the ASCVD composite. ASCVD components (`chd_v1`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`, `cerebrovasc_disease_v1`) are accessible via `get_ascvd_codes(component = ...)`.
   contents:
-  - get_htn_v1_codes
-  - get_htn_v1_defs
-  - get_htn_v2_codes
-  - get_htn_v2_defs
+  - get_hypertension_v1_codes
+  - get_hypertension_v1_defs
   - get_hf_v1_codes
   - get_hf_v1_defs
   - get_ascvd_codes
   - get_ascvd_defs
 - title: 'Conditions: Metabolic & Renal'
   desc: |
-    Obesity (v1), diabetes (v1–v3), hyperlipidemia (v1), and CKD (v1).
+    Obesity, diabetes, hyperlipidemia, and CKD.
   contents:
   - get_obesity_v1_codes
   - get_obesity_v1_defs
   - get_diabetes_v1_codes
   - get_diabetes_v1_defs
-  - get_diabetes_v2_codes
-  - get_diabetes_v2_defs
-  - get_diabetes_v3_codes
-  - get_diabetes_v3_defs
   - get_hyperlipidemia_v1_codes
   - get_hyperlipidemia_v1_defs
   - get_ckd_v1_codes
@@ -101,42 +95,40 @@ reference:
   - get_asthma_v1_defs
 - title: 'Conditions: Mental Health'
   desc: |
-    Depression history (v1: diagnosis only; v2: diagnosis or antidepressive medication).
+    Depression history (diagnosis or antidepressive medication).
   contents:
   - get_depression_v1_codes
   - get_depression_v1_defs
-  - get_depression_v2_codes
-  - get_depression_v2_defs
-- title: 'Drugs: Antihypertensives'
+- title: 'Drugs: Hypertension'
   desc: |
     ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
   contents:
-  - get_antihypertensive_generics
-  - get_antihypertensive_defs
-- title: 'Drugs: Antidiabetics'
+  - get_hypertension_generics
+  - get_hypertension_meds_labels
+- title: 'Drugs: Diabetes'
   desc: |
     Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase inhibitors, DPP-4, SGLT-2, GLP-1, insulin, etc.
   contents:
-  - get_antidiabetic_generics
-  - get_antidiabetic_defs
-- title: 'Drugs: Antiobesity'
+  - get_diabetes_generics
+  - get_diabetes_meds_labels
+- title: 'Drugs: Obesity'
   desc: |
     Non-GLP-1 agents (`non_glp1_v1`: naltrexone/bupropion, orlistat) and GLP-1 receptor agonists (`glp1_v1`: exenatide, dulaglutide, semaglutide, liraglutide, tirzepatide).
   contents:
-  - get_antiobesity_generics
-  - get_antiobesity_defs
-- title: 'Drugs: Antidepressives'
+  - get_obesity_generics
+  - get_obesity_meds_labels
+- title: 'Drugs: Depression'
   desc: |
     SSRIs (`ssri_v1`), SNRIs (`snri_v1`), tricyclics (`tca_v1`), MAOIs (`maoi_v1`), and other/atypical agents (`other_v1`).
   contents:
-  - get_antidepressive_generics
-  - get_antidepressive_defs
-- title: 'Drugs: Lipid-Lowering'
+  - get_depression_generics
+  - get_depression_meds_labels
+- title: 'Drugs: Hyperlipidemia'
   desc: |
     Statins (`statin_v1`), ezetimibe (`ezetimibe_v1`), PCSK9 inhibitors (`pcsk9_v1`), fibrates (`fibrate_v1`), bile acid sequestrants (`bile_acid_seq_v1`), and niacin (`niacin_v1`).
   contents:
-  - get_lipid_lowering_generics
-  - get_lipid_lowering_defs
+  - get_hyperlipidemia_generics
+  - get_hyperlipidemia_meds_labels
 - title: General Accessor
   desc: |
     Low-level dispatcher that works on any spec object directly.

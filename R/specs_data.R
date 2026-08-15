@@ -36,7 +36,8 @@ NULL
 #' drug class. Each is an [R6][R6::R6Class] object:
 #'
 #' - **Standalone conditions**: a `spec` for a single condition. These
-#'   specs are versioned (e.g., `spec_htn_v1`, `spec_htn_v2`).
+#'   specs are versioned when codes/generics genuinely differ (e.g.,
+#'   `spec_acei_v1`, `spec_acei_v2`).
 #'
 #' - **Composite specs**: a collection of standalone conditions in a single
 #'   spec. For example, atherosclerotic cardiovascular disease is a composition
@@ -50,11 +51,11 @@ NULL
 #' available component names.
 #'
 #' @section Condition specs (standalone, [CodeSpec]):
-#'   `spec_htn_v1`, `spec_htn_v2`,
+#'   `spec_hypertension_v1`,
 #'   `spec_hf_v1`,
 #'   `spec_obesity_v1`,
-#'   `spec_diabetes_v1`, `spec_diabetes_v2`, `spec_diabetes_v3`,
-#'   `spec_depression_v1`, `spec_depression_v2`,
+#'   `spec_diabetes_v1`,
+#'   `spec_depression_v1`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
 #'   `spec_asthma_v1`,
@@ -66,10 +67,10 @@ NULL
 #'   `spec_ascvd`
 #'
 #' @section Drug class composites ([CompositeDrugSpec]):
-#'   `spec_antihypertensive`, `spec_antidiabetic`, `spec_antiobesity`,
-#'   `spec_antidepressive`, `spec_lipid_lowering`
+#'   `spec_hypertension`, `spec_diabetes`, `spec_obesity`,
+#'   `spec_depression`, `spec_hyperlipidemia`
 #'
 #' @name spec_objects
-#' @aliases spec_antidepressive spec_lipid_lowering spec_antidiabetic spec_asthma_v1 spec_antihypertensive spec_antiobesity spec_ascvd spec_ckd_v1 spec_copd_v1 spec_depression_v1 spec_depression_v2 spec_diabetes_v1 spec_diabetes_v2 spec_diabetes_v3 spec_hf_v1 spec_htn_v1 spec_htn_v2 spec_hyperlipidemia_v1 spec_isch_stroke_v1 spec_obesity_v1 spec_ohs_v1 spec_osa_v1
+#' @aliases spec_depression spec_hyperlipidemia spec_diabetes spec_asthma_v1 spec_hypertension spec_obesity spec_ascvd spec_ckd_v1 spec_copd_v1 spec_depression_v1 spec_diabetes_v1 spec_hf_v1 spec_hypertension_v1 spec_hyperlipidemia_v1 spec_isch_stroke_v1 spec_obesity_v1 spec_ohs_v1 spec_osa_v1
 #' @keywords datasets
 NULL

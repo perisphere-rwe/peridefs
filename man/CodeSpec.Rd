@@ -6,7 +6,7 @@
 \description{
 Stores the code sets and narrative algorithm description for a single
 version of a medical condition definition. Each version is a distinct
-object (e.g., \code{spec_htn_v1}, \code{spec_htn_v2}).
+object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 
 The spec stores:
 \itemize{

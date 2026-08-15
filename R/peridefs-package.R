@@ -11,7 +11,7 @@
 #' - [CodeSpec]: Versioned ICD/HCPCS/CPT code sets for a medical condition.
 #' - [DrugSpec]: Versioned generic drug name (GNN) and NDC sets for a drug class.
 #' - [CompositeCodeSpec]: Union of multiple [CodeSpec] objects (e.g., ASCVD).
-#' - [CompositeDrugSpec]: Union of multiple [DrugSpec] objects (e.g., antihypertensives).
+#' - [CompositeDrugSpec]: Union of multiple [DrugSpec] objects (e.g., hypertension).
 #'
 #' @section ICD-10-PCS expansion:
 #' The [expand_pcs()] function resolves prefix patterns (e.g., `"0210xxx"`)
@@ -28,8 +28,8 @@ utils::globalVariables(c(
   "spec_antidiab_biguanide", "spec_antidiab_dpp4", "spec_antidiab_glp1",
   "spec_antidiab_insulin", "spec_antidiab_meglitinide",
   "spec_antidiab_sglt2", "spec_antidiab_sulfonylurea", "spec_antidiab_tzd",
-  "spec_antidiabetic", "spec_antihypertensive", "spec_arb", "spec_ascvd",
-  "spec_beta_int_sym", "spec_beta_noncardio", "spec_betablockers",
+  "spec_diabetes", "spec_hypertension", "spec_arb", "spec_ascvd",
+  "spec_beta_int_sym", "spec_beta_noncardio",
   "spec_diuretics_ksparing", "spec_diuretics_loop", "spec_diuretics_thiazide",
   "spec_statin_fluvastatin", "spec_statin_lovastatin",
   "spec_statin_pitavastatin", "spec_statin_pravastatin",

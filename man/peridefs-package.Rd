@@ -18,7 +18,7 @@ classes.
 \item \link{CodeSpec}: Versioned ICD/HCPCS/CPT code sets for a medical condition.
 \item \link{DrugSpec}: Versioned generic drug name (GNN) and NDC sets for a drug class.
 \item \link{CompositeCodeSpec}: Union of multiple \link{CodeSpec} objects (e.g., ASCVD).
-\item \link{CompositeDrugSpec}: Union of multiple \link{DrugSpec} objects (e.g., antihypertensives).
+\item \link{CompositeDrugSpec}: Union of multiple \link{DrugSpec} objects (e.g., hypertension).
 }
 }
 
