@@ -23,6 +23,7 @@ Suggests:
     pkgdown,
     rmarkdown,
     testthat (>= 3.0.0),
+    tidyr,
     withr,
     xml2
 Config/testthat/edition: 3
