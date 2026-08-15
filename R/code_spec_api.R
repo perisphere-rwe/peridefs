@@ -74,7 +74,8 @@ code_spec <- function(condition,
 #' @param generic_names Character vector of GNN drug names (priority 1, core).
 #' @param generic_names_probable Character vector of GNN drug names with more than one indication (priority 2).
 #' @param generic_names_cautious Character vector of GNN drug names lacking US approval for this class's indication (priority 3).
-#' @param brand_names Optional named list mapping a GNN drug name to one or more brand name strings, e.g. `list(SEMAGLUTIDE = "Ozempic")`. See [DrugSpec] for details.
+#' @param brand_names Optional named list mapping a GNN drug name to one or more brand name strings, e.g. `list(SEMAGLUTIDE = "Ozempic")`. See [DrugSpec] for details. Cannot be combined with `generic_defs`.
+#' @param generic_defs Optional alternative to `generic_names`/`generic_names_probable`/`generic_names_cautious`/`brand_names`, for drug classes spanning more than one condition/indication context. See [DrugSpec] for details.
 
 #' @return A [DrugSpec] R6 object.
 #' @examples
@@ -93,12 +94,13 @@ drug_spec <- function(drug_class,
                       generic_names          = character(0L),
                       generic_names_probable = character(0L),
                       generic_names_cautious = character(0L),
-                      brand_names            = list()) {
+                      brand_names            = list(),
+                      generic_defs           = NULL) {
   DrugSpec$new(drug_class = drug_class, label = label, version = version,
                defs = defs, generic_names = generic_names,
                generic_names_probable = generic_names_probable,
                generic_names_cautious = generic_names_cautious,
-               brand_names = brand_names)
+               brand_names = brand_names, generic_defs = generic_defs)
 }
 
 
@@ -278,9 +280,12 @@ modify_drug_spec <- function(spec,
       }
     }
 
-    # Existing per-generic brand assignments, keyed by generic name, used as
-    # a fallback for generics not covered by a newly supplied brand_names.
-    existing_brand <- stats::setNames(existing$brand, existing$generic)
+    # Existing per-generic brand/condition assignments, keyed by generic
+    # name, used as a fallback for generics not covered by a newly supplied
+    # brand_names (condition is always carried over, since this function
+    # has no argument for replacing it).
+    existing_brand     <- stats::setNames(existing$brand, existing$generic)
+    existing_condition <- stats::setNames(existing$condition, existing$generic)
     brand_for <- function(names_vec) {
       lapply(names_vec, function(nm) {
         if (!is.null(brand_names) && nm %in% names(brand_names)) {
@@ -292,11 +297,16 @@ modify_drug_spec <- function(spec,
         }
       })
     }
+    condition_for <- function(names_vec) {
+      vapply(names_vec, function(nm) {
+        if (nm %in% names(existing_condition)) existing_condition[[nm]] else NA_character_
+      }, character(1L), USE.NAMES = FALSE)
+    }
 
     priv$.generics <- rbind(
-      tibble::tibble(generic = core,     brand = brand_for(core),     priority = 1L),
-      tibble::tibble(generic = probable, brand = brand_for(probable), priority = 2L),
-      tibble::tibble(generic = cautious, brand = brand_for(cautious), priority = 3L)
+      tibble::tibble(generic = core,     brand = brand_for(core),     priority = 1L, condition = condition_for(core)),
+      tibble::tibble(generic = probable, brand = brand_for(probable), priority = 2L, condition = condition_for(probable)),
+      tibble::tibble(generic = cautious, brand = brand_for(cautious), priority = 3L, condition = condition_for(cautious))
     )
   }
 

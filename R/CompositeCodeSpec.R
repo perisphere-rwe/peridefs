@@ -102,7 +102,9 @@ CompositeCodeSpec <- R6::R6Class(
     #' @param priority Integer vector subsetting confidence tiers to include.
     #'   Default `1`.
     #' @return A tibble with columns `type`, `code`, `priority`, `version`,
-    #'   and `class` (the component name).
+    #'   and `class` (the component's own condition identifier, e.g. `"chd"`
+    #'   -- not the versioned component key, since `version` already
+    #'   captures that).
     get_codes = function(component     = NULL,
                          code_type     = NULL,
                          variable_type = c("condition", "outcome"),
@@ -123,7 +125,7 @@ CompositeCodeSpec <- R6::R6Class(
         s      <- .resolve_component(private$.components, nm, self$label)
         result <- s$get_codes(code_type = code_type, variable_type = vt,
                               periods = periods, priority = priority)
-        result$class <- nm
+        result$class <- s$condition
         result
       })
 

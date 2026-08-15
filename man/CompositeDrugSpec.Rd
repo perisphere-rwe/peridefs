@@ -110,7 +110,11 @@ omitting it (or passing \code{"all"}) returns every component.
 components as a tidy data frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{CompositeDrugSpec$get_generics(component = NULL, priority = 1L)}
+    \preformatted{CompositeDrugSpec$get_generics(
+  component = NULL,
+  priority = 1L,
+  condition = NULL
+)}
     \if{html}{\out{</div>}}
   }
   \subsection{Arguments}{
@@ -120,12 +124,15 @@ components as a tidy data frame.
 (default) or \code{"all"} returns every component.}
       \item{\code{priority}}{Integer vector subsetting confidence tiers to include.
 Default \code{1}.}
+      \item{\code{condition}}{Optional character vector subsetting to specific
+condition(s), forwarded to each component's \code{get_generics()}. \code{NULL}
+(default) applies no condition filtering.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
-and \code{version}.
+    A tibble with columns \code{generic}, \code{brand}, \code{priority},
+\code{condition}, \code{class}, and \code{version}.
   }
 }
 

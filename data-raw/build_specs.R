@@ -2596,23 +2596,19 @@ spec_aldo_v1 <- DrugSpec$new(
   "aldo", "Aldosterone Antagonists",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c(
-    "HCTZ/SPIRONOLACTONE",  # n=27 in MC Rx table
-    "SPIRONOLACTONE/HCTZ"  # n=9 in MC Rx table
-  ),
-  generic_names_probable = c(
-    "EPLERENONE",  # n=4,270,119; NOTE: also approved for post-MI heart failure with LV dysfunction (Inspra)
-    "SPIRONOLACTONE",  # n=134,722,193; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
-    "SPIRONOLACTONE, MICRONIZED"  # n=2,803; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
-  ),
-  generic_names_cautious = c(
+  # Migrated to generic_defs (2026-08-15) as a proof of concept for
+  # condition-specific priority tiers; every row is still tagged
+  # "hypertension" for now (no behavior change — see AGENTS.md).
+  generic_defs = tibble::tribble(
+    ~generic,                     ~priority, ~condition,     ~brand,
+    "HCTZ/SPIRONOLACTONE",        1L,        "hypertension", NA,  # n=27 in MC Rx table
+    "SPIRONOLACTONE/HCTZ",        1L,        "hypertension", NA,  # n=9 in MC Rx table
+    "EPLERENONE",                 2L,        "hypertension", "Inspra",  # n=4,270,119; NOTE: also approved for post-MI heart failure with LV dysfunction
+    "SPIRONOLACTONE",             2L,        "hypertension", NA,  # n=134,722,193; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
+    "SPIRONOLACTONE, MICRONIZED", 2L,        "hypertension", NA,  # n=2,803; NOTE: also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
     # Non-steroidal MRA; FDA-approved for CKD in T2D (Kerendia), not
     # hypertension. Included per bkbellows review comment (2026-08-12).
-    "FINERENONE"
-  ),
-  brand_names = list(
-    EPLERENONE = "Inspra",
-    FINERENONE = "Kerendia"
+    "FINERENONE",                 3L,        "hypertension", "Kerendia"
   )
 )
 

@@ -14,7 +14,7 @@ DrugSpec <- R6::R6Class(
     .version    = NULL,
     .label      = NULL,
     .defs       = NULL,
-    .generics   = NULL,  # tibble: generic, brand (list-col), priority
+    .generics   = NULL,  # tibble: generic, brand (list-col), priority, condition
 
     # Build the list-column of brand names for a vector of generic names,
     # using an existing named-list lookup (name = character vector of
@@ -38,6 +38,48 @@ DrugSpec <- R6::R6Class(
         ))
       }
       invisible(NULL)
+    },
+
+    # Build the `.generics` tibble from a `generic_defs` data frame (columns
+    # `generic`, `priority`, and optionally `condition`/`brand`). Rows sharing
+    # (generic, priority, condition) are collapsed into a single row, with
+    # `brand` collected into a list-column (dropping NAs; empty if none).
+    build_from_generic_defs = function(generic_defs) {
+      required <- c("generic", "priority")
+      missing_cols <- setdiff(required, names(generic_defs))
+      if (length(missing_cols)) {
+        cli::cli_abort(c(
+          "{.arg generic_defs} is missing required column(s): {.val {missing_cols}}",
+          "i" = "Required columns are {.val {required}}; optional columns are {.val {c('condition', 'brand')}}."
+        ))
+      }
+      if (!all(generic_defs$priority %in% 1:3)) {
+        cli::cli_abort("{.arg generic_defs}'s {.field priority} column must only contain 1, 2, or 3.")
+      }
+
+      if (!"condition" %in% names(generic_defs)) generic_defs$condition <- NA_character_
+      if (!"brand"     %in% names(generic_defs)) generic_defs$brand     <- NA_character_
+
+      key <- paste(
+        generic_defs$generic, generic_defs$priority, generic_defs$condition,
+        sep = "\r"
+      )
+      groups <- split(seq_len(nrow(generic_defs)), key, drop = TRUE)
+
+      rows <- lapply(groups, function(idx) {
+        sub <- generic_defs[idx, , drop = FALSE]
+        tibble::tibble(
+          generic   = sub$generic[[1L]],
+          brand     = list(as.character(stats::na.omit(sub$brand))),
+          priority  = as.integer(sub$priority[[1L]]),
+          condition = sub$condition[[1L]]
+        )
+      })
+
+      out <- do.call(rbind, rows)
+      # Restore original first-appearance order (split() sorts by key).
+      first_pos <- vapply(groups, `[`, integer(1L), 1L)
+      out[order(first_pos), , drop = FALSE]
     }
   ),
 
@@ -73,7 +115,32 @@ DrugSpec <- R6::R6Class(
     #'   `list(SEMAGLUTIDE = "Ozempic", "PAROXETINE MESYLATE" = c("Brisdelle",
     #'   "Pexeva"))`. Generics with no entry get an empty brand vector.
     #'   Stored as a list-column (`brand`) in `get_generics()` output, since a
-    #'   single generic can map to zero, one, or multiple brands.
+    #'   single generic can map to zero, one, or multiple brands. Ignored
+    #'   (and must be left empty) if `generic_defs` is supplied.
+    #' @param generic_defs Optional alternative to
+    #'   `generic_names`/`generic_names_probable`/`generic_names_cautious`/
+    #'   `brand_names`, for drug classes whose generics don't all map to a
+    #'   single condition/indication context (e.g. a drug that's core for one
+    #'   condition but cautious for another). A data frame/tibble with
+    #'   required columns `generic` (character) and `priority` (integer,
+    #'   `1`/`2`/`3`), and optional columns `condition` (character; `NA` if
+    #'   omitted, meaning "not condition-specific") and `brand` (character;
+    #'   `NA` if omitted or unknown). The same generic may appear in multiple
+    #'   rows with different `priority`/`condition` combinations (e.g.
+    #'   finerenone at priority 1 for `"ckd"` and priority 3 for
+    #'   `"hypertension"`), and multiple brands for one
+    #'   `(generic, priority, condition)` combination are expressed as
+    #'   duplicate rows differing only in `brand`:
+    #'   ```r
+    #'   tibble::tribble(
+    #'     ~generic,       ~priority, ~condition,     ~brand,
+    #'     "FINERENONE",   1,         "ckd",          "Kerendia",
+    #'     "FINERENONE",   3,         "hypertension", "Kerendia",
+    #'     "EPLERENONE",   2,         "hypertension", "Inspra"
+    #'   )
+    #'   ```
+    #'   Cannot be combined with `generic_names`/`generic_names_probable`/
+    #'   `generic_names_cautious`/`brand_names`.
     #' @param version Optional version label string, e.g. `"v1"`.
     initialize = function(drug_class,
                           label,
@@ -82,32 +149,51 @@ DrugSpec <- R6::R6Class(
                           generic_names_probable  = character(0L),
                           generic_names_cautious  = character(0L),
                           brand_names             = list(),
+                          generic_defs            = NULL,
                           version                 = NULL) {
       private$.drug_class <- drug_class
       private$.version    <- version
       private$.label      <- label
       private$.defs       <- defs
 
-      all_generic <- c(generic_names, generic_names_probable, generic_names_cautious)
-      private$validate_brand_names(brand_names, all_generic)
+      legacy_supplied <- length(generic_names) || length(generic_names_probable) ||
+        length(generic_names_cautious) || length(brand_names)
 
-      private$.generics <- rbind(
-        tibble::tibble(
-          generic  = generic_names,
-          brand    = private$brand_for(generic_names, brand_names),
-          priority = 1L
-        ),
-        tibble::tibble(
-          generic  = generic_names_probable,
-          brand    = private$brand_for(generic_names_probable, brand_names),
-          priority = 2L
-        ),
-        tibble::tibble(
-          generic  = generic_names_cautious,
-          brand    = private$brand_for(generic_names_cautious, brand_names),
-          priority = 3L
+      if (!is.null(generic_defs) && legacy_supplied) {
+        cli::cli_abort(c(
+          "Cannot combine {.arg generic_defs} with {.arg generic_names}, ",
+          "{.arg generic_names_probable}, {.arg generic_names_cautious}, or {.arg brand_names}.",
+          "i" = "Use one input style or the other."
+        ))
+      }
+
+      if (!is.null(generic_defs)) {
+        private$.generics <- private$build_from_generic_defs(generic_defs)
+      } else {
+        all_generic <- c(generic_names, generic_names_probable, generic_names_cautious)
+        private$validate_brand_names(brand_names, all_generic)
+
+        private$.generics <- rbind(
+          tibble::tibble(
+            generic   = generic_names,
+            brand     = private$brand_for(generic_names, brand_names),
+            priority  = 1L,
+            condition = NA_character_
+          ),
+          tibble::tibble(
+            generic   = generic_names_probable,
+            brand     = private$brand_for(generic_names_probable, brand_names),
+            priority  = 2L,
+            condition = NA_character_
+          ),
+          tibble::tibble(
+            generic   = generic_names_cautious,
+            brand     = private$brand_for(generic_names_cautious, brand_names),
+            priority  = 3L,
+            condition = NA_character_
+          )
         )
-      )
+      }
       invisible(self)
     },
 
@@ -136,16 +222,26 @@ DrugSpec <- R6::R6Class(
     #'   frame.
     #' @param priority Integer vector subsetting confidence tiers to include
     #'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
+    #' @param condition Optional character vector subsetting to specific
+    #'   condition(s) (only meaningful for specs built with `generic_defs`;
+    #'   see [DrugSpec$new()][DrugSpec]). `NULL` (default) applies no
+    #'   condition filtering. When supplied, rows with a `condition` in
+    #'   `condition`, and rows with `condition = NA` (not condition-specific),
+    #'   are both included.
     #' @return A tibble with columns `generic`, `brand` (a list-column of
     #'   character vectors — `character(0)` when a generic has no known
-    #'   brand, length 1+ otherwise), `priority`, `class`, and `version`. Use
+    #'   brand, length 1+ otherwise), `priority`, `condition` (`NA` unless
+    #'   the spec was built with `generic_defs`), `class`, and `version`. Use
     #'   `tidyr::unnest(result, brand, keep_empty = TRUE)` to get one row per
     #'   brand (this drops the generic entirely for a plain `unnest()` without
     #'   `keep_empty = TRUE`, since most generics have no brand on record).
-    get_generics = function(priority = 1L) {
+    get_generics = function(priority = 1L, condition = NULL) {
       result <- private$.generics
       if (!is.null(priority)) {
         result <- result[result$priority %in% priority, , drop = FALSE]
+      }
+      if (!is.null(condition)) {
+        result <- result[is.na(result$condition) | result$condition %in% condition, , drop = FALSE]
       }
       result$class   <- private$.drug_class
       result$version <- private$.version %||% NA_character_

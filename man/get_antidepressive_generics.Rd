@@ -18,7 +18,7 @@ Print the composite spec to see all available component names.}
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \value{
-A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{class},
+A tibble with columns \code{generic}, \code{brand}, \code{priority}, \code{condition}, \code{class},
 and \code{version}.
 }
 \description{

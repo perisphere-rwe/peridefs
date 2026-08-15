@@ -90,9 +90,12 @@ CompositeDrugSpec <- R6::R6Class(
     #'   (default) or `"all"` returns every component.
     #' @param priority Integer vector subsetting confidence tiers to include.
     #'   Default `1`.
-    #' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
-    #'   and `version`.
-    get_generics = function(component = NULL, priority = 1L) {
+    #' @param condition Optional character vector subsetting to specific
+    #'   condition(s), forwarded to each component's `get_generics()`. `NULL`
+    #'   (default) applies no condition filtering.
+    #' @return A tibble with columns `generic`, `brand`, `priority`,
+    #'   `condition`, `class`, and `version`.
+    get_generics = function(component = NULL, priority = 1L, condition = NULL) {
       if (!is.null(component) && !identical(component, "all")) {
         .validate_components(component, self)
       }
@@ -103,7 +106,7 @@ CompositeDrugSpec <- R6::R6Class(
       }
 
       rows <- lapply(comps, function(nm) {
-        .resolve_component(private$.components, nm, self$label)$get_generics(priority = priority)
+        .resolve_component(private$.components, nm, self$label)$get_generics(priority = priority, condition = condition)
       })
 
       unique(do.call(rbind, rows))

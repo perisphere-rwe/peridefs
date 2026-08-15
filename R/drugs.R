@@ -31,7 +31,7 @@ NULL
 #' `vasodilators_v1`.
 #'
 #' @inheritParams drug_accessors
-#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#' @return A tibble with columns `generic`, `brand`, `priority`, `condition`, `class`,
 #'   and `version`.
 #' @seealso \code{spec_antihypertensive}
 #' @export
@@ -52,7 +52,7 @@ get_antihypertensive_defs <- make_drug_def_getter(spec_antihypertensive, composi
 #' `sglt2_v1`, `glp1_v1`, `insulin_v1`, `amylin_v1`.
 #'
 #' @inheritParams drug_accessors
-#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#' @return A tibble with columns `generic`, `brand`, `priority`, `condition`, `class`,
 #'   and `version`.
 #' @seealso \code{spec_antidiabetic}
 #' @export
@@ -71,7 +71,7 @@ get_antidiabetic_defs <- make_drug_def_getter(spec_antidiabetic, composite = TRU
 #' and `glp1_v1`.
 #'
 #' @inheritParams drug_accessors
-#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#' @return A tibble with columns `generic`, `brand`, `priority`, `condition`, `class`,
 #'   and `version`.
 #' @seealso \code{spec_antiobesity}
 #' @export
@@ -91,7 +91,7 @@ get_antiobesity_defs <- make_drug_def_getter(spec_antiobesity, composite = TRUE)
 #' `niacin_v1`.
 #'
 #' @inheritParams drug_accessors
-#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#' @return A tibble with columns `generic`, `brand`, `priority`, `condition`, `class`,
 #'   and `version`.
 #' @seealso \code{spec_lipid_lowering}
 #' @export
@@ -110,7 +110,7 @@ get_lipid_lowering_defs <- make_drug_def_getter(spec_lipid_lowering, composite =
 #' `snri_v1`, `tca_v1`, `maoi_v1`, and `other_v1`.
 #'
 #' @inheritParams drug_accessors
-#' @return A tibble with columns `generic`, `brand`, `priority`, `class`,
+#' @return A tibble with columns `generic`, `brand`, `priority`, `condition`, `class`,
 #'   and `version`.
 #' @seealso \code{spec_antidepressive}
 #' @export

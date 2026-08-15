@@ -12,7 +12,8 @@ drug_spec(
   generic_names = character(0L),
   generic_names_probable = character(0L),
   generic_names_cautious = character(0L),
-  brand_names = list()
+  brand_names = list(),
+  generic_defs = NULL
 )
 }
 \arguments{
@@ -30,7 +31,9 @@ drug_spec(
 
 \item{generic_names_cautious}{Character vector of GNN drug names lacking US approval for this class's indication (priority 3).}
 
-\item{brand_names}{Optional named list mapping a GNN drug name to one or more brand name strings, e.g. \code{list(SEMAGLUTIDE = "Ozempic")}. See \link{DrugSpec} for details.}
+\item{brand_names}{Optional named list mapping a GNN drug name to one or more brand name strings, e.g. \code{list(SEMAGLUTIDE = "Ozempic")}. See \link{DrugSpec} for details. Cannot be combined with \code{generic_defs}.}
+
+\item{generic_defs}{Optional alternative to \code{generic_names}/\code{generic_names_probable}/\code{generic_names_cautious}/\code{brand_names}, for drug classes spanning more than one condition/indication context. See \link{DrugSpec} for details.}
 }
 \value{
 A \link{DrugSpec} R6 object.

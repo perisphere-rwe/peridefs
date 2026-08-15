@@ -44,6 +44,7 @@ object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
   generic_names_probable = character(0L),
   generic_names_cautious = character(0L),
   brand_names = list(),
+  generic_defs = NULL,
   version = NULL
 )}
     \if{html}{\out{</div>}}
@@ -71,7 +72,33 @@ appear in \code{generic_names}, \code{generic_names_probable}, or
 \code{generic_names_cautious}) to one or more brand name strings, e.g.
 \code{list(SEMAGLUTIDE = "Ozempic", "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva"))}. Generics with no entry get an empty brand vector.
 Stored as a list-column (\code{brand}) in \code{get_generics()} output, since a
-single generic can map to zero, one, or multiple brands.}
+single generic can map to zero, one, or multiple brands. Ignored
+(and must be left empty) if \code{generic_defs} is supplied.}
+      \item{\code{generic_defs}}{Optional alternative to
+\code{generic_names}/\code{generic_names_probable}/\code{generic_names_cautious}/
+\code{brand_names}, for drug classes whose generics don't all map to a
+single condition/indication context (e.g. a drug that's core for one
+condition but cautious for another). A data frame/tibble with
+required columns \code{generic} (character) and \code{priority} (integer,
+\code{1}/\code{2}/\code{3}), and optional columns \code{condition} (character; \code{NA} if
+omitted, meaning "not condition-specific") and \code{brand} (character;
+\code{NA} if omitted or unknown). The same generic may appear in multiple
+rows with different \code{priority}/\code{condition} combinations (e.g.
+finerenone at priority 1 for \code{"ckd"} and priority 3 for
+\code{"hypertension"}), and multiple brands for one
+\verb{(generic, priority, condition)} combination are expressed as
+duplicate rows differing only in \code{brand}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{tibble::tribble(
+  ~generic,       ~priority, ~condition,     ~brand,
+  "FINERENONE",   1,         "ckd",          "Kerendia",
+  "FINERENONE",   3,         "hypertension", "Kerendia",
+  "EPLERENONE",   2,         "hypertension", "Inspra"
+)
+}\if{html}{\out{</div>}}
+
+Cannot be combined with \code{generic_names}/\code{generic_names_probable}/
+\code{generic_names_cautious}/\code{brand_names}.}
       \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
     }
     \if{html}{\out{</div>}}
@@ -98,7 +125,7 @@ single generic can map to zero, one, or multiple brands.}
 frame.
   \subsection{Usage}{
     \if{html}{\out{<div class="r">}}
-    \preformatted{DrugSpec$get_generics(priority = 1L)}
+    \preformatted{DrugSpec$get_generics(priority = 1L, condition = NULL)}
     \if{html}{\out{</div>}}
   }
   \subsection{Arguments}{
@@ -106,13 +133,20 @@ frame.
     \describe{
       \item{\code{priority}}{Integer vector subsetting confidence tiers to include
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
+      \item{\code{condition}}{Optional character vector subsetting to specific
+condition(s) (only meaningful for specs built with \code{generic_defs};
+see \link[=DrugSpec]{DrugSpec$new()}). \code{NULL} (default) applies no
+condition filtering. When supplied, rows with a \code{condition} in
+\code{condition}, and rows with \code{condition = NA} (not condition-specific),
+are both included.}
     }
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
     A tibble with columns \code{generic}, \code{brand} (a list-column of
 character vectors — \code{character(0)} when a generic has no known
-brand, length 1+ otherwise), \code{priority}, \code{class}, and \code{version}. Use
+brand, length 1+ otherwise), \code{priority}, \code{condition} (\code{NA} unless
+the spec was built with \code{generic_defs}), \code{class}, and \code{version}. Use
 \code{tidyr::unnest(result, brand, keep_empty = TRUE)} to get one row per
 brand (this drops the generic entirely for a plain \code{unnest()} without
 \code{keep_empty = TRUE}, since most generics have no brand on record).

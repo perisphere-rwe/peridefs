@@ -57,7 +57,7 @@ test_that("keys() returns union of component keys", {
 
 test_that("get_codes() with no component returns all components", {
   result <- toy_composite$get_codes()
-  expect_true(all(c("a_v1", "b_v1") %in% result$class))
+  expect_true(all(c("comp_a", "comp_b") %in% result$class))
 })
 
 test_that("get_codes(component = 'a_v1') returns component A codes", {

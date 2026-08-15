@@ -153,7 +153,9 @@ Default \code{1}.}
   }
   \subsection{Returns}{
     A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version},
-and \code{class} (the component name).
+and \code{class} (the component's own condition identifier, e.g. \code{"chd"}
+-- not the versioned component key, since \code{version} already
+captures that).
   }
 }
 

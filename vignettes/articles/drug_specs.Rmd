@@ -25,7 +25,7 @@ pass `"all"`) to retrieve every component at once.
 
 | Function | Returns |
 |----------|---------|
-| `get_<drug>_generics(component = ...)` | Tibble of generic (and brand, as a list-column) names, with `priority`, `class`, and `version` columns |
+| `get_<drug>_generics(component = ...)` | Tibble of generic (and brand, as a list-column) names, with `priority`, `condition`, `class`, and `version` columns |
 | `get_<drug>_defs(component = ...)` | Narrative description of the component's drug class definition |
 
 Print any composite spec to see its available component names:

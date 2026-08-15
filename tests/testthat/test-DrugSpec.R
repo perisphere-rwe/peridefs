@@ -23,7 +23,7 @@ test_that("active bindings return correct values", {
 test_that("get_generics() returns a tibble with the expected columns", {
   result <- toy_drug_v1$get_generics()
   expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("generic", "brand", "priority", "class", "version"))
+  expect_equal(names(result), c("generic", "brand", "priority", "condition", "class", "version"))
 })
 
 test_that("get_generics() returns correct GNNs per version object", {
