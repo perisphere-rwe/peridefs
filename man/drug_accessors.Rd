@@ -16,3 +16,4 @@ Accessor functions for composite drug specs.
 
 Accessor functions for composite drug specs.
 }
+\keyword{internal}

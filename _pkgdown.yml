@@ -112,35 +112,30 @@ reference:
     ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
   contents:
   - get_antihypertensive_generics
-  - get_antihypertensive_codes
   - get_antihypertensive_defs
 - title: 'Drugs: Antidiabetics'
   desc: |
     Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase inhibitors, DPP-4, SGLT-2, GLP-1, insulin, etc.
   contents:
   - get_antidiabetic_generics
-  - get_antidiabetic_codes
   - get_antidiabetic_defs
 - title: 'Drugs: Antiobesity'
   desc: |
     Non-GLP-1 agents (`non_glp1_v1`: naltrexone/bupropion, orlistat) and GLP-1 receptor agonists (`glp1_v1`: exenatide, dulaglutide, semaglutide, liraglutide, tirzepatide).
   contents:
   - get_antiobesity_generics
-  - get_antiobesity_codes
   - get_antiobesity_defs
 - title: 'Drugs: Antidepressives'
   desc: |
     SSRIs (`ssri_v1`), SNRIs (`snri_v1`), tricyclics (`tca_v1`), MAOIs (`maoi_v1`), and other/atypical agents (`other_v1`).
   contents:
   - get_antidepressive_generics
-  - get_antidepressive_codes
   - get_antidepressive_defs
 - title: 'Drugs: Lipid-Lowering'
   desc: |
     Statins (`statin_v1`), ezetimibe (`ezetimibe_v1`), PCSK9 inhibitors (`pcsk9_v1`), fibrates (`fibrate_v1`), bile acid sequestrants (`bile_acid_seq_v1`), and niacin (`niacin_v1`).
   contents:
   - get_lipid_lowering_generics
-  - get_lipid_lowering_codes
   - get_lipid_lowering_defs
 - title: General Accessor
   desc: |

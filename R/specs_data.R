@@ -26,6 +26,7 @@ NULL
 #'   specs. `NULL` (default) or `"all"` returns every component's generics.
 #'   Print the composite spec to see all available component names.
 #' @name drug_accessors
+#' @keywords internal
 NULL
 
 #' Condition and Drug Code Specification Objects
