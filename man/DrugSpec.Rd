@@ -4,133 +4,187 @@
 \alias{DrugSpec}
 \title{R6 class for drug class specifications}
 \description{
-Stores the generic drug names (GNNs), NDC codes, and narrative description
-for a single version of a drug class definition. Each version is a distinct
+Stores the generic drug names (GNNs) and narrative description for a
+single version of a drug class definition. Each version is a distinct
 object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{drug_class}}{Short drug class identifier (read-only).}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{drug_class}}{Short drug class identifier (read-only).}
 
-\item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
+    \item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
 
-\item{\code{label}}{Human-readable drug class label (read-only).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{label}}{Human-readable drug class label (read-only).}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DrugSpec-new}{\code{DrugSpec$new()}}
-\item \href{#method-DrugSpec-print}{\code{DrugSpec$print()}}
-\item \href{#method-DrugSpec-get_generics}{\code{DrugSpec$get_generics()}}
-\item \href{#method-DrugSpec-get_codes}{\code{DrugSpec$get_codes()}}
-\item \href{#method-DrugSpec-get_defs}{\code{DrugSpec$get_defs()}}
-\item \href{#method-DrugSpec-clone}{\code{DrugSpec$clone()}}
-}
+  \itemize{
+    \item \href{#method-DrugSpec-initialize}{\code{DrugSpec$new()}}
+    \item \href{#method-DrugSpec-print}{\code{DrugSpec$print()}}
+    \item \href{#method-DrugSpec-get_generics}{\code{DrugSpec$get_generics()}}
+    \item \href{#method-DrugSpec-get_defs}{\code{DrugSpec$get_defs()}}
+    \item \href{#method-DrugSpec-clone}{\code{DrugSpec$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DrugSpec-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DrugSpec-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{DrugSpec}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$new(
+\if{html}{\out{<a id="method-DrugSpec-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DrugSpec-initialize}{}}}
+\subsection{\code{DrugSpec$new()}}{
+  Create a new \code{DrugSpec}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$new(
   drug_class,
   label,
   defs = NULL,
   generic_names = character(0L),
-  ndc = character(0L),
-  version = NULL,
-  versions = NULL
-)}\if{html}{\out{</div>}}
+  generic_names_probable = character(0L),
+  generic_names_cautious = character(0L),
+  brand_names = list(),
+  generic_defs = NULL,
+  version = NULL
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{drug_class}}{Short identifier string, e.g. \code{"acei"}.}
+      \item{\code{label}}{Human-readable label.}
+      \item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
+      \item{\code{generic_names}}{Character vector of GNN drug names that are
+single-indication and aligned with, and FDA-approved for, this drug
+class's indication. Stored at \code{priority = 1} (core).}
+      \item{\code{generic_names_probable}}{Character vector of GNN drug names that
+have more than one indication (e.g., also FDA-approved, or widely
+used off-label, for a different condition) in addition to this drug
+class's indication. Stored at \code{priority = 2} (probable).}
+      \item{\code{generic_names_cautious}}{Character vector of GNN drug names that
+are included in this drug class despite not having their expected
+indication approved in the US (e.g., approved for a related but
+distinct condition, or not marketed in the US at all). Stored at
+\code{priority = 3} (cautious).}
+      \item{\code{brand_names}}{Optional named list mapping a GNN drug name (must
+appear in \code{generic_names}, \code{generic_names_probable}, or
+\code{generic_names_cautious}) to one or more brand name strings, e.g.
+\code{list(SEMAGLUTIDE = "Ozempic", "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva"))}. Generics with no entry get an empty brand vector.
+Stored as a list-column (\code{brand}) in \code{get_generics()} output, since a
+single generic can map to zero, one, or multiple brands. Ignored
+(and must be left empty) if \code{generic_defs} is supplied.}
+      \item{\code{generic_defs}}{Optional alternative to
+\code{generic_names}/\code{generic_names_probable}/\code{generic_names_cautious}/
+\code{brand_names}, for drug classes whose generics don't all map to a
+single condition/indication context (e.g. a drug that's core for one
+condition but cautious for another). A data frame/tibble with
+required columns \code{generic} (character) and \code{priority} (integer,
+\code{1}/\code{2}/\code{3}), and optional columns \code{condition} (character; \code{NA} if
+omitted, meaning "not condition-specific") and \code{brand} (character;
+\code{NA} if omitted or unknown). The same generic may appear in multiple
+rows with different \code{priority}/\code{condition} combinations (e.g.
+finerenone at priority 1 for \code{"ckd"} and priority 3 for
+\code{"hypertension"}), and multiple brands for one
+\verb{(generic, priority, condition)} combination are expressed as
+duplicate rows differing only in \code{brand}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{tibble::tribble(
+  ~generic,       ~priority, ~condition,     ~brand,
+  "FINERENONE",   1,         "ckd",          "Kerendia",
+  "FINERENONE",   3,         "hypertension", "Kerendia",
+  "EPLERENONE",   2,         "hypertension", "Inspra"
+)
+}\if{html}{\out{</div>}}
+
+Cannot be combined with \code{generic_names}/\code{generic_names_probable}/
+\code{generic_names_cautious}/\code{brand_names}.}
+      \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{drug_class}}{Short identifier string, e.g. \code{"acei"}.}
-
-\item{\code{label}}{Human-readable label.}
-
-\item{\code{defs}}{Character string describing the drug class. May be \code{NULL}.}
-
-\item{\code{generic_names}}{Character vector of GNN drug names.}
-
-\item{\code{ndc}}{Character vector of NDC codes.}
-
-\item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
-
-\item{\code{versions}}{Deprecated. Use \code{defs}/\code{generic_names}/\code{version} directly.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-print"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-print}{}}}
-\subsection{Method \code{print()}}{
-Print a summary of the spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$print()}}{
+  Print a summary of the spec.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$print(...)}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-get_generics"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_generics}{}}}
-\subsection{Method \code{get_generics()}}{
-Retrieve generic drug names (GNNs).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_generics()}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$get_generics()}}{
+  Retrieve generic (and brand) drug names as a tidy data
+frame.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$get_generics(priority = 1L, condition = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
+      \item{\code{condition}}{Optional character vector subsetting to specific
+condition(s) (only meaningful for specs built with \code{generic_defs};
+see \link[=DrugSpec]{DrugSpec$new()}). \code{NULL} (default) applies no
+condition filtering. When supplied, rows with a \code{condition} in
+\code{condition}, and rows with \code{condition = NA} (not condition-specific),
+are both included.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A tibble with columns \code{generic}, \code{brand} (a list-column of
+character vectors — \code{character(0)} when a generic has no known
+brand, length 1+ otherwise), \code{priority}, \code{condition} (\code{NA} unless
+the spec was built with \code{generic_defs}), \code{class}, and \code{version}. Use
+\code{tidyr::unnest(result, brand, keep_empty = TRUE)} to get one row per
+brand (this drops the generic entirely for a plain \code{unnest()} without
+\code{keep_empty = TRUE}, since most generics have no brand on record).
+  }
 }
 
-\subsection{Returns}{
-Character vector of GNN strings.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DrugSpec-get_codes"></a>}}
-\if{latex}{\out{\hypertarget{method-DrugSpec-get_codes}{}}}
-\subsection{Method \code{get_codes()}}{
-Retrieve NDC codes.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_codes()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Character vector of NDC codes (empty until populated).
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-get_defs}{}}}
-\subsection{Method \code{get_defs()}}{
-Retrieve the narrative drug class description.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$get_defs()}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$get_defs()}}{
+  Retrieve the narrative drug class description.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$get_defs()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string, or \code{NULL}.
+  }
 }
 
-\subsection{Returns}{
-Character string, or \code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugSpec-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugSpec-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugSpec$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DrugSpec$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DrugSpec$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

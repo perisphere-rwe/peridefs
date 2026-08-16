@@ -17,7 +17,8 @@
 #' )
 #' ```
 #'
-#' The `component` argument is **required** when calling any `get_*` method.
+#' The `component` argument is optional when calling `get_generics()`;
+#' omitting it (or passing `"all"`) returns every component.
 #'
 #' @export
 CompositeDrugSpec <- R6::R6Class(
@@ -28,7 +29,8 @@ CompositeDrugSpec <- R6::R6Class(
     .version    = NULL,
     .label      = NULL,
     .defs       = NULL,
-    .components = NULL
+    .components = NULL,
+    .condition  = NULL
   ),
 
   active = list(
@@ -37,7 +39,11 @@ CompositeDrugSpec <- R6::R6Class(
     #' @field version Version label (read-only; typically `NULL` for composites).
     version    = function() private$.version,
     #' @field label Human-readable label (read-only).
-    label      = function() private$.label
+    label      = function() private$.label,
+    #' @field condition The single condition/indication this composite
+    #'   represents (read-only), e.g. `"hypertension"`. Used as the default
+    #'   `condition` filter in `get_generics()`.
+    condition  = function() private$.condition
   ),
 
   public = list(
@@ -48,31 +54,33 @@ CompositeDrugSpec <- R6::R6Class(
     #' @param components Named list of [DrugSpec] objects, keyed by
     #'   `"name_vX"` strings.
     #' @param version Optional version label (typically `NULL`).
-    #' @param versions Deprecated. Use `defs`/`components` directly.
+    #' @param condition Required character string naming the single
+    #'   condition/indication this composite represents, e.g.
+    #'   `"hypertension"`. A `CompositeDrugSpec` always represents exactly
+    #'   one condition (unlike a leaf [DrugSpec] built with `generic_defs`,
+    #'   which may span several); this is used as the default `condition`
+    #'   filter in `get_generics()`, so a shared leaf component tagged with
+    #'   multiple conditions (e.g. a GLP-1 spec used by both the
+    #'   obesity and diabetes composites) only contributes its
+    #'   rows for *this* composite's condition unless the caller overrides
+    #'   the filter explicitly.
     initialize = function(drug_class, label, defs = NULL, components = list(),
-                          version = NULL, versions = NULL) {
-      # Backward compat with old multi-version API
-      if (!is.null(versions)) {
-        vk <- names(versions)[length(names(versions))]
-        v  <- versions[[vk]]
-        if (is.null(defs)) defs <- v$defs
-        if (!length(components)) {
-          # Old components stored as list(name = list(spec = ..., version = ...))
-          old_comps <- v$components
-          flat <- list()
-          for (nm in names(old_comps)) {
-            cd <- old_comps[[nm]]
-            flat[[nm]] <- if (is.list(cd) && !is.null(cd$spec)) cd$spec else cd
-          }
-          components <- flat
-        }
-        if (is.null(version)) version <- vk
+                          version = NULL, condition = NULL) {
+      if (is.null(condition)) {
+        cli::cli_abort(c(
+          "{.arg condition} is required for {.cls CompositeDrugSpec}.",
+          "i" = paste0(
+            "A composite drug spec always represents a single condition/",
+            "indication (e.g. {.val hypertension}); pass it explicitly."
+          )
+        ))
       }
       private$.drug_class <- drug_class
       private$.version    <- version
       private$.label      <- label
       private$.defs       <- defs
       private$.components <- components
+      private$.condition  <- condition
       invisible(self)
     },
 
@@ -80,6 +88,7 @@ CompositeDrugSpec <- R6::R6Class(
     print = function(...) {
       cli::cli_h1("{self$label} {cli::col_grey('(composite)')}")
       cli::cli_text("Drug class: {.code {self$drug_class}}")
+      cli::cli_text("Condition: {.code {self$condition}}")
       if (!is.null(private$.defs)) cli::cli_text("{.strong Def:} {private$.defs}")
 
       comps <- private$.components
@@ -87,7 +96,7 @@ CompositeDrugSpec <- R6::R6Class(
         cli::cli_text("{length(comps)} component(s):")
         for (nm in names(comps)) {
           s <- comps[[nm]]
-          n <- length(s$get_generics())
+          n <- nrow(s$get_generics(priority = 1:3))
           cli::cli_bullets(c(" " = "{.code {nm}}: {s$label} ({n} GNNs)"))
         }
         cli::cli_text(cli::col_grey(
@@ -101,64 +110,72 @@ CompositeDrugSpec <- R6::R6Class(
     #' @return Named list of [DrugSpec] objects.
     components = function() private$.components,
 
-    #' @description Retrieve GNNs from a named component.
-    #' @param component **Required.** Component name, e.g. `"acei_v1"`.
-    #' @return Character vector of GNN strings.
-    get_generics = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(private$.components)}}"
-        ))
+    #' @description Retrieve generic (and brand) drug names from one or more
+    #'   components as a tidy data frame.
+    #' @param component Optional component name(s), e.g. `"acei_v1"`. `NULL`
+    #'   (default) or `"all"` returns every component.
+    #' @param priority Integer vector subsetting confidence tiers to include.
+    #'   Default `1`.
+    #' @param condition Optional character vector subsetting to specific
+    #'   condition(s), forwarded to each component's `get_generics()`.
+    #'   Defaults to this composite's own `condition` (e.g.
+    #'   `"hypertension"`), so a shared leaf component tagged with multiple
+    #'   conditions only contributes its rows for this composite's
+    #'   condition. Pass `NULL` explicitly to disable condition filtering
+    #'   entirely (returns every row from every component regardless of
+    #'   condition).
+    #' @return A tibble with columns `generic`, `brand`, `priority`,
+    #'   `condition`, `class`, and `version`.
+    get_generics = function(component = NULL, priority = 1L, condition = self$condition) {
+      if (!is.null(component) && !identical(component, "all")) {
+        .validate_components(component, self)
       }
-      if (identical(component, "all")) {
-        return(unique(unlist(lapply(private$.components, function(s) s$get_generics()))))
+      comps <- if (is.null(component) || identical(component, "all")) {
+        names(private$.components)
+      } else {
+        component
       }
-      .resolve_component(private$.components, component, self$label)$get_generics()
+
+      rows <- lapply(comps, function(nm) {
+        .resolve_component(private$.components, nm, self$label)$get_generics(priority = priority, condition = condition)
+      })
+
+      unique(do.call(rbind, rows))
     },
 
-    #' @description Retrieve NDC codes from a named component.
-    #' @param component **Required.** Component name, or `"all"` for the union
-    #'   across all components.
-    #' @return Character vector of NDC codes.
-    get_codes = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(private$.components)}}"
-        ))
+    #' @description Retrieve the human-readable `label` for one or more
+    #'   components as a tidy tibble.
+    #'
+    #'   This deliberately surfaces each leaf's `label` (e.g. `"ACE
+    #'   Inhibitors"`) rather than its free-text `defs` field. A leaf
+    #'   `DrugSpec`'s `defs` is typically just an internal sourcing note
+    #'   (e.g. `"From the Perisphere antihypertensive medication list."`),
+    #'   not a clinical definition -- and now that composite drug specs are
+    #'   named after the condition they treat (e.g. `spec_hypertension`), a
+    #'   `get_defs()`-style function here would be easy to confuse with the
+    #'   condition side's `get_*_v1_defs()`, which *does* return a real
+    #'   diagnostic-algorithm narrative. Returning labels instead avoids
+    #'   that confusion by making clear this is a component listing, not a
+    #'   clinical definition. Version isn't included in the output since
+    #'   `name` (the component key, e.g. `"acei_v2"`) already encodes it.
+    #' @param component Optional component name(s). `NULL` (default) or
+    #'   `"all"` returns every component's label.
+    #' @return A tibble with columns `name` (the component key, e.g.
+    #'   `"acei_v1"`) and `label` (e.g. `"ACE Inhibitors"`).
+    get_meds_labels = function(component = NULL) {
+      comps <- private$.components
+      if (!is.null(component) && !identical(component, "all")) {
+        .validate_components(component, self)
       }
-      if (identical(component, "all")) {
-        return(unique(unlist(lapply(private$.components, function(s) s$get_codes()))))
+      keys <- if (is.null(component) || identical(component, "all")) {
+        names(comps)
+      } else {
+        component
       }
-      .resolve_component(private$.components, component, self$label)$get_codes()
-    },
-
-    #' @description Retrieve the narrative description for a named component.
-    #' @param component **Required.** Component name.
-    #' @return Character string, or `NULL`.
-    get_defs = function(component = NULL) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to see all component defs, or specify one: {.val {names(private$.components)}}"
-        ))
-      }
-      if (identical(component, "all")) {
-        defs <- lapply(stats::setNames(names(private$.components),
-                                       names(private$.components)),
-                       function(nm) {
-                         d <- private$.components[[nm]]$get_defs()
-                         if (!is.null(d)) {
-                           cli::cli_text("{.strong {nm}:}")
-                           cli::cli_text(d)
-                           cli::cli_text("")
-                         }
-                         invisible(d)
-                       })
-        return(invisible(defs))
-      }
-      .render_def(.resolve_component(private$.components, component, self$label)$get_defs())
+      tibble::tibble(
+        name  = keys,
+        label = vapply(keys, function(nm) comps[[nm]]$label, character(1L), USE.NAMES = FALSE)
+      )
     }
   )
 )

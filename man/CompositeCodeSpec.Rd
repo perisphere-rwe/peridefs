@@ -20,177 +20,191 @@ The \code{components} list is a flat named list mapping \code{"name_vX"} keys to
 )
 }\if{html}{\out{</div>}}
 
-The \code{component} argument is \strong{required} when calling \code{get_codes()} or
-\code{get_defs()}. The \code{variable_type} argument is forwarded to the component
-spec, so both condition and outcome codes are accessible.
+The \code{component} argument is optional when calling \code{get_codes()} or
+\code{get_defs()}; omitting it (or passing \code{"all"}) returns every component.
+The \code{variable_type} argument is forwarded to the component spec, so both
+condition and outcome codes are accessible.
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{condition}}{Short condition identifier (read-only).}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{condition}}{Short condition identifier (read-only).}
 
-\item{\code{version}}{Version label (read-only; \code{NULL} for composites).}
+    \item{\code{version}}{Version label (read-only; \code{NULL} for composites).}
 
-\item{\code{label}}{Human-readable label (read-only).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{label}}{Human-readable label (read-only).}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-CompositeCodeSpec-new}{\code{CompositeCodeSpec$new()}}
-\item \href{#method-CompositeCodeSpec-print}{\code{CompositeCodeSpec$print()}}
-\item \href{#method-CompositeCodeSpec-components}{\code{CompositeCodeSpec$components()}}
-\item \href{#method-CompositeCodeSpec-keys}{\code{CompositeCodeSpec$keys()}}
-\item \href{#method-CompositeCodeSpec-get_codes}{\code{CompositeCodeSpec$get_codes()}}
-\item \href{#method-CompositeCodeSpec-get_defs}{\code{CompositeCodeSpec$get_defs()}}
-\item \href{#method-CompositeCodeSpec-clone}{\code{CompositeCodeSpec$clone()}}
-}
+  \itemize{
+    \item \href{#method-CompositeCodeSpec-initialize}{\code{CompositeCodeSpec$new()}}
+    \item \href{#method-CompositeCodeSpec-print}{\code{CompositeCodeSpec$print()}}
+    \item \href{#method-CompositeCodeSpec-components}{\code{CompositeCodeSpec$components()}}
+    \item \href{#method-CompositeCodeSpec-keys}{\code{CompositeCodeSpec$keys()}}
+    \item \href{#method-CompositeCodeSpec-get_codes}{\code{CompositeCodeSpec$get_codes()}}
+    \item \href{#method-CompositeCodeSpec-get_defs}{\code{CompositeCodeSpec$get_defs()}}
+    \item \href{#method-CompositeCodeSpec-clone}{\code{CompositeCodeSpec$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CompositeCodeSpec-new"></a>}}
-\if{latex}{\out{\hypertarget{method-CompositeCodeSpec-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{CompositeCodeSpec}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$new(
+\if{html}{\out{<a id="method-CompositeCodeSpec-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-CompositeCodeSpec-initialize}{}}}
+\subsection{\code{CompositeCodeSpec$new()}}{
+  Create a new \code{CompositeCodeSpec}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$new(
   condition,
   label,
   defs = NULL,
   components = list(),
   version = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{condition}}{Short identifier string, e.g. \code{"ascvd"}.}
-
-\item{\code{label}}{Human-readable label.}
-
-\item{\code{defs}}{Character string describing the composite definition.}
-
-\item{\code{components}}{Named list of \link{CodeSpec} objects, keyed by
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{condition}}{Short identifier string, e.g. \code{"ascvd"}.}
+      \item{\code{label}}{Human-readable label.}
+      \item{\code{defs}}{Character string describing the composite definition.}
+      \item{\code{components}}{Named list of \link{CodeSpec} objects, keyed by
 \code{"name_vX"} strings.}
+      \item{\code{version}}{Optional version label (typically \code{NULL} for composites).}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{version}}{Optional version label (typically \code{NULL} for composites).}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-print"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-print}{}}}
-\subsection{Method \code{print()}}{
-Print a summary of the composite spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{CompositeCodeSpec$print()}}{
+  Print a summary of the composite spec.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$print(...)}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-components"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-components}{}}}
-\subsection{Method \code{components()}}{
-Return the flat named component list.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$components()}\if{html}{\out{</div>}}
+\subsection{\code{CompositeCodeSpec$components()}}{
+  Return the flat named component list.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$components()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Named list of \link{CodeSpec} objects.
+  }
 }
 
-\subsection{Returns}{
-Named list of \link{CodeSpec} objects.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-keys"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-keys}{}}}
-\subsection{Method \code{keys()}}{
-Return the code-set keys available across all components.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$keys()}\if{html}{\out{</div>}}
+\subsection{\code{CompositeCodeSpec$keys()}}{
+  Return the code-set keys available across all components.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$keys()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of unique key strings.
+  }
 }
 
-\subsection{Returns}{
-Character vector of unique key strings.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-get_codes"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-get_codes}{}}}
-\subsection{Method \code{get_codes()}}{
-Retrieve codes from a named component.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$get_codes(
+\subsection{\code{CompositeCodeSpec$get_codes()}}{
+  Retrieve codes from one or more components as a tidy
+data frame.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$get_codes(
   component = NULL,
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble")
-)}\if{html}{\out{</div>}}
+  priority = 1L
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{component}}{Optional component name(s), e.g. \code{"chd_v1"}. \code{NULL}
+(default) or \code{"all"} returns every component, with a \code{class} column
+distinguishing them.}
+      \item{\code{code_type}}{Optional character vector of code types to filter.}
+      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
+      \item{\code{periods}}{Logical. \code{FALSE} (default) = short format.}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include.
+Default \code{1}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version},
+and \code{class} (the component's own condition identifier, e.g. \code{"chd"}
+-- not the versioned component key, since \code{version} already
+captures that).
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{component}}{\strong{Required.} Name of a component, e.g. \code{"chd_v1"}.
-Print the spec to see available names.}
-
-\item{\code{code_type}}{Optional character vector of code types to filter.}
-
-\item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
-
-\item{\code{periods}}{Logical. \code{FALSE} (default) = short format.}
-
-\item{\code{format}}{\code{"list"} (default) or \code{"tibble"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Named list or tibble of codes.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-get_defs}{}}}
-\subsection{Method \code{get_defs()}}{
-Retrieve the narrative algorithm description from a
-named component.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$get_defs(
+\subsection{\code{CompositeCodeSpec$get_defs()}}{
+  Retrieve the narrative algorithm description from one or
+more components.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$get_defs(
   component = NULL,
   variable_type = c("condition", "outcome")
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{component}}{Optional component name. \code{NULL} (default) or \code{"all"}
+renders every component's description.}
+      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string, or (for \code{"all"}/\code{NULL}) an invisible named
+list rendered to the console.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{component}}{\strong{Required.} Component name.}
-
-\item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character string, or \code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeCodeSpec-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeCodeSpec-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeCodeSpec$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{CompositeCodeSpec$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeCodeSpec$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

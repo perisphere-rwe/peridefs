@@ -9,11 +9,6 @@
   components[[component]]
 }
 
-# Return the code_type for a key string.
-parse_key <- function(key) {
-  list(code_type = key)
-}
-
 # Add decimal periods to short-format ICD codes.
 # Works for both ICD-9 ("4010" -> "401.0") and ICD-10 ("I120" -> "I12.0").
 # Codes with 3 or fewer characters are returned unchanged.
@@ -33,24 +28,6 @@ add_periods_icd <- function(codes) {
 
 `%==%` <- function(x, y){
   all(x %in% y) & all(y %in% x)
-}
-
-# Returns TRUE if a get_codes() result contains no codes.
-.result_is_empty <- function(result, format) {
-  if (identical(format, "tibble")) {
-    is.null(result) || (inherits(result, "data.frame") && nrow(result) == 0L)
-  } else {
-    is.list(result) && all(lengths(result) == 0L)
-  }
-}
-
-# Union a list of named code lists (each a list of character vectors keyed by
-# code type) into a single named list with unique codes per key.
-.union_code_lists <- function(lists) {
-  all_keys <- unique(unlist(lapply(lists, names)))
-  lapply(stats::setNames(all_keys, all_keys), function(k) {
-    unique(unlist(lapply(lists, \(x) x[[k]] %||% character(0L))))
-  })
 }
 
 # Validate that all elements of `component` exist in `components`, erroring

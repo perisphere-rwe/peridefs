@@ -8,9 +8,11 @@
 #' @param code_type Optional code type filter.
 #' @param variable_type `"condition"` (default) or `"outcome"`.
 #' @param periods Logical. Return decimal-format codes.
-#' @param format `"list"` (default) or `"tibble"`.
-#' @param component For composite specs: a named component (e.g. `"chd_v1"`),
-#'   or `"all"` to union all components. For leaf specs, not used.
+#' @param priority Integer vector subsetting confidence tiers to include
+#'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
+#' @param component For composite specs: optional named component (e.g.
+#'   `"chd_v1"`). `NULL` (default) or `"all"` returns every component. For
+#'   leaf specs, not used.
 #' @name condition_accessors
 #' @keywords internal
 NULL
@@ -20,10 +22,11 @@ NULL
 #' @description
 #' Accessor functions for composite drug specs.
 #'
-#' @param component **Required** for composite specs. A named component (e.g.
-#'   `"acei_v1"`), or `"all"` to union all components' GNNs or NDC codes.
+#' @param component Optional named component (e.g. `"acei_v1"`) for composite
+#'   specs. `NULL` (default) or `"all"` returns every component's generics.
 #'   Print the composite spec to see all available component names.
 #' @name drug_accessors
+#' @keywords internal
 NULL
 
 #' Condition and Drug Code Specification Objects
@@ -33,25 +36,26 @@ NULL
 #' drug class. Each is an [R6][R6::R6Class] object:
 #'
 #' - **Standalone conditions**: a `spec` for a single condition. These
-#'   specs are versioned (e.g., `spec_htn_v1`, `spec_htn_v2`).
+#'   specs are versioned when codes/generics genuinely differ (e.g.,
+#'   `spec_acei_v1`, `spec_acei_v2`).
 #'
 #' - **Composite specs**: a collection of standalone conditions in a single
 #'   spec. For example, atherosclerotic cardiovascular disease is a composition
 #'   of standalong specs for coronary heart disease, stroke, and cerebrovascular
 #'   disease. Composite specs are not versioned because they have multiple
 #'   components that each have versions. Use `component=` to access individual
-#'   components and their respective versions, or `component = "all"` to get
-#'   a union of all the components.
+#'   components and their respective versions, or omit `component` (or pass
+#'   `"all"`) to get a union of all the components.
 #'
 #' Print any spec to see its definition, code sets, and (for composites)
 #' available component names.
 #'
 #' @section Condition specs (standalone, [CodeSpec]):
-#'   `spec_htn_v1`, `spec_htn_v2`,
+#'   `spec_hypertension_v1`,
 #'   `spec_hf_v1`,
 #'   `spec_obesity_v1`,
-#'   `spec_diabetes_v1`, `spec_diabetes_v2`, `spec_diabetes_v3`,
-#'   `spec_depression_v1`, `spec_depression_v2`,
+#'   `spec_diabetes_v1`,
+#'   `spec_depression_v1`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
 #'   `spec_asthma_v1`,
@@ -63,31 +67,10 @@ NULL
 #'   `spec_ascvd`
 #'
 #' @section Drug class composites ([CompositeDrugSpec]):
-#'   `spec_antihypertensive`, `spec_antidiabetic`, `spec_antiobesity`,
-#'   `spec_antidepressive`
+#'   `spec_hypertension`, `spec_diabetes`, `spec_obesity`,
+#'   `spec_depression`, `spec_hyperlipidemia`
 #'
 #' @name spec_objects
-#' @aliases
-#'   spec_antidepressive
-#'   spec_antidiabetic
-#'   spec_asthma_v1
-#'   spec_antihypertensive
-#'   spec_antiobesity
-#'   spec_ascvd
-#'   spec_ckd_v1
-#'   spec_copd_v1
-#'   spec_depression_v1
-#'   spec_depression_v2
-#'   spec_diabetes_v1
-#'   spec_diabetes_v2
-#'   spec_diabetes_v3
-#'   spec_hf_v1
-#'   spec_htn_v1
-#'   spec_htn_v2
-#'   spec_hyperlipidemia_v1
-#'   spec_isch_stroke_v1
-#'   spec_obesity_v1
-#'   spec_ohs_v1
-#'   spec_osa_v1
+#' @aliases spec_depression spec_hyperlipidemia spec_diabetes spec_asthma_v1 spec_hypertension spec_obesity spec_ascvd spec_ckd_v1 spec_copd_v1 spec_depression_v1 spec_diabetes_v1 spec_hf_v1 spec_hypertension_v1 spec_hyperlipidemia_v1 spec_isch_stroke_v1 spec_obesity_v1 spec_ohs_v1 spec_osa_v1
 #' @keywords datasets
 NULL

@@ -20,165 +20,196 @@ The \code{components} list is a flat named list mapping \code{"name_vX"} keys to
 )
 }\if{html}{\out{</div>}}
 
-The \code{component} argument is \strong{required} when calling any \verb{get_*} method.
+The \code{component} argument is optional when calling \code{get_generics()};
+omitting it (or passing \code{"all"}) returns every component.
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{drug_class}}{Short drug class identifier (read-only).}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{drug_class}}{Short drug class identifier (read-only).}
 
-\item{\code{version}}{Version label (read-only; typically \code{NULL} for composites).}
+    \item{\code{version}}{Version label (read-only; typically \code{NULL} for composites).}
 
-\item{\code{label}}{Human-readable label (read-only).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{label}}{Human-readable label (read-only).}
+
+    \item{\code{condition}}{The single condition/indication this composite
+represents (read-only), e.g. \code{"hypertension"}. Used as the default
+\code{condition} filter in \code{get_generics()}.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-CompositeDrugSpec-new}{\code{CompositeDrugSpec$new()}}
-\item \href{#method-CompositeDrugSpec-print}{\code{CompositeDrugSpec$print()}}
-\item \href{#method-CompositeDrugSpec-components}{\code{CompositeDrugSpec$components()}}
-\item \href{#method-CompositeDrugSpec-get_generics}{\code{CompositeDrugSpec$get_generics()}}
-\item \href{#method-CompositeDrugSpec-get_codes}{\code{CompositeDrugSpec$get_codes()}}
-\item \href{#method-CompositeDrugSpec-get_defs}{\code{CompositeDrugSpec$get_defs()}}
-\item \href{#method-CompositeDrugSpec-clone}{\code{CompositeDrugSpec$clone()}}
-}
+  \itemize{
+    \item \href{#method-CompositeDrugSpec-initialize}{\code{CompositeDrugSpec$new()}}
+    \item \href{#method-CompositeDrugSpec-print}{\code{CompositeDrugSpec$print()}}
+    \item \href{#method-CompositeDrugSpec-components}{\code{CompositeDrugSpec$components()}}
+    \item \href{#method-CompositeDrugSpec-get_generics}{\code{CompositeDrugSpec$get_generics()}}
+    \item \href{#method-CompositeDrugSpec-get_meds_labels}{\code{CompositeDrugSpec$get_meds_labels()}}
+    \item \href{#method-CompositeDrugSpec-clone}{\code{CompositeDrugSpec$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CompositeDrugSpec-new"></a>}}
-\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{CompositeDrugSpec}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$new(
+\if{html}{\out{<a id="method-CompositeDrugSpec-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-initialize}{}}}
+\subsection{\code{CompositeDrugSpec$new()}}{
+  Create a new \code{CompositeDrugSpec}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$new(
   drug_class,
   label,
   defs = NULL,
   components = list(),
   version = NULL,
-  versions = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{drug_class}}{Short identifier string, e.g. \code{"antihypertensive"}.}
-
-\item{\code{label}}{Human-readable label.}
-
-\item{\code{defs}}{Character string describing the composite.}
-
-\item{\code{components}}{Named list of \link{DrugSpec} objects, keyed by
+  condition = NULL
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{drug_class}}{Short identifier string, e.g. \code{"antihypertensive"}.}
+      \item{\code{label}}{Human-readable label.}
+      \item{\code{defs}}{Character string describing the composite.}
+      \item{\code{components}}{Named list of \link{DrugSpec} objects, keyed by
 \code{"name_vX"} strings.}
+      \item{\code{version}}{Optional version label (typically \code{NULL}).}
+      \item{\code{condition}}{Required character string naming the single
+condition/indication this composite represents, e.g.
+\code{"hypertension"}. A \code{CompositeDrugSpec} always represents exactly
+one condition (unlike a leaf \link{DrugSpec} built with \code{generic_defs},
+which may span several); this is used as the default \code{condition}
+filter in \code{get_generics()}, so a shared leaf component tagged with
+multiple conditions (e.g. a GLP-1 spec used by both the
+obesity and diabetes composites) only contributes its
+rows for \emph{this} composite's condition unless the caller overrides
+the filter explicitly.}
+    }
+    \if{html}{\out{</div>}}
+  }
+}
 
-\item{\code{version}}{Optional version label (typically \code{NULL}).}
-
-\item{\code{versions}}{Deprecated. Use \code{defs}/\code{components} directly.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeDrugSpec-print"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-print}{}}}
-\subsection{Method \code{print()}}{
-Print a summary of the composite drug spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{CompositeDrugSpec$print()}}{
+  Print a summary of the composite drug spec.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$print(...)}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeDrugSpec-components"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-components}{}}}
-\subsection{Method \code{components()}}{
-Return the flat named component list.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$components()}\if{html}{\out{</div>}}
+\subsection{\code{CompositeDrugSpec$components()}}{
+  Return the flat named component list.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$components()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Named list of \link{DrugSpec} objects.
+  }
 }
 
-\subsection{Returns}{
-Named list of \link{DrugSpec} objects.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeDrugSpec-get_generics"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_generics}{}}}
-\subsection{Method \code{get_generics()}}{
-Retrieve GNNs from a named component.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$get_generics(component = NULL)}\if{html}{\out{</div>}}
+\subsection{\code{CompositeDrugSpec$get_generics()}}{
+  Retrieve generic (and brand) drug names from one or more
+components as a tidy data frame.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$get_generics(
+  component = NULL,
+  priority = 1L,
+  condition = self$condition
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{component}}{Optional component name(s), e.g. \code{"acei_v1"}. \code{NULL}
+(default) or \code{"all"} returns every component.}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include.
+Default \code{1}.}
+      \item{\code{condition}}{Optional character vector subsetting to specific
+condition(s), forwarded to each component's \code{get_generics()}.
+Defaults to this composite's own \code{condition} (e.g.
+\code{"hypertension"}), so a shared leaf component tagged with multiple
+conditions only contributes its rows for this composite's
+condition. Pass \code{NULL} explicitly to disable condition filtering
+entirely (returns every row from every component regardless of
+condition).}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A tibble with columns \code{generic}, \code{brand}, \code{priority},
+\code{condition}, \code{class}, and \code{version}.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{component}}{\strong{Required.} Component name, e.g. \code{"acei_v1"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character vector of GNN strings.
-}
-}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CompositeDrugSpec-get_codes"></a>}}
-\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_codes}{}}}
-\subsection{Method \code{get_codes()}}{
-Retrieve NDC codes from a named component.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$get_codes(component = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-CompositeDrugSpec-get_meds_labels"></a>}}
+\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_meds_labels}{}}}
+\subsection{\code{CompositeDrugSpec$get_meds_labels()}}{
+  Retrieve the human-readable \code{label} for one or more
+components as a tidy tibble.
+
+This deliberately surfaces each leaf's \code{label} (e.g. \code{"ACE Inhibitors"}) rather than its free-text \code{defs} field. A leaf
+\code{DrugSpec}'s \code{defs} is typically just an internal sourcing note
+(e.g. \code{"From the Perisphere antihypertensive medication list."}),
+not a clinical definition -- and now that composite drug specs are
+named after the condition they treat (e.g. \code{spec_hypertension}), a
+\code{get_defs()}-style function here would be easy to confuse with the
+condition side's \verb{get_*_v1_defs()}, which \emph{does} return a real
+diagnostic-algorithm narrative. Returning labels instead avoids
+that confusion by making clear this is a component listing, not a
+clinical definition. Version isn't included in the output since
+\code{name} (the component key, e.g. \code{"acei_v2"}) already encodes it.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$get_meds_labels(component = NULL)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{component}}{Optional component name(s). \code{NULL} (default) or
+\code{"all"} returns every component's label.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A tibble with columns \code{name} (the component key, e.g.
+\code{"acei_v1"}) and \code{label} (e.g. \code{"ACE Inhibitors"}).
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{component}}{\strong{Required.} Component name, or \code{"all"} for the union
-across all components.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character vector of NDC codes.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CompositeDrugSpec-get_defs"></a>}}
-\if{latex}{\out{\hypertarget{method-CompositeDrugSpec-get_defs}{}}}
-\subsection{Method \code{get_defs()}}{
-Retrieve the narrative description for a named component.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$get_defs(component = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{component}}{\strong{Required.} Component name.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character string, or \code{NULL}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CompositeDrugSpec-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-CompositeDrugSpec-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CompositeDrugSpec$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{CompositeDrugSpec$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CompositeDrugSpec$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

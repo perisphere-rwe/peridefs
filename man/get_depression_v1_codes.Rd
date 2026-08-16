@@ -3,29 +3,16 @@
 \name{get_depression_v1_codes}
 \alias{get_depression_v1_codes}
 \alias{get_depression_v1_defs}
-\alias{get_depression_v2_codes}
-\alias{get_depression_v2_defs}
 \title{Retrieve ICD codes for depression}
 \usage{
 get_depression_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_depression_v1_defs(variable_type = c("condition", "outcome"))
-
-get_depression_v2_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
-)
-
-get_depression_v2_defs(variable_type = c("condition", "outcome"))
 }
 \arguments{
 \item{code_type}{Optional character vector of code types to return.
@@ -38,34 +25,20 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \item{periods}{Logical. \code{FALSE} (default) returns short-format codes
 (e.g., \code{"4010"}). \code{TRUE} returns decimal-format codes (e.g., \code{"401.0"}).}
 
-\item{format}{\code{"list"} (default) returns a named list of character vectors.
-\code{"tibble"} returns a long-form tibble with columns \code{code_type}, \code{code},
-and \code{variable_type}.}
-
-\item{concatenate}{Logical. \code{FALSE} (default) returns a named list of
-character vectors. \code{TRUE} concatenates all code vectors into a single
-unnamed character vector. Not compatible with \code{format = "tibble"}.}
+\item{priority}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \description{
-Returns code sets from a depression \link{CodeSpec}.
-Two versions are available:
-\itemize{
-\item \strong{v1} (diagnosis only): \code{get_depression_v1_codes()}
-\item \strong{v2} (diagnosis + medication): \code{get_depression_v2_codes()}
-}
+Returns code sets from a depression \link{CodeSpec}. The condition
+definition is diagnosis-based, with a medication criterion (see
+\code{spec_depression}) as an alternative qualifying path.
 }
 \examples{
 get_depression_v1_codes()
 get_depression_v1_codes(code_type = "dx_icd10")
 }
 \seealso{
-\code{\link[=get_depression_v1_defs]{get_depression_v1_defs()}}, \code{\link[=get_depression_v2_codes]{get_depression_v2_codes()}},
-\code{spec_depression_v1}
+\code{\link[=get_depression_v1_defs]{get_depression_v1_defs()}}, \code{spec_depression_v1}
 
 \code{\link[=get_depression_v1_codes]{get_depression_v1_codes()}}
-
-\code{\link[=get_depression_v2_defs]{get_depression_v2_defs()}}, \code{\link[=get_depression_v1_codes]{get_depression_v1_codes()}},
-\code{spec_depression_v2}
-
-\code{\link[=get_depression_v2_codes]{get_depression_v2_codes()}}
 }

@@ -6,7 +6,7 @@
 \description{
 Stores the code sets and narrative algorithm description for a single
 version of a medical condition definition. Each version is a distinct
-object (e.g., \code{spec_htn_v1}, \code{spec_htn_v2}).
+object (e.g., \code{spec_acei_v1}, \code{spec_acei_v2}).
 
 The spec stores:
 \itemize{
@@ -25,156 +25,161 @@ belongs to the outcome definition.
 }
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{condition}}{Short condition identifier (read-only).}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{condition}}{Short condition identifier (read-only).}
 
-\item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
+    \item{\code{version}}{Version label, e.g. \code{"v1"} (read-only).}
 
-\item{\code{label}}{Human-readable condition label (read-only).}
-}
-\if{html}{\out{</div>}}
+    \item{\code{label}}{Human-readable condition label (read-only).}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-CodeSpec-new}{\code{CodeSpec$new()}}
-\item \href{#method-CodeSpec-print}{\code{CodeSpec$print()}}
-\item \href{#method-CodeSpec-keys}{\code{CodeSpec$keys()}}
-\item \href{#method-CodeSpec-get_codes}{\code{CodeSpec$get_codes()}}
-\item \href{#method-CodeSpec-get_defs}{\code{CodeSpec$get_defs()}}
-\item \href{#method-CodeSpec-clone}{\code{CodeSpec$clone()}}
-}
+  \itemize{
+    \item \href{#method-CodeSpec-initialize}{\code{CodeSpec$new()}}
+    \item \href{#method-CodeSpec-print}{\code{CodeSpec$print()}}
+    \item \href{#method-CodeSpec-keys}{\code{CodeSpec$keys()}}
+    \item \href{#method-CodeSpec-get_codes}{\code{CodeSpec$get_codes()}}
+    \item \href{#method-CodeSpec-get_defs}{\code{CodeSpec$get_defs()}}
+    \item \href{#method-CodeSpec-clone}{\code{CodeSpec$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CodeSpec-new"></a>}}
-\if{latex}{\out{\hypertarget{method-CodeSpec-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new \code{CodeSpec}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$new(
+\if{html}{\out{<a id="method-CodeSpec-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-CodeSpec-initialize}{}}}
+\subsection{\code{CodeSpec$new()}}{
+  Create a new \code{CodeSpec}.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$new(
   condition,
   label,
   defs = NULL,
   codes = NULL,
   version = NULL,
   versions = NULL
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{condition}}{Short identifier string, e.g. \code{"htn"}.}
-
-\item{\code{label}}{Human-readable label, e.g. \code{"Hypertension"}.}
-
-\item{\code{defs}}{Named list with elements \code{condition} and \code{outcome} (character
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{condition}}{Short identifier string, e.g. \code{"htn"}.}
+      \item{\code{label}}{Human-readable label, e.g. \code{"Hypertension"}.}
+      \item{\code{defs}}{Named list with elements \code{condition} and \code{outcome} (character
 strings or \code{NULL}).}
-
-\item{\code{codes}}{Named list of key-level lists. See class description.}
-
-\item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
-
-\item{\code{versions}}{Deprecated. Use \code{defs}/\code{codes}/\code{version} directly.}
+      \item{\code{codes}}{Named list of key-level lists. See class description.}
+      \item{\code{version}}{Optional version label string, e.g. \code{"v1"}.}
+      \item{\code{versions}}{Deprecated. Use \code{defs}/\code{codes}/\code{version} directly.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
-\if{html}{\out{</div>}}
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CodeSpec-print"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-print}{}}}
-\subsection{Method \code{print()}}{
-Print a summary of the spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$print(...)}\if{html}{\out{</div>}}
+\subsection{\code{CodeSpec$print()}}{
+  Print a summary of the spec.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$print(...)}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CodeSpec-keys"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-keys}{}}}
-\subsection{Method \code{keys()}}{
-Return code-set keys.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$keys()}\if{html}{\out{</div>}}
+\subsection{\code{CodeSpec$keys()}}{
+  Return code-set keys.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$keys()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character vector of keys like \code{"dx_icd9"}.
+  }
 }
 
-\subsection{Returns}{
-Character vector of keys like \code{"dx_icd9"}.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CodeSpec-get_codes"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-get_codes}{}}}
-\subsection{Method \code{get_codes()}}{
-Retrieve codes from the spec.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$get_codes(
+\subsection{\code{CodeSpec$get_codes()}}{
+  Retrieve codes from the spec as a tidy data frame.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$get_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble")
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{code_type}}{Optional character vector of code types to return.
+  priority = 1L
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{code_type}}{Optional character vector of code types to return.
 Valid values: \code{"dx_icd9"}, \code{"dx_icd10"}, \code{"proc_icd9"},
 \code{"proc_icd10"}, \code{"hcpcs"}, \code{"cpt"}, \code{"rev"}. \code{NULL} returns all.}
-
-\item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
-
-\item{\code{periods}}{Logical. If \code{TRUE}, return codes with decimal periods
+      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}. If the
+spec has no codes flagged for \code{"outcome"}, falls back to \code{"condition"}.}
+      \item{\code{periods}}{Logical. If \code{TRUE}, return codes with decimal periods
 (e.g., \code{"401.0"}). Default \code{FALSE} returns short format (\code{"4010"}).}
+      \item{\code{priority}}{Integer vector subsetting confidence tiers to include
+(\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A tibble with columns \code{type}, \code{code}, \code{priority}, and \code{version}.
+  }
+}
 
-\item{\code{format}}{\code{"list"} (default) returns a named list of character
-vectors; \code{"tibble"} returns a long-form tibble.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Named list or tibble of codes.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CodeSpec-get_defs"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-get_defs}{}}}
-\subsection{Method \code{get_defs()}}{
-Retrieve the narrative algorithm description.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$get_defs(variable_type = c("condition", "outcome"))}\if{html}{\out{</div>}}
+\subsection{\code{CodeSpec$get_defs()}}{
+  Retrieve the narrative algorithm description.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$get_defs(variable_type = c("condition", "outcome"))}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    Character string, or \code{NULL} if no definition exists for that
+variable type.
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Character string, or \code{NULL} if no definition exists for that
-variable type.
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CodeSpec-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-CodeSpec-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CodeSpec$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{CodeSpec$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{CodeSpec$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

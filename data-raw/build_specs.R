@@ -136,8 +136,8 @@ htn_v1_defs_condition <- c(
 htn_v2_defs_condition <- c(
   htn_v1_defs_condition,
   "*" = paste0(
-  "\u22652 pharmacy fills for an antihypertensive medication ",
-  "(see spec_antihypertensive)"
+    "\u22652 pharmacy fills for an antihypertensive medication ",
+    "(see spec_hypertension)"
   )
 )
 
@@ -146,18 +146,13 @@ htn_codes <- list(
   dx_icd10 = make_key_condition_only(htn_icd10)
 )
 
-spec_htn_v1 <- CodeSpec$new(
-  condition = "htn",
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 previously
+# shared identical codes and differed only in the condition definition
+# narrative (v2 added the medication criterion). Now there's a single
+# version carrying the more complete (formerly v2) narrative.
+spec_hypertension_v1 <- CodeSpec$new(
+  condition = "hypertension",
   version = "v1",
-  label = "Hypertension",
-  defs  = list(condition = htn_v1_defs_condition,
-               outcome = NULL),
-  codes = htn_codes
-)
-
-spec_htn_v2 <- CodeSpec$new(
-  condition = "htn",
-  version = "v2",
   label = "Hypertension",
   defs  = list(condition = htn_v2_defs_condition,
                outcome = NULL),
@@ -340,6 +335,12 @@ chd_hcpcs <- c(
   "G0291"
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 shared
+# identical codes and differed only in the outcome definition narrative
+# (v2 extended the outcome definition to include coronary
+# revascularizations within 60 days of MI, linked to qualifying
+# non-elective CHD-related primary discharge diagnoses). Now there's a
+# single version carrying the more complete (formerly v2) narrative.
 spec_chd_v1 <- CodeSpec$new(
   condition = "chd",
   version = "v1",
@@ -372,6 +373,21 @@ spec_chd_v1 <- CodeSpec$new(
       "*" = paste0(
         "Inpatient or outpatient claim with a procedure code for coronary ",
         "revascularization (see condition definition for procedure codes)."
+      ),
+      "i" = paste0(
+        "Also includes coronary revascularizations occurring within 60 days ",
+        "of an MI hospitalization, if linked to a {.emph primary} discharge ",
+        "diagnosis for a non-elective CHD-related condition:"
+      ),
+      "*" = paste0(
+        "ICD-9: {.strong 427.xx}, {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, ",
+        "{.strong 404.01}\u2013{.strong 404.93}, {.strong 428.x}, {.strong 411.xx}"
+      ),
+      "*" = paste0(
+        "ICD-10: {.strong I47.1}, {.strong I47.2}, {.strong I47.9}, {.strong I48.91}, ",
+        "{.strong I48.92}, {.strong I49.x}, {.strong R00.1}, {.strong I46.9}, HF codes ",
+        "({.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.x}), ",
+        "{.strong I20.0}, {.strong I24.0}, {.strong I24.1}, {.strong I24.8}"
       )
     )
   ),
@@ -386,37 +402,6 @@ spec_chd_v1 <- CodeSpec$new(
     proc_icd10 = make_key(chd_proc_icd10),
     hcpcs      = make_key(chd_hcpcs)
   )
-)
-
-#### outcome, version 2 ----
-# Same codes as v1; the outcome definition is extended to include coronary
-# revascularizations within 60 days of MI when linked to a qualifying
-# non-elective CHD-related primary discharge diagnosis.
-
-spec_chd_v2 <- CodeSpec$new(
-  condition = "chd", version = "v2", label = "Coronary Heart Disease",
-  defs = list(
-    condition = spec_chd_v1$get_defs("condition"),
-    outcome = c(
-      spec_chd_v1$get_defs("outcome"),
-      "i" = paste0(
-        "Version 2 additionally includes coronary revascularizations occurring ",
-        "within 60 days of an MI hospitalization, if linked to a {.emph primary} ",
-        "discharge diagnosis for a non-elective CHD-related condition:"
-      ),
-      "*" = paste0(
-        "ICD-9: {.strong 427.xx}, {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, ",
-        "{.strong 404.01}\u2013{.strong 404.93}, {.strong 428.x}, {.strong 411.xx}"
-      ),
-      "*" = paste0(
-        "ICD-10: {.strong I47.1}, {.strong I47.2}, {.strong I47.9}, {.strong I48.91}, ",
-        "{.strong I48.92}, {.strong I49.x}, {.strong R00.1}, {.strong I46.9}, HF codes ",
-        "({.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.x}), ",
-        "{.strong I20.0}, {.strong I24.0}, {.strong I24.1}, {.strong I24.8}"
-      )
-    )
-  ),
-  codes = spec_chd_v1$.__enclos_env__$private$.codes
 )
 
 ### Stroke ----
@@ -1368,7 +1353,6 @@ spec_ascvd <- CompositeCodeSpec$new(
   ),
   components = list(
     chd_v1                 = spec_chd_v1,
-    chd_v2                 = spec_chd_v2,
     stroke_v1              = spec_stroke_v1,
     lead_pad_v1            = spec_lead_pad_v1,
     cerebrovasc_disease_v1 = spec_cerebrovasc_disease_v1
@@ -1610,6 +1594,10 @@ depress_defs_base <- c(
   )
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2 shared
+# identical codes and differed only in the condition definition narrative
+# (v2 added the medication criterion). Now there's a single version
+# carrying the more complete (formerly v2) narrative.
 spec_depression_v1 <- CodeSpec$new(
   condition = "depression",
   version   = "v1",
@@ -1617,23 +1605,9 @@ spec_depression_v1 <- CodeSpec$new(
   defs = list(
     condition = c(
       depress_defs_base,
-      "i" = "Medication use is not required (diagnosis-based only)."
-    ),
-    outcome = NULL
-  ),
-  codes = depress_codes
-)
-
-spec_depression_v2 <- CodeSpec$new(
-  condition = "depression",
-  version   = "v2",
-  label     = "Depression",
-  defs = list(
-    condition = c(
-      depress_defs_base,
       "*" = paste0(
         "\u22652 pharmacy claims for a depression medication ",
-        "(see {.strong spec_antidepressive}); 2 different GNNs on the same day are permitted."
+        "(see {.strong spec_depression}); 2 different GNNs on the same day are permitted."
       )
     ),
     outcome = NULL
@@ -1825,6 +1799,11 @@ diab_defs_base <- c(
   )
 )
 
+# Collapsed to a single version (2026-08-15, issue #4): v1/v2/v3 shared
+# identical codes (diab_codes) and differed only in the condition
+# definition narrative (v2 added the medication criterion; v3 added the
+# four-category sub-classification note). Now there's a single version
+# carrying the most complete (formerly v3) narrative.
 spec_diabetes_v1 <- CodeSpec$new(
   condition = "diabetes",
   version = "v1",
@@ -1832,29 +1811,7 @@ spec_diabetes_v1 <- CodeSpec$new(
   defs  = list(
     condition = c(
       diab_defs_base,
-      "i" = "Medication use is not required (diagnosis-based only)."
-    ),
-    outcome = NULL
-  ),
-  codes = diab_codes
-)
-
-spec_diabetes_v2 <- CodeSpec$new(
-  condition = "diabetes", version = "v2", label = "Diabetes Mellitus",
-  defs  = list(
-    condition = c(diab_defs_base,
-                  "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_antidiabetic})."),
-    outcome = NULL
-  ),
-  codes = diab_codes
-)
-
-spec_diabetes_v3 <- CodeSpec$new(
-  condition = "diabetes", version = "v3", label = "Diabetes Mellitus",
-  defs  = list(
-    condition = c(
-      diab_defs_base,
-      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_antidiabetic}).",
+      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes}).",
       "i" = paste0(
         "Patients are then classified into four mutually exclusive categories: ",
         "no diabetes; diabetes without antidiabetic medication; ",
@@ -2074,9 +2031,9 @@ spec_ckd_v1 <- CodeSpec$new(
 # ICD-10 diagnosis code of G47.30, G47.31, G47.33, G47.37, G47.39.
 #
 osa_icd9  <- c("32720",
-              "32723",
-              "32729",
-              "78057")
+               "32723",
+               "32729",
+               "78057")
 
 
 osa_icd10 <- c("G4730", "G4733", "G4739")
@@ -2302,27 +2259,85 @@ spec_non_glp1_v1 <- DrugSpec$new(
   'non_glp1', "Antiobesity (non GLP-1)",
   version = 'v1',
   defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
-  generic_names = c("NALTREXONE HCL/BUPROPION HCL", "ORLISTAT")
+  generic_names = c(
+    "BENZPHETAMINE HCL",  # n=116,290 in MC Rx table
+    "DIETHYLPROPION HCL",  # n=1,028,425 in MC Rx table
+    "LORCASERIN HCL",  # n=2,034,254 in MC Rx table
+    "NALTREXONE HCL/BUPROPION HCL",  # n=5,046,258 in MC Rx table
+    "ORLISTAT",  # n=406,726 in MC Rx table
+    "PHENDIMETRAZINE TARTRATE",  # n=1,412,570 in MC Rx table
+    "PHENTERMINE HCL",  # n=44,810,003 in MC Rx table
+    "PHENTERMINE RESIN",  # n=138 in MC Rx table
+    "PHENTERMINE/TOPIRAMATE",  # n=3,187,485 in MC Rx table
+    "SETMELANOTIDE ACETATE"  # n=14,433 in MC Rx table
+  )
 )
 
+# Dual-indication GLP-1s: separate brand names cover T2D and chronic weight
+# management, so each GNN spans both the antidiabetic and antiobesity classes
+# (e.g., Ozempic/T2D vs. Wegovy/weight for SEMAGLUTIDE). Priority 2 (probable)
+# in both specs.
+# Shared across the antiobesity and antidiabetic composites (2026-08-15):
+# previously two separate DrugSpec objects (spec_glp1_v1 here and
+# spec_antidiab_glp1_v1, defined near the antidiabetic components) listed
+# these generics independently, with independently-maintained priority
+# tiers and brand names — a duplication/drift risk. Now a single spec
+# carries every generic's priority/brand *per condition* via generic_defs;
+# spec_obesity and spec_diabetes both reference this one object as
+# their "glp1_v1" component, and each composite's own `condition` field
+# filters it down to the relevant rows automatically.
+#
+# RESOLVED (2026-08-15): EXENATIDE EXTENDED-RELEASE previously only had an
+# "obesity" row, matching a pre-merge asymmetry between the two original
+# specs (present in the old obesity spec's cautious list but absent from
+# the old diabetes spec's generic list). Confirmed via FDA labeling that
+# it (Bydureon) is indicated as an adjunct to diet/exercise to improve
+# glycemic control in adults with T2D, no obesity indication — the same
+# profile as its sibling formulations EXENATIDE and EXENATIDE
+# MICROSPHERES, which already have diabetes/priority-1 rows below. Added
+# the missing diabetes row to match.
 spec_glp1_v1 <- DrugSpec$new(
   'glp1', "GLP-1",
   version = 'v1',
-  defs = "From the Perisphere antiobesity (non GLP-1) medication list.",
-  generic_names = c("EXENATIDE",
-                    "EXENATIDE EXTENDED-RELEASE",
-                    "DULAGLUTIDE",
-                    "SEMAGLUTIDE",
-                    "LIRAGLUTIDE",
-                    "TIRZEPATIDE")
+  defs = "GLP-1 receptor agonists, shared across the antiobesity and antidiabetic composites.",
+  generic_defs = tibble::tribble(
+    ~generic,                      ~priority, ~condition, ~brand,
+    "LIRAGLUTIDE",                 2L,        "obesity",  "Saxenda",
+    "LIRAGLUTIDE",                 2L,        "diabetes", "Victoza",
+    "SEMAGLUTIDE",                 2L,        "obesity",  "Wegovy",
+    "SEMAGLUTIDE",                 2L,        "diabetes", "Ozempic",
+    "TIRZEPATIDE",                 2L,        "obesity",  "Zepbound",
+    "TIRZEPATIDE",                 2L,        "diabetes", "Mounjaro",
+    "ALBIGLUTIDE",                 3L,        "obesity",  NA,
+    "ALBIGLUTIDE",                 1L,        "diabetes", NA,
+    "DULAGLUTIDE",                 3L,        "obesity",  NA,
+    "DULAGLUTIDE",                 1L,        "diabetes", NA,
+    "EXENATIDE",                   3L,        "obesity",  NA,
+    "EXENATIDE",                   1L,        "diabetes", NA,
+    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",  NA,
+    "EXENATIDE EXTENDED-RELEASE",  1L,        "diabetes", NA,
+    "EXENATIDE MICROSPHERES",      3L,        "obesity",  NA,
+    "EXENATIDE MICROSPHERES",      1L,        "diabetes", NA,
+    "LIXISENATIDE",                3L,        "obesity",  NA,
+    "LIXISENATIDE",                1L,        "diabetes", NA,
+    "INSULIN DEGLUDEC/LIRAGLUTIDE",  1L, "diabetes", NA,
+    "INSULIN GLARGINE/LIXISENATIDE", 1L, "diabetes", NA
+  )
 )
+# Rx counts (for reference): LIRAGLUTIDE n=37,296,377; SEMAGLUTIDE
+# n=140,453,217; TIRZEPATIDE n=79,868,142; ALBIGLUTIDE n=1,136,292
+# (Tanzeum, withdrawn 2018 — retained for historical claims capture);
+# DULAGLUTIDE n=64,108,557; EXENATIDE n=2,709,695; EXENATIDE MICROSPHERES
+# n=8,332,389; LIXISENATIDE n=16,469; INSULIN DEGLUDEC/LIRAGLUTIDE
+# n=796,110; INSULIN GLARGINE/LIXISENATIDE n=2,515,845.
 
 ## Antiobesity medication compositions ----
 
-spec_antiobesity <- CompositeDrugSpec$new(
+spec_obesity <- CompositeDrugSpec$new(
   drug_class = "antiobesity",
   label      = "Antiobesity Medications",
   defs       = "Antiobesity medication subclasses (v1): non-GLP-1 agents and GLP-1 receptor agonists.",
+  condition  = "obesity",
   components = list(
     non_glp1_v1 = spec_non_glp1_v1,
     glp1_v1     = spec_glp1_v1
@@ -2336,8 +2351,33 @@ spec_antidep_ssri_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Selective serotonin reuptake inhibitors (SSRIs).",
   generic_names = c(
-    "CITALOPRAM", "ESCITALOPRAM", "FLUOXETINE",
-    "FLUVOXAMINE", "PAROXETINE", "SERTRALINE"
+    "CITALOPRAM",
+    "CITALOPRAM HYDROBROMIDE",  # n=184,818,869 in MC Rx table
+    "ESCITALOPRAM",
+    "ESCITALOPRAM OXALATE",  # n=293,715,823 in MC Rx table
+    "FLUOXETINE",  # n=2,368 in MC Rx table
+    "FLUOXETINE HCL",  # n=229,522,546 in MC Rx table
+    "PAROXETINE",
+    "PAROXETINE HCL",  # n=87,014,857 in MC Rx table
+    "SERTRALINE",
+    "SERTRALINE HCL"  # n=361,607,336 in MC Rx table
+  ),
+  generic_names_probable = c(
+    # Same GNRC_NM covers both the MDD-approved (Pexeva) and VMS-only,
+    # non-MDD-approved (Brisdelle 7.5 mg) paroxetine mesylate products.
+    "PAROXETINE MESYLATE"  # n=977,517 in MC Rx table
+  ),
+  brand_names = list(
+    # Both brands share this GNRC_NM; dose distinguishes them (7.5mg
+    # Brisdelle for VMS vs. 7.5-25mg Pexeva for MDD) — see bkbellows's PR #1
+    # review comment.
+    "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva")
+  ),
+  generic_names_cautious = c(
+    # US approval is OCD/social anxiety disorder only; no US MDD approval
+    # (MDD approval exists in Europe but not the US).
+    "FLUVOXAMINE",
+    "FLUVOXAMINE MALEATE"  # n=10,691,902 in MC Rx table
   )
 )
 
@@ -2346,8 +2386,24 @@ spec_antidep_snri_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Serotonin-norepinephrine reuptake inhibitors (SNRIs).",
   generic_names = c(
-    "DESVENLAFAXINE", "DULOXETINE", "LEVOMILNACIPRAN",
-    "MILNACIPRAN", "VENLAFAXINE"
+    "DESVENLAFAXINE",  # n=824,794 in MC Rx table
+    "DESVENLAFAXINE FUMARATE",  # n=4,680 in MC Rx table
+    "DESVENLAFAXINE SUCCINATE",  # n=33,049,132 in MC Rx table
+    "LEVOMILNACIPRAN",
+    "LEVOMILNACIPRAN HCL",  # n=1,616,535 in MC Rx table
+    "LEVOMILNACIPRAN HYDROCHLORIDE",  # n=583,942 in MC Rx table
+    "VENLAFAXINE",
+    "VENLAFAXINE BESYLATE",  # n=23,174 in MC Rx table
+    "VENLAFAXINE HCL"  # n=165,131,988 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "DULOXETINE",  # NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
+    "DULOXETINE HCL"  # n=214,463,588; NOTE: also FDA-approved for fibromyalgia, diabetic neuropathy, and chronic MSK pain
+  ),
+  generic_names_cautious = c(
+    # US approval is fibromyalgia only (Savella); no US antidepressant indication.
+    "MILNACIPRAN",
+    "MILNACIPRAN HCL"  # n=3,639,057 in MC Rx table
   )
 )
 
@@ -2356,9 +2412,29 @@ spec_antidep_tca_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Tricyclic and tetracyclic antidepressants (TCAs).",
   generic_names = c(
-    "AMITRIPTYLINE", "AMOXAPINE", "CLOMIPRAMINE", "DESIPRAMINE",
-    "DOXEPIN", "IMIPRAMINE", "MAPROTILINE", "NORTRIPTYLINE",
-    "PROTRIPTYLINE", "TRIMIPRAMINE"
+    "AMITRIPTYLINE",
+    "AMITRIPTYLINE HCL",  # n=95,689,949 in MC Rx table
+    "AMITRIPTYLINE HCL/PERPHENAZINE",  # n=4,276 in MC Rx table
+    "AMITRIPTYLINE/CHLORDIAZEPOXIDE",  # n=133,845 in MC Rx table
+    "AMOXAPINE",  # n=99,875 in MC Rx table
+    "CLOMIPRAMINE",
+    "CLOMIPRAMINE HCL",  # n=3,359,761 in MC Rx table
+    "DESIPRAMINE",
+    "DESIPRAMINE HCL",  # n=1,744,858 in MC Rx table
+    "DOXEPIN",
+    "DOXEPIN HCL",  # n=25,915,220 in MC Rx table
+    "IMIPRAMINE",
+    "IMIPRAMINE HCL",  # n=5,602,753 in MC Rx table
+    "IMIPRAMINE PAMOATE",  # n=278,673 in MC Rx table
+    "MAPROTILINE",
+    "MAPROTILINE HCL",  # n=59,763 in MC Rx table
+    "NORTRIPTYLINE",
+    "NORTRIPTYLINE HCL",  # n=29,908,577 in MC Rx table
+    "PERPHENAZINE/AMITRIPTYLINE HCL",  # n=395,854 in MC Rx table
+    "PROTRIPTYLINE",
+    "PROTRIPTYLINE HCL",  # n=294,863 in MC Rx table
+    "TRIMIPRAMINE",
+    "TRIMIPRAMINE MALEATE"  # n=35,695 in MC Rx table
   )
 )
 
@@ -2367,7 +2443,22 @@ spec_antidep_maoi_v1 <- DrugSpec$new(
   version = "v1",
   defs    = "Monoamine oxidase inhibitors (MAOIs).",
   generic_names = c(
-    "ISOCARBOXAZID", "PHENELZINE", "SELEGILINE", "TRANYLCYPROMINE"
+    "ISOCARBOXAZID",  # n=15,320 in MC Rx table
+    "PHENELZINE",
+    "PHENELZINE SULFATE",  # n=314,051 in MC Rx table
+    "TRANYLCYPROMINE",
+    "TRANYLCYPROMINE SULFATE"  # n=316,001 in MC Rx table
+  ),
+  generic_names_probable = c(
+    # GNRC_NM "SELEGILINE" covers both the oral (Parkinson's-only) and
+    # transdermal Emsam patch (MDD-approved) forms.
+    "SELEGILINE"  # n=247,338 in MC Rx table
+  ),
+  generic_names_cautious = c(
+    # "SELEGILINE HCL" denotes the oral hydrochloride salt, which is
+    # Parkinson's-only; the MDD-approved form is the transdermal patch
+    # (Emsam), whose GNRC_NM is plain "SELEGILINE" (see probable, above).
+    "SELEGILINE HCL"  # n=806,042 in MC Rx table
   )
 )
 
@@ -2376,23 +2467,43 @@ spec_antidep_other_v1 <- DrugSpec$new(
   version = "v1",
   defs    = paste0(
     "Atypical and other-mechanism antidepressants, including NDRIs (bupropion), ",
-    "NaSSAs (mirtazapine), SARIs (trazodone, nefazodone), serotonin modulators ",
-    "(vilazodone, vortioxetine), and perphenazine (included for the ",
-    "perphenazine/amitriptyline fixed-dose combination product)."
+    "NaSSAs (mirtazapine), SARIs (nefazodone, trazodone), and serotonin ",
+    "modulators (vilazodone, vortioxetine). Note: perphenazine is intentionally ",
+    "excluded — see commented-out entry in generic_names."
   ),
   generic_names = c(
-    "BUPROPION", "MIRTAZAPINE", "NEFAZODONE",
-    "PERPHENAZINE", "TRAZODONE", "VILAZODONE", "VORTIOXETINE"
+    "DEXTROMETHORPHAN HBR/BUPROPION",  # n=1,469,999 in MC Rx table
+    "MIRTAZAPINE",  # n=88,176,986 in MC Rx table
+    "NEFAZODONE",
+    "NEFAZODONE HCL",  # n=831,947 in MC Rx table
+    # "PERPHENAZINE",  # First-generation antipsychotic (Trilafon); no antidepressant FDA indication — standalone claims reflect antipsychotic use. Combo products (amitriptyline/perphenazine) are captured in the TCA spec. n=3,639,397
+    "VILAZODONE",
+    "VILAZODONE HCL",  # n=12,478,041 in MC Rx table
+    "VILAZODONE HYDROCHLORIDE",  # n=3,003,724 in MC Rx table
+    "VORTIOXETINE",
+    "VORTIOXETINE HYDROBROMIDE"  # n=18,701,850 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "BUPROPION",  # NOTE: also approved for smoking cessation (Zyban)
+    "BUPROPION HBR",  # n=492,497; NOTE: also approved for smoking cessation (Zyban)
+    "BUPROPION HCL",  # n=290,468,738; NOTE: also approved for smoking cessation (Zyban)
+    # FDA-approved for MDD, but nationally ~85% of prescriptions (~20M of ~24M
+    # in 2019) are off-label for insomnia — it is the #1 prescribed sleep aid
+    # in the US by volume, so standalone claims often reflect insomnia, not
+    # depression, treatment.
+    "TRAZODONE",
+    "TRAZODONE HCL"  # n=265,385,791 in MC Rx table
   )
 )
 
-spec_antidepressive <- CompositeDrugSpec$new(
+spec_depression <- CompositeDrugSpec$new(
   drug_class = "antidepressive",
   label      = "Antidepressive Medications",
   defs       = paste0(
     "Antidepressive medication subclasses (v1): SSRIs, SNRIs, tricyclic ",
     "antidepressants, MAOIs, and other/atypical agents."
   ),
+  condition  = "depression",
   components = list(
     ssri_v1  = spec_antidep_ssri_v1,
     snri_v1  = spec_antidep_snri_v1,
@@ -2410,35 +2521,101 @@ spec_acei_v1 <- DrugSpec$new(
   "acei", "ACE Inhibitors",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c("BENAZEPRIL","CAPTOPRIL","ENALAPRIL","FOSINOPRIL","LISINOPRIL",
-                    "MOEXIPRIL","PERINDOPRIL","QUINAPRIL","RAMIPRIL","TRANDOLAPRIL")
+  generic_names = c(
+    "BENAZEPRIL",
+    "CAPTOPRIL",  # n=2,536,660 in MC Rx table
+    "ENALAPRIL",
+    "FOSINOPRIL",
+    "LISINOPRIL",  # n=659,049,069 in MC Rx table
+    "MOEXIPRIL",
+    "PERINDOPRIL",
+    "QUINAPRIL",
+    "RAMIPRIL",  # n=33,136,146 in MC Rx table
+    "TRANDOLAPRIL"  # n=1,363,466 in MC Rx table
+  )
 )
 
 spec_acei_v2 <- DrugSpec$new(
   "acei", "ACE Inhibitors",
   version = "v2",
   defs    = "From First Data Bank (FDB).",
-  generic_names = c("BENAZEPRIL","CAPTOPRIL","ENALAPRIL","FOSINOPRIL","FOSINIPRIL",
-                    "LISINOPRIL","MOEXIPRIL","MOEXEPRIL","PERINDOPRIL","QUINAPRIL",
-                    "RAMIPRIL","TRANDOLAPRIL")
+  generic_names = c(
+    "AMLODIPINE BESYLATE/BENAZEPRIL",  # n=38,671,935 in MC Rx table
+    "BENAZEPRIL",
+    "BENAZEPRIL HCL",  # n=39,100,906 in MC Rx table
+    "BENAZEPRIL/HYDROCHLOROTHIAZIDE",  # n=7,330,130 in MC Rx table
+    "CAPTOPRIL",  # n=2,536,660 in MC Rx table
+    "CAPTOPRIL/HYDROCHLOROTHIAZIDE",  # n=195,735 in MC Rx table
+    "ENALAPRIL",
+    "ENALAPRIL MALEATE",  # n=41,907,960 in MC Rx table
+    "ENALAPRIL MALEATE/FELODIPINE",  # n=637 in MC Rx table
+    "ENALAPRIL MALEATE/HCTZ",  # n=3 in MC Rx table
+    "ENALAPRIL/HYDROCHLOROTHIAZIDE",  # n=3,262,351 in MC Rx table
+    "ENALAPRILAT DIHYDRATE",  # n=11,908 in MC Rx table
+    "FOSINIPRIL",
+    "FOSINOPRIL",
+    "FOSINOPRIL SODIUM",  # n=4,651,718 in MC Rx table
+    "FOSINOPRIL/HYDROCHLOROTHIAZIDE",  # n=386,427 in MC Rx table
+    "LISINOPRIL",  # n=659,049,069 in MC Rx table
+    "LISINOPRIL/HYDROCHLOROTHIAZIDE",  # n=143,246,937 in MC Rx table
+    "MOEXEPRIL",
+    "MOEXIPRIL",
+    "MOEXIPRIL HCL",  # n=700,755 in MC Rx table
+    "MOEXIPRIL/HYDROCHLOROTHIAZIDE",  # n=348,350 in MC Rx table
+    "PERINDOPRIL",
+    "PERINDOPRIL ARG/AMLODIPINE BES",  # n=17,656 in MC Rx table
+    "PERINDOPRIL ERBUMINE",  # n=515,270 in MC Rx table
+    "QUINAPRIL",
+    "QUINAPRIL HCL",  # n=13,127,354 in MC Rx table
+    "QUINAPRIL/HYDROCHLOROTHIAZIDE",  # n=1,723,417 in MC Rx table
+    "RAMIPRIL",  # n=33,136,146 in MC Rx table
+    "TRANDOLAPRIL",  # n=1,363,466 in MC Rx table
+    "TRANDOLAPRIL/VERAPAMIL HCL"  # n=464,374 in MC Rx table
+  )
 )
 
 ### Aldosterone antagonists ----
-# (v1 only — no FDB expansion)
+
 spec_aldo_v1 <- DrugSpec$new(
   "aldo", "Aldosterone Antagonists",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c("EPLERENONE", "SPIRONOLACTONE")
+  # Migrated to generic_defs (2026-08-15) as a proof of concept for
+  # condition-specific priority tiers; every row is still tagged
+  # "hypertension" for now (no behavior change — see AGENTS.md).
+  generic_defs = tibble::tribble(
+    ~generic,                     ~priority, ~condition,     ~brand,
+    "HCTZ/SPIRONOLACTONE",        1L,        "hypertension", NA,
+    "SPIRONOLACTONE/HCTZ",        1L,        "hypertension", NA,
+    "EPLERENONE",                 2L,        "hypertension", "Inspra",
+    "SPIRONOLACTONE",             2L,        "hypertension", NA,
+    "SPIRONOLACTONE, MICRONIZED", 2L,        "hypertension", NA,
+    "FINERENONE",                 3L,        "hypertension", "Kerendia"
+  ),
+  # HCTZ/SPIRONOLACTONE: n=27 in MC Rx table
+  # SPIRONOLACTONE/HCTZ: n=9 in MC Rx table
+  # EPLERENONE: n=4,270,119; also approved for post-MI heart failure with LV dysfunction
+  # SPIRONOLACTONE: n=134,722,193; also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
+  # SPIRONOLACTONE, MICRONIZED: n=2,803; also used for heart failure, primary hyperaldosteronism, PCOS, and feminizing HRT
 )
 
 ### Alpha-1 blockers ----
-# v1 only
+
 spec_alpha_v1 <- DrugSpec$new(
   "alpha", "Alpha-1 Blockers",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c("DOXAZOSIN", "PRAZOSIN", "TERAZOSIN")
+  generic_names = c(
+    "PRAZOSIN HCL/POLYTHIAZIDE"  # n=9 in MC Rx table; fixed-dose antihypertensive combo, not prescribed for PTSD
+  ),
+  generic_names_probable = c(
+    "DOXAZOSIN",  # NOTE: also approved for BPH; ER formulation is BPH-only (not HTN)
+    "DOXAZOSIN MESYLATE",  # n=30,006,202; NOTE: also approved for BPH; ER formulation is BPH-only (not HTN)
+    "PRAZOSIN",  # NOTE: also used for PTSD-related nightmares (VA/DoD guideline first-line)
+    "PRAZOSIN HCL",  # n=27,727,643; NOTE: also used for PTSD-related nightmares (VA/DoD guideline first-line)
+    "TERAZOSIN",  # NOTE: also approved for BPH
+    "TERAZOSIN HCL"  # n=18,490,325; NOTE: also approved for BPH
+  )
 )
 
 ### Alpha-beta blockers ----
@@ -2446,14 +2623,25 @@ spec_alpha_beta_v1 <- DrugSpec$new(
   "alpha_beta", "Alpha-Beta Blockers",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c("CARVEDILOL", "LABETALOL")
+  generic_names = c(
+    "CARVEDILOL",  # n=191,074,509 in MC Rx table
+    "CARVEDILOL PHOSPHATE",  # n=3,747,156 in MC Rx table
+    "LABETALOL",
+    "LABETALOL HCL"  # n=24,814,249 in MC Rx table
+    # "LABETALOL IN DEXTROSE 5 %",  # n=5 in MC Rx table (this is an IV)
+    # "LABETALOL IN NACL, ISO-OSMOTIC"  # n=27 in MC Rx table (this is an IV)
+  )
 )
 
 spec_alpha_beta_v2 <- DrugSpec$new(
   "alpha_beta", "Alpha-Beta Blockers",
   version = "v2",
   defs    = "From First Data Bank (FDB). Adds LABETOLOL spelling variant.",
-  generic_names = c("CARVEDILOL", "LABETALOL", "LABETOLOL")
+  generic_names = c(
+    "CARVEDILOL",  # n=191,074,509 in MC Rx table
+    "LABETALOL",
+    "LABETOLOL"
+  )
 )
 
 ### ARBs ----
@@ -2461,16 +2649,58 @@ spec_arb_v1 <- DrugSpec$new(
   "arb", "Angiotensin Receptor Blockers (ARBs)",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
-  generic_names = c("AZILSARTAN","CANDESARTAN","EPROSARTAN","IRBESARTAN",
-                    "LOSARTAN","OLMESARTAN","TELMISARTAN","VALSARTAN")
+  generic_names = c(
+    "AZILSARTAN",
+    "CANDESARTAN",
+    "EPROSARTAN",
+    "IRBESARTAN",  # n=30,438,200 in MC Rx table
+    "LOSARTAN",
+    "OLMESARTAN",
+    "TELMISARTAN",  # n=15,875,773 in MC Rx table
+    "VALSARTAN"  # n=68,668,702 in MC Rx table
+  )
 )
 
 spec_arb_v2 <- DrugSpec$new(
   "arb", "Angiotensin Receptor Blockers (ARBs)",
   version = "v2",
   defs    = "From First Data Bank (FDB). Adds OLMESARTEN spelling variant.",
-  generic_names = c("AZILSARTAN","CANDESARTAN","EPROSARTAN","IRBESARTAN",
-                    "LOSARTAN","OLMESARTAN","OLMESARTEN","TELMISARTAN","VALSARTAN")
+  generic_names = c(
+    "AMLODIPINE BES/OLMESARTAN MED",  # n=8,209,749 in MC Rx table
+    "AMLODIPINE BESYLATE/VALSARTAN",  # n=4,094,379 in MC Rx table
+    "AMLODIPINE/VALSARTAN",  # n=5,148,545 in MC Rx table
+    "AMLODIPINE/VALSARTAN/HCTHIAZID",  # n=2,301,457 in MC Rx table
+    "AMLODIPINE/VALSARTAN/HCTZ",  # n=453,468 in MC Rx table
+    "AZILSARTAN",
+    "AZILSARTAN MED/CHLORTHALIDONE",  # n=2,480,588 in MC Rx table
+    "AZILSARTAN MEDOXOMIL",  # n=2,408,516 in MC Rx table
+    "CANDESARTAN",
+    "CANDESARTAN CILEXETIL",  # n=6,691,116 in MC Rx table
+    "CANDESARTAN CILEXETIL/HCTZ",  # n=3 in MC Rx table
+    "CANDESARTAN/HYDROCHLOROTHIAZID",  # n=1,787,845 in MC Rx table
+    "EPROSARTAN",
+    "EPROSARTAN MESYLATE",  # n=49,411 in MC Rx table
+    "EPROSARTAN/HYDROCHLOROTHIAZIDE",  # n=21,511 in MC Rx table
+    "IRBESARTAN",  # n=30,438,200 in MC Rx table
+    "IRBESARTAN/HYDROCHLOROTHIAZIDE",  # n=8,128,615 in MC Rx table
+    "LOSARTAN",
+    "LOSARTAN POTASSIUM",  # n=404,382,651 in MC Rx table
+    "LOSARTAN POTASSIUM/HCTZ",  # n=8 in MC Rx table
+    "LOSARTAN/HYDROCHLOROTHIAZIDE",  # n=104,228,299 in MC Rx table
+    "NEBIVOLOL HCL/VALSARTAN",  # n=10,523 in MC Rx table
+    "OLMESARTAN",
+    "OLMESARTAN MED/AMLODIPINE/HCTZ",  # n=486,595 in MC Rx table
+    "OLMESARTAN MEDOXOMIL",  # n=43,759,431 in MC Rx table
+    "OLMESARTAN/AMLODIPIN/HCTHIAZID",  # n=4,201,739 in MC Rx table
+    "OLMESARTAN/HYDROCHLOROTHIAZIDE",  # n=22,004,651 in MC Rx table
+    "OLMESARTEN",
+    "OLMESARTN/HYDROCHLOROTHIAZIDE",  # n=128,042 in MC Rx table
+    "TELMISARTAN",  # n=15,875,773 in MC Rx table
+    "TELMISARTAN/AMLODIPINE",  # n=425,910 in MC Rx table
+    "TELMISARTAN/HYDROCHLOROTHIAZID",  # n=6,353,512 in MC Rx table
+    "VALSARTAN",  # n=68,668,702 in MC Rx table
+    "VALSARTAN/HYDROCHLOROTHIAZIDE"  # n=42,938,341 in MC Rx table
+  )
 )
 
 ### Beta blockers: cardioselective  ----
@@ -2478,7 +2708,25 @@ spec_beta_cardio_v1 <- DrugSpec$new(
   "beta_cardio", "Beta Blockers (Cardioselective)",
   version = "v1",
   defs    = "Cardioselective beta blockers from the Perisphere antihypertensive medication list.",
-  generic_names = c("ATENOLOL", "BETAXOLOL", "BISOPROLOL", "METOPROLOL")
+  generic_names = c(
+    "ATENOLOL",  # n=133,656,295 in MC Rx table
+    "ATENOLOL/CHLORTHALIDONE",  # n=9,970,067 in MC Rx table
+    "BETAXOLOL",
+    "BETAXOLOL HCL",  # n=856,860 in MC Rx table
+    "BISOPROL/HYDROCHLOROTHIAZIDE",  # n=1,114,763 in MC Rx table
+    "BISOPROLOL",
+    "BISOPROLOL FUMARATE",  # n=12,350,330 in MC Rx table
+    "BISOPROLOL FUMARATE/HCTZ",  # n=5,399,045 in MC Rx table
+    "BISOPROLOL/HYDROCHLOROTHIAZIDE",  # n=7,336,325 in MC Rx table
+    "CHLORTHALIDONE/ATENOLOL",  # n=32 in MC Rx table
+    "METOPROLOL",
+    "METOPROLOL SU/HYDROCHLOROTHIAZ",  # n=48,126 in MC Rx table
+    "METOPROLOL SUCCINATE",  # n=362,686,652 in MC Rx table
+    "METOPROLOL SUCCINATE/HCTZ",  # n=56,464 in MC Rx table
+    "METOPROLOL TARTRATE",  # n=238,634,149 in MC Rx table
+    "METOPROLOL/HYDROCHLOROTHIAZIDE",  # n=1,266,691 in MC Rx table
+    "METOPROL/HYDROCHLOROTHIAZIDE"  # n=17,286 in MC Rx table
+  )
 )
 
 ### Beta blockers: cardioselective-vasodilatory ----
@@ -2486,7 +2734,10 @@ spec_beta_cardio_vasod_v1 <- DrugSpec$new(
   "beta_cardio_vasod", "Beta Blockers (Cardioselective, Vasodilatory)",
   version = "v1",
   defs    = "Cardioselective vasodilatory beta blocker from the Perisphere antihypertensive medication list.",
-  generic_names = c("NEBIVOLOL")
+  generic_names = c(
+    "NEBIVOLOL",
+    "NEBIVOLOL HCL"  # n=39,298,685 in MC Rx table
+  )
 )
 
 ### Beta blockers: ISA ----
@@ -2494,14 +2745,25 @@ spec_beta_int_sym_v1 <- DrugSpec$new(
   "beta_int_sym", "Beta Blockers (Intrinsic Sympathomimetic Activity)",
   version = "v1",
   defs    = "ISA beta blockers from the Perisphere antihypertensive medication list.",
-  generic_names = c("ACEBUTOLOL", "CARTEOLOL", "PENBUTOLOL", "PINDOLOL")
+  generic_names = c(
+    "ACEBUTOLOL",
+    "CARTEOLOL",
+    "PENBUTOLOL",
+    "PINDOLOL"  # n=856,187 in MC Rx table
+  )
 )
 
 spec_beta_int_sym_v2 <- DrugSpec$new(
   "beta_int_sym", "Beta Blockers (Intrinsic Sympathomimetic Activity)",
   version = "v2",
   defs    = "ISA beta blockers from FDB. Excludes CARTEOLOL and PENBUTOLOL.",
-  generic_names = c("ACEBUTOLOL", "PINDOLOL")
+  generic_names = c(
+    "ACEBUTOLOL",
+    "ACEBUTOLOL HCL",  # n=1,592,039 in MC Rx table
+    "CARTEOLOL HCL",  # n=295,236 in MC Rx table
+    "PENBUTOLOL SULFATE",  # n=7,256 in MC Rx table
+    "PINDOLOL"  # n=856,187 in MC Rx table
+  )
 )
 
 ### Beta blockers: noncardioselective  ----
@@ -2509,7 +2771,20 @@ spec_beta_noncardio_v1 <- DrugSpec$new(
   "beta_noncardio", "Beta Blockers (Noncardioselective)",
   version = "v1",
   defs    = "Noncardioselective beta blockers from the Perisphere antihypertensive medication list.",
-  generic_names = c("NADOLOL", "PROPRANOLOL")
+  generic_names = c(
+    "HCTZ/PROPRANOLOL HCL",  # n=1 in MC Rx table
+    "NADOLOL",  # n=8,721,728 in MC Rx table
+    "NADOLOL/BENDROFLUMETHIAZIDE",  # n=39,079 in MC Rx table
+    "PROPRANOLOL HCL/HCTZ",  # n=45 in MC Rx table
+    "PROPRANOLOL/HYDROCHLOROTHIAZID",  # n=104,281 in MC Rx table
+    "TIMOLOL/HYDROCHLOROTHIAZIDE"  # n=2 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "PROPRANOLOL",  # NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
+    "PROPRANOLOL HCL",  # n=90,513,340; NOTE: also approved for angina, arrhythmias, essential tremor, migraine prophylaxis, and portal HTN
+    "TIMOLOL",  # n=766,670; NOTE: also approved for angina and migraine prevention
+    "TIMOLOL MALEATE"  # n=33,785,241; NOTE: also approved for angina and migraine prevention
+  )
 )
 
 ### CCB: dihydropyridines ----
@@ -2518,8 +2793,25 @@ spec_ccb_dhp_v1 <- DrugSpec$new(
   "ccb_dhp", "Calcium Channel Blockers (Dihydropyridines)",
   version = "v1",
   defs    = "Dihydropyridine CCBs from the Perisphere antihypertensive medication list and FDB.",
-  generic_names = c("AMLODIPINE","FELODIPINE","ISRADIPINE","NICARDIPINE",
-                    "NIFEDIPINE","NISOLDIPINE")
+  generic_names = c(
+    "AMLODIPINE",
+    "AMLODIPINE BENZOATE",  # n=98,290 in MC Rx table
+    "AMLODIPINE BESYLATE",  # n=609,583,943 in MC Rx table
+    "AMLODIPINE BESYLATE/CELECOXIB",  # n=292 in MC Rx table
+    "FELODIPINE",  # n=6,536,585 in MC Rx table
+    "ISRADIPINE",  # n=300,988 in MC Rx table
+    "LEVAMLODIPINE MALEATE",  # n=1,561 in MC Rx table
+    "NICARDIPINE",
+    "NICARDIPINE HCL",  # n=208,932 in MC Rx table
+    "NICARDIPINE HCL IN 0.9% NACL",  # n=1,437 in MC Rx table
+    "NICARDIPINE HCL-0.9% SOD CHLOR",  # n=35 in MC Rx table
+    "NICARDIPINE IN 5 % DEXTROSE",  # n=1 in MC Rx table
+    "NICARDIPINE IN DEXTROSE,ISO-OS",  # n=43 in MC Rx table
+    "NICARDIPINE IN NACL, ISO-OSM",  # n=28,752 in MC Rx table
+    "NIFEDIPINE",  # n=56,763,296 in MC Rx table
+    "NIFEDIPINE, MICRONIZED",  # n=1,715 in MC Rx table
+    "NISOLDIPINE"  # n=872,050 in MC Rx table
+  )
 )
 
 ### CCB: non-dihydropyridines ----
@@ -2527,7 +2819,13 @@ spec_ccb_nondhp_v1 <- DrugSpec$new(
   "ccb_nondhp", "Calcium Channel Blockers (Non-Dihydropyridines)",
   version = "v1",
   defs    = "Non-dihydropyridine CCBs from the Perisphere antihypertensive medication list.",
-  generic_names = c("DILTIAZEM", "VERAPAMIL")
+  generic_names_probable = c(
+    "DILTIAZEM",  # NOTE: also widely used for AF rate control and angina
+    "DILTIAZEM HCL",  # n=97,751,376; NOTE: also widely used for AF rate control and angina
+    "DILTIAZEM MALATE",  # n=1; NOTE: also widely used for AF rate control and angina
+    "VERAPAMIL",  # NOTE: also used for SVT, AF rate control, and angina
+    "VERAPAMIL HCL"  # n=36,104,608; NOTE: also used for SVT, AF rate control, and angina
+  )
 )
 
 ### Centrally acting agents ----
@@ -2535,14 +2833,56 @@ spec_central_v1 <- DrugSpec$new(
   "central", "Centrally Acting Agents",
   version = "v1",
   defs    = "Centrally acting antihypertensives from the Perisphere list. Note: exclude APRACLONIDINE when matching CLONIDINE.",
-  generic_names = c("CLONIDINE", "METHYLDOPA", "GUANFACINE")
+  generic_names = c(
+    "METHYLDOPA"  # n=1,313,741 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CLONIDINE",  # n=7,489,006; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
+    "GUANFACINE"  # NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+  ),
+  brand_names = list(
+    # ADHD-approved ER brands; the HTN-indicated brands (Catapres, Tenex)
+    # were never discussed in the PR review, so only the ADHD brand is
+    # recorded here for now.
+    CLONIDINE  = "Kapvay",
+    GUANFACINE = "Intuniv"
+  )
 )
 
 spec_central_v2 <- DrugSpec$new(
   "central", "Centrally Acting Agents",
   version = "v2",
   defs    = "Centrally acting antihypertensives from FDB. Note: exclude APRACLONIDINE when matching CLONIDINE.",
-  generic_names = c("CLONIDINE","GUANABENZ","GUANFACINE","METHYLDOPA","RESERPINE")
+  generic_names = c(
+    "CLONIDINE HCL/CHLORTHALIDONE",  # n=8,778 in MC Rx table
+    "GUANABENZ",
+    "GUANABENZ ACETATE",  # n=808 in MC Rx table
+    "HYDRALAZINE HCL/RESERPINE/HCTZ",  # n=5 in MC Rx table
+    "HYDRALAZINE/RESERPIN/HCTHIAZID",  # n=4 in MC Rx table
+    "HYDRALAZINE/RESERPIN/HCTZ",  # n=13 in MC Rx table
+    "METHYLDOPA",  # n=1,313,741 in MC Rx table
+    "METHYLDOPA/CHLOROTHIAZIDE",  # n=1 in MC Rx table
+    "METHYLDOPA/HYDROCHLOROTHIAZIDE",  # n=27,242 in MC Rx table
+    "METHYLDOPATE HCL",  # n=61 in MC Rx table
+    "RESERPINE",  # n=6,204 in MC Rx table
+    "RESERPINE/CHLOROTHIAZIDE",  # n=6 in MC Rx table
+    "RESERPINE/CHLORTHALIDONE",  # n=1 in MC Rx table
+    "RESERPINE/HYDROCHLOROTHIAZIDE",  # n=46 in MC Rx table
+    "RESERPINE/HYDROFLUMETHIAZIDE",  # n=10 in MC Rx table
+    "RESERPINE/TRICHLORMETHIAZIDE"  # n=1 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CLONIDINE",  # n=7,489,006; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
+    "CLONIDINE HCL",  # n=96,485,351; NOTE: also used for ADHD (Kapvay ER) and opioid/alcohol withdrawal
+    "GUANFACINE",  # NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+    "GUANFACINE HCL"  # n=40,070,257; NOTE: ER form (Intuniv) is approved for ADHD; same GNRC_NM covers both HTN and ADHD indications
+  ),
+  brand_names = list(
+    CLONIDINE      = "Kapvay",
+    "CLONIDINE HCL" = "Kapvay",
+    GUANFACINE     = "Intuniv",
+    "GUANFACINE HCL" = "Intuniv"
+  )
 )
 
 ### Diuretics: thiazide ----
@@ -2550,17 +2890,35 @@ spec_diuretics_thiazide_v1 <- DrugSpec$new(
   "diuretics_thiazide", "Diuretics (Thiazide and Thiazide-Type)",
   version = "v1",
   defs    = "Thiazide diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c("CHLOROTHIAZIDE","CHLORTHALIDONE","HYDROCHLOROTHIAZIDE",
-                    "INDAPAMIDE","METOLAZONE","HCTZ")
+  generic_names = c(
+    "BENDROFLUMETHIAZIDE",  # n=3 in MC Rx table
+    "CHLOROTHIAZIDE",  # n=282,136 in MC Rx table
+    "CHLOROTHIAZIDE SODIUM",  # n=26,344 in MC Rx table
+    "CHLORTHALIDONE",  # n=40,665,762 in MC Rx table
+    "HCTZ",
+    "HYDROCHLOROTHIAZIDE",  # n=313,609,977 in MC Rx table
+    "INDAPAMIDE",  # n=5,810,554 in MC Rx table
+    "METOLAZONE",  # n=10,414,571 in MC Rx table
+    "POLYTHIAZIDE"  # n=12 in MC Rx table
+  )
 )
 
 spec_diuretics_thiazide_v2 <- DrugSpec$new(
   "diuretics_thiazide", "Diuretics (Thiazide and Thiazide-Type)",
   version = "v2",
   defs    = "Thiazide diuretics from FDB. Includes additional agents and spelling variants.",
-  generic_names = c("CHLOROTHIAZIDE","CHLORTHALIDONE","HYDROCHLOROTHIAZIDE",
-                    "HYDROCHOLOROTHIAZIDE","INDAPAMIDE","METOLAZONE",
-                    "BENDROFLUMETHIAZIDE","POLYTHIAZIDE")
+  generic_names = c(
+    "BENDROFLUMETHIAZIDE",  # n=3 in MC Rx table
+    "CHLOROTHIAZIDE",  # n=282,136 in MC Rx table
+    "CHLOROTHIAZIDE SODIUM",  # n=26,344 in MC Rx table
+    "CHLORTHALIDONE",  # n=40,665,762 in MC Rx table
+    "HCTZ",
+    "HYDROCHLOROTHIAZIDE",  # n=313,609,977 in MC Rx table
+    "HYDROCHOLOROTHIAZIDE",
+    "INDAPAMIDE",  # n=5,810,554 in MC Rx table
+    "METOLAZONE",  # n=10,414,571 in MC Rx table
+    "POLYTHIAZIDE"  # n=12 in MC Rx table
+  )
 )
 
 ### Diuretics: loop ----
@@ -2568,14 +2926,26 @@ spec_diuretics_loop_v1 <- DrugSpec$new(
   "diuretics_loop", "Diuretics (Loop)",
   version = "v1",
   defs    = "Loop diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c("BUMETANIDE", "FUROSEMIDE", "TORSEMIDE")
+  generic_names_probable = c(
+    "BUMETANIDE",  # n=22,577,818; NOTE: primarily prescribed for heart failure/edema in US practice
+    "FUROSEMIDE",  # n=280,141,596; NOTE: primarily prescribed for heart failure/edema in US practice
+    "TORSEMIDE"  # n=24,278,347; NOTE: primarily prescribed for heart failure/edema in US practice
+  )
 )
 
 spec_diuretics_loop_v2 <- DrugSpec$new(
   "diuretics_loop", "Diuretics (Loop)",
   version = "v2",
   defs    = "Loop diuretics from FDB. Adds ETHACRYNIC ACID.",
-  generic_names = c("BUMETANIDE", "ETHACRYNIC ACID", "FUROSEMIDE", "TORSEMIDE")
+  generic_names = c(
+    "ETHACRYNIC ACID",  # n=356,706 in MC Rx table
+    "FUROSEMIDE IN 0.9 % NACL"  # n=234; NOTE: IV infusion — inpatient-only; antihypertensive use is negligible
+  ),
+  generic_names_probable = c(
+    "BUMETANIDE",  # n=22,577,818; NOTE: primarily prescribed for heart failure/edema in US practice
+    "FUROSEMIDE",  # n=280,141,596; NOTE: primarily prescribed for heart failure/edema in US practice
+    "TORSEMIDE"  # n=24,278,347; NOTE: primarily prescribed for heart failure/edema in US practice
+  )
 )
 
 ### Diuretics: potassium-sparing ----
@@ -2583,14 +2953,29 @@ spec_diuretics_ksparing_v1 <- DrugSpec$new(
   "diuretics_ksparing", "Diuretics (Potassium-Sparing)",
   version = "v1",
   defs    = "Potassium-sparing diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c("AMILORIDE", "TRIAMTERENE")
+  generic_names = c(
+    "AMILORIDE",
+    "TRIAMTERENE"  # n=308,537 in MC Rx table
+  )
 )
 
 spec_diuretics_ksparing_v2 <- DrugSpec$new(
   "diuretics_ksparing", "Diuretics (Potassium-Sparing)",
   version = "v2",
   defs    = "Potassium-sparing diuretics from FDB. Adds spelling variants.",
-  generic_names = c("AMILORIDE","TRIAMTERENE","TRIAMTERINE","TRIMATERENE")
+  generic_names = c(
+    "AMILORIDE",
+    "AMILORIDE HCL",  # n=1,731,096 in MC Rx table
+    "AMILORIDE HCL/HCTZ",  # n=21 in MC Rx table
+    "AMILORIDE/HYDROCHLOROTHIAZIDE",  # n=1,025,583 in MC Rx table
+    "HCTZ/TRIAMTERENE",  # n=1,826 in MC Rx table
+    "HYDROCHLOROTHIAZIDE/AMILOR HCL",  # n=32 in MC Rx table
+    "TRIAMTERENE",  # n=308,537 in MC Rx table
+    "TRIAMTERINE",
+    "TRIAMTERENE/HCTZ",  # n=149 in MC Rx table
+    "TRIAMTERENE/HYDROCHLOROTHIAZID",  # n=66,530,088 in MC Rx table
+    "TRIMATERENE"
+  )
 )
 
 ### Direct renin inhibitors ----
@@ -2598,7 +2983,16 @@ spec_renin_v1 <- DrugSpec$new(
   "renin", "Direct Renin Inhibitors",
   version = "v1",
   defs    = "Direct renin inhibitors from the Perisphere antihypertensive medication list.",
-  generic_names = c("ALISKIREN")
+  generic_names = c(
+    "ALISKIREN",
+    "ALISKIREN HEMIFUMARATE",  # n=1,771,161 in MC Rx table
+    "ALISKIREN/AMLODIPIN/HCTHIAZIDE",  # n=7,400 in MC Rx table
+    "ALISKIREN/AMLODIPINE",  # n=10,469 in MC Rx table
+    "ALISKIREN/AMLODIPINE BESYLATE",  # n=25,388 in MC Rx table
+    "ALISKIREN/AMLODIPINE/HCTZ",  # n=7,693 in MC Rx table
+    "ALISKIREN/HYDROCHLOROTHIAZIDE",  # n=439,319 in MC Rx table
+    "ALISKIREN/VALSARTAN"  # n=53,354 in MC Rx table
+  )
 )
 
 ### Direct vasodilators ----
@@ -2606,53 +3000,26 @@ spec_vasodilators_v1 <- DrugSpec$new(
   "vasodilators", "Direct Vasodilators",
   version = "v1",
   defs    = "Direct vasodilators from the Perisphere antihypertensive medication list.",
-  generic_names = c("HYDRALAZINE", "MINOXIDIL")
+  generic_names = c(
+    "HYDRALAZINE HCL/HCTZ",  # n=17 in MC Rx table
+    "HYDRALAZINE/HYDROCHLOROTHIAZID"  # n=1,585 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "HYDRALAZINE",  # NOTE: also used for heart failure (isosorbide dinitrate + hydralazine regimen)
+    "HYDRALAZINE HCL",  # n=59,439,978; NOTE: also used for heart failure (isosorbide dinitrate + hydralazine regimen)
+    "MINOXIDIL"  # n=8,870,133; NOTE: also prescribed at low doses (off-label) for androgenic alopecia
+  )
 )
 
 ## Antihypertensive medication compositions ----
 
-### beta blockers ----
-
-spec_betablockers <- CompositeDrugSpec$new(
-  drug_class = "betablockers",
-  label      = "Beta Blockers",
-  defs       = "All beta blocker subclasses across versions. Use component= to select a specific version.",
-  components = list(
-    cardio_v1       = spec_beta_cardio_v1,
-    cardio_vasod_v1 = spec_beta_cardio_vasod_v1,
-    int_sym_v1      = spec_beta_int_sym_v1,
-    int_sym_v2      = spec_beta_int_sym_v2,
-    noncardio_v1    = spec_beta_noncardio_v1
-  )
-)
-
-### CCBs ----
-spec_ccb <- CompositeDrugSpec$new(
-  drug_class = "ccb",
-  label      = "Calcium Channel Blockers",
-  defs       = "Dihydropyridine and non-dihydropyridine CCBs across versions.",
-  components = list(
-    dhp_v1    = spec_ccb_dhp_v1,
-    nondhp_v1 = spec_ccb_nondhp_v1
-  )
-)
-
-### diuretics ----
-# (incl. aldosterone antagonists)
-spec_diuretics <- CompositeDrugSpec$new(
-  drug_class = "diuretics",
-  label      = "Diuretics",
-  defs       = "Thiazide, loop, potassium-sparing, and aldosterone antagonist diuretics across versions.",
-  components = list(
-    thiazide_v1  = spec_diuretics_thiazide_v1,
-    thiazide_v2  = spec_diuretics_thiazide_v2,
-    loop_v1      = spec_diuretics_loop_v1,
-    loop_v2      = spec_diuretics_loop_v2,
-    ksparing_v1  = spec_diuretics_ksparing_v1,
-    ksparing_v2  = spec_diuretics_ksparing_v2,
-    aldo_v1      = spec_aldo_v1
-  )
-)
+# Removed 2026-08-15: spec_betablockers, spec_ccb, and spec_diuretics were
+# unused, unexported intermediate composites (drug-class groupings within
+# antihypertensives) — every leaf they reference is already flattened
+# directly into spec_hypertension below, and nothing else in this file
+# referenced them. Deleted as dead code as part of formalizing that
+# CompositeDrugSpec objects are always condition-scoped (a single
+# `condition`), not drug-class-scoped.
 
 ### All antihypertensives ----
 
@@ -2661,13 +3028,14 @@ spec_diuretics <- CompositeDrugSpec$new(
 # If we nested, it would mean you'd have to run get_codes more than once,
 # which would make the package feel too clunky.
 
-spec_antihypertensive <- CompositeDrugSpec$new(
+spec_hypertension <- CompositeDrugSpec$new(
   drug_class = "antihypertensive",
   label      = "Antihypertensive Medications",
   defs       = paste0(
     "All antihypertensive leaf components across versions (v1 = Perisphere list; ",
     "v2 = FDB). Note for central agents: exclude APRACLONIDINE when matching CLONIDINE."
   ),
+  condition  = "hypertension",
   components = list(
     acei_v1         = spec_acei_v1,
     acei_v2         = spec_acei_v2,
@@ -2697,187 +3065,346 @@ spec_antihypertensive <- CompositeDrugSpec$new(
   )
 )
 
-
-
-
-# Antidiabetic drug components ----
+## Antidiabetic medication components ----
+#
 # Source: "Definition of conditions and medications_11262025.docx"
 # Section: Diabetes, history, version 2 (with medication) — GNN list
 
-# All GNNs from the document's antidiabetic medication list, version 1
-antidiab_gnns <- list(
-  biguanide = c(
-    "METFORMIN HCL",
-    "METFORMIN/AA COMB.#7/HC#125/CH",
-    "METFORMIN/CAFF/AA7/HRB125/CHOL"
+### Biguanides ----
+
+spec_antidiab_biguanide_v1 <- DrugSpec$new(
+  "biguanide", "Biguanides",
+  version = "v1",
+  defs    = "Biguanide antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "METFORMIN HCL",  # n=582,684,970 in MC Rx table
+    "METFORMIN/AA COMB.#7/HC#125/CH",  # n=11 in MC Rx table
+    "METFORMIN/CAFF/AA7/HRB125/CHOL"  # n=32 in MC Rx table
+  )
+)
+
+### Sulfonylureas ----
+
+spec_antidiab_sulfonylurea_v1 <- DrugSpec$new(
+  "sulfonylurea", "Sulfonylureas",
+  version = "v1",
+  defs    = "Sulfonylurea antidiabetic agents (first- and second-generation). From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "ACETOHEXAMIDE",  # n=20 in MC Rx table
+    "CHLORPROPAMIDE",  # n=26,284 in MC Rx table
+    "GLIMEPIRIDE",  # n=82,220,866 in MC Rx table
+    "GLIPIZIDE",  # n=116,334,542 in MC Rx table
+    "GLIPIZIDE/METFORMIN HCL",  # n=3,412,573 in MC Rx table
+    "GLYBURIDE",  # n=18,777,790 in MC Rx table
+    "GLYBURIDE,MICRONIZED",  # n=772,875 in MC Rx table
+    "GLYBURIDE/METFORMIN HCL",  # n=6,493,130 in MC Rx table
+    "TOLAZAMIDE",  # n=8,179 in MC Rx table
+    "TOLBUTAMIDE",  # n=9,967 in MC Rx table
+    "GLYBURIDE, MICRO/METFORMIN HCL"  # n=221,920 in MC Rx table
+  )
+)
+
+### Meglitinides ----
+
+spec_antidiab_meglitinide_v1 <- DrugSpec$new(
+  "meglitinide", "Meglitinides",
+  version = "v1",
+  defs    = "Meglitinide (glinide) antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "NATEGLINIDE",  # n=2,678,863 in MC Rx table
+    "REPAGLINIDE",  # n=4,841,685 in MC Rx table
+    "REPAGLINIDE/METFORMIN HCL"  # n=11,197 in MC Rx table
+  )
+)
+
+### Thiazolidinediones (TZDs) ----
+
+spec_antidiab_tzd_v1 <- DrugSpec$new(
+  "tzd", "Thiazolidinediones (TZDs)",
+  version = "v1",
+  defs    = "Thiazolidinedione (TZD / glitazone) antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "PIOGLITAZONE HCL",  # n=45,499,575 in MC Rx table
+    "PIOGLITAZONE HCL/GLIMEPIRIDE",  # n=161,285 in MC Rx table
+    "PIOGLITAZONE HCL/METFORMIN HCL",  # n=2,772,081 in MC Rx table
+    "PIOGLITAZONE/GLIMEPIRIDE",  # n=40,663 in MC Rx table
+    "ROSIGLITAZONE MALEATE",  # n=450,097 in MC Rx table
+    "ROSIGLITAZONE/GLIMEPIRIDE",  # n=30,045 in MC Rx table
+    "ROSIGLITAZONE/METFORMIN HCL",  # n=162,687 in MC Rx table
+    "TROGLITAZONE",  # n=13 in MC Rx table
+    "ROSIGLITAZONE MALEATE/GLIMEPIR"  # n=6,885 in MC Rx table
+  )
+)
+
+### Alpha-glucosidase inhibitors ----
+
+spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new(
+  "alpha_glucosidase", "Alpha-Glucosidase Inhibitors",
+  version = "v1",
+  defs    = "Alpha-glucosidase inhibitor antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "ACARBOSE",  # n=2,695,084 in MC Rx table
+    "MIGLITOL"  # n=110,276 in MC Rx table
   ),
-  sulfonylurea = c(
-    "ACETOHEXAMIDE",
-    "CHLORPROPAMIDE",
-    "GLIMEPIRIDE",
-    "GLIPIZIDE",
-    "GLIPIZIDE/METFORMIN HCL",
-    "GLYBURIDE",
-    "GLYBURIDE,MICRONIZED",
-    "GLYBURIDE/METFORMIN HCL",
-    "TOLAZAMIDE",
-    "TOLBUTAMIDE"
-  ),
-  meglitinide = c("NATEGLINIDE", "REPAGLINIDE", "REPAGLINIDE/METFORMIN HCL"),
-  tzd = c(
-    "PIOGLITAZONE HCL",
-    "PIOGLITAZONE HCL/GLIMEPIRIDE",
-    "PIOGLITAZONE HCL/METFORMIN HCL",
-    "PIOGLITAZONE/GLIMEPIRIDE",
-    "ROSIGLITAZONE MALEATE",
-    "ROSIGLITAZONE/GLIMEPIRIDE",
-    "ROSIGLITAZONE/METFORMIN HCL",
-    "TROGLITAZONE"
-  ),
-  alpha_glucosidase = c("ACARBOSE", "MIGLITOL", "VOGLIBOSE"),
-  dpp4 = c(
-    "ALOGLIPTIN BENZ/METFORMIN HCL",
-    "ALOGLIPTIN BENZ/PIOGLITAZONE",
-    "ALOGLIPTIN BENZ/PIOGLITZONE",
-    "ALOGLIPTIN BENZOATE",
+  generic_names_cautious = c(
+    "VOGLIBOSE"  # Not FDA-approved or marketed in the US (approved in Japan/India)
+  )
+)
+
+### DPP-4 inhibitors ----
+
+spec_antidiab_dpp4_v1 <- DrugSpec$new(
+  "dpp4", "DPP-4 Inhibitors",
+  version = "v1",
+  defs    = "DPP-4 inhibitor (gliptin) antidiabetic agents, including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "ALOGLIPTIN BENZ/METFORMIN HCL",  # n=687,166 in MC Rx table
+    "ALOGLIPTIN BENZ/PIOGLITAZONE",  # n=333,008 in MC Rx table
+    "ALOGLIPTIN BENZ/PIOGLITZONE",  # n=30,071 in MC Rx table
+    "ALOGLIPTIN BENZOATE",  # n=3,007,468 in MC Rx table
     "ALOGLIPTIN/METFORMIN",
-    "LINAGLIPTIN",
-    "LINAGLIPTIN/METFORMIN HCL",
+    "LINAGLIPTIN",  # n=18,631,487 in MC Rx table
+    "LINAGLIPTIN/METFORMIN HCL",  # n=2,503,329 in MC Rx table
     "PIOGLITAZONE/ALOGLIPTIN",
-    "SAXAGLIPTIN HCL",
-    "SAXAGLIPTIN HCL/METFORMIN HCL",
-    "SAXAGLIPTIN HYDROCHLORIDE",
-    "SITAGLIPTIN PHOS/METFORMIN HCL",
-    "SITAGLIPTIN PHOSPHATE",
-    "SITAGLIPTIN/SIMVASTATIN",
-    "VILDAGLIPTIN"
-  ),
-  sglt2 = c(
-    "CANAGLIFLOZIN",
+    "SAXAGLIPTIN HCL",  # n=6,136,665 in MC Rx table
+    "SAXAGLIPTIN HCL/METFORMIN HCL",  # n=3,106,395 in MC Rx table
+    "SAXAGLIPTIN HYDROCHLORIDE",  # n=17,932 in MC Rx table
+    "SITAGLIPTIN PHOS/METFORMIN HCL",  # n=28,141,072 in MC Rx table
+    "SITAGLIPTIN PHOSPHATE",  # n=71,565,776 in MC Rx table
+    "SITAGLIPTIN/SIMVASTATIN",  # n=11,897 in MC Rx table
+    "VILDAGLIPTIN",
+    "SITAGLIPTIN",  # n=148,377 in MC Rx table
+    "SITAGLIPTIN HCL",  # n=32 in MC Rx table
+    "SITAGLIPTIN/METFORMIN HCL"  # n=55,672 in MC Rx table
+  )
+)
+
+### SGLT-2 inhibitors ----
+
+spec_antidiab_sglt2_v1 <- DrugSpec$new(
+  "sglt2", "SGLT-2 Inhibitors",
+  version = "v1",
+  defs    = "SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "CANAGLIFLOZIN",  # n=17,633,966 in MC Rx table
     "CANAGLIFLOZIN/METFORM",
     "CANAGLIFLOZIN/METFORMIN",
     "DAPAGLIFLOZIN",
     "DAPAGLIFLOZIN/METFORMIN",
     "DAPAGLIFLOZIN/SAXAGLIPTIN",
-    "EMPAGLIFLOZIN",
-    "EMPAGLIFLOZIN/LINAGLIPTIN",
+    "EMPAGLIFLOZIN",  # n=75,691,170 in MC Rx table
+    "EMPAGLIFLOZIN/LINAGLIPTIN",  # n=2,418,949 in MC Rx table
     "EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN",
     "EMPAGLIFLOZIN/METFORMIN",
     "ERTUGLIFLOZIN",
-    "ERTUGLIFLOZIN/METFORMIN",
-    "ERTUGLIFLOZIN/SITAGLIPTIN"
-  ),
-  glp1 = c(
-    "DULAGLUTIDE",
-    "EXENATIDE",
-    "EXENATIDE MICROSPHERES",
-    "LIRAGLUTIDE",
-    "LIXISENATIDE",
-    "SEMAGLUTIDE"
-  ),
-  insulin = c(
-    "HUM INSULIN NPH/REG INSULIN HM",
+    "ERTUGLIFLOZIN/METFORMIN",  # n=245,406 in MC Rx table
+    "ERTUGLIFLOZIN/SITAGLIPTIN",  # n=106,321 in MC Rx table
+    "BEXAGLIFLOZIN",  # n=9,839 in MC Rx table
+    "CANAGLIFLOZIN/METFORMIN HCL",  # n=2,366,509 in MC Rx table
+    "DAPAGLIFLOZ PROPANED/METFORMIN",  # n=157,863 in MC Rx table
+    "DAPAGLIFLOZIN PROPANEDIOL",  # n=44,710,552 in MC Rx table
+    "DAPAGLIFLOZIN/METFORMIN HCL",  # n=4,946,123 in MC Rx table
+    "DAPAGLIFLOZIN/SAXAGLIPTIN HCL",  # n=59,138 in MC Rx table
+    "EMPAGLIFLOZ/LINAGLIP/METFORMIN",  # n=443,960 in MC Rx table
+    "EMPAGLIFLOZIN/METFORMIN HCL",  # n=5,909,272 in MC Rx table
+    "ERTUGLIFLOZIN PIDOLATE",  # n=3,094,383 in MC Rx table
+    "ERTUGLIFLOZIN/SITAGLIPTIN PHOS"  # n=29,822 in MC Rx table
+  )
+)
+
+### GLP-1 ----
+#
+# spec_antidiab_glp1_v1 was merged into spec_glp1_v1 (2026-08-15, see the
+# comment near its definition); the antidiabetic composite below now
+# references that shared object directly as its "glp1_v1" component.
+
+### Insulin and supplies ----
+
+spec_antidiab_insulin_v1 <- DrugSpec$new(
+  "insulin", "Insulin and Supplies",
+  version = "v1",
+  defs    = "Insulin preparations and insulin administration supplies. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "HUM INSULIN NPH/REG INSULIN HM",  # n=3,296,175 in MC Rx table
     "INS ZN,BF (P)/INS ZN,PK (P),",
-    "INSUL,PK PURE/INSUL NPH,PK-P",
-    "INSULIN ADMIN. SUPPLIES",
-    "INSULIN ASPART",
+    "INSUL,PK PURE/INSUL NPH,PK-P",  # n=3 in MC Rx table
+    "INSULIN ADMIN. SUPPLIES",  # n=212,045 in MC Rx table
+    "INSULIN ASPART",  # n=74,545,189 in MC Rx table
     "INSULIN DEGLEDEC",
     "INSULIN DEGLEDEC/LIRAGLUTIDE",
-    "INSULIN DETEMIR",
-    "INSULIN GLARGINE,HUM.REC.ANLOG",
-    "INSULIN GLULISINE",
+    "INSULIN DETEMIR",  # n=44,596,992 in MC Rx table
+    "INSULIN GLARGINE,HUM.REC.ANLOG",  # n=174,464,465 in MC Rx table
+    "INSULIN GLULISINE",  # n=2,940,926 in MC Rx table
     "INSULIN ISOPHANE NPH,BFPK",
-    "INSULIN ISOPHANE NPH,BF-PK",
-    "INSULIN ISOPHANE,BEEF",
-    "INSULIN ISOPHANE,BEEF PURE",
-    "INSULIN ISOPHANE,PORK PURE",
-    "INSULIN LISPRO",
-    "INSULIN NPH HUM/REG INSULIN HM",
-    "INSULIN NPH HUMAN ISOPHANE",
+    "INSULIN ISOPHANE NPH,BF-PK",  # n=212 in MC Rx table
+    "INSULIN ISOPHANE,BEEF",  # n=112 in MC Rx table
+    "INSULIN ISOPHANE,BEEF PURE",  # n=14 in MC Rx table
+    "INSULIN ISOPHANE,PORK PURE",  # n=109 in MC Rx table
+    "INSULIN LISPRO",  # n=73,695,041 in MC Rx table
+    "INSULIN NPH HUM/REG INSULIN HM",  # n=11,208,835 in MC Rx table
+    "INSULIN NPH HUMAN ISOPHANE",  # n=8,788,275 in MC Rx table
     "INSULIN NPH HUMAN SEMISYN",
-    "INSULIN NPH HUMAN SEMI-SYN",
-    "INSULIN NPH S-S/REG INSULN S-S",
-    "INSULIN NPL/INSULIN LISPRO",
+    "INSULIN NPH HUMAN SEMI-SYN",  # n=77 in MC Rx table
+    "INSULIN NPH S-S/REG INSULN S-S",  # n=61 in MC Rx table
+    "INSULIN NPL/INSULIN LISPRO",  # n=2,057,607 in MC Rx table
     "INSULIN PROTAMINE ZINC,BEEF",
     "INSULIN PROTAMINE ZN,BEEF (P),",
-    "INSULIN PROTAMINE ZN,BF-PK",
+    "INSULIN PROTAMINE ZN,BF-PK",  # n=5 in MC Rx table
     "INSULIN PROTAMINE ZN,PORK (P),",
     "INSULIN REG HUMAN  SEMI-SYN",
-    "INSULIN REG HUMAN SEMI-SYN",
+    "INSULIN REG HUMAN SEMI-SYN",  # n=103 in MC Rx table
     "INSULIN REG,HUM S-S BUFF",
     "INSULIN REGULAR,HUMAN",
-    "INSULIN REGULAR,BEEF-PORK",
-    "INSULIN REGULAR,HUMAN BUFFERED",
-    "INSULIN REGULAR,HUMAN&REL.UNT",
-    "INSULIN ZINC BEEF",
+    "INSULIN REGULAR,BEEF-PORK",  # n=453 in MC Rx table
+    "INSULIN REGULAR,HUMAN BUFFERED",  # n=22 in MC Rx table
+    "INSULIN REGULAR,HUMAN&REL.UNT",  # n=820 in MC Rx table
+    "INSULIN ZINC BEEF",  # n=23 in MC Rx table
     "INSULIN ZINC EXT,BEEF (P),",
-    "INSULIN ZINC EXTEND HUMAN REC",
-    "INSULIN ZINC EXTENDED,BEEF",
-    "INSULIN ZINC EXTENDED,BF-PK",
-    "INSULIN ZINC HUMAN REC",
-    "INSULIN ZINC HUMAN SEMI-SYN",
-    "INSULIN ZINC PROMPT,BEEF",
-    "INSULIN ZINC PROMPT,BF-PK",
-    "INSULIN ZINC PROMPT,PORK PURE",
-    "INSULIN ZINC,BEEF PURIFIED",
-    "INSULIN ZINC,BEEF-PORK",
-    "INSULIN ZINC,PORK PURIFIED",
-    "INSULIN,BEEF",
-    "INSULIN,PORK",
-    "INSULIN,PORK PURIFIED",
+    "INSULIN ZINC EXTEND HUMAN REC",  # n=156 in MC Rx table
+    "INSULIN ZINC EXTENDED,BEEF",  # n=8 in MC Rx table
+    "INSULIN ZINC EXTENDED,BF-PK",  # n=19 in MC Rx table
+    "INSULIN ZINC HUMAN REC",  # n=240 in MC Rx table
+    "INSULIN ZINC HUMAN SEMI-SYN",  # n=6 in MC Rx table
+    "INSULIN ZINC PROMPT,BEEF",  # n=3 in MC Rx table
+    "INSULIN ZINC PROMPT,BF-PK",  # n=11 in MC Rx table
+    "INSULIN ZINC PROMPT,PORK PURE",  # n=6 in MC Rx table
+    "INSULIN ZINC,BEEF PURIFIED",  # n=2 in MC Rx table
+    "INSULIN ZINC,BEEF-PORK",  # n=45 in MC Rx table
+    "INSULIN ZINC,PORK PURIFIED",  # n=47 in MC Rx table
+    "INSULIN,BEEF",  # n=2 in MC Rx table
+    "INSULIN,PORK",  # n=30 in MC Rx table
+    "INSULIN,PORK PURIFIED",  # n=47 in MC Rx table
     "INSULIN,PORK REG. CONCENTRATE",
-    "INSULN ASP PRT/INSULIN ASPART",
+    "INSULN ASP PRT/INSULIN ASPART",  # n=2,886,127 in MC Rx table
     "LIXISENATIDE/INSULIN GLARGINE",
     "NPH,HUMAN INSULIN ISOPHANE",
-    "REG INSULIN HM/RLSE/CHBR/IHLR",
+    "REG INSULIN HM/RLSE/CHBR/IHLR",  # n=306 in MC Rx table
     "SUB-Q INSULIN DEVICE,20 UNIT",
     "SUB-Q INSULIN DEVICE,40 UNIT",
-    "SYR W-NDL,INS 0.3 ML HALF MARK",
+    "SYR W-NDL,INS 0.3 ML HALF MARK",  # n=386,436 in MC Rx table
     "SYRGND,INS,0.5/CONTAINER",
-    "SYRG-ND,INS,0.5/CONTAINER",
+    "SYRG-ND,INS,0.5/CONTAINER",  # n=1,179 in MC Rx table
     "SYRING  W-NDL,DISP,INSUL,0.3ML",
     "SYRING WNDL,DISP,INSUL,0.5 ML",
-    "SYRING W-NDL,DISP,INSUL,0.3 ML",
-    "SYRING W-NDL,DISP,INSUL,0.3ML",
-    "SYRING W-NDL,DISP,INSUL,0.5 ML",
-    "SYRING W-NDL,DISP,INSUL,0.5ML",
+    "SYRING W-NDL,DISP,INSUL,0.3 ML",  # n=776,903 in MC Rx table
+    "SYRING W-NDL,DISP,INSUL,0.3ML",  # n=1,389,830 in MC Rx table
+    "SYRING W-NDL,DISP,INSUL,0.5 ML",  # n=2,200,897 in MC Rx table
+    "SYRING W-NDL,DISP,INSUL,0.5ML",  # n=3,898,112 in MC Rx table
     "SYRING W-O NDL,DISP,INSUL,1ML",
-    "SYRINGE & NEEDLE,INSULIN,1 ML",
+    "SYRINGE & NEEDLE,INSULIN,1 ML",  # n=5,446,276 in MC Rx table
     "SYRINGE W-NDL,DISP,INSUL,1ML",
     "SYRINGE W-NDL,DISP.,INSULIN",
-    "SYR-ND,INS,0.5/CONTAINER,EMPTY",
-    "SYRNGE&NEEDLE,INSLN,1ML&SHARPS"
-  ),
-  amylin = c("PRAMLINTIDE ACETATE")
+    "SYR-ND,INS,0.5/CONTAINER,EMPTY",  # n=1,486 in MC Rx table
+    "SYRNGE&NEEDLE,INSLN,1ML&SHARPS",  # n=2,037 in MC Rx table
+    "BOLUS INSULIN PUMP, 200 UNIT",  # n=101,214 in MC Rx table
+    "DILUENT, INSULIN ASPART NO.1",  # n=32 in MC Rx table
+    "DILUENT,INSULIN LISPRO,REGULAR",  # n=6 in MC Rx table
+    "INFUSION SET FOR INSULIN PUMP",  # n=771,093 in MC Rx table
+    "INFUSION SET-INSULIN PUMP BODY",  # n=4,806 in MC Rx table
+    "INSUL NPH HU REC/INS RG HU REC",  # n=21 in MC Rx table
+    "INSULIN ASPART (NIACINAMIDE)",  # n=2,732,257 in MC Rx table
+    "INSULIN ASPART PROT/INSULN ASP",  # n=734,692 in MC Rx table
+    "INSULIN ASPART PROTAM & ASPART",  # n=7,002,676 in MC Rx table
+    "INSULIN ASPART-SZJJ",  # n=110 in MC Rx table
+    "INSULIN ASPART-XJHZ",  # n=20,384 in MC Rx table
+    "INSULIN ASPART/B3/PUMP CART",  # n=23,156 in MC Rx table
+    "INSULIN DEGLUDEC",  # n=28,217,524 in MC Rx table
+    "INSULIN GLARGINE-AGLR",  # n=104,013 in MC Rx table
+    "INSULIN GLARGINE-YFGN",  # n=5,750,339 in MC Rx table
+    "INSULIN INFUSION SET/CARTRIDGE",  # n=126,607 in MC Rx table
+    "INSULIN INHALATION CHAMBER",  # n=5 in MC Rx table
+    "INSULIN LISPRO PROTAMIN/LISPRO",  # n=4,608,139 in MC Rx table
+    "INSULIN LISPRO,HUMAN REC.ANLOG",  # n=58,533 in MC Rx table
+    "INSULIN LISPRO-AABC",  # n=879,308 in MC Rx table
+    "INSULIN NPH HUMAN RECOM",  # n=40,600 in MC Rx table
+    "INSULIN NPH/REGULAR INSULN S-S",  # n=40 in MC Rx table
+    "INSULIN PEN,REUSABLE,BT LISPRO",  # n=31,757 in MC Rx table
+    "INSULIN PEN,REUSABLE,BT,ASPART",  # n=39,330 in MC Rx table
+    "INSULIN PMP CART,AUT,G6/7,CNTR",  # n=148,845 in MC Rx table
+    "INSULIN PMP CART,BT,G6/L2/CNTR",  # n=13,936 in MC Rx table
+    "INSULIN PMP CART/SET/SYR/NEEDL",  # n=3,001 in MC Rx table
+    "INSULIN POWDER INHALER/CHAMBER",  # n=8 in MC Rx table
+    "INSULIN PROTAMINE ZN,BEEF (P)",  # n=1 in MC Rx table
+    "INSULIN PUMP CART,10 UNITS/DAY",  # n=94 in MC Rx table
+    "INSULIN PUMP CART,15 UNITS/DAY",  # n=63 in MC Rx table
+    "INSULIN PUMP CART,20 UNITS/DAY",  # n=55 in MC Rx table
+    "INSULIN PUMP CART,25 UNITS/DAY",  # n=39 in MC Rx table
+    "INSULIN PUMP CART,30 UNITS/DAY",  # n=36 in MC Rx table
+    "INSULIN PUMP CART,35 UNITS/DAY",  # n=17 in MC Rx table
+    "INSULIN PUMP CART,40 UNITS/DAY",  # n=22 in MC Rx table
+    "INSULIN PUMP CART,AUTO,BT,G6/7",  # n=1,680,268 in MC Rx table
+    "INSULIN PUMP CART,AUTO,BT,G6/L",  # n=38,973 in MC Rx table
+    "INSULIN PUMP CART,AUTO,BT/CNTR",  # n=562,343 in MC Rx table
+    "INSULIN PUMP CART,AUTOMATED,BT",  # n=2,422,775 in MC Rx table
+    "INSULIN PUMP CART,CONT BT/CNTR",  # n=9,067 in MC Rx table
+    "INSULIN PUMP CART,CONT INF,BT",  # n=742,978 in MC Rx table
+    "INSULIN PUMP CART,CONT INF,RF",  # n=55,720 in MC Rx table
+    "INSULIN PUMP CART/SYRNG/NEEDLE",  # n=288 in MC Rx table
+    "INSULIN PUMP CARTRIDGE",  # n=1,186,324 in MC Rx table
+    "INSULIN PUMP CONTROLLER",  # n=3,214 in MC Rx table
+    "INSULIN PUMP SYRINGE, 1.8 ML",  # n=38,195 in MC Rx table
+    "INSULIN PUMP SYRINGE, 1.8ML",  # n=431 in MC Rx table
+    "INSULIN PUMP SYRINGE, 3 ML",  # n=153,430 in MC Rx table
+    "INSULIN PUMP SYRINGE, 3ML",  # n=607 in MC Rx table
+    "INSULIN PUMP/CART/SET/SYR/NEED",  # n=15,505 in MC Rx table
+    "INSULIN PUMP/INFUS. SET/METER",  # n=7,571 in MC Rx table
+    "INSULIN REG, HUM S-S BUFF",  # n=4 in MC Rx table
+    "INSULIN REGULAR HUMAN REC",  # n=20,939 in MC Rx table
+    "INSULIN REGULAR HUMAN REC/RLSE",  # n=594 in MC Rx table
+    "INSULIN REGULAR IN 0.9 % NACL",  # n=38,787 in MC Rx table
+    "INSULIN REGULAR, HUMAN",  # n=12,695,177 in MC Rx table
+    "INSULIN RELEASE UNIT",  # n=7 in MC Rx table
+    "INSULIN ZINC EXT,BEEF (P)",  # n=1 in MC Rx table
+    "INSULIN ZINC HUMAN RECOMBINANT",  # n=256 in MC Rx table
+    "NEEDLELESS ACCESS. DEV,INSULIN",  # n=133 in MC Rx table
+    "NEEDLES, INSULIN DISP., SAFETY",  # n=217,000 in MC Rx table
+    "NEEDLES, INSULIN DISPOSABLE",  # n=18,169,054 in MC Rx table
+    "NPH, HUMAN INSULIN ISOPHANE",  # n=2,600,487 in MC Rx table
+    "SUB-Q INSULIN DEVICE, 20 UNIT",  # n=228,500 in MC Rx table
+    "SUB-Q INSULIN DEVICE, 30 UNIT",  # n=240,308 in MC Rx table
+    "SUB-Q INSULIN DEVICE, 40 UNIT",  # n=367,904 in MC Rx table
+    "SUB-Q INSULIN PUMP, CGM SYSTEM",  # n=3,246 in MC Rx table
+    "SUBCUTANEOUS INSULIN PUMP",  # n=666,618 in MC Rx table
+    "SUBQ INSULIN PUMP,GLUC.MON.SYS",  # n=521 in MC Rx table
+    "SYR,NDL,INSULIN,1ML-SHARPS BIN",  # n=1,846 in MC Rx table
+    "SYRING W-NDL,DISP,INSUL,0.25ML",  # n=11 in MC Rx table
+    "SYRING W-O NDL,DISP,INSUL, 1ML",  # n=2,691 in MC Rx table
+    "SYRING W-O NEEDLE,DISP,INSULIN",  # n=3 in MC Rx table
+    "SYRING,NDL,DISP,INSUL,0.333 ML",  # n=3 in MC Rx table
+    "SYRING-NEEDL,DISP,INSUL,0.3 ML",  # n=4,183,822 in MC Rx table
+    "SYRINGE AND NEEDLE,INSULIN,1ML",  # n=11,885,331 in MC Rx table
+    "SYRINGE NDL,INSUL U-500,0.5ML",  # n=4,582 in MC Rx table
+    "SYRINGE W-NDL, DISP,INSUL,1ML",  # n=306,432 in MC Rx table
+    "SYRINGE W-NDL, DISP,INSUL,2 ML",  # n=311 in MC Rx table
+    "SYRINGE W-NDL, DISP,INSUL,2ML",  # n=307 in MC Rx table
+    "SYRINGE W-NDL, DISP,INSUL,3ML",  # n=2 in MC Rx table
+    "SYRINGE W-NDL, DISP., INSULIN",  # n=48,847 in MC Rx table
+    "SYRINGE W-NDL,INSUL,U-40,1 ML",  # n=63 in MC Rx table
+    "SYRINGE W-O NEEDL,INSULIN,1 ML",  # n=4,918 in MC Rx table
+    "SYRINGE WITH NEEDLE, INSULIN",  # n=37,293 in MC Rx table
+    "SYRINGE,INSUL U-500,NDL,0.5ML",  # n=98,503 in MC Rx table
+    "SYRINGE,INSULIN,NEEDLESS 1 ML",  # n=40,462 in MC Rx table
+    "SYRINGE,NEEDLE,INSULN,SAFE,1ML",  # n=47,432 in MC Rx table
+    "SYRINGE,NEEDLE,INSULN,SF 0.5ML",  # n=36,144 in MC Rx table
+    "SYRINGE,NEEDLE,INSULN,SF,0.3ML",  # n=6,025 in MC Rx table
+    "SYRINGE-NEEDLE,INSULIN,0.5 ML"  # n=9,392,895 in MC Rx table
+  )
 )
 
-antidiab_defs <- list(
-  biguanide         = "Biguanide antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  sulfonylurea      = "Sulfonylurea antidiabetic agents (first- and second-generation). From the Perisphere antidiabetic medication list.",
-  meglitinide       = "Meglitinide (glinide) antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  tzd               = "Thiazolidinedione (TZD / glitazone) antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  alpha_glucosidase = "Alpha-glucosidase inhibitor antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  dpp4              = "DPP-4 inhibitor (gliptin) antidiabetic agents, including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
-  sglt2             = "SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
-  glp1              = "GLP-1 receptor agonist antidiabetic agents. From the Perisphere antidiabetic medication list.",
-  insulin           = "Insulin preparations and insulin administration supplies. From the Perisphere antidiabetic medication list.",
-  amylin            = "Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list."
+### Amylin analogues ----
+
+spec_antidiab_amylin_v1 <- DrugSpec$new(
+  "amylin", "Amylin Analogues",
+  version = "v1",
+  defs    = "Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list.",
+  generic_names = c(
+    "PRAMLINTIDE ACETATE"  # n=344,852 in MC Rx table
+  )
 )
 
-spec_antidiab_biguanide_v1         <- DrugSpec$new("antidiab_biguanide",         "Biguanides",                   version = "v1", defs = antidiab_defs$biguanide,         generic_names = antidiab_gnns$biguanide)
-spec_antidiab_sulfonylurea_v1      <- DrugSpec$new("antidiab_sulfonylurea",      "Sulfonylureas",                version = "v1", defs = antidiab_defs$sulfonylurea,      generic_names = antidiab_gnns$sulfonylurea)
-spec_antidiab_meglitinide_v1       <- DrugSpec$new("antidiab_meglitinide",       "Meglitinides",                 version = "v1", defs = antidiab_defs$meglitinide,       generic_names = antidiab_gnns$meglitinide)
-spec_antidiab_tzd_v1               <- DrugSpec$new("antidiab_tzd",               "Thiazolidinediones (TZDs)",    version = "v1", defs = antidiab_defs$tzd,               generic_names = antidiab_gnns$tzd)
-spec_antidiab_alpha_glucosidase_v1 <- DrugSpec$new("antidiab_alpha_glucosidase", "Alpha-Glucosidase Inhibitors", version = "v1", defs = antidiab_defs$alpha_glucosidase, generic_names = antidiab_gnns$alpha_glucosidase)
-spec_antidiab_dpp4_v1              <- DrugSpec$new("antidiab_dpp4",              "DPP-4 Inhibitors",             version = "v1", defs = antidiab_defs$dpp4,              generic_names = antidiab_gnns$dpp4)
-spec_antidiab_sglt2_v1             <- DrugSpec$new("antidiab_sglt2",             "SGLT-2 Inhibitors",            version = "v1", defs = antidiab_defs$sglt2,             generic_names = antidiab_gnns$sglt2)
-spec_antidiab_glp1_v1              <- DrugSpec$new("antidiab_glp1",              "GLP-1 Receptor Agonists",      version = "v1", defs = antidiab_defs$glp1,              generic_names = antidiab_gnns$glp1)
-spec_antidiab_insulin_v1           <- DrugSpec$new("antidiab_insulin",           "Insulin and Supplies",         version = "v1", defs = antidiab_defs$insulin,           generic_names = antidiab_gnns$insulin)
-spec_antidiab_amylin_v1            <- DrugSpec$new("antidiab_amylin",            "Amylin Analogues",             version = "v1", defs = antidiab_defs$amylin,            generic_names = antidiab_gnns$amylin)
+## Antidiabetic medication composite ----
 
-# Antidiabetic drugs composite ----
-
-spec_antidiabetic <- CompositeDrugSpec$new(
+spec_diabetes <- CompositeDrugSpec$new(
   drug_class = "antidiabetic",
   label      = "Antidiabetic Medications",
   defs       = paste0(
@@ -2885,6 +3412,7 @@ spec_antidiabetic <- CompositeDrugSpec$new(
     "meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4 inhibitors, ",
     "SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies, amylin analogues."
   ),
+  condition  = "diabetes",
   components = list(
     biguanide_v1         = spec_antidiab_biguanide_v1,
     sulfonylurea_v1      = spec_antidiab_sulfonylurea_v1,
@@ -2893,7 +3421,7 @@ spec_antidiabetic <- CompositeDrugSpec$new(
     alpha_glucosidase_v1 = spec_antidiab_alpha_glucosidase_v1,
     dpp4_v1              = spec_antidiab_dpp4_v1,
     sglt2_v1             = spec_antidiab_sglt2_v1,
-    glp1_v1              = spec_antidiab_glp1_v1,
+    glp1_v1              = spec_glp1_v1,
     insulin_v1           = spec_antidiab_insulin_v1,
     amylin_v1            = spec_antidiab_amylin_v1
   )
@@ -2909,37 +3437,58 @@ spec_antidiabetic <- CompositeDrugSpec$new(
 # LOVASTATIN in some pharmacy files; those mappings are handled upstream.
 
 spec_ll_statin_v1 <- DrugSpec$new(
-  "ll_statin", "Statins (HMG-CoA Reductase Inhibitors)",
+  "statin", "Statins (HMG-CoA Reductase Inhibitors)",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
   generic_names = c(
+    "AMLODIPINE/ATORVAST CAL",  # n=230,934 in MC Rx table
+    "AMLODIPINE/ATORVASTATIN",  # n=2,896,648 in MC Rx table
+    "ASPIRIN(CALC&MG)/PRAVASTATIN",  # n=7 in MC Rx table
     "ATORVASTATIN",
-    "AMLODIPINE/ATORVASTATIN",
+    "ATORVASTATIN CALCIUM",  # n=824,538,830 in MC Rx table
     "FLUVASTATIN",
-    "LOVASTATIN",
+    "FLUVASTATIN SODIUM",  # n=1,389,190 in MC Rx table
+    "LOVASTATIN",  # n=53,839,480 in MC Rx table
+    "NIACIN/LOVASTATIN",  # n=296,037 in MC Rx table
+    "NIACIN/SIMVASTATIN",  # n=679,412 in MC Rx table
     "PITAVASTATIN",
+    "PITAVASTATIN CALCIUM",  # n=7,547,548 in MC Rx table
+    "PITAVASTATIN MAGNESIUM",  # n=54,135 in MC Rx table
     "PRAVASTATIN",
+    "PRAVASTATIN SODIUM",  # n=161,381,694 in MC Rx table
     "ROSUVASTATIN",
-    "SIMVASTATIN"
+    "ROSUVASTATIN CALCIUM",  # n=286,122,744 in MC Rx table
+    "SIMVASTATIN"  # n=309,570,705 in MC Rx table
   )
 )
 
 ### Ezetimibe ----
 
 spec_ll_ezetimibe_v1 <- DrugSpec$new(
-  "ll_ezetimibe", "Ezetimibe",
+  "ezetimibe", "Ezetimibe",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
-  generic_names = c("EZETIMIBE", "EZETIMIBE/SIMVASTATIN")
+  generic_names = c(
+    "BEMPEDOIC ACID/EZETIMIBE",  # n=879,792 in MC Rx table
+    "EZETIMIBE",  # n=75,793,181 in MC Rx table
+    "EZETIMIBE/ATORVASTATIN CALCIUM",  # n=46,998 in MC Rx table
+    "EZETIMIBE/ROSUVASTATIN CALCIUM",  # n=22,412 in MC Rx table
+    "EZETIMIBE/SIMVASTATIN"  # n=11,139,034 in MC Rx table
+  )
 )
 
 ### PCSK9 inhibitors ----
 
 spec_ll_pcsk9_v1 <- DrugSpec$new(
-  "ll_pcsk9", "PCSK9 Inhibitors",
+  "pcsk9", "PCSK9 Inhibitors",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
-  generic_names = c("ALIROCUMAB", "EVOLOCUMAB", "INCLISIRAN")
+  generic_names = c(
+    "ALIROCUMAB",  # n=5,783,992 in MC Rx table
+    "EVOLOCUMAB",  # n=18,168,974 in MC Rx table
+    "INCLISIRAN",
+    "INCLISIRAN SODIUM"  # n=69,825 in MC Rx table
+  )
 )
 
 ### Fibrates ----
@@ -2948,19 +3497,37 @@ spec_ll_pcsk9_v1 <- DrugSpec$new(
 # CLOFIBRATE, GEMFIBROZIL.
 
 spec_ll_fibrate_v1 <- DrugSpec$new(
-  "ll_fibrate", "Fibrates",
+  "fibrate", "Fibrates",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
-  generic_names = c("FENOFIBRATE", "FENOFIBRIC ACID", "CLOFIBRATE", "GEMFIBROZIL")
+  generic_names = c(
+    "CLOFIBRATE",  # n=8 in MC Rx table
+    "FENOFIBRATE",  # n=38,426,904 in MC Rx table
+    "FENOFIBRATE NANOCRYSTALLIZED",  # n=38,580,751 in MC Rx table
+    "FENOFIBRATE,MICRONIZED",  # n=13,655,102 in MC Rx table
+    "FENOFIBRIC ACID",  # n=179,125 in MC Rx table
+    "FENOFIBRIC ACID (CHOLINE)",  # n=7,929,332 in MC Rx table
+    "GEMFIBROZIL"  # n=22,194,891 in MC Rx table
+  )
 )
 
 ### Bile acid sequestrants ----
 
 spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
-  "ll_bile_acid_seq", "Bile Acid Sequestrants",
+  "bile_acid_seq", "Bile Acid Sequestrants",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
-  generic_names = c("CHOLESTYRAMINE", "COLESTIPOL", "COLESEVELAM")
+  generic_names = c(
+    "CHOLESTYRAMINE",  # n=166,587 in MC Rx table
+    "CHOLESTYRAMINE (WITH SUGAR)",  # n=8,443,157 in MC Rx table
+    "CHOLESTYRAMINE/ASPARTAME",  # n=3,070,417 in MC Rx table
+    "CHOLESTYRAMINE/SUCROSE",  # n=105,327 in MC Rx table
+    "COLESEVELAM",
+    "COLESEVELAM HCL",  # n=8,444,448 in MC Rx table
+    "COLESTIPOL",
+    "COLESTIPOL HCL",  # n=6,982,208 in MC Rx table
+    "COLESTIPOL HCL,MICRONIZED"  # n=29,249 in MC Rx table
+  )
 )
 
 ### Niacin ----
@@ -2970,25 +3537,32 @@ spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
 # supplement without lipid-lowering activity and is excluded.
 
 spec_ll_niacin_v1 <- DrugSpec$new(
-  "ll_niacin", "Niacin",
+  "niacin", "Niacin",
   version = "v1",
   defs    = paste0(
     "From the Perisphere lipid-lowering medication list. ",
     "Includes GNNs containing 'NIACIN' (excluding niacinamide / 'NIACINA-') ",
     "or 'NICOTINIC' (for nicotinic acid preparations)."
   ),
-  generic_names = c("NIACIN", "NIACIN EXTENDED-RELEASE", "NICOTINIC ACID")
+  generic_names = c(
+    "INOSITOL NIACINATE",  # n=81 in MC Rx table
+    "NIACIN",  # n=11,370,413 in MC Rx table
+    "NIACIN (INOSITOL NIACINATE)",  # n=58,498 in MC Rx table
+    "NIACIN EXTENDED-RELEASE",
+    "NICOTINIC ACID"
+  )
 )
 
 ## Lipid-lowering medication composite ----
 
-spec_lipid_lowering <- CompositeDrugSpec$new(
+spec_hyperlipidemia <- CompositeDrugSpec$new(
   drug_class = "lipid_lowering",
   label      = "Lipid-Lowering Medications",
   defs       = paste0(
     "Lipid-lowering medication subclasses (v1): statins (HMG-CoA reductase inhibitors), ",
     "ezetimibe, PCSK9 inhibitors, fibrates, bile acid sequestrants, and niacin."
   ),
+  condition  = "hyperlipidemia",
   components = list(
     statin_v1        = spec_ll_statin_v1,
     ezetimibe_v1     = spec_ll_ezetimibe_v1,
@@ -3007,7 +3581,7 @@ spec_lipid_lowering <- CompositeDrugSpec$new(
 
 usethis::use_data(
   # Hypertension
-  spec_htn_v1, spec_htn_v2,
+  spec_hypertension_v1,
   # Ischemic stroke (not included b/c its in stroke)
   # spec_isch_stroke_v1,
   # ASCVD composite
@@ -3017,9 +3591,9 @@ usethis::use_data(
   # Obesity
   spec_obesity_v1,
   # Depression
-  spec_depression_v1, spec_depression_v2,
+  spec_depression_v1,
   # Diabetes
-  spec_diabetes_v1, spec_diabetes_v2, spec_diabetes_v3,
+  spec_diabetes_v1,
   # CKD
   spec_ckd_v1,
   # Sleep apnea
@@ -3033,15 +3607,15 @@ usethis::use_data(
   # Asthma
   spec_asthma_v1,
   # Antiobesity (non GLP-1)
-  spec_antiobesity,
+  spec_obesity,
   # Antihypertensive composites
-  spec_antihypertensive,
+  spec_hypertension,
   # Antidiabetic composite
-  spec_antidiabetic,
+  spec_diabetes,
   # Antidepressive composite
-  spec_antidepressive,
+  spec_depression,
   # Lipid-lowering composite
-  spec_lipid_lowering,
+  spec_hyperlipidemia,
   overwrite = TRUE
 )
 

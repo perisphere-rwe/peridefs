@@ -14,10 +14,18 @@ get_defs(spec, variable_type = c("condition", "outcome"))
 \link{DrugSpec} and \link{CompositeDrugSpec} objects.}
 }
 \value{
-The raw definition (named character vector or \code{NULL}), invisibly.
+The raw definition (named character vector or \code{NULL}), invisibly,
+for \link{CodeSpec}/\link{CompositeCodeSpec}/\link{DrugSpec}. A tibble with columns
+\code{name} and \code{label} for \link{CompositeDrugSpec}.
 }
 \description{
-Renders the definition for a \link{CodeSpec} or \link{DrugSpec} to the console using
-cli formatting (bullets, inline code markup, etc.) and returns the raw
-definition invisibly for programmatic use.
+Renders the definition for a \link{CodeSpec} or \link{CompositeCodeSpec} to the
+console using cli formatting (bullets, inline code markup, etc.) and
+returns the raw definition invisibly for programmatic use. For a
+\link{DrugSpec} leaf, renders and returns its (typically internal sourcing
+note) \code{defs} text the same way. For a \link{CompositeDrugSpec}, returns the
+tibble of component \code{name}/\code{label} pairs from \verb{$get_meds_labels()}
+instead (see that method, or \code{\link[=get_hypertension_meds_labels]{get_hypertension_meds_labels()}} and
+friends) — composite drug specs don't carry a narrative definition the
+way condition specs do.
 }

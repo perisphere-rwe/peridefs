@@ -10,3 +10,6 @@
 ^\.github$
 ^README\.Rmd$
 ^vignettes/articles$
+^AGENTS\.md$
+^market_clarity_rx_gnrc_nms\.rds$
+^LICENSE\.md$

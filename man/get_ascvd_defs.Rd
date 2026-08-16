@@ -4,12 +4,13 @@
 \alias{get_ascvd_defs}
 \title{Retrieve the narrative algorithm description for an ASCVD component}
 \usage{
-get_ascvd_defs(variable_type = c("condition", "outcome"), component)
+get_ascvd_defs(variable_type = c("condition", "outcome"), component = NULL)
 }
 \arguments{
 \item{variable_type}{\code{"condition"} (default) or \code{"outcome"}.}
 
-\item{component}{\strong{Required.} Component name. See \code{\link[=get_ascvd_codes]{get_ascvd_codes()}}.}
+\item{component}{Optional component name. \code{NULL} (default) or \code{"all"}
+renders every component. See \code{\link[=get_ascvd_codes]{get_ascvd_codes()}}.}
 }
 \description{
 Retrieve the narrative algorithm description for an ASCVD component

@@ -30,6 +30,8 @@ toy_composite <- CompositeCodeSpec$new(
   components = list(a_v1 = toy_a, b_v1 = toy_b)
 )
 
+.codes_of <- function(df, type) df$code[df$type == type]
+
 # ---- Structure tests --------------------------------------------------------
 
 test_that("CompositeCodeSpec has correct class and fields", {
@@ -51,59 +53,64 @@ test_that("keys() returns union of component keys", {
   expect_true("dx_icd10" %in% keys)
 })
 
-# ---- get_codes() tests — component required ---------------------------------
+# ---- get_codes() tests -------------------------------------------------------
 
-test_that("get_codes() errors without component=", {
-  expect_error(toy_composite$get_codes(), "component")
+test_that("get_codes() with no component returns all components", {
+  result <- toy_composite$get_codes()
+  expect_true(all(c("comp_a", "comp_b") %in% result$class))
 })
 
 test_that("get_codes(component = 'a_v1') returns component A codes", {
   result <- toy_composite$get_codes(component = "a_v1", variable_type = "condition")
-  expect_equal(sort(result$dx_icd9), c("4010", "4011"))
-  expect_equal(result$dx_icd10, "I10")
+  expect_equal(sort(.codes_of(result, "dx_icd9")), c("4010", "4011"))
+  expect_equal(.codes_of(result, "dx_icd10"), "I10")
 })
 
 test_that("get_codes(component = 'b_v1') returns component B codes", {
   result <- toy_composite$get_codes(component = "b_v1", variable_type = "condition")
-  expect_equal(result$dx_icd9, c("4011"))
-  expect_equal(result$hcpcs,   c("G0001"))
+  expect_equal(.codes_of(result, "dx_icd9"), c("4011"))
+  expect_equal(.codes_of(result, "hcpcs"),   c("G0001"))
 })
 
 test_that("get_codes() respects variable_type filtering", {
   cond <- toy_composite$get_codes(component = "b_v1", variable_type = "condition")
   out  <- toy_composite$get_codes(component = "b_v1", variable_type = "outcome")
-  expect_true("4011" %in% cond$dx_icd9)
-  expect_false("4019" %in% cond$dx_icd9)
-  expect_true("4019" %in% out$dx_icd9)
+  expect_true("4011" %in% .codes_of(cond, "dx_icd9"))
+  expect_false("4019" %in% .codes_of(cond, "dx_icd9"))
+  expect_true("4019" %in% .codes_of(out, "dx_icd9"))
 })
 
 test_that("get_codes() code_type filter works", {
   result <- toy_composite$get_codes(component = "a_v1", code_type = "dx_icd9",
                                      variable_type = "condition")
-  expect_named(result, "dx_icd9")
+  expect_true(all(result$type == "dx_icd9"))
 })
 
-test_that("get_codes() returns tibble when requested", {
-  result <- toy_composite$get_codes(component = "a_v1", format = "tibble")
+test_that("get_codes() returns a tibble with expected columns", {
+  result <- toy_composite$get_codes(component = "a_v1")
   expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("code_type", "code", "variable_type"))
+  expect_equal(names(result), c("type", "code", "priority", "version", "class"))
 })
 
 test_that("get_codes() applies periods to ICD codes", {
   result <- toy_composite$get_codes(component = "a_v1", code_type = "dx_icd9",
                                      variable_type = "condition", periods = TRUE)
-  expect_true(all(grepl("\\.", result$dx_icd9)))
+  expect_true(all(grepl("\\.", .codes_of(result, "dx_icd9"))))
+})
+
+test_that("get_codes(component = 'bad_component') errors informatively", {
+  expect_error(toy_composite$get_codes(component = "bad_component"), "bad_component")
 })
 
 # ---- get_defs() tests -------------------------------------------------------
 
-test_that("get_defs() errors without component=", {
-  expect_error(toy_composite$get_defs(), "component")
-})
-
 test_that("get_defs() returns correct narrative for component", {
   expect_equal(toy_composite$get_defs("a_v1", "condition"), "A condition def")
   expect_equal(toy_composite$get_defs("b_v1", "outcome"),   "B outcome def")
+})
+
+test_that("get_defs() with no component renders all components", {
+  expect_invisible(toy_composite$get_defs())
 })
 
 # ---- ASCVD integration tests ------------------------------------------------
@@ -121,18 +128,10 @@ test_that("spec_ascvd has expected components including chd_v1, hf_v1, isch_stro
 
 test_that("get_ascvd_codes(component = 'chd_v1') returns CHD condition codes", {
   result <- get_ascvd_codes(component = "chd_v1", variable_type = "condition")
-  expect_type(result, "list")
-  expect_true("dx_icd9"  %in% names(result))
-  expect_true("dx_icd10" %in% names(result))
-  expect_true("hcpcs"    %in% names(result))
-})
-
-test_that("get_ascvd_codes() errors without component=", {
-  expect_error(get_ascvd_codes(), "component")
-})
-
-test_that("get_ascvd_defs() errors without component=", {
-  expect_error(get_ascvd_defs(), "component")
+  expect_s3_class(result, "tbl_df")
+  expect_true("dx_icd9"  %in% result$type)
+  expect_true("dx_icd10" %in% result$type)
+  expect_true("hcpcs"    %in% result$type)
 })
 
 test_that("get_ascvd_defs(component = 'chd_v1') returns a non-empty character vector", {
@@ -143,11 +142,15 @@ test_that("get_ascvd_defs(component = 'chd_v1') returns a non-empty character ve
 })
 
 test_that("chd_v1 codes are a subset of chd_v1 condition codes directly", {
-  ascvd_chd <- get_ascvd_codes(component = "chd_v1", code_type = "dx_icd9",
-                                 variable_type = "condition")$dx_icd9
-  direct_chd <- spec_ascvd$components()$chd_v1$get_codes(
-    code_type = "dx_icd9", variable_type = "condition"
-  )$dx_icd9
+  ascvd_chd <- .codes_of(
+    get_ascvd_codes(component = "chd_v1", code_type = "dx_icd9",
+                    variable_type = "condition"),
+    "dx_icd9"
+  )
+  direct_chd <- .codes_of(
+    spec_ascvd$components()$chd_v1$get_codes(code_type = "dx_icd9",
+                                              variable_type = "condition"),
+    "dx_icd9"
+  )
   expect_equal(ascvd_chd, direct_chd)
 })
-

@@ -17,9 +17,10 @@
 #' )
 #' ```
 #'
-#' The `component` argument is **required** when calling `get_codes()` or
-#' `get_defs()`. The `variable_type` argument is forwarded to the component
-#' spec, so both condition and outcome codes are accessible.
+#' The `component` argument is optional when calling `get_codes()` or
+#' `get_defs()`; omitting it (or passing `"all"`) returns every component.
+#' The `variable_type` argument is forwarded to the component spec, so both
+#' condition and outcome codes are accessible.
 #'
 #' @export
 CompositeCodeSpec <- R6::R6Class(
@@ -52,7 +53,6 @@ CompositeCodeSpec <- R6::R6Class(
     #' @param version Optional version label (typically `NULL` for composites).
     initialize = function(condition, label, defs = NULL, components = list(),
                           version = NULL) {
-      # Backward compat with old multi-version API
       private$.condition  <- condition
       private$.version    <- version
       private$.label      <- label
@@ -91,70 +91,75 @@ CompositeCodeSpec <- R6::R6Class(
       unique(unlist(lapply(private$.components, \(s) s$keys())))
     },
 
-    #' @description Retrieve codes from a named component.
-    #' @param component **Required.** Name of a component, e.g. `"chd_v1"`.
-    #'   Print the spec to see available names.
+    #' @description Retrieve codes from one or more components as a tidy
+    #'   data frame.
+    #' @param component Optional component name(s), e.g. `"chd_v1"`. `NULL`
+    #'   (default) or `"all"` returns every component, with a `class` column
+    #'   distinguishing them.
     #' @param code_type Optional character vector of code types to filter.
     #' @param variable_type `"condition"` (default) or `"outcome"`.
     #' @param periods Logical. `FALSE` (default) = short format.
-    #' @param format `"list"` (default) or `"tibble"`.
-    #' @return Named list or tibble of codes.
+    #' @param priority Integer vector subsetting confidence tiers to include.
+    #'   Default `1`.
+    #' @return A tibble with columns `type`, `code`, `priority`, `version`,
+    #'   and `class` (the component's own condition identifier, e.g. `"chd"`
+    #'   -- not the versioned component key, since `version` already
+    #'   captures that).
     get_codes = function(component     = NULL,
                          code_type     = NULL,
                          variable_type = c("condition", "outcome"),
                          periods       = FALSE,
-                         format        = c("list", "tibble")) {
-      vt  <- match.arg(variable_type)
-      fmt <- match.arg(format)
+                         priority      = 1L) {
+      vt <- match.arg(variable_type)
 
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Use {.val all} to union all components, or specify one: {.val {names(private$.components)}}",
-          "i" = "Print {.code {self$condition}} spec to see all options."
-        ))
+      if (!is.null(component) && !identical(component, "all")) {
+        .validate_components(component, self)
+      }
+      comps <- if (is.null(component) || identical(component, "all")) {
+        names(private$.components)
+      } else {
+        component
       }
 
-      if (identical(component, "all")) {
-        all_lists <- lapply(private$.components, function(s) {
-          s$get_codes(code_type = code_type, variable_type = vt,
-                      periods = periods, format = "list")
-        })
-        all_keys <- unique(unlist(lapply(all_lists, names)))
-        result <- lapply(stats::setNames(all_keys, all_keys), function(k) {
-          unique(unlist(lapply(all_lists, \(x) x[[k]] %||% character(0L))))
-        })
-        if (identical(fmt, "tibble")) {
-          rows <- lapply(names(result), function(k) {
-            cd <- result[[k]]
-            if (!length(cd)) return(NULL)
-            tibble::tibble(code_type = k, code = cd, variable_type = vt)
-          })
-          return(do.call(rbind, Filter(Negate(is.null), rows)))
-        }
-        return(result)
-      }
+      rows <- lapply(comps, function(nm) {
+        s      <- .resolve_component(private$.components, nm, self$label)
+        result <- s$get_codes(code_type = code_type, variable_type = vt,
+                              periods = periods, priority = priority)
+        result$class <- s$condition
+        result
+      })
 
-      s <- .resolve_component(private$.components, component, self$label)
-      s$get_codes(code_type = code_type, variable_type = vt,
-                  periods = periods, format = fmt)
+      unique(do.call(rbind, rows))
     },
 
-    #' @description Retrieve the narrative algorithm description from a
-    #'   named component.
-    #' @param component **Required.** Component name.
+    #' @description Retrieve the narrative algorithm description from one or
+    #'   more components.
+    #' @param component Optional component name. `NULL` (default) or `"all"`
+    #'   renders every component's description.
     #' @param variable_type `"condition"` (default) or `"outcome"`.
-    #' @return Character string, or `NULL`.
-    get_defs = function(component = NULL,
+    #' @return Character string, or (for `"all"`/`NULL`) an invisible named
+    #'   list rendered to the console.
+    get_defs = function(component     = NULL,
                         variable_type = c("condition", "outcome")) {
-      if (is.null(component)) {
-        cli::cli_abort(c(
-          "{.arg component} is required for composite specs.",
-          "i" = "Available: {.val {names(private$.components)}}"
-        ))
+      vt <- match.arg(variable_type)
+
+      if (is.null(component) || identical(component, "all")) {
+        defs <- lapply(stats::setNames(names(private$.components),
+                                       names(private$.components)),
+                       function(nm) {
+                         d <- private$.components[[nm]]$get_defs(variable_type = vt)
+                         if (!is.null(d)) {
+                           cli::cli_text("{.strong {nm}:}")
+                           cli::cli_text(d)
+                           cli::cli_text("")
+                         }
+                         invisible(d)
+                       })
+        return(invisible(defs))
       }
+
       s <- .resolve_component(private$.components, component, self$label)
-      s$get_defs(match.arg(variable_type))
+      s$get_defs(vt)
     }
   )
 )

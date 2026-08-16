@@ -18,20 +18,20 @@ knitr::opts_chunk$set(
 library(peridefs)
 ```
 
-All drug specs in `peridefs` are **composites** — they contain named component
+Most drug specs in `peridefs` are **composites** — they contain named component
 specs (individual drug classes or versions) rather than a flat GNN list. The
-`component` argument is required on every drug `get_*` function.
+`component` argument is optional on every drug `get_*` function; omit it (or
+pass `"all"`) to retrieve every component at once.
 
 | Function | Returns |
 |----------|---------|
-| `get_<drug>_generics(component = ...)` | Character vector of generic nonproprietary names (GNNs) |
-| `get_<drug>_codes(component = ...)` | Character vector of NDC codes (typically empty) |
-| `get_<drug>_defs(component = ...)` | Narrative description of the component's drug class definition |
+| `get_<condition>_generics(component = ...)` | Tibble of generic (and brand, as a list-column) names, with `priority`, `condition`, `class`, and `version` columns |
+| `get_<condition>_meds_labels(component = ...)` | Tibble of each component's `name` (key) and human-readable `label` (e.g. `"ACE Inhibitors"`) |
 
 Print any composite spec to see its available component names:
 
 ```{r antihtn-spec}
-spec_antihypertensive
+spec_hypertension
 ```
 
 ## Retrieving GNNs for a specific component
@@ -39,13 +39,14 @@ spec_antihypertensive
 Pass the versioned component name to `get_*_generics()`:
 
 ```{r acei-v1}
-get_antihypertensive_generics(component = "acei_v1")
+get_hypertension_generics(component = "acei_v1")
 ```
 
-Use `component = "all"` to retrieve the union of every component's GNNs:
+Omit `component` (or pass `"all"`) to retrieve every component's GNNs at once,
+distinguished by the `class` and `version` columns:
 
 ```{r antihtn-all}
-get_antihypertensive_generics(component = "all") |> length()
+get_hypertension_generics() |> nrow()
 ```
 
 ### Comparing versions
@@ -55,42 +56,94 @@ and v2 from First DataBank (FDB), which may add spelling variants:
 
 ```{r acei-compare}
 # v1 — Perisphere source
-get_antihypertensive_generics(component = "acei_v1")
+get_hypertension_generics(component = "acei_v1")
 
 # v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)
-get_antihypertensive_generics(component = "acei_v2")
+get_hypertension_generics(component = "acei_v2")
 ```
 
-## Algorithm definitions
+## Component labels
 
-Each component carries a narrative description of how that drug class was
-identified:
+`get_hypertension_meds_labels()` returns a tibble of each component's `name`
+(its key, e.g. `"acei_v1"`) and human-readable `label` (e.g. `"ACE
+Inhibitors"`) — not a clinical definition. See [get_hypertension_v1_codes()]
+for the actual diagnostic algorithm; a drug leaf's own `defs` field is just
+an internal sourcing note, so it isn't surfaced here.
 
 ```{r acei-defs}
-get_antihypertensive_defs(component = "acei_v1")
+get_hypertension_meds_labels(component = "acei_v1")
+
+# Omit component to see every leaf's label at once
+get_hypertension_meds_labels()
 ```
 
-## NDC codes
+## Confidence tiers
 
-NDC code vectors are currently empty for drug classes. They can be added in a
-future update.  The `get_<drug>_codes()` function is reserved for future use or
-for custom specs you build with `drug_spec()`. The primary identification
-mechanism at the moment is through generic names.
+The `priority` column distinguishes how confident we are that a generic name
+belongs in a drug class definition: `1` (core) is the default and most
+conservative tier, `2` (probable) covers generics with more than one
+indication, and `3` (cautious) covers generics without their expected
+indication in the US. Pass `priority = 1:3` to widen the result and include
+lower-confidence matches.
+
+## Brand names
+
+Some generics genuinely correspond to more than one brand product — most
+often because the same `GNRC_NM` covers formulations approved for different
+indications (e.g., semaglutide as Ozempic for type 2 diabetes vs. Wegovy for
+chronic weight management). Because a single generic can map to zero, one, or
+multiple brands, `brand` is stored as a **list-column**: each row's `brand`
+value is a character vector, empty (`character(0)`) when no brand is on
+record.
+
+Build a small example with `drug_spec()` to see this in action:
+
+```{r brand-example}
+example_spec <- drug_spec(
+  drug_class    = "example",
+  label         = "Example GLP-1s",
+  generic_names_probable = c("SEMAGLUTIDE", "TIRZEPATIDE"),
+  generic_names_cautious = c("DULAGLUTIDE"),
+  brand_names = list(
+    SEMAGLUTIDE = "Ozempic",
+    TIRZEPATIDE = "Mounjaro"
+    # DULAGLUTIDE has no brand_names entry, so its brand is character(0)
+  )
+)
+
+example_spec$get_generics(priority = 1:3)
+```
+
+Printing the tibble shows `<chr [1]>`/`<chr [0]>` for the list-column rather
+than the brand text itself — that's expected; `str()` or indexing into the
+column (e.g., `result$brand[[1]]`) shows the actual value(s). To get a
+one-row-per-brand tibble instead, use `tidyr::unnest()` with
+`keep_empty = TRUE` — **without** `keep_empty = TRUE`, `unnest()` silently
+drops every row with no recorded brand, which is most of them:
+
+```{r brand-unnest}
+example_spec$get_generics(priority = 1:3) |>
+  tidyr::unnest(brand, keep_empty = TRUE)
+```
 
 ## Antidiabetic drug classes
 
-`spec_antidiabetic` groups all oral antidiabetic agents and insulin:
+`spec_diabetes` groups all oral antidiabetic agents and insulin. Note that
+`class` values are unprefixed drug-mechanism names (e.g. `"biguanide"`, not
+`"antidiab_biguanide"`) — the composite's `condition` column already
+supplies the condition context, so repeating it in `class` would be
+redundant:
 
 ```{r antidiab-spec}
-spec_antidiabetic
+spec_diabetes
 ```
 
 ```{r glp1}
-get_antidiabetic_generics(component = "glp1_v1")
+get_diabetes_generics(component = "glp1_v1")
 ```
 
 ```{r sglt2}
-get_antidiabetic_generics(component = "sglt2_v1")
+get_diabetes_generics(component = "sglt2_v1")
 ```
 
 ## Creating your own drug spec

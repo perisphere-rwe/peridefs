@@ -3,7 +3,7 @@
 #' @description
 #' Stores the code sets and narrative algorithm description for a single
 #' version of a medical condition definition. Each version is a distinct
-#' object (e.g., `spec_htn_v1`, `spec_htn_v2`).
+#' object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 #'
 #' The spec stores:
 #' - `defs`: named list with elements `condition` and `outcome`, each holding
@@ -28,35 +28,46 @@ CodeSpec <- R6::R6Class(
     .defs      = NULL,
     .codes     = NULL,
 
-    get_codes_impl = function(code_type, variable_type, periods, format) {
+    # Build a tidy tibble (type, code, priority, version) for one variable_type.
+    build_tibble = function(code_type, variable_type, periods) {
       keys <- names(private$.codes)
+      if (!is.null(code_type)) keys <- keys[keys %in% code_type]
 
-      if (!is.null(code_type)) {
-        keys <- keys[keys %in% code_type]
-      }
-
-      result <- lapply(stats::setNames(keys, keys), function(k) {
+      rows <- lapply(keys, function(k) {
         kd   <- private$.codes[[k]]
         mask <- if (variable_type == "condition") kd$condition else kd$outcome
         cd   <- kd$codes[mask]
+        if (!length(cd)) return(NULL)
         if (periods) cd <- add_periods_icd(cd)
-        cd
+        tibble::tibble(
+          type     = k,
+          code     = cd,
+          priority = 1L,
+          version  = private$.version %||% NA_character_
+        )
       })
 
-      if (identical(format, "tibble")) {
-        rows <- lapply(names(result), function(k) {
-          kd      <- private$.codes[[k]]
-          mask    <- if (variable_type == "condition") kd$condition else kd$outcome
-          parsed  <- parse_key(k)
-          cd      <- kd$codes[mask]
-          if (!length(cd)) return(NULL)
-          tibble::tibble(
-            code_type     = parsed$code_type,
-            code          = if (periods) add_periods_icd(cd) else cd,
-            variable_type = variable_type
-          )
-        })
-        return(do.call(rbind, Filter(Negate(is.null), rows)))
+      result <- do.call(rbind, Filter(Negate(is.null), rows))
+      if (is.null(result)) {
+        result <- tibble::tibble(
+          type = character(0L), code = character(0L),
+          priority = integer(0L), version = character(0L)
+        )
+      }
+      result
+    },
+
+    get_codes_impl = function(code_type, variable_type, periods, priority) {
+      result <- private$build_tibble(code_type, variable_type, periods)
+
+      # Fall back to condition codes when a condition-only spec is asked for
+      # outcome codes (e.g., hypertension).
+      if (variable_type == "outcome" && nrow(result) == 0L) {
+        result <- private$build_tibble(code_type, "condition", periods)
+      }
+
+      if (!is.null(priority)) {
+        result <- result[result$priority %in% priority, , drop = FALSE]
       }
 
       result
@@ -134,25 +145,26 @@ CodeSpec <- R6::R6Class(
     #' @return Character vector of keys like `"dx_icd9"`.
     keys = function() names(private$.codes),
 
-    #' @description Retrieve codes from the spec.
+    #' @description Retrieve codes from the spec as a tidy data frame.
     #' @param code_type Optional character vector of code types to return.
     #'   Valid values: `"dx_icd9"`, `"dx_icd10"`, `"proc_icd9"`,
     #'   `"proc_icd10"`, `"hcpcs"`, `"cpt"`, `"rev"`. `NULL` returns all.
-    #' @param variable_type `"condition"` (default) or `"outcome"`.
+    #' @param variable_type `"condition"` (default) or `"outcome"`. If the
+    #'   spec has no codes flagged for `"outcome"`, falls back to `"condition"`.
     #' @param periods Logical. If `TRUE`, return codes with decimal periods
     #'   (e.g., `"401.0"`). Default `FALSE` returns short format (`"4010"`).
-    #' @param format `"list"` (default) returns a named list of character
-    #'   vectors; `"tibble"` returns a long-form tibble.
-    #' @return Named list or tibble of codes.
+    #' @param priority Integer vector subsetting confidence tiers to include
+    #'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
+    #' @return A tibble with columns `type`, `code`, `priority`, and `version`.
     get_codes = function(code_type = NULL,
                          variable_type = c("condition", "outcome"),
                          periods = FALSE,
-                         format = c("list", "tibble")) {
+                         priority = 1L) {
       private$get_codes_impl(
         code_type,
         match.arg(variable_type),
         periods,
-        match.arg(format)
+        priority
       )
     },
 
