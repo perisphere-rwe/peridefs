@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,9 @@
 <span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  defs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  generic_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ndc <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  generic_names_probable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  generic_names_cautious <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  brand_names <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -80,11 +82,19 @@
 
 
 <dt id="arg-generic-names">generic_names<a class="anchor" aria-label="anchor" href="#arg-generic-names"></a></dt>
-<dd><p>Optional replacement GNN character vector.</p></dd>
+<dd><p>Optional replacement GNN character vector for priority 1 (core).</p></dd>
 
 
-<dt id="arg-ndc">ndc<a class="anchor" aria-label="anchor" href="#arg-ndc"></a></dt>
-<dd><p>Optional replacement NDC character vector.</p></dd>
+<dt id="arg-generic-names-probable">generic_names_probable<a class="anchor" aria-label="anchor" href="#arg-generic-names-probable"></a></dt>
+<dd><p>Optional replacement GNN character vector for priority 2 (probable).</p></dd>
+
+
+<dt id="arg-generic-names-cautious">generic_names_cautious<a class="anchor" aria-label="anchor" href="#arg-generic-names-cautious"></a></dt>
+<dd><p>Optional replacement GNN character vector for priority 3 (cautious).</p></dd>
+
+
+<dt id="arg-brand-names">brand_names<a class="anchor" aria-label="anchor" href="#arg-brand-names"></a></dt>
+<dd><p>Optional named list mapping a GNN drug name to one or more brand name strings (replaces the full brand mapping for the resulting generic set; unspecified generics keep their existing brand assignment).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -101,7 +111,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

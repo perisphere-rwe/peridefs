@@ -30,5 +30,5 @@ A modified deep clone of `spec`.
 
 ``` r
 # Remove a specific code from the ICD-9 inpatient set
-my_htn <- remove_codes(spec_htn_v1, dx_icd9 = c("4019"))
+my_htn <- remove_codes(spec_hypertension_v1, dx_icd9 = c("4019"))
 ```

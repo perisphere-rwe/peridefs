@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,12 +112,14 @@ scratch. Provide a short <code>condition</code> ID, a
 <span><span class="co">#&gt; Code sets:</span></span>
 <span><span class="co">#&gt;   `dx_icd9`: 3 condition / 3 outcome codes</span></span>
 <span><span class="co">#&gt;   `dx_icd10`: 1 condition / 1 outcome codes</span></span></code></pre></div>
-<p>The resulting spec object has <code>$get_codes()</code> and
-<code>$get_defs()</code> methods:</p>
+<p>The resulting spec object has a <code>$get_codes()</code> method that
+returns a tibble:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_htn</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt; [1] "I10"</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
+<span><span class="co">#&gt;   type     code  priority version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> dx_icd10 I10          1 v1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="creating-a-new-drugspec">Creating a new DrugSpec<a class="anchor" aria-label="anchor" href="#creating-a-new-drugspec"></a>
@@ -133,7 +135,12 @@ vector of generic names:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">my_thiazide</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "HYDROCHLOROTHIAZIDE" "CHLORTHALIDONE"      "INDAPAMIDE"</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">#&gt;   generic             brand     priority condition class       version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> HYDROCHLOROTHIAZIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        my_thiazide v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> CHLORTHALIDONE      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        my_thiazide v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> INDAPAMIDE          <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        my_thiazide v1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="adding-codes-to-a-bundled-spec">Adding codes to a bundled spec<a class="anchor" aria-label="anchor" href="#adding-codes-to-a-bundled-spec"></a>
@@ -143,22 +150,22 @@ additional codes merged in. The <code>...</code> argument names must be
 valid code-set keys. The original is never modified:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Inspect available keys</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">spec_htn_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">spec_hypertension_v1</span><span class="op">$</span><span class="fu">keys</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "dx_icd9"  "dx_icd10"</span></span>
 <span></span>
 <span><span class="co"># Add a code and confirm the clone grew; original is unchanged</span></span>
-<span><span class="va">htn_plus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_codes.html">add_codes</a></span><span class="op">(</span><span class="va">spec_htn_v1</span>, dx_icd10 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I99"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">htn_plus</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_codes.html">add_codes</a></span><span class="op">(</span><span class="va">spec_hypertension_v1</span>, dx_icd10 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I99"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">htn_plus</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span><span class="op">$</span><span class="va">dx_icd10</span><span class="op">)</span>  <span class="co"># clone</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">htn_plus</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span><span class="op">)</span>     <span class="co"># clone</span></span>
 <span><span class="co">#&gt; [1] 24</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">spec_htn_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span><span class="op">$</span><span class="va">dx_icd10</span><span class="op">)</span>  <span class="co"># original</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">spec_hypertension_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># original</span></span>
 <span><span class="co">#&gt; [1] 23</span></span></code></pre></div>
 <p>By default, added codes are flagged for both <code>condition</code>
 and <code>outcome</code>. Use <code>variable_type</code> to restrict
 membership:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">htn_outcome_only</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_codes.html">add_codes</a></span><span class="op">(</span></span>
-<span>  <span class="va">spec_htn_v1</span>,</span>
+<span>  <span class="va">spec_hypertension_v1</span>,</span>
 <span>  variable_type <span class="op">=</span> <span class="st">"outcome"</span>,</span>
 <span>  dx_icd10      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I99"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -169,12 +176,12 @@ membership:</p>
 <p><code><a href="../reference/remove_codes.html">remove_codes()</a></code> returns a clone with the specified codes
 excluded:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">htn_trimmed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_codes.html">remove_codes</a></span><span class="op">(</span><span class="va">spec_htn_v1</span>, dx_icd9 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4019"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">htn_trimmed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_codes.html">remove_codes</a></span><span class="op">(</span><span class="va">spec_hypertension_v1</span>, dx_icd9 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"4019"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Code removed from clone; original is unchanged</span></span>
-<span><span class="st">"4019"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">htn_trimmed</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd9"</span><span class="op">)</span><span class="op">$</span><span class="va">dx_icd9</span></span>
+<span><span class="st">"4019"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">htn_trimmed</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd9"</span><span class="op">)</span><span class="op">$</span><span class="va">code</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span>
-<span><span class="st">"4019"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">spec_htn_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd9"</span><span class="op">)</span><span class="op">$</span><span class="va">dx_icd9</span></span>
+<span><span class="st">"4019"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">spec_hypertension_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd9"</span><span class="op">)</span><span class="op">$</span><span class="va">code</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -184,7 +191,7 @@ excluded:</p>
 definitions, or replace code sets:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">htn_revised</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_code_spec.html">modify_code_spec</a></span><span class="op">(</span></span>
-<span>  spec  <span class="op">=</span> <span class="va">spec_htn_v1</span>,</span>
+<span>  spec  <span class="op">=</span> <span class="va">spec_hypertension_v1</span>,</span>
 <span>  label <span class="op">=</span> <span class="st">"Hypertension (revised)"</span>,</span>
 <span>  defs  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"i"</span> <span class="op">=</span> <span class="st">"Study-specific hypertension definition."</span><span class="op">)</span>,</span>
@@ -195,7 +202,7 @@ definitions, or replace code sets:</p>
 <span><span class="va">htn_revised</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Hypertension (revised)</span><span style="color: #555555; font-weight: bold;"> (v1)</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; Condition: `htn`</span></span>
+<span><span class="co">#&gt; Condition: `hypertension`</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Condition def:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Study-specific hypertension definition.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -237,7 +244,7 @@ existing one. This keeps each version explicit and self-contained:</p>
 specific component from a composite, extract it first:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract a leaf spec from a composite</span></span>
-<span><span class="va">acei_v1</span> <span class="op">&lt;-</span> <span class="va">spec_antihypertensive</span><span class="op">$</span><span class="fu">components</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">acei_v1</span></span>
+<span><span class="va">acei_v1</span> <span class="op">&lt;-</span> <span class="va">spec_hypertension</span><span class="op">$</span><span class="fu">components</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">acei_v1</span></span>
 <span></span>
 <span><span class="co"># Build a study-specific variant</span></span>
 <span><span class="va">my_acei</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/modify_drug_spec.html">modify_drug_spec</a></span><span class="op">(</span></span>
@@ -247,15 +254,20 @@ specific component from a composite, extract it first:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">my_acei</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "LISINOPRIL" "RAMIPRIL"   "ENALAPRIL"</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">#&gt;   generic    brand     priority condition class version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> LISINOPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> RAMIPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ENALAPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="immutability">Immutability<a class="anchor" aria-label="anchor" href="#immutability"></a>
 </h2>
 <p>All custom-spec functions return <strong>deep clones</strong>.
-Bundled spec objects (<code>spec_htn_v1</code>,
-<code>spec_antihypertensive</code>, etc.) are never modified in place,
-so you can safely build study-specific variants without affecting other
+Bundled spec objects (<code>spec_hypertension_v1</code>,
+<code>spec_hypertension</code>, etc.) are never modified in place, so
+you can safely build study-specific variants without affecting other
 code in your project that relies on the standard definitions.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -269,7 +281,7 @@ code in your project that relies on the standard definitions.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

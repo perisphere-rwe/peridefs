@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,7 +149,7 @@ reflect the FY2026 reference table.</p>
 <code class="sourceCode R"><span></span>
 <span><span class="co"># ICD-10-PCS codes bundled in spec_chd_v1</span></span>
 <span><span class="va">spec_chd_v1</span> <span class="op">&lt;-</span> <span class="va">spec_ascvd</span><span class="op">$</span><span class="fu">components</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="st">'chd_v1'</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="va">spec_chd_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"proc_icd10"</span><span class="op">)</span><span class="op">$</span><span class="va">proc_icd10</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">spec_chd_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"proc_icd10"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 575</span></span></code></pre></div>
 <p>When CMS releases a new fiscal year update (typically October 1), the
 package maintainer runs <code>data-raw/download_pcs_codes.R</code> to
@@ -166,7 +166,7 @@ refresh the reference table, then rebuilds all affected specs.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -9,7 +9,7 @@ Heart failure is both a condition and an outcome definition."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,8 +61,7 @@ Heart failure is both a condition and an outcome definition.</p>
 <span>  code_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"condition"</span>, <span class="st">"outcome"</span><span class="op">)</span>,</span>
 <span>  periods <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"tibble"</span><span class="op">)</span>,</span>
-<span>  concatenate <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  priority <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,16 +85,9 @@ is defined as a condition only; <code>"outcome"</code> falls back to condition c
 (e.g., <code>"4010"</code>). <code>TRUE</code> returns decimal-format codes (e.g., <code>"401.0"</code>).</p></dd>
 
 
-<dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p><code>"list"</code> (default) returns a named list of character vectors.
-<code>"tibble"</code> returns a long-form tibble with columns <code>code_type</code>, <code>code</code>,
-and <code>variable_type</code>.</p></dd>
-
-
-<dt id="arg-concatenate">concatenate<a class="anchor" aria-label="anchor" href="#arg-concatenate"></a></dt>
-<dd><p>Logical. <code>FALSE</code> (default) returns a named list of
-character vectors. <code>TRUE</code> concatenates all code vectors into a single
-unnamed character vector. Not compatible with <code>format = "tibble"</code>.</p></dd>
+<dt id="arg-priority">priority<a class="anchor" aria-label="anchor" href="#arg-priority"></a></dt>
+<dd><p>Integer vector subsetting confidence tiers to include
+(<code>1</code> = core, <code>2</code> = probable, <code>3</code> = cautious). Default <code>1</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -106,31 +98,35 @@ unnamed character vector. Not compatible with <code>format = "tibble"</code>.</p
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_hf_v1_codes</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $dx_icd9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "40201" "40211" "40291" "40401" "40403" "40411" "40413" "40491" "40493"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "428"   "4280"  "4281"  "4282"  "42820" "42821" "42822" "42823" "4283" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "42830" "42831" "42832" "42833" "4284"  "42840" "42841" "42842" "42843"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "4289" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $dx_icd10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "I110"   "I130"   "I132"   "I501"   "I5020"  "I5021"  "I5022"  "I5023" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "I5030"  "I5031"  "I5032"  "I5033"  "I5040"  "I5041"  "I5042"  "I5043" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "I509"   "I50810" "I50814" "I50811" "I50812" "I50813" "I5082"  "I5083" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "I5084"  "I5089" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 54 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    type    code  priority version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> dx_icd9 40201        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> dx_icd9 40211        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> dx_icd9 40291        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> dx_icd9 40401        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> dx_icd9 40403        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> dx_icd9 40411        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> dx_icd9 40413        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> dx_icd9 40491        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dx_icd9 40493        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dx_icd9 428          1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 44 more rows</span></span>
 <span class="r-in"><span><span class="fu">get_hf_v1_codes</span><span class="op">(</span>variable_type <span class="op">=</span> <span class="st">"outcome"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $dx_icd9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "40201" "40211" "40291" "40401" "40403" "40411" "40413" "40491" "40493"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "428"   "4280"  "4281"  "4282"  "42820" "42821" "42822" "42823" "4283" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "42830" "42831" "42832" "42833" "4284"  "42840" "42841" "42842" "42843"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "4289" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $dx_icd10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "I110"   "I130"   "I132"   "I501"   "I5020"  "I5021"  "I5022"  "I5023" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "I5030"  "I5031"  "I5032"  "I5033"  "I5040"  "I5041"  "I5042"  "I5043" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "I509"   "I50810" "I50814" "I50811" "I50812" "I50813" "I5082"  "I5083" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "I5084"  "I5089" </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 54 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    type    code  priority version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> dx_icd9 40201        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> dx_icd9 40211        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> dx_icd9 40291        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> dx_icd9 40401        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> dx_icd9 40403        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> dx_icd9 40411        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> dx_icd9 40413        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> dx_icd9 40491        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dx_icd9 40493        1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dx_icd9 428          1 v1     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 44 more rows</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -142,7 +138,7 @@ unnamed character vector. Not compatible with <code>format = "tibble"</code>.</p
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

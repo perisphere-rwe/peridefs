@@ -22,7 +22,7 @@ classes.
 - [CompositeDrugSpec](https://perisphere-rwe.github.io/peridefs/reference/CompositeDrugSpec.md):
   Union of multiple
   [DrugSpec](https://perisphere-rwe.github.io/peridefs/reference/DrugSpec.md)
-  objects (e.g., antihypertensives).
+  objects (e.g., hypertension).
 
 ## ICD-10-PCS expansion
 
@@ -46,3 +46,7 @@ Useful links:
 ## Author
 
 **Maintainer**: Perisphere <info@perisphere-rwe.com>
+
+Authors:
+
+- Perisphere <info@perisphere-rwe.com>

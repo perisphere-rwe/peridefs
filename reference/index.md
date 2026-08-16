@@ -9,22 +9,19 @@ to union everything). Print any spec to see its definitions and
 component names.
 
 - [`spec_objects`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_antidepressive`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_antidiabetic`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_depression`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_hyperlipidemia`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_diabetes`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_asthma_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_antihypertensive`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_antiobesity`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_hypertension`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_obesity`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_ascvd`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_ckd_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_copd_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_depression_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_depression_v2`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_diabetes_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_diabetes_v2`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_diabetes_v3`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hf_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_htn_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_htn_v2`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_hypertension_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hyperlipidemia_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_isch_stroke_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_obesity_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
@@ -34,16 +31,14 @@ component names.
 
 ## Conditions: Cardiovascular
 
-Hypertension (v1, v2), heart failure (v1), and the ASCVD composite.
-ASCVD components (`chd_v1`, `chd_v2`, `stroke_v1`, `isch_stroke_v1`,
-`hf_v1`, `cerebrovasc_disease_v1`) are accessible via
+Hypertension, heart failure, and the ASCVD composite. ASCVD components
+(`chd_v1`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`,
+`cerebrovasc_disease_v1`) are accessible via
 `get_ascvd_codes(component = ...)`.
 
-- [`get_htn_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_htn_v1_codes.md)
-  [`get_htn_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_htn_v1_codes.md)
+- [`get_hypertension_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_v1_codes.md)
   : Retrieve ICD codes for hypertension
-- [`get_htn_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_htn_v1_defs.md)
-  [`get_htn_v2_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_htn_v1_defs.md)
+- [`get_hypertension_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_v1_defs.md)
   : Retrieve the narrative algorithm description for hypertension (v1)
 - [`get_hf_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hf_v1_codes.md)
   : Retrieve ICD codes for heart failure
@@ -56,17 +51,13 @@ ASCVD components (`chd_v1`, `chd_v2`, `stroke_v1`, `isch_stroke_v1`,
 
 ## Conditions: Metabolic & Renal
 
-Obesity (v1), diabetes (v1–v3), hyperlipidemia (v1), and CKD (v1).
+Obesity, diabetes, hyperlipidemia, and CKD.
 
 - [`get_obesity_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_v1_codes.md)
   [`get_obesity_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_v1_codes.md)
   : Retrieve ICD codes for obesity
 - [`get_diabetes_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
   [`get_diabetes_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  [`get_diabetes_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  [`get_diabetes_v2_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  [`get_diabetes_v3_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  [`get_diabetes_v3_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
   : Retrieve ICD codes for diabetes mellitus
 - [`get_hyperlipidemia_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_v1_codes.md)
   [`get_hyperlipidemia_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_v1_codes.md)
@@ -94,60 +85,57 @@ COPD (v1) and sleep apnea (v1).
 
 ## Conditions: Mental Health
 
-Depression history (v1: diagnosis only; v2: diagnosis or antidepressive
-medication).
+Depression history (diagnosis or antidepressive medication).
 
 - [`get_depression_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md)
   [`get_depression_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md)
-  [`get_depression_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md)
-  [`get_depression_v2_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md)
   : Retrieve ICD codes for depression
 
-## Drugs: Antihypertensives
+## Drugs: Hypertension
 
 ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
 
-- [`get_antihypertensive_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_antihypertensive_generics.md)
-  : Retrieve generic drug names for antihypertensive medications
-- [`get_antihypertensive_codes()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antihypertensive_defs()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antidiabetic_codes()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antidiabetic_defs()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  : Miscellaneous drug accessor functions
+- [`get_hypertension_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_generics.md)
+  [`get_hypertension_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_generics.md)
+  : Retrieve generic drug names for hypertension medications
 
-## Drugs: Antidiabetics
+## Drugs: Diabetes
 
 Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase
 inhibitors, DPP-4, SGLT-2, GLP-1, insulin, etc.
 
-- [`get_antidiabetic_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_antidiabetic_generics.md)
-  : Retrieve generic drug names for antidiabetic medications
-- [`get_antihypertensive_codes()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antihypertensive_defs()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antidiabetic_codes()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  [`get_antidiabetic_defs()`](https://perisphere-rwe.github.io/peridefs/reference/drug_accessors.md)
-  : Miscellaneous drug accessor functions
+- [`get_diabetes_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.md)
+  [`get_diabetes_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.md)
+  : Retrieve generic drug names for diabetes medications
 
-## Drugs: Antiobesity
+## Drugs: Obesity
 
 Non-GLP-1 agents (`non_glp1_v1`: naltrexone/bupropion, orlistat) and
 GLP-1 receptor agonists (`glp1_v1`: exenatide, dulaglutide, semaglutide,
 liraglutide, tirzepatide).
 
-- [`get_antiobesity_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md)
-  [`get_antiobesity_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md)
-  [`get_antiobesity_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_antiobesity_generics.md)
-  : Retrieve generic drug names for antiobesity medications
+- [`get_obesity_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_generics.md)
+  [`get_obesity_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_generics.md)
+  : Retrieve generic drug names for obesity medications
 
-## Drugs: Antidepressives
+## Drugs: Depression
 
 SSRIs (`ssri_v1`), SNRIs (`snri_v1`), tricyclics (`tca_v1`), MAOIs
 (`maoi_v1`), and other/atypical agents (`other_v1`).
 
-- [`get_antidepressive_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_antidepressive_generics.md)
-  [`get_antidepressive_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_antidepressive_generics.md)
-  [`get_antidepressive_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_antidepressive_generics.md)
-  : Retrieve generic drug names for antidepressive medications
+- [`get_depression_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_generics.md)
+  [`get_depression_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_generics.md)
+  : Retrieve generic drug names for depression medications
+
+## Drugs: Hyperlipidemia
+
+Statins (`statin_v1`), ezetimibe (`ezetimibe_v1`), PCSK9 inhibitors
+(`pcsk9_v1`), fibrates (`fibrate_v1`), bile acid sequestrants
+(`bile_acid_seq_v1`), and niacin (`niacin_v1`).
+
+- [`get_hyperlipidemia_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_generics.md)
+  [`get_hyperlipidemia_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_generics.md)
+  : Retrieve generic drug names for hyperlipidemia medications
 
 ## General Accessor
 

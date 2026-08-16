@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,98 +91,108 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install from GitHub</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"perisphere-rwe/peridefs"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Install from GitHub</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"perisphere-rwe/peridefs"</span>)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>A quick look at how you can get relevant information from <code>peridefs</code> family of <code>get_</code> functions</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://perisphere-rwe.github.io/peridefs">peridefs</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Retrieve ICD-10 hypertension codes as a tibble</span></span>
-<span><span class="fu"><a href="reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span>, format <span class="op">=</span> <span class="st">"tibble"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 23 × 3</span></span>
-<span><span class="co">#&gt;    code_type code  variable_type</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;        </span></span>
-<span><span class="co">#&gt;  1 dx_icd10  I10   condition    </span></span>
-<span><span class="co">#&gt;  2 dx_icd10  I11   condition    </span></span>
-<span><span class="co">#&gt;  3 dx_icd10  I110  condition    </span></span>
-<span><span class="co">#&gt;  4 dx_icd10  I119  condition    </span></span>
-<span><span class="co">#&gt;  5 dx_icd10  I12   condition    </span></span>
-<span><span class="co">#&gt;  6 dx_icd10  I120  condition    </span></span>
-<span><span class="co">#&gt;  7 dx_icd10  I129  condition    </span></span>
-<span><span class="co">#&gt;  8 dx_icd10  I13   condition    </span></span>
-<span><span class="co">#&gt;  9 dx_icd10  I130  condition    </span></span>
-<span><span class="co">#&gt; 10 dx_icd10  I131  condition    </span></span>
-<span><span class="co">#&gt; # ℹ 13 more rows</span></span>
-<span></span>
-<span><span class="co"># Complement with icd package to look up code explanations</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">icd</span><span class="op">)</span> <span class="co"># for as.icd9 / as.icd10 / explain_code functions</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span> <span class="co"># for map / set_names / enframe functions</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'dx_icd10'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">as.icd10</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">set_names</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">map_chr</span><span class="op">(</span><span class="op">~</span><span class="fu">explain_code</span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">enframe</span><span class="op">(</span>name <span class="op">=</span> <span class="st">'code'</span>, value <span class="op">=</span> <span class="st">'explanation'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 23 × 2</span></span>
-<span><span class="co">#&gt;    code  explanation                                                            </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt; &lt;chr&gt;                                                                  </span></span>
-<span><span class="co">#&gt;  1 I10   Essential (primary) hypertension                                       </span></span>
-<span><span class="co">#&gt;  2 I11   Hypertensive heart disease                                             </span></span>
-<span><span class="co">#&gt;  3 I110  Hypertensive heart disease with heart failure                          </span></span>
-<span><span class="co">#&gt;  4 I119  Hypertensive heart disease without heart failure                       </span></span>
-<span><span class="co">#&gt;  5 I12   Hypertensive chronic kidney disease                                    </span></span>
-<span><span class="co">#&gt;  6 I120  Hypertensive chronic kidney disease with stage 5 chronic kidney diseas…</span></span>
-<span><span class="co">#&gt;  7 I129  Hypertensive chronic kidney disease with stage 1 through stage 4 chron…</span></span>
-<span><span class="co">#&gt;  8 I13   Hypertensive heart and chronic kidney disease                          </span></span>
-<span><span class="co">#&gt;  9 I130  Hypertensive heart and chronic kidney disease with heart failure and s…</span></span>
-<span><span class="co">#&gt; 10 I131  Hypertensive heart and chronic kidney disease without heart failure    </span></span>
-<span><span class="co">#&gt; # ℹ 13 more rows</span></span>
-<span></span>
-<span><span class="co"># Retrieve generic drug names for ACE inhibitors (version 2)</span></span>
-<span><span class="fu"><a href="reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">'acei_v2'</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "FOSINIPRIL"  </span></span>
-<span><span class="co">#&gt;  [6] "LISINOPRIL"   "MOEXIPRIL"    "MOEXEPRIL"    "PERINDOPRIL"  "QUINAPRIL"   </span></span>
-<span><span class="co">#&gt; [11] "RAMIPRIL"     "TRANDOLAPRIL"</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(peridefs)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Retrieve ICD-10 hypertension codes as a tibble</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">get_hypertension_v1_codes</span>(<span class="at">code_type =</span> <span class="st">"dx_icd10"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 23 × 4</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;    type     code  priority version</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;  1 dx_icd10 I10          1 v1     </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt;  2 dx_icd10 I11          1 v1     </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt;  3 dx_icd10 I110         1 v1     </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;  4 dx_icd10 I119         1 v1     </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;  5 dx_icd10 I12          1 v1     </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;  6 dx_icd10 I120         1 v1     </span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;  7 dx_icd10 I129         1 v1     </span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  8 dx_icd10 I13          1 v1     </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;  9 dx_icd10 I130         1 v1     </span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 10 dx_icd10 I131         1 v1     </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 13 more rows</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co"># Complement with icd package to look up code explanations</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="fu">library</span>(icd) <span class="co"># for as.icd9 / as.icd10 / explain_code functions</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># for mutate / map_chr functions</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="fu">get_hypertension_v1_codes</span>(<span class="at">code_type =</span> <span class="st">'dx_icd10'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">explanation =</span> <span class="fu">map_chr</span>(code, <span class="sc">~</span><span class="fu">explain_code</span>(<span class="fu">as.icd10</span>(.x))))</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; # A tibble: 23 × 5</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;    type     code  priority version explanation                                                                                               </span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;    &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;                                                                                                     </span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;  1 dx_icd10 I10          1 v1      Essential (primary) hypertension                                                                          </span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;  2 dx_icd10 I11          1 v1      Hypertensive heart disease                                                                                </span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt;  3 dx_icd10 I110         1 v1      Hypertensive heart disease with heart failure                                                             </span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;  4 dx_icd10 I119         1 v1      Hypertensive heart disease without heart failure                                                          </span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt;  5 dx_icd10 I12          1 v1      Hypertensive chronic kidney disease                                                                       </span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt;  6 dx_icd10 I120         1 v1      Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease        </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt;  7 dx_icd10 I129         1 v1      Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified c…</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt;  8 dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease                                                             </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt;  9 dx_icd10 I130         1 v1      Hypertensive heart and chronic kidney disease with heart failure and stage 1 through stage 4 chronic kidn…</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; 10 dx_icd10 I131         1 v1      Hypertensive heart and chronic kidney disease without heart failure                                       </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; # ℹ 13 more rows</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co"># Retrieve generic drug names for ACE inhibitors (version 2)</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="fu">get_hypertension_generics</span>(<span class="at">component =</span> <span class="st">'acei_v2'</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; # A tibble: 31 × 6</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt;    generic                        brand     priority condition class version</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;                          &lt;list&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  </span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt;  1 AMLODIPINE BESYLATE/BENAZEPRIL &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt;  2 BENAZEPRIL                     &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt;  3 BENAZEPRIL HCL                 &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt;  4 BENAZEPRIL/HYDROCHLOROTHIAZIDE &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt;  5 CAPTOPRIL                      &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt;  6 CAPTOPRIL/HYDROCHLOROTHIAZIDE  &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt;  7 ENALAPRIL                      &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt;  8 ENALAPRIL MALEATE              &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt;  9 ENALAPRIL MALEATE/FELODIPINE   &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt; 10 ENALAPRIL MALEATE/HCTZ         &lt;chr [0]&gt;        1 &lt;NA&gt;      acei  v2     </span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt; # ℹ 21 more rows</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="specs">Specs<a class="anchor" aria-label="anchor" href="#specs"></a>
 </h2>
 <p><code>peridefs</code> is built on an R6 back-end that provides <code>specs</code> for conditions and drug classes. You can work directly with our exported specs if the <code>get_</code> functions don’t provide exactly what you’re looking for.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># the spec objects all have a built-in print method that</span></span>
-<span><span class="co"># gives a helpful summary and recommended method for </span></span>
-<span><span class="co"># defining the given condition.</span></span>
-<span><span class="va">spec_htn_v1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ── Hypertension (v1) ───────────────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; Condition: `htn`</span></span>
-<span><span class="co">#&gt; Condition def:</span></span>
-<span><span class="co">#&gt; ℹ Any of the following:</span></span>
-<span><span class="co">#&gt; • ≥1 inpatient claim with an ICD-9 discharge diagnosis of 401.x, 403.0x,</span></span>
-<span><span class="co">#&gt;   403.1x, or 403.9x, or ICD-10 discharge diagnosis code of I10, I11.x, I12.x,</span></span>
-<span><span class="co">#&gt;   I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position.</span></span>
-<span><span class="co">#&gt; • ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Code sets:</span></span>
-<span><span class="co">#&gt;   `dx_icd9`: 13 condition / 0 outcome codes</span></span>
-<span><span class="co">#&gt;   `dx_icd10`: 23 condition / 0 outcome codes</span></span>
-<span></span>
-<span><span class="co"># just like get_htn_v1_codes() above</span></span>
-<span><span class="va">spec_htn_v1</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd9</span></span>
-<span><span class="co">#&gt;  [1] "401"   "4010"  "4011"  "4019"  "4030"  "40300" "40301" "4031"  "40310"</span></span>
-<span><span class="co">#&gt; [10] "40311" "4039"  "40390" "40391"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I10"   "I11"   "I110"  "I119"  "I12"   "I120"  "I129"  "I13"   "I130" </span></span>
-<span><span class="co">#&gt; [10] "I131"  "I1310" "I1311" "I132"  "I15"   "I150"  "I151"  "I152"  "I158" </span></span>
-<span><span class="co">#&gt; [19] "I159"  "I16"   "I160"  "I161"  "I169"</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># the spec objects all have a built-in print method that</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># gives a helpful summary and recommended method for </span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># defining the given condition.</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>spec_hypertension_v1</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; ── Hypertension (v1) ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; Condition: `hypertension`</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; Condition def:</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ℹ Any of the following:</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; • ≥1 inpatient claim with an ICD-9 discharge diagnosis of 401.x, 403.0x, 403.1x, or 403.9x, or ICD-10 discharge diagnosis code of I10,</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;   I11.x, I12.x, I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position.</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; • ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days apart.</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; • ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; Code sets:</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt;   `dx_icd9`: 13 condition / 0 outcome codes</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt;   `dx_icd10`: 23 condition / 0 outcome codes</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># just like get_hypertension_v1_codes() above</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>spec_hypertension_v1<span class="sc">$</span><span class="fu">get_codes</span>()</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; # A tibble: 36 × 4</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt;    type    code  priority version</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;  </span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;  1 dx_icd9 401          1 v1     </span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt;  2 dx_icd9 4010         1 v1     </span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt;  3 dx_icd9 4011         1 v1     </span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;  4 dx_icd9 4019         1 v1     </span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt;  5 dx_icd9 4030         1 v1     </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt;  6 dx_icd9 40300        1 v1     </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt;  7 dx_icd9 40301        1 v1     </span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;  8 dx_icd9 4031         1 v1     </span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt;  9 dx_icd9 40310        1 v1     </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; 10 dx_icd9 40311        1 v1     </span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; # ℹ 26 more rows</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="safety">Safety<a class="anchor" aria-label="anchor" href="#safety"></a>
@@ -190,7 +200,7 @@
 <p>These safety features are a work in progress, but the vision is as follows:</p>
 <ul>
 <li><p>We have tests for each condition that assert the code sets are equal to static vectors. These tests ensure that package updates will never inadvertently overwrite existing code sets, meaning your analyses will never be unexplicably changed by our updates to the package.</p></li>
-<li><p>When we make updates to a condition, we simply add a new spec (e.g., <code>spec_htn_v1</code>, <code>spec_htn_v2</code>, <code>spec_htn_v3</code>, etc. and throw a once-per-session warning if you are using an older version of a definition.</p></li>
+<li><p>When we make updates to a condition, we simply add a new spec (e.g., <code>spec_hypertension_v1</code>, <code>spec_hypertension_v2</code>, <code>spec_hypertension_v3</code>, etc. and throw a once-per-session warning if you are using an older version of a definition.</p></li>
 </ul>
 </div>
 </div>
@@ -205,8 +215,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -236,7 +246,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -1,8 +1,8 @@
 # R6 class for drug class specifications
 
-Stores the generic drug names (GNNs), NDC codes, and narrative
-description for a single version of a drug class definition. Each
-version is a distinct object (e.g., `spec_acei_v1`, `spec_acei_v2`).
+Stores the generic drug names (GNNs) and narrative description for a
+single version of a drug class definition. Each version is a distinct
+object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 
 ## Active bindings
 
@@ -22,13 +22,11 @@ version is a distinct object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 
 ### Public methods
 
-- [`DrugSpec$new()`](#method-DrugSpec-new)
+- [`DrugSpec$new()`](#method-DrugSpec-initialize)
 
 - [`DrugSpec$print()`](#method-DrugSpec-print)
 
 - [`DrugSpec$get_generics()`](#method-DrugSpec-get_generics)
-
-- [`DrugSpec$get_codes()`](#method-DrugSpec-get_codes)
 
 - [`DrugSpec$get_defs()`](#method-DrugSpec-get_defs)
 
@@ -36,7 +34,7 @@ version is a distinct object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DrugSpec$new()`
 
 Create a new `DrugSpec`.
 
@@ -47,9 +45,11 @@ Create a new `DrugSpec`.
       label,
       defs = NULL,
       generic_names = character(0L),
-      ndc = character(0L),
-      version = NULL,
-      versions = NULL
+      generic_names_probable = character(0L),
+      generic_names_cautious = character(0L),
+      brand_names = list(),
+      generic_defs = NULL,
+      version = NULL
     )
 
 #### Arguments
@@ -68,23 +68,68 @@ Create a new `DrugSpec`.
 
 - `generic_names`:
 
-  Character vector of GNN drug names.
+  Character vector of GNN drug names that are single-indication and
+  aligned with, and FDA-approved for, this drug class's indication.
+  Stored at `priority = 1` (core).
 
-- `ndc`:
+- `generic_names_probable`:
 
-  Character vector of NDC codes.
+  Character vector of GNN drug names that have more than one indication
+  (e.g., also FDA-approved, or widely used off-label, for a different
+  condition) in addition to this drug class's indication. Stored at
+  `priority = 2` (probable).
+
+- `generic_names_cautious`:
+
+  Character vector of GNN drug names that are included in this drug
+  class despite not having their expected indication approved in the US
+  (e.g., approved for a related but distinct condition, or not marketed
+  in the US at all). Stored at `priority = 3` (cautious).
+
+- `brand_names`:
+
+  Optional named list mapping a GNN drug name (must appear in
+  `generic_names`, `generic_names_probable`, or
+  `generic_names_cautious`) to one or more brand name strings, e.g.
+  `list(SEMAGLUTIDE = "Ozempic", "PAROXETINE MESYLATE" = c("Brisdelle", "Pexeva"))`.
+  Generics with no entry get an empty brand vector. Stored as a
+  list-column (`brand`) in `get_generics()` output, since a single
+  generic can map to zero, one, or multiple brands. Ignored (and must be
+  left empty) if `generic_defs` is supplied.
+
+- `generic_defs`:
+
+  Optional alternative to
+  `generic_names`/`generic_names_probable`/`generic_names_cautious`/
+  `brand_names`, for drug classes whose generics don't all map to a
+  single condition/indication context (e.g. a drug that's core for one
+  condition but cautious for another). A data frame/tibble with required
+  columns `generic` (character) and `priority` (integer, `1`/`2`/`3`),
+  and optional columns `condition` (character; `NA` if omitted, meaning
+  "not condition-specific") and `brand` (character; `NA` if omitted or
+  unknown). The same generic may appear in multiple rows with different
+  `priority`/`condition` combinations (e.g. finerenone at priority 1 for
+  `"ckd"` and priority 3 for `"hypertension"`), and multiple brands for
+  one `(generic, priority, condition)` combination are expressed as
+  duplicate rows differing only in `brand`:
+
+      tibble::tribble(
+        ~generic,       ~priority, ~condition,     ~brand,
+        "FINERENONE",   1,         "ckd",          "Kerendia",
+        "FINERENONE",   3,         "hypertension", "Kerendia",
+        "EPLERENONE",   2,         "hypertension", "Inspra"
+      )
+
+  Cannot be combined with `generic_names`/`generic_names_probable`/
+  `generic_names_cautious`/`brand_names`.
 
 - `version`:
 
   Optional version label string, e.g. `"v1"`.
 
-- `versions`:
-
-  Deprecated. Use `defs`/`generic_names`/`version` directly.
-
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `DrugSpec$print()`
 
 Print a summary of the spec.
 
@@ -94,35 +139,42 @@ Print a summary of the spec.
 
 ------------------------------------------------------------------------
 
-### Method `get_generics()`
+### `DrugSpec$get_generics()`
 
-Retrieve generic drug names (GNNs).
-
-#### Usage
-
-    DrugSpec$get_generics()
-
-#### Returns
-
-Character vector of GNN strings.
-
-------------------------------------------------------------------------
-
-### Method `get_codes()`
-
-Retrieve NDC codes.
+Retrieve generic (and brand) drug names as a tidy data frame.
 
 #### Usage
 
-    DrugSpec$get_codes()
+    DrugSpec$get_generics(priority = 1L, condition = NULL)
+
+#### Arguments
+
+- `priority`:
+
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
+
+- `condition`:
+
+  Optional character vector subsetting to specific condition(s) (only
+  meaningful for specs built with `generic_defs`; see DrugSpec\$new()).
+  `NULL` (default) applies no condition filtering. When supplied, rows
+  with a `condition` in `condition`, and rows with `condition = NA` (not
+  condition-specific), are both included.
 
 #### Returns
 
-Character vector of NDC codes (empty until populated).
+A tibble with columns `generic`, `brand` (a list-column of character
+vectors — `character(0)` when a generic has no known brand, length 1+
+otherwise), `priority`, `condition` (`NA` unless the spec was built with
+`generic_defs`), `class`, and `version`. Use
+`tidyr::unnest(result, brand, keep_empty = TRUE)` to get one row per
+brand (this drops the generic entirely for a plain `unnest()` without
+`keep_empty = TRUE`, since most generics have no brand on record).
 
 ------------------------------------------------------------------------
 
-### Method [`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)
+### `DrugSpec$get_defs()`
 
 Retrieve the narrative drug class description.
 
@@ -136,7 +188,7 @@ Character string, or `NULL`.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DrugSpec$clone()`
 
 The objects of this class are cloneable with this method.
 

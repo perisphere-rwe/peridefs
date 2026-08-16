@@ -16,11 +16,13 @@ Accessor functions for condition specs.
 
   Logical. Return decimal-format codes.
 
-- format:
+- priority:
 
-  `"list"` (default) or `"tibble"`.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 - component:
 
-  For composite specs: a named component (e.g. `"chd_v1"`), or `"all"`
-  to union all components. For leaf specs, not used.
+  For composite specs: optional named component (e.g. `"chd_v1"`).
+  `NULL` (default) or `"all"` returns every component. For leaf specs,
+  not used.

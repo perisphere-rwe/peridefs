@@ -19,9 +19,10 @@ objects, e.g.:
       cerebrovasc_disease_v1 = spec_cerebrovasc_disease_v1
     )
 
-The `component` argument is **required** when calling `get_codes()` or
-[`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md).
-The `variable_type` argument is forwarded to the component spec, so both
+The `component` argument is optional when calling `get_codes()` or
+[`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md);
+omitting it (or passing `"all"`) returns every component. The
+`variable_type` argument is forwarded to the component spec, so both
 condition and outcome codes are accessible.
 
 ## Active bindings
@@ -42,7 +43,7 @@ condition and outcome codes are accessible.
 
 ### Public methods
 
-- [`CompositeCodeSpec$new()`](#method-CompositeCodeSpec-new)
+- [`CompositeCodeSpec$new()`](#method-CompositeCodeSpec-initialize)
 
 - [`CompositeCodeSpec$print()`](#method-CompositeCodeSpec-print)
 
@@ -58,7 +59,7 @@ condition and outcome codes are accessible.
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `CompositeCodeSpec$new()`
 
 Create a new `CompositeCodeSpec`.
 
@@ -98,7 +99,7 @@ Create a new `CompositeCodeSpec`.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `CompositeCodeSpec$print()`
 
 Print a summary of the composite spec.
 
@@ -108,7 +109,7 @@ Print a summary of the composite spec.
 
 ------------------------------------------------------------------------
 
-### Method `components()`
+### `CompositeCodeSpec$components()`
 
 Return the flat named component list.
 
@@ -124,7 +125,7 @@ objects.
 
 ------------------------------------------------------------------------
 
-### Method `keys()`
+### `CompositeCodeSpec$keys()`
 
 Return the code-set keys available across all components.
 
@@ -138,9 +139,9 @@ Character vector of unique key strings.
 
 ------------------------------------------------------------------------
 
-### Method `get_codes()`
+### `CompositeCodeSpec$get_codes()`
 
-Retrieve codes from a named component.
+Retrieve codes from one or more components as a tidy data frame.
 
 #### Usage
 
@@ -149,15 +150,16 @@ Retrieve codes from a named component.
       code_type = NULL,
       variable_type = c("condition", "outcome"),
       periods = FALSE,
-      format = c("list", "tibble")
+      priority = 1L
     )
 
 #### Arguments
 
 - `component`:
 
-  **Required.** Name of a component, e.g. `"chd_v1"`. Print the spec to
-  see available names.
+  Optional component name(s), e.g. `"chd_v1"`. `NULL` (default) or
+  `"all"` returns every component, with a `class` column distinguishing
+  them.
 
 - `code_type`:
 
@@ -171,19 +173,22 @@ Retrieve codes from a named component.
 
   Logical. `FALSE` (default) = short format.
 
-- `format`:
+- `priority`:
 
-  `"list"` (default) or `"tibble"`.
+  Integer vector subsetting confidence tiers to include. Default `1`.
 
 #### Returns
 
-Named list or tibble of codes.
+A tibble with columns `type`, `code`, `priority`, `version`, and `class`
+(the component's own condition identifier, e.g. `"chd"` – not the
+versioned component key, since `version` already captures that).
 
 ------------------------------------------------------------------------
 
-### Method [`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)
+### `CompositeCodeSpec$get_defs()`
 
-Retrieve the narrative algorithm description from a named component.
+Retrieve the narrative algorithm description from one or more
+components.
 
 #### Usage
 
@@ -196,7 +201,8 @@ Retrieve the narrative algorithm description from a named component.
 
 - `component`:
 
-  **Required.** Component name.
+  Optional component name. `NULL` (default) or `"all"` renders every
+  component's description.
 
 - `variable_type`:
 
@@ -204,11 +210,12 @@ Retrieve the narrative algorithm description from a named component.
 
 #### Returns
 
-Character string, or `NULL`.
+Character string, or (for `"all"`/`NULL`) an invisible named list
+rendered to the console.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `CompositeCodeSpec$clone()`
 
 The objects of this class are cloneable with this method.
 

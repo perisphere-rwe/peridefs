@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,36 +94,29 @@ easy access to these validated definitions.</p>
 </h3>
 <p>Each condition has one or more
 <code>get_&lt;condition&gt;_vX_codes()</code> functions — one per
-algorithm version. By default the function returns a named list with one
-element per code type:</p>
+algorithm version. Every <code>get_*</code> function in
+<code>peridefs</code> returns a tidy data frame:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd9</span></span>
-<span><span class="co">#&gt;  [1] "401"   "4010"  "4011"  "4019"  "4030"  "40300" "40301" "4031"  "40310"</span></span>
-<span><span class="co">#&gt; [10] "40311" "4039"  "40390" "40391"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I10"   "I11"   "I110"  "I119"  "I12"   "I120"  "I129"  "I13"   "I130" </span></span>
-<span><span class="co">#&gt; [10] "I131"  "I1310" "I1311" "I132"  "I15"   "I150"  "I151"  "I152"  "I158" </span></span>
-<span><span class="co">#&gt; [19] "I159"  "I16"   "I160"  "I161"  "I169"</span></span></code></pre></div>
-<p>Pass <code>format = "tibble"</code> to get a tidy data frame
-instead</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"tibble"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 3</span></span></span>
-<span><span class="co">#&gt;    code_type code  variable_type</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd9   401   condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd9   4010  condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd9   4011  condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd9   4019  condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd9   4030  condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd9   40300 condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd9   40301 condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd9   4031  condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd9   40310 condition    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd9   40311 condition    </span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 4</span></span></span>
+<span><span class="co">#&gt;    type    code  priority version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd9 401          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd9 4010         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd9 4011         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd9 4019         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd9 4030         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd9 40300        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd9 40301        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd9 4031         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd9 40310        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd9 40311        1 v1     </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more rows</span></span></span></code></pre></div>
+<p>The <code>priority</code> column reflects our confidence that a code
+belongs in the definition (<code>1</code> = core, <code>2</code> =
+probable, <code>3</code> = cautious); by default only
+<code>priority = 1</code> rows are returned. The <code>version</code>
+column identifies which version of the spec produced each row.</p>
 <div class="section level4">
 <h4 id="selecting-a-code-type">Selecting a code type<a class="anchor" aria-label="anchor" href="#selecting-a-code-type"></a>
 </h4>
@@ -133,17 +126,28 @@ of codes, use the <code>code_type</code> argument to retrieve a filtered
 code list. Supprted values are <code>"dx_icd9"</code>,
 <code>"dx_icd10"</code>, <code>"hcpcs"</code>, <code>"proc_icd9"</code>,
 and <code>"proc_icd10"</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I10"   "I11"   "I110"  "I119"  "I12"   "I120"  "I129"  "I13"   "I130" </span></span>
-<span><span class="co">#&gt; [10] "I131"  "I1310" "I1311" "I132"  "I15"   "I150"  "I151"  "I152"  "I158" </span></span>
-<span><span class="co">#&gt; [19] "I159"  "I16"   "I160"  "I161"  "I169"</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 4</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I110         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I119         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I120         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I129         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I130         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I131         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
 <p>Note that if you ask for a code type that isn’t stored in the object,
-you get an empty list.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'proc_icd10'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; named list()</span></span></code></pre></div>
+you get an empty tibble.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'proc_icd10'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 variables: type &lt;chr&gt;, code &lt;chr&gt;, priority &lt;int&gt;, version &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="adding-periods-to-codes">Adding periods to codes<a class="anchor" aria-label="anchor" href="#adding-periods-to-codes"></a>
@@ -151,12 +155,22 @@ you get an empty list.</p>
 <p>Codes are stored in short format (no periods, i.e., <code>.</code>)
 as this is a common format in claims data. Set
 <code>periods = TRUE</code> to add them to your codes:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span>, periods <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I10"    "I11"    "I11.0"  "I11.9"  "I12"    "I12.0"  "I12.9"  "I13"   </span></span>
-<span><span class="co">#&gt;  [9] "I13.0"  "I13.1"  "I13.10" "I13.11" "I13.2"  "I15"    "I15.0"  "I15.1" </span></span>
-<span><span class="co">#&gt; [17] "I15.2"  "I15.8"  "I15.9"  "I16"    "I16.0"  "I16.1"  "I16.9"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span>, periods <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 4</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I11.0        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I11.9        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I12.0        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I12.9        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I13.0        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I13.1        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
 <p>Note that this feature is not perfect - it just adds a period after
 the third character. Periods appear after the third character in ICD-10
 but may appear after the fourth in ICD-9. Most of our analyses focus on
@@ -170,13 +184,22 @@ exactly right is not a high priority at the moment.</p>
 <strong>condition</strong> (history / comorbidity lookback) vs. an
 <strong>outcome</strong> (new event). Use <code>variable_type</code> to
 select one:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hf_v1_codes.html">get_hf_v1_codes</a></span><span class="op">(</span>variable_type <span class="op">=</span> <span class="st">"outcome"</span>, code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I110"   "I130"   "I132"   "I501"   "I5020"  "I5021"  "I5022"  "I5023" </span></span>
-<span><span class="co">#&gt;  [9] "I5030"  "I5031"  "I5032"  "I5033"  "I5040"  "I5041"  "I5042"  "I5043" </span></span>
-<span><span class="co">#&gt; [17] "I509"   "I50810" "I50814" "I50811" "I50812" "I50813" "I5082"  "I5083" </span></span>
-<span><span class="co">#&gt; [25] "I5084"  "I5089"</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 4</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I110         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I130         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I132         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I501         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I5020        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I5021        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I5022        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I5023        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I5030        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I5031        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more rows</span></span></span></code></pre></div>
 <p>The default (<code>variable_type = "condition"</code>) retrieves the
 condition definition.</p>
 </div>
@@ -190,10 +213,11 @@ named component specs rather than a single code set.
 (CHD), stroke, lower extremity artery disease (LEAD) / peripheral
 arterial disease (PAD), and cerebrovascular disease into a single
 composition.</p>
-<p>For composite specs, the <code>component</code> argument is
-<strong>required</strong>. Print the spec to see all available component
-names:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>For composite specs, the <code>component</code> argument is optional.
+Omitting it (or passing <code>"all"</code>) returns every component at
+once, distinguished by a <code>class</code> column. Print the spec to
+see all available component names:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spec_ascvd</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Atherosclerotic Cardiovascular Disease (ASCVD) </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">──────────────────</span></span></span>
@@ -203,28 +227,34 @@ names:</p>
 <span><span class="co">#&gt; (PAD), and cerebrovascular disease</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Components:</span></span></span>
 <span><span class="co">#&gt;   `chd_v1`: Coronary Heart Disease</span></span>
-<span><span class="co">#&gt;   `chd_v2`: Coronary Heart Disease</span></span>
 <span><span class="co">#&gt;   `stroke_v1`: Stroke (Any)</span></span>
 <span><span class="co">#&gt;   `lead_pad_v1`: lower extremity artery disease (LEAD) / peripheral artery</span></span>
 <span><span class="co">#&gt;   disease (PAD)</span></span>
 <span><span class="co">#&gt;   `cerebrovasc_disease_v1`: Cerebrovascular Disease</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"chd_v1"</span>, <span style="color: #0000BB;">"chd_v2"</span>, <span style="color: #0000BB;">"stroke_v1"</span>, <span style="color: #0000BB;">"lead_pad_v1"</span>, and</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"chd_v1"</span>, <span style="color: #0000BB;">"stroke_v1"</span>, <span style="color: #0000BB;">"lead_pad_v1"</span>, and</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"cerebrovasc_disease_v1"</span> in `get_*()` functions.</span></span></code></pre></div>
 <p>Retrieve codes for a single component:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_ascvd_codes.html">get_ascvd_codes</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"chd_v1"</span>, code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $dx_icd10</span></span>
-<span><span class="co">#&gt;  [1] "I21"    "I210"   "I2101"  "I2102"  "I2109"  "I211"   "I2111"  "I2119" </span></span>
-<span><span class="co">#&gt;  [9] "I212"   "I2121"  "I2129"  "I213"   "I214"   "I219"   "I21A"   "I21A1" </span></span>
-<span><span class="co">#&gt; [17] "I21A9"  "I22"    "I220"   "I221"   "I222"   "I228"   "I229"   "I2510" </span></span>
-<span><span class="co">#&gt; [25] "I25810" "I25811" "I25812" "I253"   "I2541"  "I2542"  "Z951"   "Z9861" </span></span>
-<span><span class="co">#&gt; [33] "I200"   "I201"   "I208"   "I209"   "I240"   "I241"   "I248"   "I252"  </span></span>
-<span><span class="co">#&gt; [41] "I255"   "I2582"  "I2583"  "I2584"  "I2589"  "I259"</span></span></code></pre></div>
-<p>Use <code>component = "all"</code> to get the union of every
-component’s codes:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_ascvd_codes.html">get_ascvd_codes</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"all"</span>, code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 46 × 5</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version class</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I21          1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I210         1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I2101        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I2102        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I2109        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I211         1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I2111        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I2119        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I212         1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I2121        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 36 more rows</span></span></span></code></pre></div>
+<p>Omit <code>component</code> (or pass <code>"all"</code>) to get every
+component’s codes at once:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_ascvd_codes.html">get_ascvd_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 609</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="reading-algorithm-definitions">Reading algorithm definitions<a class="anchor" aria-label="anchor" href="#reading-algorithm-definitions"></a>
@@ -233,16 +263,17 @@ component’s codes:</p>
 You also need to know how to apply them.
 <code>get_&lt;condition&gt;_vX_defs()</code> provides a description of
 the algorithm used to define each condition:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_htn_v1_defs.html">get_htn_v1_defs</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_defs.html">get_hypertension_v1_defs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Any of the following:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">403.1x</span>, or <span style="font-weight: bold;">403.9x</span>, or ICD-10 discharge diagnosis code of <span style="font-weight: bold;">I10</span>, <span style="font-weight: bold;">I11.x</span>, <span style="font-weight: bold;">I12.x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span></code></pre></div>
+<span><span class="co">#&gt;   apart.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)</span></span></code></pre></div>
 <p>For composite specs, pass the component name:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_ascvd_defs.html">get_ascvd_defs</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"chd_v1"</span>, variable_type <span class="op">=</span> <span class="st">"condition"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Any of the following:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 diagnosis code of <span style="font-weight: bold;">410.xx</span>–<span style="font-weight: bold;">414.xx</span>, <span style="font-weight: bold;">V45.81</span>, or</span></span>
@@ -257,32 +288,15 @@ the algorithm used to define each condition:</p>
 <h3 id="versioning">Versioning<a class="anchor" aria-label="anchor" href="#versioning"></a>
 </h3>
 <p>Algorithm versions are encoded directly in the spec and function
-names using a <code>_vX</code> suffix. <code>spec_htn_v1</code> and
-<code>spec_htn_v2</code> are two distinct objects; the corresponding
-getters are <code><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes()</a></code> and
-<code><a href="../reference/get_htn_v1_codes.html">get_htn_v2_codes()</a></code>. When a condition has only one version
-(e.g., <code>spec_hf_v1</code>), there is only one getter.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># v1 and v2 share the same code sets for HTN — only the defs differ</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="../reference/get_htn_v1_codes.html">get_htn_v2_codes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/get_htn_v1_defs.html">get_htn_v1_defs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Any of the following:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
-<span><span class="co">#&gt;   <span style="font-weight: bold;">403.1x</span>, or <span style="font-weight: bold;">403.9x</span>, or ICD-10 discharge diagnosis code of <span style="font-weight: bold;">I10</span>, <span style="font-weight: bold;">I11.x</span>, <span style="font-weight: bold;">I12.x</span>,</span></span>
-<span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span>
-<span><span class="fu"><a href="../reference/get_htn_v1_defs.html">get_htn_v2_defs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Any of the following:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
-<span><span class="co">#&gt;   <span style="font-weight: bold;">403.1x</span>, or <span style="font-weight: bold;">403.9x</span>, or ICD-10 discharge diagnosis code of <span style="font-weight: bold;">I10</span>, <span style="font-weight: bold;">I11.x</span>, <span style="font-weight: bold;">I12.x</span>,</span></span>
-<span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 pharmacy fills for an antihypertensive medication (see</span></span>
-<span><span class="co">#&gt;   spec_antihypertensive)</span></span></code></pre></div>
+names using a <code>_vX</code> suffix (e.g., <code>spec_acei_v1</code>,
+<code>spec_acei_v2</code>), used when a spec’s codes or generics
+genuinely change between versions. Conditions like hypertension
+previously had multiple versions that shared identical codes and
+differed only in the narrative definition (e.g., whether a medication
+criterion was included) — those have been collapsed into a single
+version, so
+<code>spec_hypertension_v1</code>/<code><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes()</a></code>/<code><a href="../reference/get_hypertension_v1_defs.html">get_hypertension_v1_defs()</a></code>
+always reflect the most current definition.</p>
 </div>
 <div class="section level3">
 <h3 id="spec-objects">Spec objects<a class="anchor" aria-label="anchor" href="#spec-objects"></a>
@@ -290,11 +304,11 @@ getters are <code><a href="../reference/get_htn_v1_codes.html">get_htn_v1_codes(
 <p>Behind every <code>get_*</code> function is a <code>spec_*</code>
 data object. You can inspect it directly to see codes, definitions, and
 (for composites) component names:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spec_htn_v1</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">spec_hypertension_v1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Hypertension</span><span style="color: #555555; font-weight: bold;"> (v1)</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; Condition: `htn`</span></span>
+<span><span class="co">#&gt; Condition: `hypertension`</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Condition def:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Any of the following:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
@@ -302,6 +316,7 @@ data object. You can inspect it directly to see codes, definitions, and
 <span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
 <span><span class="co">#&gt;   apart.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Code sets:</span></span>
 <span><span class="co">#&gt;   `dx_icd9`: 13 condition / 0 outcome codes</span></span>
@@ -314,12 +329,12 @@ data object. You can inspect it directly to see codes, definitions, and
 <code>peridefs</code>, but it can be used to complement it. In
 particular, if you want to look up the explanations of our diagnostic
 codes, <code>icd</code> is helpful and easy to apply:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">icd</span><span class="op">)</span> <span class="co"># for as.icd9 / as.icd10 / explain_code functions</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">peri_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_copd_v1_codes.html">get_copd_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'dx_icd9'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> </span>
+<span><span class="va">peri_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_copd_v1_codes.html">get_copd_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'dx_icd9'</span><span class="op">)</span><span class="op">$</span><span class="va">code</span></span>
 <span></span>
 <span><span class="fu">as.icd9</span><span class="op">(</span><span class="va">peri_codes</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">set_names</span><span class="op">(</span><span class="va">peri_codes</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
@@ -347,7 +362,7 @@ complete list of conditions and drugs.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

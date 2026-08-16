@@ -10,7 +10,9 @@ modify_drug_spec(
   label = NULL,
   defs = NULL,
   generic_names = NULL,
-  ndc = NULL
+  generic_names_probable = NULL,
+  generic_names_cautious = NULL,
+  brand_names = NULL
 )
 ```
 
@@ -32,11 +34,21 @@ modify_drug_spec(
 
 - generic_names:
 
-  Optional replacement GNN character vector.
+  Optional replacement GNN character vector for priority 1 (core).
 
-- ndc:
+- generic_names_probable:
 
-  Optional replacement NDC character vector.
+  Optional replacement GNN character vector for priority 2 (probable).
+
+- generic_names_cautious:
+
+  Optional replacement GNN character vector for priority 3 (cautious).
+
+- brand_names:
+
+  Optional named list mapping a GNN drug name to one or more brand name
+  strings (replaces the full brand mapping for the resulting generic
+  set; unspecified generics keep their existing brand assignment).
 
 ## Value
 

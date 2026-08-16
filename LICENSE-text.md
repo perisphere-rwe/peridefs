@@ -1,3 +1,4 @@
 # License
 
-    Copyright 2026 Perisphere. All rights reserved.
+    YEAR: 2026
+    COPYRIGHT HOLDER: peridefs authors

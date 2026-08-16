@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,13 +69,15 @@
 <dd><p>Logical. Return decimal-format codes.</p></dd>
 
 
-<dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
-<dd><p><code>"list"</code> (default) or <code>"tibble"</code>.</p></dd>
+<dt id="arg-priority">priority<a class="anchor" aria-label="anchor" href="#arg-priority"></a></dt>
+<dd><p>Integer vector subsetting confidence tiers to include
+(<code>1</code> = core, <code>2</code> = probable, <code>3</code> = cautious). Default <code>1</code>.</p></dd>
 
 
 <dt id="arg-component">component<a class="anchor" aria-label="anchor" href="#arg-component"></a></dt>
-<dd><p>For composite specs: a named component (e.g. <code>"chd_v1"</code>),
-or <code>"all"</code> to union all components. For leaf specs, not used.</p></dd>
+<dd><p>For composite specs: optional named component (e.g.
+<code>"chd_v1"</code>). <code>NULL</code> (default) or <code>"all"</code> returns every component. For
+leaf specs, not used.</p></dd>
 
 </dl></div>
 
@@ -87,7 +89,7 @@ or <code>"all"</code> to union all components. For leaf specs, not used.</p></dd
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

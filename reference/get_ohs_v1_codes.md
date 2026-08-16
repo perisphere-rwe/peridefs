@@ -9,8 +9,7 @@ get_ohs_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_ohs_v1_defs(variable_type = c("condition", "outcome"))
@@ -34,17 +33,10 @@ get_ohs_v1_defs(variable_type = c("condition", "outcome"))
   Logical. `FALSE` (default) returns short-format codes (e.g.,
   `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 
-- format:
+- priority:
 
-  `"list"` (default) returns a named list of character vectors.
-  `"tibble"` returns a long-form tibble with columns `code_type`,
-  `code`, and `variable_type`.
-
-- concatenate:
-
-  Logical. `FALSE` (default) returns a named list of character vectors.
-  `TRUE` concatenates all code vectors into a single unnamed character
-  vector. Not compatible with `format = "tibble"`.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 ## See also
 
@@ -54,10 +46,9 @@ get_ohs_v1_defs(variable_type = c("condition", "outcome"))
 
 ``` r
 get_ohs_v1_codes()
-#> $dx_icd9
-#> [1] "27803"
-#> 
-#> $dx_icd10
-#> [1] "E662"
-#> 
+#> # A tibble: 2 × 4
+#>   type     code  priority version
+#>   <chr>    <chr>    <int> <chr>  
+#> 1 dx_icd9  27803        1 v1     
+#> 2 dx_icd10 E662         1 v1     
 ```

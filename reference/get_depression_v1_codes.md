@@ -2,11 +2,8 @@
 
 Returns code sets from a depression
 [CodeSpec](https://perisphere-rwe.github.io/peridefs/reference/CodeSpec.md).
-Two versions are available:
-
-- **v1** (diagnosis only): `get_depression_v1_codes()`
-
-- **v2** (diagnosis + medication): `get_depression_v2_codes()`
+The condition definition is diagnosis-based, with a medication criterion
+(see `spec_depression`) as an alternative qualifying path.
 
 ## Usage
 
@@ -15,21 +12,10 @@ get_depression_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_depression_v1_defs(variable_type = c("condition", "outcome"))
-
-get_depression_v2_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
-)
-
-get_depression_v2_defs(variable_type = c("condition", "outcome"))
 ```
 
 ## Arguments
@@ -50,51 +36,48 @@ get_depression_v2_defs(variable_type = c("condition", "outcome"))
   Logical. `FALSE` (default) returns short-format codes (e.g.,
   `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 
-- format:
+- priority:
 
-  `"list"` (default) returns a named list of character vectors.
-  `"tibble"` returns a long-form tibble with columns `code_type`,
-  `code`, and `variable_type`.
-
-- concatenate:
-
-  Logical. `FALSE` (default) returns a named list of character vectors.
-  `TRUE` concatenates all code vectors into a single unnamed character
-  vector. Not compatible with `format = "tibble"`.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 ## See also
 
-`get_depression_v1_defs()`, `get_depression_v2_codes()`,
-`spec_depression_v1`
+`get_depression_v1_defs()`, `spec_depression_v1`
 
 `get_depression_v1_codes()`
-
-`get_depression_v2_defs()`, `get_depression_v1_codes()`,
-`spec_depression_v2`
-
-`get_depression_v2_codes()`
 
 ## Examples
 
 ``` r
 get_depression_v1_codes()
-#> $dx_icd9
-#>  [1] "29620" "29621" "29622" "29623" "29624" "29625" "29626" "29630" "29631"
-#> [10] "29632" "29633" "29634" "29635" "29636" "29651" "29652" "29653" "29654"
-#> [19] "29655" "29656" "29660" "29661" "29662" "29663" "29664" "29665" "29666"
-#> [28] "29689" "2980"  "3004"  "3091"  "311"  
-#> 
-#> $dx_icd10
-#>  [1] "F329"  "F320"  "F321"  "F322"  "F323"  "F324"  "F325"  "F339"  "F330" 
-#> [10] "F331"  "F332"  "F333"  "F3341" "F3342" "F3331" "F3132" "F314"  "F315" 
-#> [19] "F3175" "F3176" "F3160" "F3161" "F3162" "F3163" "F3164" "F3177" "F3178"
-#> [28] "F3181" "F341"  "F4321"
-#> 
+#> # A tibble: 62 × 4
+#>    type    code  priority version
+#>    <chr>   <chr>    <int> <chr>  
+#>  1 dx_icd9 29620        1 v1     
+#>  2 dx_icd9 29621        1 v1     
+#>  3 dx_icd9 29622        1 v1     
+#>  4 dx_icd9 29623        1 v1     
+#>  5 dx_icd9 29624        1 v1     
+#>  6 dx_icd9 29625        1 v1     
+#>  7 dx_icd9 29626        1 v1     
+#>  8 dx_icd9 29630        1 v1     
+#>  9 dx_icd9 29631        1 v1     
+#> 10 dx_icd9 29632        1 v1     
+#> # ℹ 52 more rows
 get_depression_v1_codes(code_type = "dx_icd10")
-#> $dx_icd10
-#>  [1] "F329"  "F320"  "F321"  "F322"  "F323"  "F324"  "F325"  "F339"  "F330" 
-#> [10] "F331"  "F332"  "F333"  "F3341" "F3342" "F3331" "F3132" "F314"  "F315" 
-#> [19] "F3175" "F3176" "F3160" "F3161" "F3162" "F3163" "F3164" "F3177" "F3178"
-#> [28] "F3181" "F341"  "F4321"
-#> 
+#> # A tibble: 30 × 4
+#>    type     code  priority version
+#>    <chr>    <chr>    <int> <chr>  
+#>  1 dx_icd10 F329         1 v1     
+#>  2 dx_icd10 F320         1 v1     
+#>  3 dx_icd10 F321         1 v1     
+#>  4 dx_icd10 F322         1 v1     
+#>  5 dx_icd10 F323         1 v1     
+#>  6 dx_icd10 F324         1 v1     
+#>  7 dx_icd10 F325         1 v1     
+#>  8 dx_icd10 F339         1 v1     
+#>  9 dx_icd10 F330         1 v1     
+#> 10 dx_icd10 F331         1 v1     
+#> # ℹ 20 more rows
 ```

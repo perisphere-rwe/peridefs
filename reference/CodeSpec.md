@@ -2,7 +2,7 @@
 
 Stores the code sets and narrative algorithm description for a single
 version of a medical condition definition. Each version is a distinct
-object (e.g., `spec_htn_v1`, `spec_htn_v2`).
+object (e.g., `spec_acei_v1`, `spec_acei_v2`).
 
 The spec stores:
 
@@ -41,7 +41,7 @@ The spec stores:
 
 ### Public methods
 
-- [`CodeSpec$new()`](#method-CodeSpec-new)
+- [`CodeSpec$new()`](#method-CodeSpec-initialize)
 
 - [`CodeSpec$print()`](#method-CodeSpec-print)
 
@@ -55,7 +55,7 @@ The spec stores:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `CodeSpec$new()`
 
 Create a new `CodeSpec`.
 
@@ -99,7 +99,7 @@ Create a new `CodeSpec`.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `CodeSpec$print()`
 
 Print a summary of the spec.
 
@@ -109,7 +109,7 @@ Print a summary of the spec.
 
 ------------------------------------------------------------------------
 
-### Method `keys()`
+### `CodeSpec$keys()`
 
 Return code-set keys.
 
@@ -123,9 +123,9 @@ Character vector of keys like `"dx_icd9"`.
 
 ------------------------------------------------------------------------
 
-### Method `get_codes()`
+### `CodeSpec$get_codes()`
 
-Retrieve codes from the spec.
+Retrieve codes from the spec as a tidy data frame.
 
 #### Usage
 
@@ -133,7 +133,7 @@ Retrieve codes from the spec.
       code_type = NULL,
       variable_type = c("condition", "outcome"),
       periods = FALSE,
-      format = c("list", "tibble")
+      priority = 1L
     )
 
 #### Arguments
@@ -146,25 +146,26 @@ Retrieve codes from the spec.
 
 - `variable_type`:
 
-  `"condition"` (default) or `"outcome"`.
+  `"condition"` (default) or `"outcome"`. If the spec has no codes
+  flagged for `"outcome"`, falls back to `"condition"`.
 
 - `periods`:
 
   Logical. If `TRUE`, return codes with decimal periods (e.g.,
   `"401.0"`). Default `FALSE` returns short format (`"4010"`).
 
-- `format`:
+- `priority`:
 
-  `"list"` (default) returns a named list of character vectors;
-  `"tibble"` returns a long-form tibble.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 #### Returns
 
-Named list or tibble of codes.
+A tibble with columns `type`, `code`, `priority`, and `version`.
 
 ------------------------------------------------------------------------
 
-### Method [`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)
+### `CodeSpec$get_defs()`
 
 Retrieve the narrative algorithm description.
 
@@ -185,7 +186,7 @@ type.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `CodeSpec$clone()`
 
 The objects of this class are cloneable with this method.
 

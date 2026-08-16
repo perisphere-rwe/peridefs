@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,11 +83,12 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://perisphere-rwe.github.io/peridefs">peridefs</a></span><span class="op">)</span></span></code></pre></div>
-<p>All drug specs in <code>peridefs</code> are
+<p>Most drug specs in <code>peridefs</code> are
 <strong>composites</strong> — they contain named component specs
 (individual drug classes or versions) rather than a flat GNN list. The
-<code>component</code> argument is required on every drug
-<code>get_*</code> function.</p>
+<code>component</code> argument is optional on every drug
+<code>get_*</code> function; omit it (or pass <code>"all"</code>) to
+retrieve every component at once.</p>
 <table class="table">
 <colgroup>
 <col width="52%">
@@ -99,54 +100,55 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>get_&lt;drug&gt;_generics(component = ...)</code></td>
-<td>Character vector of generic nonproprietary names (GNNs)</td>
+<td><code>get_&lt;condition&gt;_generics(component = ...)</code></td>
+<td>Tibble of generic (and brand, as a list-column) names, with
+<code>priority</code>, <code>condition</code>, <code>class</code>, and
+<code>version</code> columns</td>
 </tr>
 <tr class="even">
-<td><code>get_&lt;drug&gt;_codes(component = ...)</code></td>
-<td>Character vector of NDC codes (typically empty)</td>
-</tr>
-<tr class="odd">
-<td><code>get_&lt;drug&gt;_defs(component = ...)</code></td>
-<td>Narrative description of the component’s drug class definition</td>
+<td><code>get_&lt;condition&gt;_meds_labels(component = ...)</code></td>
+<td>Tibble of each component’s <code>name</code> (key) and
+human-readable <code>label</code>
+(e.g. <code>"ACE Inhibitors"</code>)</td>
 </tr>
 </tbody>
 </table>
 <p>Print any composite spec to see its available component names:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spec_antihypertensive</span></span>
+<code class="sourceCode R"><span><span class="va">spec_hypertension</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Antihypertensive Medications </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; Drug class: `antihypertensive`</span></span>
+<span><span class="co">#&gt; Condition: `hypertension`</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Def:</span> All antihypertensive leaf components across versions (v1 = Perisphere</span></span>
 <span><span class="co">#&gt; list; v2 = FDB). Note for central agents: exclude APRACLONIDINE when matching</span></span>
 <span><span class="co">#&gt; CLONIDINE.</span></span>
 <span><span class="co">#&gt; 25 component(s):</span></span>
 <span><span class="co">#&gt;   `acei_v1`: ACE Inhibitors (10 GNNs)</span></span>
-<span><span class="co">#&gt;   `acei_v2`: ACE Inhibitors (12 GNNs)</span></span>
+<span><span class="co">#&gt;   `acei_v2`: ACE Inhibitors (31 GNNs)</span></span>
 <span><span class="co">#&gt;   `arb_v1`: Angiotensin Receptor Blockers (ARBs) (8 GNNs)</span></span>
-<span><span class="co">#&gt;   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (9 GNNs)</span></span>
-<span><span class="co">#&gt;   `alpha_v1`: Alpha-1 Blockers (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `alpha_beta_v1`: Alpha-Beta Blockers (2 GNNs)</span></span>
+<span><span class="co">#&gt;   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (34 GNNs)</span></span>
+<span><span class="co">#&gt;   `alpha_v1`: Alpha-1 Blockers (7 GNNs)</span></span>
+<span><span class="co">#&gt;   `alpha_beta_v1`: Alpha-Beta Blockers (4 GNNs)</span></span>
 <span><span class="co">#&gt;   `alpha_beta_v2`: Alpha-Beta Blockers (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `cardio_v1`: Beta Blockers (Cardioselective) (4 GNNs)</span></span>
-<span><span class="co">#&gt;   `cardio_vasod_v1`: Beta Blockers (Cardioselective, Vasodilatory) (1 GNNs)</span></span>
+<span><span class="co">#&gt;   `cardio_v1`: Beta Blockers (Cardioselective) (17 GNNs)</span></span>
+<span><span class="co">#&gt;   `cardio_vasod_v1`: Beta Blockers (Cardioselective, Vasodilatory) (2 GNNs)</span></span>
 <span><span class="co">#&gt;   `int_sym_v1`: Beta Blockers (Intrinsic Sympathomimetic Activity) (4 GNNs)</span></span>
-<span><span class="co">#&gt;   `int_sym_v2`: Beta Blockers (Intrinsic Sympathomimetic Activity) (2 GNNs)</span></span>
-<span><span class="co">#&gt;   `noncardio_v1`: Beta Blockers (Noncardioselective) (2 GNNs)</span></span>
-<span><span class="co">#&gt;   `ccb_dhp_v1`: Calcium Channel Blockers (Dihydropyridines) (6 GNNs)</span></span>
-<span><span class="co">#&gt;   `ccb_nondhp_v1`: Calcium Channel Blockers (Non-Dihydropyridines) (2 GNNs)</span></span>
-<span><span class="co">#&gt;   `thiazide_v1`: Diuretics (Thiazide and Thiazide-Type) (6 GNNs)</span></span>
-<span><span class="co">#&gt;   `thiazide_v2`: Diuretics (Thiazide and Thiazide-Type) (8 GNNs)</span></span>
+<span><span class="co">#&gt;   `int_sym_v2`: Beta Blockers (Intrinsic Sympathomimetic Activity) (5 GNNs)</span></span>
+<span><span class="co">#&gt;   `noncardio_v1`: Beta Blockers (Noncardioselective) (10 GNNs)</span></span>
+<span><span class="co">#&gt;   `ccb_dhp_v1`: Calcium Channel Blockers (Dihydropyridines) (17 GNNs)</span></span>
+<span><span class="co">#&gt;   `ccb_nondhp_v1`: Calcium Channel Blockers (Non-Dihydropyridines) (5 GNNs)</span></span>
+<span><span class="co">#&gt;   `thiazide_v1`: Diuretics (Thiazide and Thiazide-Type) (9 GNNs)</span></span>
+<span><span class="co">#&gt;   `thiazide_v2`: Diuretics (Thiazide and Thiazide-Type) (10 GNNs)</span></span>
 <span><span class="co">#&gt;   `loop_v1`: Diuretics (Loop) (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `loop_v2`: Diuretics (Loop) (4 GNNs)</span></span>
+<span><span class="co">#&gt;   `loop_v2`: Diuretics (Loop) (5 GNNs)</span></span>
 <span><span class="co">#&gt;   `ksparing_v1`: Diuretics (Potassium-Sparing) (2 GNNs)</span></span>
-<span><span class="co">#&gt;   `ksparing_v2`: Diuretics (Potassium-Sparing) (4 GNNs)</span></span>
-<span><span class="co">#&gt;   `aldo_v1`: Aldosterone Antagonists (2 GNNs)</span></span>
+<span><span class="co">#&gt;   `ksparing_v2`: Diuretics (Potassium-Sparing) (11 GNNs)</span></span>
+<span><span class="co">#&gt;   `aldo_v1`: Aldosterone Antagonists (6 GNNs)</span></span>
 <span><span class="co">#&gt;   `central_v1`: Centrally Acting Agents (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `central_v2`: Centrally Acting Agents (5 GNNs)</span></span>
-<span><span class="co">#&gt;   `renin_v1`: Direct Renin Inhibitors (1 GNNs)</span></span>
-<span><span class="co">#&gt;   `vasodilators_v1`: Direct Vasodilators (2 GNNs)</span></span>
+<span><span class="co">#&gt;   `central_v2`: Centrally Acting Agents (20 GNNs)</span></span>
+<span><span class="co">#&gt;   `renin_v1`: Direct Renin Inhibitors (8 GNNs)</span></span>
+<span><span class="co">#&gt;   `vasodilators_v1`: Direct Vasodilators (5 GNNs)</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"acei_v1"</span>, <span style="color: #0000BB;">"acei_v2"</span>, <span style="color: #0000BB;">"arb_v1"</span>, <span style="color: #0000BB;">"arb_v2"</span>, <span style="color: #0000BB;">"alpha_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"alpha_beta_v1"</span>, <span style="color: #0000BB;">"alpha_beta_v2"</span>, <span style="color: #0000BB;">"cardio_v1"</span>, <span style="color: #0000BB;">"cardio_vasod_v1"</span>, <span style="color: #0000BB;">"int_sym_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"int_sym_v2"</span>, <span style="color: #0000BB;">"noncardio_v1"</span>, <span style="color: #0000BB;">"ccb_dhp_v1"</span>, <span style="color: #0000BB;">"ccb_nondhp_v1"</span>, <span style="color: #0000BB;">"thiazide_v1"</span>,</span></span>
@@ -158,15 +160,26 @@
 <p>Pass the versioned component name to
 <code>get_*_generics()</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $acei_v1</span></span>
-<span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  </span></span>
-<span><span class="co">#&gt;  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"</span></span></code></pre></div>
-<p>Use <code>component = "all"</code> to retrieve the union of every
-component’s GNNs:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
+<span><span class="co">#&gt;    generic      brand     priority condition class version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> BENAZEPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CAPTOPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ENALAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FOSINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> LISINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> MOEXIPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> PERINDOPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> QUINAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> RAMIPRIL     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRANDOLAPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span></code></pre></div>
+<p>Omit <code>component</code> (or pass <code>"all"</code>) to retrieve
+every component’s GNNs at once, distinguished by the <code>class</code>
+and <code>version</code> columns:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 25</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 205</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="comparing-versions">Comparing versions<a class="anchor" aria-label="anchor" href="#comparing-versions"></a>
 </h3>
@@ -175,80 +188,197 @@ medication list and v2 from First DataBank (FDB), which may add spelling
 variants:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># v1 — Perisphere source</span></span>
-<span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $acei_v1</span></span>
-<span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "LISINOPRIL"  </span></span>
-<span><span class="co">#&gt;  [6] "MOEXIPRIL"    "PERINDOPRIL"  "QUINAPRIL"    "RAMIPRIL"     "TRANDOLAPRIL"</span></span>
+<span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
+<span><span class="co">#&gt;    generic      brand     priority condition class version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> BENAZEPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CAPTOPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ENALAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FOSINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> LISINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> MOEXIPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> PERINDOPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> QUINAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> RAMIPRIL     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRANDOLAPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span>
 <span></span>
 <span><span class="co"># v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)</span></span>
-<span><span class="fu"><a href="../reference/get_antihypertensive_generics.html">get_antihypertensive_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $acei_v2</span></span>
-<span><span class="co">#&gt;  [1] "BENAZEPRIL"   "CAPTOPRIL"    "ENALAPRIL"    "FOSINOPRIL"   "FOSINIPRIL"  </span></span>
-<span><span class="co">#&gt;  [6] "LISINOPRIL"   "MOEXIPRIL"    "MOEXEPRIL"    "PERINDOPRIL"  "QUINAPRIL"   </span></span>
-<span><span class="co">#&gt; [11] "RAMIPRIL"     "TRANDOLAPRIL"</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v2"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 31 × 6</span></span></span>
+<span><span class="co">#&gt;    generic                        brand     priority condition class version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AMLODIPINE BESYLATE/BENAZEPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> BENAZEPRIL                     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> BENAZEPRIL HCL                 <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> BENAZEPRIL/HYDROCHLOROTHIAZIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CAPTOPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CAPTOPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ENALAPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ENALAPRIL MALEATE              <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ENALAPRIL MALEATE/FELODIPINE   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ENALAPRIL MALEATE/HCTZ         <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 21 more rows</span></span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="algorithm-definitions">Algorithm definitions<a class="anchor" aria-label="anchor" href="#algorithm-definitions"></a>
+<h2 id="component-labels">Component labels<a class="anchor" aria-label="anchor" href="#component-labels"></a>
 </h2>
-<p>Each component carries a narrative description of how that drug class
-was identified:</p>
+<p><code><a href="../reference/get_hypertension_generics.html">get_hypertension_meds_labels()</a></code> returns a tibble of each
+component’s <code>name</code> (its key, e.g. <code>"acei_v1"</code>) and
+human-readable <code>label</code> (e.g. <code>"ACE Inhibitors"</code>) —
+not a clinical definition. See [get_hypertension_v1_codes()] for the
+actual diagnostic algorithm; a drug leaf’s own <code>defs</code> field
+is just an internal sourcing note, so it isn’t surfaced here.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/drug_accessors.html">get_antihypertensive_defs</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; From the Perisphere antihypertensive medication list.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_meds_labels</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
+<span><span class="co">#&gt;   name    label         </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> acei_v1 ACE Inhibitors</span></span>
+<span></span>
+<span><span class="co"># Omit component to see every leaf's label at once</span></span>
+<span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_meds_labels</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 25 × 2</span></span></span>
+<span><span class="co">#&gt;    name            label                                             </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> acei_v1         ACE Inhibitors                                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> acei_v2         ACE Inhibitors                                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> arb_v1          Angiotensin Receptor Blockers (ARBs)              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> arb_v2          Angiotensin Receptor Blockers (ARBs)              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> alpha_v1        Alpha-1 Blockers                                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> alpha_beta_v1   Alpha-Beta Blockers                               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> alpha_beta_v2   Alpha-Beta Blockers                               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> cardio_v1       Beta Blockers (Cardioselective)                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> cardio_vasod_v1 Beta Blockers (Cardioselective, Vasodilatory)     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> int_sym_v1      Beta Blockers (Intrinsic Sympathomimetic Activity)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="ndc-codes">NDC codes<a class="anchor" aria-label="anchor" href="#ndc-codes"></a>
+<h2 id="confidence-tiers">Confidence tiers<a class="anchor" aria-label="anchor" href="#confidence-tiers"></a>
 </h2>
-<p>NDC code vectors are currently empty for drug classes. They can be
-added in a future update. The <code>get_&lt;drug&gt;_codes()</code>
-function is reserved for future use or for custom specs you build with
-<code><a href="../reference/drug_spec.html">drug_spec()</a></code>. The primary identification mechanism at the
-moment is through generic names.</p>
+<p>The <code>priority</code> column distinguishes how confident we are
+that a generic name belongs in a drug class definition: <code>1</code>
+(core) is the default and most conservative tier, <code>2</code>
+(probable) covers generics with more than one indication, and
+<code>3</code> (cautious) covers generics without their expected
+indication in the US. Pass <code>priority = 1:3</code> to widen the
+result and include lower-confidence matches.</p>
+</div>
+<div class="section level2">
+<h2 id="brand-names">Brand names<a class="anchor" aria-label="anchor" href="#brand-names"></a>
+</h2>
+<p>Some generics genuinely correspond to more than one brand product —
+most often because the same <code>GNRC_NM</code> covers formulations
+approved for different indications (e.g., semaglutide as Ozempic for
+type 2 diabetes vs. Wegovy for chronic weight management). Because a
+single generic can map to zero, one, or multiple brands,
+<code>brand</code> is stored as a <strong>list-column</strong>: each
+row’s <code>brand</code> value is a character vector, empty
+(<code>character(0)</code>) when no brand is on record.</p>
+<p>Build a small example with <code><a href="../reference/drug_spec.html">drug_spec()</a></code> to see this in
+action:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/drug_spec.html">drug_spec</a></span><span class="op">(</span></span>
+<span>  drug_class    <span class="op">=</span> <span class="st">"example"</span>,</span>
+<span>  label         <span class="op">=</span> <span class="st">"Example GLP-1s"</span>,</span>
+<span>  generic_names_probable <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEMAGLUTIDE"</span>, <span class="st">"TIRZEPATIDE"</span><span class="op">)</span>,</span>
+<span>  generic_names_cautious <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DULAGLUTIDE"</span><span class="op">)</span>,</span>
+<span>  brand_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    SEMAGLUTIDE <span class="op">=</span> <span class="st">"Ozempic"</span>,</span>
+<span>    TIRZEPATIDE <span class="op">=</span> <span class="st">"Mounjaro"</span></span>
+<span>    <span class="co"># DULAGLUTIDE has no brand_names entry, so its brand is character(0)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">example_spec</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span>priority <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">#&gt;   generic     brand     priority condition class   version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SEMAGLUTIDE <span style="color: #949494;">&lt;chr [1]&gt;</span>        2 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TIRZEPATIDE <span style="color: #949494;">&lt;chr [1]&gt;</span>        2 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> DULAGLUTIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        3 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<p>Printing the tibble shows
+<code>&lt;chr [1]&gt;</code>/<code>&lt;chr [0]&gt;</code> for the
+list-column rather than the brand text itself — that’s expected;
+<code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> or indexing into the column (e.g.,
+<code>result$brand[[1]]</code>) shows the actual value(s). To get a
+one-row-per-brand tibble instead, use <code><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">tidyr::unnest()</a></code> with
+<code>keep_empty = TRUE</code> — <strong>without</strong>
+<code>keep_empty = TRUE</code>, <code>unnest()</code> silently drops
+every row with no recorded brand, which is most of them:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_spec</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span>priority <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">brand</span>, keep_empty <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">#&gt;   generic     brand    priority condition class   version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> SEMAGLUTIDE Ozempic         2 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> TIRZEPATIDE Mounjaro        2 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> DULAGLUTIDE <span style="color: #BB0000;">NA</span>              3 <span style="color: #BB0000;">NA</span>        example <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="antidiabetic-drug-classes">Antidiabetic drug classes<a class="anchor" aria-label="anchor" href="#antidiabetic-drug-classes"></a>
 </h2>
-<p><code>spec_antidiabetic</code> groups all oral antidiabetic agents
-and insulin:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spec_antidiabetic</span></span>
+<p><code>spec_diabetes</code> groups all oral antidiabetic agents and
+insulin. Note that <code>class</code> values are unprefixed
+drug-mechanism names (e.g. <code>"biguanide"</code>, not
+<code>"antidiab_biguanide"</code>) — the composite’s
+<code>condition</code> column already supplies the condition context, so
+repeating it in <code>class</code> would be redundant:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">spec_diabetes</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Antidiabetic Medications </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; Drug class: `antidiabetic`</span></span>
+<span><span class="co">#&gt; Condition: `diabetes`</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">Def:</span> All antidiabetic medication subclasses (v1): biguanides, sulfonylureas,</span></span>
 <span><span class="co">#&gt; meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4</span></span>
 <span><span class="co">#&gt; inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies,</span></span>
 <span><span class="co">#&gt; amylin analogues.</span></span>
 <span><span class="co">#&gt; 10 component(s):</span></span>
 <span><span class="co">#&gt;   `biguanide_v1`: Biguanides (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `sulfonylurea_v1`: Sulfonylureas (10 GNNs)</span></span>
+<span><span class="co">#&gt;   `sulfonylurea_v1`: Sulfonylureas (11 GNNs)</span></span>
 <span><span class="co">#&gt;   `meglitinide_v1`: Meglitinides (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `tzd_v1`: Thiazolidinediones (TZDs) (8 GNNs)</span></span>
+<span><span class="co">#&gt;   `tzd_v1`: Thiazolidinediones (TZDs) (9 GNNs)</span></span>
 <span><span class="co">#&gt;   `alpha_glucosidase_v1`: Alpha-Glucosidase Inhibitors (3 GNNs)</span></span>
-<span><span class="co">#&gt;   `dpp4_v1`: DPP-4 Inhibitors (15 GNNs)</span></span>
-<span><span class="co">#&gt;   `sglt2_v1`: SGLT-2 Inhibitors (13 GNNs)</span></span>
-<span><span class="co">#&gt;   `glp1_v1`: GLP-1 Receptor Agonists (6 GNNs)</span></span>
-<span><span class="co">#&gt;   `insulin_v1`: Insulin and Supplies (71 GNNs)</span></span>
+<span><span class="co">#&gt;   `dpp4_v1`: DPP-4 Inhibitors (18 GNNs)</span></span>
+<span><span class="co">#&gt;   `sglt2_v1`: SGLT-2 Inhibitors (23 GNNs)</span></span>
+<span><span class="co">#&gt;   `glp1_v1`: GLP-1 (20 GNNs)</span></span>
+<span><span class="co">#&gt;   `insulin_v1`: Insulin and Supplies (163 GNNs)</span></span>
 <span><span class="co">#&gt;   `amylin_v1`: Amylin Analogues (1 GNNs)</span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"biguanide_v1"</span>, <span style="color: #0000BB;">"sulfonylurea_v1"</span>, <span style="color: #0000BB;">"meglitinide_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"tzd_v1"</span>, <span style="color: #0000BB;">"alpha_glucosidase_v1"</span>, <span style="color: #0000BB;">"dpp4_v1"</span>, <span style="color: #0000BB;">"sglt2_v1"</span>, <span style="color: #0000BB;">"glp1_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"insulin_v1"</span>, and <span style="color: #0000BB;">"amylin_v1"</span> in `get_*()` functions.</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antidiabetic_generics.html">get_antidiabetic_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"glp1_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $glp1_v1</span></span>
-<span><span class="co">#&gt; [1] "DULAGLUTIDE"            "EXENATIDE"              "EXENATIDE MICROSPHERES"</span></span>
-<span><span class="co">#&gt; [4] "LIRAGLUTIDE"            "LIXISENATIDE"           "SEMAGLUTIDE"</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_antidiabetic_generics.html">get_antidiabetic_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $sglt2_v1</span></span>
-<span><span class="co">#&gt;  [1] "CANAGLIFLOZIN"                       "CANAGLIFLOZIN/METFORM"              </span></span>
-<span><span class="co">#&gt;  [3] "CANAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN"                      </span></span>
-<span><span class="co">#&gt;  [5] "DAPAGLIFLOZIN/METFORMIN"             "DAPAGLIFLOZIN/SAXAGLIPTIN"          </span></span>
-<span><span class="co">#&gt;  [7] "EMPAGLIFLOZIN"                       "EMPAGLIFLOZIN/LINAGLIPTIN"          </span></span>
-<span><span class="co">#&gt;  [9] "EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN" "EMPAGLIFLOZIN/METFORMIN"            </span></span>
-<span><span class="co">#&gt; [11] "ERTUGLIFLOZIN"                       "ERTUGLIFLOZIN/METFORMIN"            </span></span>
-<span><span class="co">#&gt; [13] "ERTUGLIFLOZIN/SITAGLIPTIN"</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_generics.html">get_diabetes_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"glp1_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 6</span></span></span>
+<span><span class="co">#&gt;   generic                       brand     priority condition class version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ALBIGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> DULAGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> EXENATIDE                     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> EXENATIDE EXTENDED-RELEASE    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> EXENATIDE MICROSPHERES        <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> LIXISENATIDE                  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> INSULIN DEGLUDEC/LIRAGLUTIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INSULIN GLARGINE/LIXISENATIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_generics.html">get_diabetes_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 6</span></span></span>
+<span><span class="co">#&gt;    generic                             brand  priority condition class version</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CANAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CANAGLIFLOZIN/METFORM               <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CANAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> DAPAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> DAPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> DAPAGLIFLOZIN/SAXAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> EMPAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> EMPAGLIFLOZIN/LINAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> EMPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="creating-your-own-drug-spec">Creating your own drug spec<a class="anchor" aria-label="anchor" href="#creating-your-own-drug-spec"></a>
@@ -268,7 +398,7 @@ and insulin:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

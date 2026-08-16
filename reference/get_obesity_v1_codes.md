@@ -11,8 +11,7 @@ get_obesity_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_obesity_v1_defs(variable_type = c("condition", "outcome"))
@@ -36,17 +35,10 @@ get_obesity_v1_defs(variable_type = c("condition", "outcome"))
   Logical. `FALSE` (default) returns short-format codes (e.g.,
   `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 
-- format:
+- priority:
 
-  `"list"` (default) returns a named list of character vectors.
-  `"tibble"` returns a long-form tibble with columns `code_type`,
-  `code`, and `variable_type`.
-
-- concatenate:
-
-  Logical. `FALSE` (default) returns a named list of character vectors.
-  `TRUE` concatenates all code vectors into a single unnamed character
-  vector. Not compatible with `format = "tibble"`.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 ## See also
 
@@ -56,9 +48,18 @@ get_obesity_v1_defs(variable_type = c("condition", "outcome"))
 
 ``` r
 get_obesity_v1_codes()
-#> $dx_icd10
-#>  [1] "E6601" "E663"  "E669"  "R939"  "Z6825" "Z6826" "Z6827" "Z6828" "Z6829"
-#> [10] "Z6830" "Z6831" "Z6832" "Z6833" "Z6834" "Z6835" "Z6836" "Z6837" "Z6838"
-#> [19] "Z6839" "Z6841" "Z6842" "Z6843" "Z6844" "Z6845"
-#> 
+#> # A tibble: 24 × 4
+#>    type     code  priority version
+#>    <chr>    <chr>    <int> <chr>  
+#>  1 dx_icd10 E6601        1 v1     
+#>  2 dx_icd10 E663         1 v1     
+#>  3 dx_icd10 E669         1 v1     
+#>  4 dx_icd10 R939         1 v1     
+#>  5 dx_icd10 Z6825        1 v1     
+#>  6 dx_icd10 Z6826        1 v1     
+#>  7 dx_icd10 Z6827        1 v1     
+#>  8 dx_icd10 Z6828        1 v1     
+#>  9 dx_icd10 Z6829        1 v1     
+#> 10 dx_icd10 Z6830        1 v1     
+#> # ℹ 14 more rows
 ```

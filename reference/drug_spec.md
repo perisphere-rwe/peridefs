@@ -13,7 +13,10 @@ drug_spec(
   version = NULL,
   defs = NULL,
   generic_names = character(0L),
-  ndc = character(0L)
+  generic_names_probable = character(0L),
+  generic_names_cautious = character(0L),
+  brand_names = list(),
+  generic_defs = NULL
 )
 ```
 
@@ -37,11 +40,33 @@ drug_spec(
 
 - generic_names:
 
-  Character vector of GNN drug names.
+  Character vector of GNN drug names (priority 1, core).
 
-- ndc:
+- generic_names_probable:
 
-  Character vector of NDC codes. Defaults to `character(0)`.
+  Character vector of GNN drug names with more than one indication
+  (priority 2).
+
+- generic_names_cautious:
+
+  Character vector of GNN drug names lacking US approval for this
+  class's indication (priority 3).
+
+- brand_names:
+
+  Optional named list mapping a GNN drug name to one or more brand name
+  strings, e.g. `list(SEMAGLUTIDE = "Ozempic")`. See
+  [DrugSpec](https://perisphere-rwe.github.io/peridefs/reference/DrugSpec.md)
+  for details. Cannot be combined with `generic_defs`.
+
+- generic_defs:
+
+  Optional alternative to
+  `generic_names`/`generic_names_probable`/`generic_names_cautious`/`brand_names`,
+  for drug classes spanning more than one condition/indication context.
+  See
+  [DrugSpec](https://perisphere-rwe.github.io/peridefs/reference/DrugSpec.md)
+  for details.
 
 ## Value
 
@@ -62,6 +87,6 @@ my_drug
 #> 
 #> ── My Drug Class (v1) ──────────────────────────────────────────────────────────
 #> Drug class: `my_drug`
-#> 2 generic name(s), 0 NDC code(s)
+#> 2 generic name(s) (2 core, 0 probable, 0 cautious)
 #> GNNs: DRUGONE, DRUGTWO
 ```

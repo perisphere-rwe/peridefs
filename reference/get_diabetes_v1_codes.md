@@ -2,8 +2,11 @@
 
 Returns code sets from a diabetes
 [CodeSpec](https://perisphere-rwe.github.io/peridefs/reference/CodeSpec.md).
-Three versions are available: `get_diabetes_v1_codes()`,
-`get_diabetes_v2_codes()`, `get_diabetes_v3_codes()`.
+The condition definition is diagnosis-based, with a medication criterion
+(see `spec_diabetes`) as an alternative qualifying path, and patients
+are further classified into four mutually exclusive categories (no
+diabetes; diabetes without antidiabetic medication; diabetes with oral
+antidiabetic; diabetes with insulin).
 
 ## Usage
 
@@ -12,31 +15,10 @@ get_diabetes_v1_codes(
   code_type = NULL,
   variable_type = c("condition", "outcome"),
   periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
+  priority = 1L
 )
 
 get_diabetes_v1_defs(variable_type = c("condition", "outcome"))
-
-get_diabetes_v2_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
-)
-
-get_diabetes_v2_defs(variable_type = c("condition", "outcome"))
-
-get_diabetes_v3_codes(
-  code_type = NULL,
-  variable_type = c("condition", "outcome"),
-  periods = FALSE,
-  format = c("list", "tibble"),
-  concatenate = FALSE
-)
-
-get_diabetes_v3_defs(variable_type = c("condition", "outcome"))
 ```
 
 ## Arguments
@@ -57,17 +39,10 @@ get_diabetes_v3_defs(variable_type = c("condition", "outcome"))
   Logical. `FALSE` (default) returns short-format codes (e.g.,
   `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 
-- format:
+- priority:
 
-  `"list"` (default) returns a named list of character vectors.
-  `"tibble"` returns a long-form tibble with columns `code_type`,
-  `code`, and `variable_type`.
-
-- concatenate:
-
-  Logical. `FALSE` (default) returns a named list of character vectors.
-  `TRUE` concatenates all code vectors into a single unnamed character
-  vector. Not compatible with `format = "tibble"`.
+  Integer vector subsetting confidence tiers to include (`1` = core, `2`
+  = probable, `3` = cautious). Default `1`.
 
 ## See also
 

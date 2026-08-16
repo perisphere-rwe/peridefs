@@ -12,7 +12,8 @@ components = list(
   ...
 )
 
-The component argument is required when calling any get_* method.'><meta property="og:description" content='A CompositeDrugSpec is a composition of all versioned drug class components
+The component argument is optional when calling get_generics();
+omitting it (or passing "all") returns every component.'><meta property="og:description" content='A CompositeDrugSpec is a composition of all versioned drug class components
 that collectively define a composite drug group (e.g., antihypertensives).
 It holds references to specific versioned DrugSpec leaf objects,
 accessible by name via the component argument.
@@ -25,7 +26,8 @@ components = list(
   ...
 )
 
-The component argument is required when calling any get_* method.'></head><body>
+The component argument is optional when calling get_generics();
+omitting it (or passing "all") returns every component.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -33,7 +35,7 @@ The component argument is required when calling any get_* method.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +89,8 @@ accessible by name via the <code>component</code> argument.</p>
 <span>  arb_v1  <span class="op">=</span> <span class="va">spec_arb_v1</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre><p></p></div>
-<p>The <code>component</code> argument is <strong>required</strong> when calling any <code>get_*</code> method.</p>
+<p>The <code>component</code> argument is optional when calling <code>get_generics()</code>;
+omitting it (or passing <code>"all"</code>) returns every component.</p>
     </div>
 
 
@@ -97,12 +100,18 @@ accessible by name via the <code>component</code> argument.</p>
 <dd><p>Short drug class identifier (read-only).</p></dd>
 
 
-<dt><code>version</code></dt>
+    <dt><code>version</code></dt>
 <dd><p>Version label (read-only; typically <code>NULL</code> for composites).</p></dd>
 
 
-<dt><code>label</code></dt>
+    <dt><code>label</code></dt>
 <dd><p>Human-readable label (read-only).</p></dd>
+
+
+    <dt><code>condition</code></dt>
+<dd><p>The single condition/indication this composite
+represents (read-only), e.g. <code>"hypertension"</code>. Used as the default
+<code>condition</code> filter in <code>get_generics()</code>.</p></dd>
 
 
 </dl><p></p></div>
@@ -112,16 +121,14 @@ accessible by name via the <code>component</code> argument.</p>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-CompositeDrugSpec-new"><code>CompositeDrugSpec$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-CompositeDrugSpec-initialize"><code>CompositeDrugSpec$new()</code></a></p></li>
 <li><p><a href="#method-CompositeDrugSpec-print"><code>CompositeDrugSpec$print()</code></a></p></li>
 <li><p><a href="#method-CompositeDrugSpec-components"><code>CompositeDrugSpec$components()</code></a></p></li>
 <li><p><a href="#method-CompositeDrugSpec-get_generics"><code>CompositeDrugSpec$get_generics()</code></a></p></li>
-<li><p><a href="#method-CompositeDrugSpec-get_codes"><code>CompositeDrugSpec$get_codes()</code></a></p></li>
-<li><p><a href="#method-CompositeDrugSpec-get_defs"><code>CompositeDrugSpec$get_defs()</code></a></p></li>
+<li><p><a href="#method-CompositeDrugSpec-get_meds_labels"><code>CompositeDrugSpec$get_meds_labels()</code></a></p></li>
 <li><p><a href="#method-CompositeDrugSpec-clone"><code>CompositeDrugSpec$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-CompositeDrugSpec-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p></p><hr><a id="method-CompositeDrugSpec-initialize"></a><div class="section">
+<h3 id="compositedrugspec-new-"><code>CompositeDrugSpec$new()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-new-"></a></h3>
 <p>Create a new <code>CompositeDrugSpec</code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/CompositeDrugSpec.html">CompositeDrugSpec</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
@@ -130,130 +137,145 @@ accessible by name via the <code>component</code> argument.</p>
 <span>  defs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  components <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  version <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  versions <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  condition <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>drug_class</code></dt>
 <dd><p>Short identifier string, e.g. <code>"antihypertensive"</code>.</p></dd>
 
-
-<dt><code>label</code></dt>
+      <dt><code>label</code></dt>
 <dd><p>Human-readable label.</p></dd>
 
-
-<dt><code>defs</code></dt>
+      <dt><code>defs</code></dt>
 <dd><p>Character string describing the composite.</p></dd>
 
-
-<dt><code>components</code></dt>
+      <dt><code>components</code></dt>
 <dd><p>Named list of <a href="DrugSpec.html">DrugSpec</a> objects, keyed by
 <code>"name_vX"</code> strings.</p></dd>
 
-
-<dt><code>version</code></dt>
+      <dt><code>version</code></dt>
 <dd><p>Optional version label (typically <code>NULL</code>).</p></dd>
 
-
-<dt><code>versions</code></dt>
-<dd><p>Deprecated. Use <code>defs</code>/<code>components</code> directly.</p></dd>
+      <dt><code>condition</code></dt>
+<dd><p>Required character string naming the single
+condition/indication this composite represents, e.g.
+<code>"hypertension"</code>. A <code>CompositeDrugSpec</code> always represents exactly
+one condition (unlike a leaf <a href="DrugSpec.html">DrugSpec</a> built with <code>generic_defs</code>,
+which may span several); this is used as the default <code>condition</code>
+filter in <code>get_generics()</code>, so a shared leaf component tagged with
+multiple conditions (e.g. a GLP-1 spec used by both the
+obesity and diabetes composites) only contributes its
+rows for <em>this</em> composite's condition unless the caller overrides
+the filter explicitly.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-CompositeDrugSpec-print"></a><div class="section">
-<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-CompositeDrugSpec-print"></a><div class="section">
+<h3 id="compositedrugspec-print-"><code>CompositeDrugSpec$print()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-print-"></a></h3>
 <p>Print a summary of the composite drug spec.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+</div>
 
-</div><p></p><hr><a id="method-CompositeDrugSpec-components"></a><div class="section">
-<h3 id="method-components-">Method <code>components()</code><a class="anchor" aria-label="anchor" href="#method-components-"></a></h3>
+<p></p><hr><a id="method-CompositeDrugSpec-components"></a><div class="section">
+<h3 id="compositedrugspec-components-"><code>CompositeDrugSpec$components()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-components-"></a></h3>
 <p>Return the flat named component list.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">components</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>Named list of <a href="DrugSpec.html">DrugSpec</a> objects.</p>
 </div>
 
-</div><p></p><hr><a id="method-CompositeDrugSpec-get_generics"></a><div class="section">
-<h3 id="method-get-generics-">Method <code>get_generics()</code><a class="anchor" aria-label="anchor" href="#method-get-generics-"></a></h3>
-<p>Retrieve GNNs from a named component.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
-<div class="section">
+<p></p><hr><a id="method-CompositeDrugSpec-get_generics"></a><div class="section">
+<h3 id="compositedrugspec-get-generics-"><code>CompositeDrugSpec$get_generics()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-get-generics-"></a></h3>
+<p>Retrieve generic (and brand) drug names from one or more
+components as a tidy data frame.</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">get_generics</span><span class="op">(</span></span>
+<span>  component <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  priority <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>  condition <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="va">condition</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>component</code></dt>
-<dd><p><strong>Required.</strong> Component name, e.g. <code>"acei_v1"</code>.</p></dd>
+<dd><p>Optional component name(s), e.g. <code>"acei_v1"</code>. <code>NULL</code>
+(default) or <code>"all"</code> returns every component.</p></dd>
+
+      <dt><code>priority</code></dt>
+<dd><p>Integer vector subsetting confidence tiers to include.
+Default <code>1</code>.</p></dd>
+
+      <dt><code>condition</code></dt>
+<dd><p>Optional character vector subsetting to specific
+condition(s), forwarded to each component's <code>get_generics()</code>.
+Defaults to this composite's own <code>condition</code> (e.g.
+<code>"hypertension"</code>), so a shared leaf component tagged with multiple
+conditions only contributes its rows for this composite's
+condition. Pass <code>NULL</code> explicitly to disable condition filtering
+entirely (returns every row from every component regardless of
+condition).</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p>Character vector of GNN strings.</p>
+<p>A tibble with columns <code>generic</code>, <code>brand</code>, <code>priority</code>,
+<code>condition</code>, <code>class</code>, and <code>version</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-CompositeDrugSpec-get_codes"></a><div class="section">
-<h3 id="method-get-codes-">Method <code>get_codes()</code><a class="anchor" aria-label="anchor" href="#method-get-codes-"></a></h3>
-<p>Retrieve NDC codes from a named component.</p><div class="section">
+</div>
+
+<p></p><hr><a id="method-CompositeDrugSpec-get_meds_labels"></a><div class="section">
+<h3 id="compositedrugspec-get-meds-labels-"><code>CompositeDrugSpec$get_meds_labels()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-get-meds-labels-"></a></h3>
+<p>Retrieve the human-readable <code>label</code> for one or more
+components as a tidy tibble.</p>
+<p>This deliberately surfaces each leaf's <code>label</code> (e.g. <code>"ACE Inhibitors"</code>) rather than its free-text <code>defs</code> field. A leaf
+<code>DrugSpec</code>'s <code>defs</code> is typically just an internal sourcing note
+(e.g. <code>"From the Perisphere antihypertensive medication list."</code>),
+not a clinical definition – and now that composite drug specs are
+named after the condition they treat (e.g. <code>spec_hypertension</code>), a
+<code><a href="get_defs.html">get_defs()</a></code>-style function here would be easy to confuse with the
+condition side's <code>get_*_v1_defs()</code>, which <em>does</em> return a real
+diagnostic-algorithm narrative. Returning labels instead avoids
+that confusion by making clear this is a component listing, not a
+clinical definition. Version isn't included in the output since
+<code>name</code> (the component key, e.g. <code>"acei_v2"</code>) already encodes it.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">get_codes</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">get_meds_labels</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>component</code></dt>
-<dd><p><strong>Required.</strong> Component name, or <code>"all"</code> for the union
-across all components.</p></dd>
+<dd><p>Optional component name(s). <code>NULL</code> (default) or
+<code>"all"</code> returns every component's label.</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p>Character vector of NDC codes.</p>
+<p>A tibble with columns <code>name</code> (the component key, e.g.
+<code>"acei_v1"</code>) and <code>label</code> (e.g. <code>"ACE Inhibitors"</code>).</p>
 </div>
 
-</div><p></p><hr><a id="method-CompositeDrugSpec-get_defs"></a><div class="section">
-<h3 id="method-get-defs-">Method <code><a href="get_defs.html">get_defs()</a></code><a class="anchor" aria-label="anchor" href="#method-get-defs-"></a></h3>
-<p>Retrieve the narrative description for a named component.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">get_defs</span><span class="op">(</span>component <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
-<div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>component</code></dt>
-<dd><p><strong>Required.</strong> Component name.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p>Character string, or <code>NULL</code>.</p>
-</div>
-
-</div><p></p><hr><a id="method-CompositeDrugSpec-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p></p><hr><a id="method-CompositeDrugSpec-clone"></a><div class="section">
+<h3 id="compositedrugspec-clone-"><code>CompositeDrugSpec$clone()</code><a class="anchor" aria-label="anchor" href="#compositedrugspec-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">CompositeDrugSpec</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+</div><p></p><div class="section">
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -262,6 +284,7 @@ across all components.</p></dd>
 </div>
 
 </div>
+
 
     </div>
 
@@ -274,7 +297,7 @@ across all components.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

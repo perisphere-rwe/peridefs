@@ -17,8 +17,8 @@ objects:
       ...
     )
 
-The `component` argument is **required** when calling any `get_*`
-method.
+The `component` argument is optional when calling `get_generics()`;
+omitting it (or passing `"all"`) returns every component.
 
 ## Active bindings
 
@@ -34,11 +34,17 @@ method.
 
   Human-readable label (read-only).
 
+- `condition`:
+
+  The single condition/indication this composite represents (read-only),
+  e.g. `"hypertension"`. Used as the default `condition` filter in
+  `get_generics()`.
+
 ## Methods
 
 ### Public methods
 
-- [`CompositeDrugSpec$new()`](#method-CompositeDrugSpec-new)
+- [`CompositeDrugSpec$new()`](#method-CompositeDrugSpec-initialize)
 
 - [`CompositeDrugSpec$print()`](#method-CompositeDrugSpec-print)
 
@@ -46,15 +52,13 @@ method.
 
 - [`CompositeDrugSpec$get_generics()`](#method-CompositeDrugSpec-get_generics)
 
-- [`CompositeDrugSpec$get_codes()`](#method-CompositeDrugSpec-get_codes)
-
-- [`CompositeDrugSpec$get_defs()`](#method-CompositeDrugSpec-get_defs)
+- [`CompositeDrugSpec$get_meds_labels()`](#method-CompositeDrugSpec-get_meds_labels)
 
 - [`CompositeDrugSpec$clone()`](#method-CompositeDrugSpec-clone)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `CompositeDrugSpec$new()`
 
 Create a new `CompositeDrugSpec`.
 
@@ -66,7 +70,7 @@ Create a new `CompositeDrugSpec`.
       defs = NULL,
       components = list(),
       version = NULL,
-      versions = NULL
+      condition = NULL
     )
 
 #### Arguments
@@ -93,13 +97,22 @@ Create a new `CompositeDrugSpec`.
 
   Optional version label (typically `NULL`).
 
-- `versions`:
+- `condition`:
 
-  Deprecated. Use `defs`/`components` directly.
+  Required character string naming the single condition/indication this
+  composite represents, e.g. `"hypertension"`. A `CompositeDrugSpec`
+  always represents exactly one condition (unlike a leaf
+  [DrugSpec](https://perisphere-rwe.github.io/peridefs/reference/DrugSpec.md)
+  built with `generic_defs`, which may span several); this is used as
+  the default `condition` filter in `get_generics()`, so a shared leaf
+  component tagged with multiple conditions (e.g. a GLP-1 spec used by
+  both the obesity and diabetes composites) only contributes its rows
+  for *this* composite's condition unless the caller overrides the
+  filter explicitly.
 
 ------------------------------------------------------------------------
 
-### Method [`print()`](https://rdrr.io/r/base/print.html)
+### `CompositeDrugSpec$print()`
 
 Print a summary of the composite drug spec.
 
@@ -109,7 +122,7 @@ Print a summary of the composite drug spec.
 
 ------------------------------------------------------------------------
 
-### Method `components()`
+### `CompositeDrugSpec$components()`
 
 Return the flat named component list.
 
@@ -125,68 +138,85 @@ objects.
 
 ------------------------------------------------------------------------
 
-### Method `get_generics()`
+### `CompositeDrugSpec$get_generics()`
 
-Retrieve GNNs from a named component.
+Retrieve generic (and brand) drug names from one or more components as a
+tidy data frame.
 
 #### Usage
 
-    CompositeDrugSpec$get_generics(component = NULL)
+    CompositeDrugSpec$get_generics(
+      component = NULL,
+      priority = 1L,
+      condition = self$condition
+    )
 
 #### Arguments
 
 - `component`:
 
-  **Required.** Component name, e.g. `"acei_v1"`.
+  Optional component name(s), e.g. `"acei_v1"`. `NULL` (default) or
+  `"all"` returns every component.
+
+- `priority`:
+
+  Integer vector subsetting confidence tiers to include. Default `1`.
+
+- `condition`:
+
+  Optional character vector subsetting to specific condition(s),
+  forwarded to each component's `get_generics()`. Defaults to this
+  composite's own `condition` (e.g. `"hypertension"`), so a shared leaf
+  component tagged with multiple conditions only contributes its rows
+  for this composite's condition. Pass `NULL` explicitly to disable
+  condition filtering entirely (returns every row from every component
+  regardless of condition).
 
 #### Returns
 
-Character vector of GNN strings.
+A tibble with columns `generic`, `brand`, `priority`, `condition`,
+`class`, and `version`.
 
 ------------------------------------------------------------------------
 
-### Method `get_codes()`
+### `CompositeDrugSpec$get_meds_labels()`
 
-Retrieve NDC codes from a named component.
+Retrieve the human-readable `label` for one or more components as a tidy
+tibble.
+
+This deliberately surfaces each leaf's `label` (e.g. `"ACE Inhibitors"`)
+rather than its free-text `defs` field. A leaf `DrugSpec`'s `defs` is
+typically just an internal sourcing note (e.g.
+`"From the Perisphere antihypertensive medication list."`), not a
+clinical definition – and now that composite drug specs are named after
+the condition they treat (e.g. `spec_hypertension`), a
+[`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)-style
+function here would be easy to confuse with the condition side's
+`get_*_v1_defs()`, which *does* return a real diagnostic-algorithm
+narrative. Returning labels instead avoids that confusion by making
+clear this is a component listing, not a clinical definition. Version
+isn't included in the output since `name` (the component key, e.g.
+`"acei_v2"`) already encodes it.
 
 #### Usage
 
-    CompositeDrugSpec$get_codes(component = NULL)
+    CompositeDrugSpec$get_meds_labels(component = NULL)
 
 #### Arguments
 
 - `component`:
 
-  **Required.** Component name, or `"all"` for the union across all
-  components.
+  Optional component name(s). `NULL` (default) or `"all"` returns every
+  component's label.
 
 #### Returns
 
-Character vector of NDC codes.
+A tibble with columns `name` (the component key, e.g. `"acei_v1"`) and
+`label` (e.g. `"ACE Inhibitors"`).
 
 ------------------------------------------------------------------------
 
-### Method [`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)
-
-Retrieve the narrative description for a named component.
-
-#### Usage
-
-    CompositeDrugSpec$get_defs(component = NULL)
-
-#### Arguments
-
-- `component`:
-
-  **Required.** Component name.
-
-#### Returns
-
-Character string, or `NULL`.
-
-------------------------------------------------------------------------
-
-### Method `clone()`
+### `CompositeDrugSpec$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -40,13 +40,16 @@ my_htn
 #>   `dx_icd10`: 1 condition / 1 outcome codes
 ```
 
-The resulting spec object has `$get_codes()` and `$get_defs()` methods:
+The resulting spec object has a `$get_codes()` method that returns a
+tibble:
 
 ``` r
 
 my_htn$get_codes(code_type = "dx_icd10")
-#> $dx_icd10
-#> [1] "I10"
+#> # A tibble: 1 × 4
+#>   type     code  priority version
+#>   <chr>    <chr>    <int> <chr>  
+#> 1 dx_icd10 I10          1 v1
 ```
 
 ## Creating a new DrugSpec
@@ -66,7 +69,12 @@ my_thiazide <- drug_spec(
 )
 
 my_thiazide$get_generics()
-#> [1] "HYDROCHLOROTHIAZIDE" "CHLORTHALIDONE"      "INDAPAMIDE"
+#> # A tibble: 3 × 6
+#>   generic             brand     priority condition class       version
+#>   <chr>               <list>       <int> <chr>     <chr>       <chr>  
+#> 1 HYDROCHLOROTHIAZIDE <chr [0]>        1 NA        my_thiazide v1     
+#> 2 CHLORTHALIDONE      <chr [0]>        1 NA        my_thiazide v1     
+#> 3 INDAPAMIDE          <chr [0]>        1 NA        my_thiazide v1
 ```
 
 ## Adding codes to a bundled spec
@@ -79,15 +87,15 @@ never modified:
 ``` r
 
 # Inspect available keys
-names(spec_htn_v1$get_codes())
+spec_hypertension_v1$keys()
 #> [1] "dx_icd9"  "dx_icd10"
 
 # Add a code and confirm the clone grew; original is unchanged
-htn_plus <- add_codes(spec_htn_v1, dx_icd10 = c("I99"))
+htn_plus <- add_codes(spec_hypertension_v1, dx_icd10 = c("I99"))
 
-length(htn_plus$get_codes(code_type = "dx_icd10")$dx_icd10)  # clone
+nrow(htn_plus$get_codes(code_type = "dx_icd10"))     # clone
 #> [1] 24
-length(spec_htn_v1$get_codes(code_type = "dx_icd10")$dx_icd10)  # original
+nrow(spec_hypertension_v1$get_codes(code_type = "dx_icd10"))  # original
 #> [1] 23
 ```
 
@@ -97,7 +105,7 @@ Use `variable_type` to restrict membership:
 ``` r
 
 htn_outcome_only <- add_codes(
-  spec_htn_v1,
+  spec_hypertension_v1,
   variable_type = "outcome",
   dx_icd10      = c("I99")
 )
@@ -110,12 +118,12 @@ returns a clone with the specified codes excluded:
 
 ``` r
 
-htn_trimmed <- remove_codes(spec_htn_v1, dx_icd9 = c("4019"))
+htn_trimmed <- remove_codes(spec_hypertension_v1, dx_icd9 = c("4019"))
 
 # Code removed from clone; original is unchanged
-"4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$dx_icd9
+"4019" %in% htn_trimmed$get_codes(code_type = "dx_icd9")$code
 #> [1] FALSE
-"4019" %in% spec_htn_v1$get_codes(code_type = "dx_icd9")$dx_icd9
+"4019" %in% spec_hypertension_v1$get_codes(code_type = "dx_icd9")$code
 #> [1] TRUE
 ```
 
@@ -127,7 +135,7 @@ can update the label, narrative definitions, or replace code sets:
 ``` r
 
 htn_revised <- modify_code_spec(
-  spec  = spec_htn_v1,
+  spec  = spec_hypertension_v1,
   label = "Hypertension (revised)",
   defs  = list(
     condition = c("i" = "Study-specific hypertension definition."),
@@ -138,7 +146,7 @@ htn_revised <- modify_code_spec(
 htn_revised
 #> 
 #> ── Hypertension (revised) (v1) ─────────────────────────────────────────────────
-#> Condition: `htn`
+#> Condition: `hypertension`
 #> Condition def:
 #> ℹ Study-specific hypertension definition.
 #> 
@@ -189,7 +197,7 @@ extract it first:
 ``` r
 
 # Extract a leaf spec from a composite
-acei_v1 <- spec_antihypertensive$components()$acei_v1
+acei_v1 <- spec_hypertension$components()$acei_v1
 
 # Build a study-specific variant
 my_acei <- modify_drug_spec(
@@ -199,12 +207,18 @@ my_acei <- modify_drug_spec(
 )
 
 my_acei$get_generics()
-#> [1] "LISINOPRIL" "RAMIPRIL"   "ENALAPRIL"
+#> # A tibble: 3 × 6
+#>   generic    brand     priority condition class version
+#>   <chr>      <list>       <int> <chr>     <chr> <chr>  
+#> 1 LISINOPRIL <chr [0]>        1 NA        acei  v1     
+#> 2 RAMIPRIL   <chr [0]>        1 NA        acei  v1     
+#> 3 ENALAPRIL  <chr [0]>        1 NA        acei  v1
 ```
 
 ## Immutability
 
 All custom-spec functions return **deep clones**. Bundled spec objects
-(`spec_htn_v1`, `spec_antihypertensive`, etc.) are never modified in
-place, so you can safely build study-specific variants without affecting
-other code in your project that relies on the standard definitions.
+(`spec_hypertension_v1`, `spec_hypertension`, etc.) are never modified
+in place, so you can safely build study-specific variants without
+affecting other code in your project that relies on the standard
+definitions.
