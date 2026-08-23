@@ -72,24 +72,17 @@ make_key_condition_only <- function(codes) {
 
 ## Hypertension ----
 
-### history, version 1 ----
+### history, source versions 1-2 (not separately exported) ----
 #
-# Any of the following:
+# The source document described two versions that differed only in required
+# evidence, not in ICD code set (both share the codes built below). They were
+# collapsed (2026-08-15, issue #4) into the single implemented
+# spec_hypertension_v1 (below), which carries the more complete
+# source-version-2 narrative. "Version 1"/"version 2" here refer only to the
+# two source-document drafts -- there is no separately exported
+# spec_hypertension_v2.
 #
-# a)	≥1 inpatient claim with an ICD-9 discharge diagnosis code of 401.x, 403.0x,
-# 403.1x, 403.9x, or an ICD-10 discharge diagnosis code of I10, I11.x, I12.x,
-# I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position
-#
-# b)	≥2 physician evaluation and management visits (page 7) claims with an ICD-9
-# diagnosis code of 401.x, 403.0x, 403.1x, 403.9x, or an ICD-10 diagnosis code
-# of I10, I11.x, I12.x, I13.x, I15.x, I12.0, I12.9, I16.x, in any position at
-# least 30 days apart.
-#
-### history, version 2 ----
-#
-# this adds medication to the defn of version 1
-#
-# Any of the following:
+# Source version 1 -- any of the following:
 #
 # a)	≥1 inpatient claim with an ICD-9 discharge diagnosis code of 401.x, 403.0x,
 # 403.1x, 403.9x, or an ICD-10 discharge diagnosis code of I10, I11.x, I12.x,
@@ -99,6 +92,8 @@ make_key_condition_only <- function(codes) {
 # diagnosis code of 401.x, 403.0x, 403.1x, 403.9x, or an ICD-10 diagnosis code
 # of I10, I11.x, I12.x, I13.x, I15.x, I12.0, I12.9, I16.x, in any position at
 # least 30 days apart.
+#
+# Source version 2 -- same as version 1 (a)-(b) above, plus:
 #
 # c)	Two or more pharmacy fills for an antihypertensive medication:
 
@@ -195,7 +190,15 @@ spec_hypertension_v1 <- CodeSpec$new(
 # ICD-10-PCS codes use a wildcard suffix "xxx" that represents 3 variable
 # characters. These are stored as-is (pattern strings) in the proc_icd10 key.
 
-#### outcome, version 1 ----
+#### outcome, source version 1 (not separately implemented) ----
+#
+# The source definition document described two outcome versions, transcribed
+# here as "source version 1" and "source version 2" for reference. Both were
+# collapsed into the single implemented spec_chd_v1 (below), which uses the
+# more complete source-version-2 outcome text -- there is no exported
+# spec_chd_v1/spec_chd_v2 outcome distinction; "version 1" and "version 2" in
+# this comment block refer only to the two source-document drafts, not to
+# two live package specs.
 #
 # Overnight hospitalization with a discharge diagnosis code for AMI (i.e., an
 # ICD-9 code 410.xx, except 410.x2, which represent a subsequent episode of
@@ -210,9 +213,10 @@ spec_hypertension_v1 <- CodeSpec$new(
 # '0270xxx', '0271xxx', '0272xxx', '0273xxx','02C0xxx', '02C1xxx', '02C2xxx',
 # '02C3xxx', '3E07xxx'.
 
-#### outcome, version 2 ----
+#### outcome, source version 2 (the version implemented below as spec_chd_v1) ----
 #
-# Version 2 includes everything from version 1 in addition to:
+# Source version 2 includes everything from source version 1 above, in
+# addition to:
 #
 # Coronary revascularizations within the 60 days following an MI hospitalization
 # may be elective and not represent a new coronary event, except the following
@@ -487,6 +491,9 @@ spec_stroke_v1 <- CodeSpec$new(
 
 ### Ischemic Stroke ----
 
+# this is not used but i'm keeping it in case i ever want to make stroke
+# a composite condition with ischemic stroke and other subtypes
+
 #### history/outcome, version 1 ----
 #
 # Condition:
@@ -635,40 +642,18 @@ spec_isch_stroke_v1 <- CodeSpec$new(
 #
 # c)	≥1 CPT code of 37205, 75962, 36902, 36905, 37246, or 37247.
 
-# Lower extremity artery disease (LEAD)/peripheral arterial disease (PAD),
-
-#### history, version 2 ---- (THIS SEEMS IDENTICAL TO V1??)
-#
-# In addition to version 1, any of the following:
-#
-# Algorithm based on ICD-9 codes:
-#
-# d)	≥1 hospitalization with a discharge diagnosis code of atherosclerosis or
-# thrombosis of arteries of the extremities (ICD-9-CM diagnosis code of 440.2,
-# 440.20, 440.21, 440.22, 440.23, 440.24, 440.29, 440.3, 440.30, 440.31, 440.32,
-# 440.4, 443.9) in any discharge diagnosis position.
-#
-# e)	≥2 physician evaluation and management visits (page 7) with a diagnosis
-# code of atherosclerosis or thrombosis of arteries of the extremities (ICD-9-CM
-# diagnosis code of 440.2, 440.20, 440.21, 440.22, 440.23, 440.24, 440.29,
-# 440.3, 440.30, 440.31, 440.32, 440.4, 443.9) in any discharge position on
-# separate days.
-#
-# f)	≥1 CPT code of 37205, 75962, 36902, 36905, 37246, or 37247.
-#
-# Algorithm based on ICD-10 codes:
-#
-# d)	≥1 hospitalization with a discharge diagnosis code of atherosclerosis or
-# thrombosis of arteries of the extremities (ICD-10-CM diagnosis code of I702xx,
-# I703xx, I704xx, I70.92, I739) in any discharge diagnosis position.
-#
-# e)	≥2 physician evaluation and management visits (page 7) with a diagnosis
-# code of atherosclerosis or thrombosis of arteries of the extremities
-# (ICD-10-CM diagnosis code of I702xx, I703xx, I704xx, I70.92, I739) in any
-# discharge position on separate days.
-#
-# f)	≥1 CPT code of 37205, 75962, 36902, 36905, 37246, or 37247.
-#
+# Reviewed 2026-08-23 (previously flagged "THIS SEEMS IDENTICAL TO V1??"):
+# the source document's "history, version 2" section is a duplicate/
+# copy-paste artifact of version 1 above, not a genuine second version.
+# Its ICD-9 list (d)/(e) is word-for-word identical to version 1's (a)/(b),
+# and its ICD-10 list (d) -- written as truncated "I702xx"/"I703xx"/"I704xx"
+# wildcards rather than version 1's fully expanded codes -- covers only the
+# I70.2/I70.3/I70.4 families, a *subset* of version 1's I70.2-I70.7 range,
+# so it adds nothing beyond version 1 even under a permissive reading.
+# There was never an implemented spec_lead_pad_v2; the single
+# spec_lead_pad_v1 below already reflects the full version 1 code set.
+# The duplicate section has been removed from this file; see git history
+# for the original source-document text if needed.
 
 #### outcome, version 1 ---- (NOT IMPLEMENTED)
 #
@@ -1619,22 +1604,27 @@ spec_depression_v1 <- CodeSpec$new(
 ## Diabetes ----
 
 # Source: "Definition of conditions and medications_11262025.docx"
-# Section: Diabetes, history, versions 1-3
+# Section: Diabetes, history, source versions 1-3 (not separately exported)
 #
-# Versions differ by required evidence, not by ICD code set:
-#   v1: ICD codes only (diagnosis-based)
-#   v2: ICD codes OR antidiabetic medication (diagnosis + medication)
-#   v3: same evidence as v2, but sub-classified into four mutually exclusive
-#       categories (no medication / oral antidiabetic / insulin / no diabetes)
+# The source document described three versions that differed only in
+# required evidence, not in ICD code set (all three share the codes built
+# below):
+#   source v1: ICD codes only (diagnosis-based)
+#   source v2: ICD codes OR antidiabetic medication (diagnosis + medication)
+#   source v3: same evidence as v2, but sub-classified into four mutually
+#       exclusive categories (no diabetes / diabetes without medication /
+#       oral antidiabetic / insulin)
 #
-# version 3 is omitted b/c it is based on post-processing version 2, which
-# can only realistically be done in applied settings and would be tricky
-# to implement in a specification.
+# All three were collapsed (2026-08-15, issue #4) into the single
+# implemented spec_diabetes_v1 (below), which carries the most complete
+# source-version-3 narrative, including the four-category classification
+# note -- see its `defs$condition` field. "Version 1"/"version 2" in the
+# comment blocks below refer only to the source-document drafts; there is
+# no separately exported spec_diabetes_v2 or spec_diabetes_v3.
 #
-# All three versions share the same ICD-9 and ICD-10 code sets.
 # Diabetes is a condition-only definition (outcome = FALSE for all codes).
 
-### history, version 1 ----
+### history, source version 1 ----
 
 # Any of the following:
 #
@@ -1677,10 +1667,14 @@ spec_depression_v1 <- CodeSpec$new(
 # 'E113591', 'E113592', 'E113593', 'E113599', 'E1137X2', with the 2 claims
 # occurring at least 7 days apart.
 #
-### history, version 2 ----
+### history, source version 2 ----
 #
-# Same as version 1 but includes
+# Same as source version 1 above, plus:
 #  (c)	At least 1 pharmacy claim for an oral antidiabetic drug fill or insulin.
+#
+# (Source version 3 adds no further codes -- it only sub-classifies patients
+# meeting version 2's criteria into four categories; see the note on
+# spec_diabetes_v1 below.)
 
 diab_icd9 <- unique(c(
   expand9("250"),
@@ -2255,6 +2249,10 @@ spec_asthma_v1 <- CodeSpec$new(
 
 ## Antiobesity medication components ----
 
+# Priority tiers reviewed (2026-08-23): every generic here (appetite
+# suppressants, orlistat, naltrexone/bupropion, phentermine/topiramate,
+# setmelanotide) has obesity/weight-management as its only FDA-approved
+# indication, so all remain priority 1; no probable/cautious tier needed.
 spec_non_glp1_v1 <- DrugSpec$new(
   'non_glp1', "Antiobesity (non GLP-1)",
   version = 'v1',
@@ -2300,6 +2298,27 @@ spec_glp1_v1 <- DrugSpec$new(
   'glp1', "GLP-1",
   version = 'v1',
   defs = "GLP-1 receptor agonists, shared across the antiobesity and antidiabetic composites.",
+  # @BKB: please review the six condition = "obesity", priority = 3L rows
+  # below (ALBIGLUTIDE, DULAGLUTIDE, EXENATIDE, EXENATIDE EXTENDED-RELEASE,
+  # EXENATIDE MICROSPHERES, LIXISENATIDE). Per the priority-tier definition
+  # (P3 = indicated for the condition, alone or with others, but only
+  # outside the US), none of these six appears to have ever had an
+  # obesity/weight-management indication in any country -- they're T2D-only
+  # drugs used off-label for weight loss. If so, none of these tiers
+  # actually applies; per the package's own exclusion rules these rows
+  # should probably be dropped from the obesity condition entirely rather
+  # than tagged priority 3. Flagging for manual confirmation rather than
+  # changing unilaterally.
+  # Sources:
+  #   - https://pmc.ncbi.nlm.nih.gov/articles/PMC12668848/ ("Dulaglutide was
+  #     approved ... for T2DM but not for weight loss"; "Lixisenatide ...
+  #     lacks FDA approval for weight management"; albiglutide approved only
+  #     "as adjunct therapy for glycemic control in T2DM")
+  #   - https://www.medcentral.com/meds/which-glp-1-agonist-if-any-is-right-for-my-patient
+  #     ("dulaglutide's use remains limited to patients with T2D ... The
+  #     drug's manufacturer has announced no existing plans for expanded
+  #     indications"; exenatide "indicated to improve glycemic control ...
+  #     This agent has no established effects on other organ systems")
   generic_defs = tibble::tribble(
     ~generic,                      ~priority, ~condition, ~brand,
     "LIRAGLUTIDE",                 2L,        "obesity",  "Saxenda",
@@ -2308,17 +2327,17 @@ spec_glp1_v1 <- DrugSpec$new(
     "SEMAGLUTIDE",                 2L,        "diabetes", "Ozempic",
     "TIRZEPATIDE",                 2L,        "obesity",  "Zepbound",
     "TIRZEPATIDE",                 2L,        "diabetes", "Mounjaro",
-    "ALBIGLUTIDE",                 3L,        "obesity",  NA,
+    "ALBIGLUTIDE",                 3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "ALBIGLUTIDE",                 1L,        "diabetes", NA,
-    "DULAGLUTIDE",                 3L,        "obesity",  NA,
+    "DULAGLUTIDE",                 3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "DULAGLUTIDE",                 1L,        "diabetes", NA,
-    "EXENATIDE",                   3L,        "obesity",  NA,
+    "EXENATIDE",                   3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "EXENATIDE",                   1L,        "diabetes", NA,
-    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",  NA,
+    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "EXENATIDE EXTENDED-RELEASE",  1L,        "diabetes", NA,
-    "EXENATIDE MICROSPHERES",      3L,        "obesity",  NA,
+    "EXENATIDE MICROSPHERES",      3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "EXENATIDE MICROSPHERES",      1L,        "diabetes", NA,
-    "LIXISENATIDE",                3L,        "obesity",  NA,
+    "LIXISENATIDE",                3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
     "LIXISENATIDE",                1L,        "diabetes", NA,
     "INSULIN DEGLUDEC/LIRAGLUTIDE",  1L, "diabetes", NA,
     "INSULIN GLARGINE/LIXISENATIDE", 1L, "diabetes", NA
@@ -2411,21 +2430,17 @@ spec_antidep_tca_v1 <- DrugSpec$new(
   "tca", "Tricyclic Antidepressants",
   version = "v1",
   defs    = "Tricyclic and tetracyclic antidepressants (TCAs).",
+  # 2026-08-23: priority tiers added (this spec previously had none). See
+  # generic_names_probable/generic_names_cautious below for the specific
+  # drugs pulled out of the plain (priority 1) list and why.
   generic_names = c(
     "AMITRIPTYLINE",
     "AMITRIPTYLINE HCL",  # n=95,689,949 in MC Rx table
     "AMITRIPTYLINE HCL/PERPHENAZINE",  # n=4,276 in MC Rx table
     "AMITRIPTYLINE/CHLORDIAZEPOXIDE",  # n=133,845 in MC Rx table
     "AMOXAPINE",  # n=99,875 in MC Rx table
-    "CLOMIPRAMINE",
-    "CLOMIPRAMINE HCL",  # n=3,359,761 in MC Rx table
     "DESIPRAMINE",
     "DESIPRAMINE HCL",  # n=1,744,858 in MC Rx table
-    "DOXEPIN",
-    "DOXEPIN HCL",  # n=25,915,220 in MC Rx table
-    "IMIPRAMINE",
-    "IMIPRAMINE HCL",  # n=5,602,753 in MC Rx table
-    "IMIPRAMINE PAMOATE",  # n=278,673 in MC Rx table
     "MAPROTILINE",
     "MAPROTILINE HCL",  # n=59,763 in MC Rx table
     "NORTRIPTYLINE",
@@ -2435,6 +2450,20 @@ spec_antidep_tca_v1 <- DrugSpec$new(
     "PROTRIPTYLINE HCL",  # n=294,863 in MC Rx table
     "TRIMIPRAMINE",
     "TRIMIPRAMINE MALEATE"  # n=35,695 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "DOXEPIN",  # NOTE: also FDA-approved (as low-dose Silenor, 3-6mg) for insomnia
+    "DOXEPIN HCL",  # n=25,915,220; NOTE: also FDA-approved (as low-dose Silenor, 3-6mg) for insomnia
+    "IMIPRAMINE",  # NOTE: also FDA-approved (Tofranil) for childhood nocturnal enuresis
+    "IMIPRAMINE HCL",  # n=5,602,753; NOTE: also FDA-approved (Tofranil) for childhood nocturnal enuresis
+    "IMIPRAMINE PAMOATE"  # n=278,673; NOTE: also FDA-approved (Tofranil-PM) for childhood nocturnal enuresis
+  ),
+  generic_names_cautious = c(
+    # US approval is OCD only (Anafranil, 1989); depression approval exists
+    # outside the US, where clomipramine has long been used as an
+    # antidepressant.
+    "CLOMIPRAMINE",
+    "CLOMIPRAMINE HCL"  # n=3,359,761 in MC Rx table
   )
 )
 
@@ -2521,17 +2550,28 @@ spec_acei_v1 <- DrugSpec$new(
   "acei", "ACE Inhibitors",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # Standalone ACE inhibitors that also carry a distinct FDA-approved
+  # indication beyond hypertension (heart failure, post-MI, stable CAD) are
+  # moved to generic_names_probable below; BENAZEPRIL and MOEXIPRIL remain
+  # here because their US labels are hypertension-only. Fixed-dose
+  # antihypertensive combination products (see spec_acei_v2) are left at
+  # priority 1 regardless of a standalone component's other indications,
+  # matching the convention already used elsewhere in this file (e.g.
+  # HCTZ/SPIRONOLACTONE in spec_aldo_v1).
   generic_names = c(
     "BENAZEPRIL",
-    "CAPTOPRIL",  # n=2,536,660 in MC Rx table
-    "ENALAPRIL",
-    "FOSINOPRIL",
-    "LISINOPRIL",  # n=659,049,069 in MC Rx table
-    "MOEXIPRIL",
-    "PERINDOPRIL",
-    "QUINAPRIL",
-    "RAMIPRIL",  # n=33,136,146 in MC Rx table
-    "TRANDOLAPRIL"  # n=1,363,466 in MC Rx table
+    "MOEXIPRIL"
+  ),
+  generic_names_probable = c(
+    "CAPTOPRIL",  # n=2,536,660; NOTE: also FDA-approved for heart failure, post-MI LV dysfunction, and diabetic nephropathy
+    "ENALAPRIL",  # NOTE: also FDA-approved for symptomatic heart failure
+    "FOSINOPRIL",  # NOTE: also FDA-approved for heart failure
+    "LISINOPRIL",  # n=659,049,069; NOTE: also FDA-approved for heart failure and acute MI
+    "PERINDOPRIL",  # NOTE: also FDA-approved to reduce CV death/non-fatal MI risk in stable CAD
+    "QUINAPRIL",  # NOTE: also FDA-approved for heart failure
+    "RAMIPRIL",  # n=33,136,146; NOTE: also FDA-approved to improve survival post-MI complicated by heart failure/LV dysfunction
+    "TRANDOLAPRIL"  # n=1,363,466; NOTE: also FDA-approved for post-MI LV dysfunction/heart failure
   )
 )
 
@@ -2539,38 +2579,48 @@ spec_acei_v2 <- DrugSpec$new(
   "acei", "ACE Inhibitors",
   version = "v2",
   defs    = "From First Data Bank (FDB).",
+  # 2026-08-23: priority tiers added (this spec previously had none), same
+  # rationale as spec_acei_v1: standalone ingredients with a distinct
+  # additional FDA-approved indication (heart failure, post-MI, stable CAD)
+  # move to generic_names_probable; fixed-dose antihypertensive combination
+  # products stay priority 1 regardless of a standalone component's other
+  # indications (matching the rest of the file's convention). ENALAPRILAT
+  # DIHYDRATE (IV form) stays priority 1 -- its own approved indication is
+  # narrower (hypertensive emergencies only), not heart failure.
   generic_names = c(
     "AMLODIPINE BESYLATE/BENAZEPRIL",  # n=38,671,935 in MC Rx table
     "BENAZEPRIL",
     "BENAZEPRIL HCL",  # n=39,100,906 in MC Rx table
     "BENAZEPRIL/HYDROCHLOROTHIAZIDE",  # n=7,330,130 in MC Rx table
-    "CAPTOPRIL",  # n=2,536,660 in MC Rx table
     "CAPTOPRIL/HYDROCHLOROTHIAZIDE",  # n=195,735 in MC Rx table
-    "ENALAPRIL",
-    "ENALAPRIL MALEATE",  # n=41,907,960 in MC Rx table
     "ENALAPRIL MALEATE/FELODIPINE",  # n=637 in MC Rx table
     "ENALAPRIL MALEATE/HCTZ",  # n=3 in MC Rx table
     "ENALAPRIL/HYDROCHLOROTHIAZIDE",  # n=3,262,351 in MC Rx table
     "ENALAPRILAT DIHYDRATE",  # n=11,908 in MC Rx table
-    "FOSINIPRIL",
-    "FOSINOPRIL",
-    "FOSINOPRIL SODIUM",  # n=4,651,718 in MC Rx table
     "FOSINOPRIL/HYDROCHLOROTHIAZIDE",  # n=386,427 in MC Rx table
-    "LISINOPRIL",  # n=659,049,069 in MC Rx table
     "LISINOPRIL/HYDROCHLOROTHIAZIDE",  # n=143,246,937 in MC Rx table
     "MOEXEPRIL",
     "MOEXIPRIL",
     "MOEXIPRIL HCL",  # n=700,755 in MC Rx table
     "MOEXIPRIL/HYDROCHLOROTHIAZIDE",  # n=348,350 in MC Rx table
-    "PERINDOPRIL",
     "PERINDOPRIL ARG/AMLODIPINE BES",  # n=17,656 in MC Rx table
-    "PERINDOPRIL ERBUMINE",  # n=515,270 in MC Rx table
-    "QUINAPRIL",
-    "QUINAPRIL HCL",  # n=13,127,354 in MC Rx table
     "QUINAPRIL/HYDROCHLOROTHIAZIDE",  # n=1,723,417 in MC Rx table
-    "RAMIPRIL",  # n=33,136,146 in MC Rx table
-    "TRANDOLAPRIL",  # n=1,363,466 in MC Rx table
     "TRANDOLAPRIL/VERAPAMIL HCL"  # n=464,374 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CAPTOPRIL",  # n=2,536,660; NOTE: also FDA-approved for heart failure, post-MI LV dysfunction, and diabetic nephropathy
+    "ENALAPRIL",  # NOTE: also FDA-approved for symptomatic heart failure
+    "ENALAPRIL MALEATE",  # n=41,907,960; NOTE: also FDA-approved for symptomatic heart failure
+    "FOSINIPRIL",  # NOTE: also FDA-approved for heart failure
+    "FOSINOPRIL",  # NOTE: also FDA-approved for heart failure
+    "FOSINOPRIL SODIUM",  # n=4,651,718; NOTE: also FDA-approved for heart failure
+    "LISINOPRIL",  # n=659,049,069; NOTE: also FDA-approved for heart failure and acute MI
+    "PERINDOPRIL",  # NOTE: also FDA-approved to reduce CV death/non-fatal MI risk in stable CAD
+    "PERINDOPRIL ERBUMINE",  # n=515,270; NOTE: also FDA-approved to reduce CV death/non-fatal MI risk in stable CAD
+    "QUINAPRIL",  # NOTE: also FDA-approved for heart failure
+    "QUINAPRIL HCL",  # n=13,127,354; NOTE: also FDA-approved for heart failure
+    "RAMIPRIL",  # n=33,136,146; NOTE: also FDA-approved to improve survival post-MI complicated by heart failure/LV dysfunction
+    "TRANDOLAPRIL"  # n=1,363,466; NOTE: also FDA-approved for post-MI LV dysfunction/heart failure
   )
 )
 
@@ -2590,6 +2640,26 @@ spec_aldo_v1 <- DrugSpec$new(
     "EPLERENONE",                 2L,        "hypertension", "Inspra",
     "SPIRONOLACTONE",             2L,        "hypertension", NA,
     "SPIRONOLACTONE, MICRONIZED", 2L,        "hypertension", NA,
+    # @BKB: please review this priority = 3L tag. Per the priority-tier
+    # definition (P3 = indicated for the condition, alone or with others,
+    # but only outside the US), FINERENONE doesn't appear to have a
+    # hypertension indication anywhere -- Kerendia is approved worldwide
+    # (US, EU, Japan, China, 95+ countries) for CKD associated with T2D
+    # (and, as of 2025-2026, HF with LVEF >=40%), not for hypertension in
+    # any market. If confirmed, this row doesn't fit any of the three
+    # tiers and should probably be excluded from the hypertension spec
+    # entirely rather than tagged priority 3. Flagging for manual
+    # confirmation rather than changing unilaterally.
+    # Sources:
+    #   - https://www.bayer.com/media/en-us/us-fda-approves-finerenone-for-new-indication-in-patients-with-heart-failure-with-left-ventricular-ejection-fraction-of--40/
+    #     ("finerenone is approved for the treatment of adult patients with
+    #     CKD associated with T2D in more than 95 countries worldwide,
+    #     including in China, Europe, Japan, and the U.S."; new HF LVEF>=40%
+    #     indication as of July 2025 -- neither indication is hypertension)
+    #   - https://pace-cme.org/news/fda-approves-new-indication-for-finerenone-in-patients-with-hfmrefhfpef/2475672/
+    #     ("Finerenone was previously approved in the U.S. for the treatment
+    #     of adults with CKD associated with T2D ... It is authorized in
+    #     over 95 countries ... for this indication")
     "FINERENONE",                 3L,        "hypertension", "Kerendia"
   ),
   # HCTZ/SPIRONOLACTONE: n=27 in MC Rx table
@@ -2623,13 +2693,22 @@ spec_alpha_beta_v1 <- DrugSpec$new(
   "alpha_beta", "Alpha-Beta Blockers",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # LABETALOL is also used for hypertension of pregnancy (pre-eclampsia),
+  # but per bkbellows's PR #1 review that's still "hypertension" rather
+  # than a distinct condition, so it's intentionally left at priority 1
+  # (see AGENTS.md). CARVEDILOL, however, has genuinely distinct additional
+  # FDA-approved indications (heart failure, post-MI LV dysfunction) and
+  # moves to generic_names_probable.
   generic_names = c(
-    "CARVEDILOL",  # n=191,074,509 in MC Rx table
-    "CARVEDILOL PHOSPHATE",  # n=3,747,156 in MC Rx table
     "LABETALOL",
     "LABETALOL HCL"  # n=24,814,249 in MC Rx table
     # "LABETALOL IN DEXTROSE 5 %",  # n=5 in MC Rx table (this is an IV)
     # "LABETALOL IN NACL, ISO-OSMOTIC"  # n=27 in MC Rx table (this is an IV)
+  ),
+  generic_names_probable = c(
+    "CARVEDILOL",  # n=191,074,509; NOTE: also FDA-approved for heart failure and post-MI LV dysfunction
+    "CARVEDILOL PHOSPHATE"  # n=3,747,156; NOTE: also FDA-approved for heart failure and post-MI LV dysfunction
   )
 )
 
@@ -2637,10 +2716,13 @@ spec_alpha_beta_v2 <- DrugSpec$new(
   "alpha_beta", "Alpha-Beta Blockers",
   version = "v2",
   defs    = "From First Data Bank (FDB). Adds LABETOLOL spelling variant.",
+  # 2026-08-23: priority tiers added -- see spec_alpha_beta_v1 for rationale.
   generic_names = c(
-    "CARVEDILOL",  # n=191,074,509 in MC Rx table
     "LABETALOL",
     "LABETOLOL"
+  ),
+  generic_names_probable = c(
+    "CARVEDILOL"  # n=191,074,509; NOTE: also FDA-approved for heart failure and post-MI LV dysfunction
   )
 )
 
@@ -2649,15 +2731,30 @@ spec_arb_v1 <- DrugSpec$new(
   "arb", "Angiotensin Receptor Blockers (ARBs)",
   version = "v1",
   defs    = "From the Perisphere antihypertensive medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none). ARBs
+  # with a distinct additional FDA-approved indication (heart failure,
+  # diabetic nephropathy) move to generic_names_probable. TELMISARTAN's
+  # only other label claim is cardiovascular risk reduction in high-risk
+  # patients unable to take ACE inhibitors -- not a separately diagnosed
+  # condition -- so it stays priority 1, unlike the CAD/HF-type claims for
+  # the ACE inhibitors above.
+  # @BKB: this CV-risk-reduction-vs-distinct-condition line is more
+  # subjective than the other tiering calls in this file -- please
+  # spot-check whether TELMISARTAN's ONTARGET-based indication really
+  # belongs outside priority 2 (compare against PERINDOPRIL above, which
+  # was moved to probable for a similarly-framed stable-CAD risk-reduction
+  # claim).
   generic_names = c(
     "AZILSARTAN",
-    "CANDESARTAN",
     "EPROSARTAN",
-    "IRBESARTAN",  # n=30,438,200 in MC Rx table
-    "LOSARTAN",
     "OLMESARTAN",
-    "TELMISARTAN",  # n=15,875,773 in MC Rx table
-    "VALSARTAN"  # n=68,668,702 in MC Rx table
+    "TELMISARTAN"  # n=15,875,773 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CANDESARTAN",  # NOTE: also FDA-approved for chronic heart failure (NYHA II-IV)
+    "IRBESARTAN",  # n=30,438,200; NOTE: also FDA-approved for diabetic nephropathy in T2D
+    "LOSARTAN",  # NOTE: also FDA-approved for diabetic nephropathy in T2D
+    "VALSARTAN"  # n=68,668,702; NOTE: also FDA-approved for chronic heart failure and post-MI LV dysfunction
   )
 )
 
@@ -2665,6 +2762,9 @@ spec_arb_v2 <- DrugSpec$new(
   "arb", "Angiotensin Receptor Blockers (ARBs)",
   version = "v2",
   defs    = "From First Data Bank (FDB). Adds OLMESARTEN spelling variant.",
+  # 2026-08-23: priority tiers added -- see spec_arb_v1 for rationale.
+  # Fixed-dose antihypertensive combination products stay priority 1
+  # regardless of a standalone component's other indications.
   generic_names = c(
     "AMLODIPINE BES/OLMESARTAN MED",  # n=8,209,749 in MC Rx table
     "AMLODIPINE BESYLATE/VALSARTAN",  # n=4,094,379 in MC Rx table
@@ -2674,17 +2774,12 @@ spec_arb_v2 <- DrugSpec$new(
     "AZILSARTAN",
     "AZILSARTAN MED/CHLORTHALIDONE",  # n=2,480,588 in MC Rx table
     "AZILSARTAN MEDOXOMIL",  # n=2,408,516 in MC Rx table
-    "CANDESARTAN",
-    "CANDESARTAN CILEXETIL",  # n=6,691,116 in MC Rx table
     "CANDESARTAN CILEXETIL/HCTZ",  # n=3 in MC Rx table
     "CANDESARTAN/HYDROCHLOROTHIAZID",  # n=1,787,845 in MC Rx table
     "EPROSARTAN",
     "EPROSARTAN MESYLATE",  # n=49,411 in MC Rx table
     "EPROSARTAN/HYDROCHLOROTHIAZIDE",  # n=21,511 in MC Rx table
-    "IRBESARTAN",  # n=30,438,200 in MC Rx table
     "IRBESARTAN/HYDROCHLOROTHIAZIDE",  # n=8,128,615 in MC Rx table
-    "LOSARTAN",
-    "LOSARTAN POTASSIUM",  # n=404,382,651 in MC Rx table
     "LOSARTAN POTASSIUM/HCTZ",  # n=8 in MC Rx table
     "LOSARTAN/HYDROCHLOROTHIAZIDE",  # n=104,228,299 in MC Rx table
     "NEBIVOLOL HCL/VALSARTAN",  # n=10,523 in MC Rx table
@@ -2697,9 +2792,15 @@ spec_arb_v2 <- DrugSpec$new(
     "OLMESARTN/HYDROCHLOROTHIAZIDE",  # n=128,042 in MC Rx table
     "TELMISARTAN",  # n=15,875,773 in MC Rx table
     "TELMISARTAN/AMLODIPINE",  # n=425,910 in MC Rx table
-    "TELMISARTAN/HYDROCHLOROTHIAZID",  # n=6,353,512 in MC Rx table
-    "VALSARTAN",  # n=68,668,702 in MC Rx table
-    "VALSARTAN/HYDROCHLOROTHIAZIDE"  # n=42,938,341 in MC Rx table
+    "TELMISARTAN/HYDROCHLOROTHIAZID"  # n=6,353,512 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CANDESARTAN",  # NOTE: also FDA-approved for chronic heart failure (NYHA II-IV)
+    "CANDESARTAN CILEXETIL",  # n=6,691,116; NOTE: also FDA-approved for chronic heart failure (NYHA II-IV)
+    "IRBESARTAN",  # n=30,438,200; NOTE: also FDA-approved for diabetic nephropathy in T2D
+    "LOSARTAN",  # NOTE: also FDA-approved for diabetic nephropathy in T2D
+    "LOSARTAN POTASSIUM",  # n=404,382,651; NOTE: also FDA-approved for diabetic nephropathy in T2D
+    "VALSARTAN"  # n=68,668,702; NOTE: also FDA-approved for chronic heart failure and post-MI LV dysfunction
   )
 )
 
@@ -2708,28 +2809,44 @@ spec_beta_cardio_v1 <- DrugSpec$new(
   "beta_cardio", "Beta Blockers (Cardioselective)",
   version = "v1",
   defs    = "Cardioselective beta blockers from the Perisphere antihypertensive medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # ATENOLOL and the METOPROLOL salts carry distinct additional FDA-approved
+  # indications (angina, acute MI, heart failure for the succinate salt) and
+  # move to generic_names_probable. BISOPROLOL is guideline-recommended for
+  # heart failure (one of the three classic HFrEF beta blockers) but its US
+  # label remains hypertension-only, unlike carvedilol/metoprolol succinate
+  # -- that HF use is off-label in the US, so it stays priority 1 per the
+  # "indicated" (not just well-documented off-label) reading used elsewhere
+  # in this tiering scheme. BETAXOLOL (oral) has no other oral indication;
+  # its ophthalmic (glaucoma) form is a separate product/GNRC_NM.
   generic_names = c(
-    "ATENOLOL",  # n=133,656,295 in MC Rx table
     "ATENOLOL/CHLORTHALIDONE",  # n=9,970,067 in MC Rx table
     "BETAXOLOL",
     "BETAXOLOL HCL",  # n=856,860 in MC Rx table
     "BISOPROL/HYDROCHLOROTHIAZIDE",  # n=1,114,763 in MC Rx table
     "BISOPROLOL",
-    "BISOPROLOL FUMARATE",  # n=12,350,330 in MC Rx table
+    "BISOPROLOL FUMARATE",  # n=12,350,330; NOTE: guideline-recommended for HFrEF, but this is off-label in the US (no FDA HF indication)
     "BISOPROLOL FUMARATE/HCTZ",  # n=5,399,045 in MC Rx table
     "BISOPROLOL/HYDROCHLOROTHIAZIDE",  # n=7,336,325 in MC Rx table
     "CHLORTHALIDONE/ATENOLOL",  # n=32 in MC Rx table
-    "METOPROLOL",
     "METOPROLOL SU/HYDROCHLOROTHIAZ",  # n=48,126 in MC Rx table
-    "METOPROLOL SUCCINATE",  # n=362,686,652 in MC Rx table
     "METOPROLOL SUCCINATE/HCTZ",  # n=56,464 in MC Rx table
-    "METOPROLOL TARTRATE",  # n=238,634,149 in MC Rx table
     "METOPROLOL/HYDROCHLOROTHIAZIDE",  # n=1,266,691 in MC Rx table
     "METOPROL/HYDROCHLOROTHIAZIDE"  # n=17,286 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "ATENOLOL",  # n=133,656,295; NOTE: also FDA-approved for angina and acute MI
+    "METOPROLOL",  # NOTE: also FDA-approved for angina, acute MI, and (succinate ER) heart failure
+    "METOPROLOL SUCCINATE",  # n=362,686,652; NOTE: also FDA-approved for chronic heart failure (NYHA II-III)
+    "METOPROLOL TARTRATE"  # n=238,634,149; NOTE: also FDA-approved for angina and acute MI
   )
 )
 
 ### Beta blockers: cardioselective-vasodilatory ----
+# NEBIVOLOL/NEBIVOLOL HCL reviewed for priority tiers (2026-08-23): nebivolol
+# is used for heart failure in Europe (Nebilet), but that indication is not
+# FDA-approved -- its only US-approved indication is hypertension -- so it
+# stays priority 1 (no probable/cautious tier warranted).
 spec_beta_cardio_vasod_v1 <- DrugSpec$new(
   "beta_cardio_vasod", "Beta Blockers (Cardioselective, Vasodilatory)",
   version = "v1",
@@ -2741,15 +2858,20 @@ spec_beta_cardio_vasod_v1 <- DrugSpec$new(
 )
 
 ### Beta blockers: ISA ----
+# 2026-08-23: priority tiers added (this spec previously had none).
+# ACEBUTOLOL is also FDA-approved for ventricular arrhythmias (PVCs); the
+# other ISA beta blockers here have no other US-approved indication.
 spec_beta_int_sym_v1 <- DrugSpec$new(
   "beta_int_sym", "Beta Blockers (Intrinsic Sympathomimetic Activity)",
   version = "v1",
   defs    = "ISA beta blockers from the Perisphere antihypertensive medication list.",
   generic_names = c(
-    "ACEBUTOLOL",
     "CARTEOLOL",
     "PENBUTOLOL",
     "PINDOLOL"  # n=856,187 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "ACEBUTOLOL"  # NOTE: also FDA-approved for ventricular arrhythmias (PVCs)
   )
 )
 
@@ -2758,11 +2880,13 @@ spec_beta_int_sym_v2 <- DrugSpec$new(
   version = "v2",
   defs    = "ISA beta blockers from FDB. Excludes CARTEOLOL and PENBUTOLOL.",
   generic_names = c(
-    "ACEBUTOLOL",
-    "ACEBUTOLOL HCL",  # n=1,592,039 in MC Rx table
     "CARTEOLOL HCL",  # n=295,236 in MC Rx table
     "PENBUTOLOL SULFATE",  # n=7,256 in MC Rx table
     "PINDOLOL"  # n=856,187 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "ACEBUTOLOL",  # NOTE: also FDA-approved for ventricular arrhythmias (PVCs)
+    "ACEBUTOLOL HCL"  # n=1,592,039; NOTE: also FDA-approved for ventricular arrhythmias (PVCs)
   )
 )
 
@@ -2793,24 +2917,34 @@ spec_ccb_dhp_v1 <- DrugSpec$new(
   "ccb_dhp", "Calcium Channel Blockers (Dihydropyridines)",
   version = "v1",
   defs    = "Dihydropyridine CCBs from the Perisphere antihypertensive medication list and FDB.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # AMLODIPINE and NIFEDIPINE are also FDA-approved for angina; oral
+  # NICARDIPINE likewise. The IV/infusion NICARDIPINE formulations stay
+  # priority 1 -- that's a known route-of-administration gap in this
+  # tiering scheme (see AGENTS.md), not a change here. FELODIPINE,
+  # ISRADIPINE, LEVAMLODIPINE MALEATE, and NISOLDIPINE have no other known
+  # US-approved indication. AMLODIPINE BESYLATE/CELECOXIB is a discontinued
+  # niche combo product, left untouched per AGENTS.md.
   generic_names = c(
-    "AMLODIPINE",
-    "AMLODIPINE BENZOATE",  # n=98,290 in MC Rx table
-    "AMLODIPINE BESYLATE",  # n=609,583,943 in MC Rx table
     "AMLODIPINE BESYLATE/CELECOXIB",  # n=292 in MC Rx table
     "FELODIPINE",  # n=6,536,585 in MC Rx table
     "ISRADIPINE",  # n=300,988 in MC Rx table
     "LEVAMLODIPINE MALEATE",  # n=1,561 in MC Rx table
-    "NICARDIPINE",
-    "NICARDIPINE HCL",  # n=208,932 in MC Rx table
     "NICARDIPINE HCL IN 0.9% NACL",  # n=1,437 in MC Rx table
     "NICARDIPINE HCL-0.9% SOD CHLOR",  # n=35 in MC Rx table
     "NICARDIPINE IN 5 % DEXTROSE",  # n=1 in MC Rx table
     "NICARDIPINE IN DEXTROSE,ISO-OS",  # n=43 in MC Rx table
     "NICARDIPINE IN NACL, ISO-OSM",  # n=28,752 in MC Rx table
-    "NIFEDIPINE",  # n=56,763,296 in MC Rx table
-    "NIFEDIPINE, MICRONIZED",  # n=1,715 in MC Rx table
     "NISOLDIPINE"  # n=872,050 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "AMLODIPINE",  # NOTE: also FDA-approved for chronic stable and vasospastic angina, and CAD
+    "AMLODIPINE BENZOATE",  # n=98,290; NOTE: also FDA-approved for chronic stable and vasospastic angina, and CAD
+    "AMLODIPINE BESYLATE",  # n=609,583,943; NOTE: also FDA-approved for chronic stable and vasospastic angina, and CAD
+    "NICARDIPINE",  # NOTE: oral form also FDA-approved for chronic stable angina
+    "NICARDIPINE HCL",  # n=208,932; NOTE: oral form also FDA-approved for chronic stable angina
+    "NIFEDIPINE",  # n=56,763,296; NOTE: also FDA-approved for chronic stable and vasospastic angina
+    "NIFEDIPINE, MICRONIZED"  # n=1,715; NOTE: also FDA-approved for chronic stable and vasospastic angina
   )
 )
 
@@ -2886,20 +3020,27 @@ spec_central_v2 <- DrugSpec$new(
 )
 
 ### Diuretics: thiazide ----
+# 2026-08-23: priority tiers added to spec_diuretics_thiazide_v1/v2 (these
+# previously had none). Thiazide/thiazide-type diuretic labels list "edema"
+# (associated with heart failure, hepatic cirrhosis, corticosteroid/estrogen
+# therapy, or renal dysfunction) as a distinct FDA-approved indication
+# alongside hypertension -- the same rationale already used for loop
+# diuretics (spec_diuretics_loop_v1/v2) in this file -- so every standalone
+# entry here moves to generic_names_probable rather than staying priority 1.
 spec_diuretics_thiazide_v1 <- DrugSpec$new(
   "diuretics_thiazide", "Diuretics (Thiazide and Thiazide-Type)",
   version = "v1",
   defs    = "Thiazide diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c(
-    "BENDROFLUMETHIAZIDE",  # n=3 in MC Rx table
-    "CHLOROTHIAZIDE",  # n=282,136 in MC Rx table
-    "CHLOROTHIAZIDE SODIUM",  # n=26,344 in MC Rx table
-    "CHLORTHALIDONE",  # n=40,665,762 in MC Rx table
-    "HCTZ",
-    "HYDROCHLOROTHIAZIDE",  # n=313,609,977 in MC Rx table
-    "INDAPAMIDE",  # n=5,810,554 in MC Rx table
-    "METOLAZONE",  # n=10,414,571 in MC Rx table
-    "POLYTHIAZIDE"  # n=12 in MC Rx table
+  generic_names_probable = c(
+    "BENDROFLUMETHIAZIDE",  # n=3; NOTE: also FDA-approved for edema
+    "CHLOROTHIAZIDE",  # n=282,136; NOTE: also FDA-approved for edema
+    "CHLOROTHIAZIDE SODIUM",  # n=26,344; NOTE: also FDA-approved for edema
+    "CHLORTHALIDONE",  # n=40,665,762; NOTE: also FDA-approved for edema
+    "HCTZ",  # NOTE: also FDA-approved for edema
+    "HYDROCHLOROTHIAZIDE",  # n=313,609,977; NOTE: also FDA-approved for edema
+    "INDAPAMIDE",  # n=5,810,554; NOTE: also FDA-approved for edema associated with heart failure
+    "METOLAZONE",  # n=10,414,571; NOTE: also FDA-approved for edema (heart failure, renal disease)
+    "POLYTHIAZIDE"  # n=12; NOTE: also FDA-approved for edema
   )
 )
 
@@ -2907,17 +3048,17 @@ spec_diuretics_thiazide_v2 <- DrugSpec$new(
   "diuretics_thiazide", "Diuretics (Thiazide and Thiazide-Type)",
   version = "v2",
   defs    = "Thiazide diuretics from FDB. Includes additional agents and spelling variants.",
-  generic_names = c(
-    "BENDROFLUMETHIAZIDE",  # n=3 in MC Rx table
-    "CHLOROTHIAZIDE",  # n=282,136 in MC Rx table
-    "CHLOROTHIAZIDE SODIUM",  # n=26,344 in MC Rx table
-    "CHLORTHALIDONE",  # n=40,665,762 in MC Rx table
-    "HCTZ",
-    "HYDROCHLOROTHIAZIDE",  # n=313,609,977 in MC Rx table
-    "HYDROCHOLOROTHIAZIDE",
-    "INDAPAMIDE",  # n=5,810,554 in MC Rx table
-    "METOLAZONE",  # n=10,414,571 in MC Rx table
-    "POLYTHIAZIDE"  # n=12 in MC Rx table
+  generic_names_probable = c(
+    "BENDROFLUMETHIAZIDE",  # n=3; NOTE: also FDA-approved for edema
+    "CHLOROTHIAZIDE",  # n=282,136; NOTE: also FDA-approved for edema
+    "CHLOROTHIAZIDE SODIUM",  # n=26,344; NOTE: also FDA-approved for edema
+    "CHLORTHALIDONE",  # n=40,665,762; NOTE: also FDA-approved for edema
+    "HCTZ",  # NOTE: also FDA-approved for edema
+    "HYDROCHLOROTHIAZIDE",  # n=313,609,977; NOTE: also FDA-approved for edema
+    "HYDROCHOLOROTHIAZIDE",  # NOTE: also FDA-approved for edema (spelling variant of hydrochlorothiazide)
+    "INDAPAMIDE",  # n=5,810,554; NOTE: also FDA-approved for edema associated with heart failure
+    "METOLAZONE",  # n=10,414,571; NOTE: also FDA-approved for edema (heart failure, renal disease)
+    "POLYTHIAZIDE"  # n=12; NOTE: also FDA-approved for edema
   )
 )
 
@@ -2949,13 +3090,21 @@ spec_diuretics_loop_v2 <- DrugSpec$new(
 )
 
 ### Diuretics: potassium-sparing ----
+# 2026-08-23: priority tiers added to spec_diuretics_ksparing_v1/v2 (these
+# previously had none). AMILORIDE and TRIAMTERENE labels list "edema"
+# (heart failure, hepatic cirrhosis, nephrotic syndrome, steroid-induced,
+# idiopathic) as a distinct FDA-approved indication alongside hypertension
+# -- same rationale as the thiazide diuretics above -- so the standalone
+# ingredients move to generic_names_probable. Fixed-dose antihypertensive
+# combination products stay priority 1, matching the convention used
+# throughout this file.
 spec_diuretics_ksparing_v1 <- DrugSpec$new(
   "diuretics_ksparing", "Diuretics (Potassium-Sparing)",
   version = "v1",
   defs    = "Potassium-sparing diuretics from the Perisphere antihypertensive medication list.",
-  generic_names = c(
-    "AMILORIDE",
-    "TRIAMTERENE"  # n=308,537 in MC Rx table
+  generic_names_probable = c(
+    "AMILORIDE",  # NOTE: also FDA-approved for edema
+    "TRIAMTERENE"  # n=308,537; NOTE: also FDA-approved for edema
   )
 )
 
@@ -2964,21 +3113,27 @@ spec_diuretics_ksparing_v2 <- DrugSpec$new(
   version = "v2",
   defs    = "Potassium-sparing diuretics from FDB. Adds spelling variants.",
   generic_names = c(
-    "AMILORIDE",
-    "AMILORIDE HCL",  # n=1,731,096 in MC Rx table
     "AMILORIDE HCL/HCTZ",  # n=21 in MC Rx table
     "AMILORIDE/HYDROCHLOROTHIAZIDE",  # n=1,025,583 in MC Rx table
     "HCTZ/TRIAMTERENE",  # n=1,826 in MC Rx table
     "HYDROCHLOROTHIAZIDE/AMILOR HCL",  # n=32 in MC Rx table
-    "TRIAMTERENE",  # n=308,537 in MC Rx table
-    "TRIAMTERINE",
     "TRIAMTERENE/HCTZ",  # n=149 in MC Rx table
-    "TRIAMTERENE/HYDROCHLOROTHIAZID",  # n=66,530,088 in MC Rx table
-    "TRIMATERENE"
+    "TRIAMTERENE/HYDROCHLOROTHIAZID"  # n=66,530,088 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "AMILORIDE",  # NOTE: also FDA-approved for edema
+    "AMILORIDE HCL",  # n=1,731,096; NOTE: also FDA-approved for edema
+    "TRIAMTERENE",  # n=308,537; NOTE: also FDA-approved for edema
+    "TRIAMTERINE",  # NOTE: spelling variant of triamterene; also FDA-approved for edema
+    "TRIMATERENE"  # NOTE: spelling variant of triamterene; also FDA-approved for edema
   )
 )
 
 ### Direct renin inhibitors ----
+# Priority tiers reviewed (2026-08-23): ALISKIREN's only FDA-approved
+# indication is hypertension (its diabetic-nephropathy combination-therapy
+# program was discontinued for safety reasons, not approved); remains
+# priority 1.
 spec_renin_v1 <- DrugSpec$new(
   "renin", "Direct Renin Inhibitors",
   version = "v1",
@@ -3068,10 +3223,19 @@ spec_hypertension <- CompositeDrugSpec$new(
 ## Antidiabetic medication components ----
 #
 # Source: "Definition of conditions and medications_11262025.docx"
-# Section: Diabetes, history, version 2 (with medication) — GNN list
+# Section: Diabetes, history, source version 2 (with medication) — GNN list.
+# (This cites where the medication GNN list originated in the source
+# document; it does not imply a separately exported spec_diabetes_v2 -- see
+# the "Diabetes" section notes above.)
 
 ### Biguanides ----
 
+# Priority tiers reviewed (2026-08-23) for all antidiabetic sub-specs below
+# except spec_antidiab_alpha_glucosidase_v1 (already tiered) and
+# spec_antidiab_sglt2_v1 (tiered above): biguanides, sulfonylureas,
+# meglitinides, TZDs, DPP-4 inhibitors, insulin/supplies, and amylin
+# analogues have no other known US-approved indication beyond diabetes, so
+# they remain priority 1 throughout.
 spec_antidiab_biguanide_v1 <- DrugSpec$new(
   "biguanide", "Biguanides",
   version = "v1",
@@ -3185,14 +3349,18 @@ spec_antidiab_sglt2_v1 <- DrugSpec$new(
   "sglt2", "SGLT-2 Inhibitors",
   version = "v1",
   defs    = "SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # DAPAGLIFLOZIN, EMPAGLIFLOZIN, and CANAGLIFLOZIN each carry a distinct
+  # additional FDA-approved indication beyond T2D (heart failure and/or
+  # chronic kidney disease/diabetic nephropathy) and move to
+  # generic_names_probable. ERTUGLIFLOZIN and BEXAGLIFLOZIN have no other
+  # known US-approved indication. Fixed-dose antidiabetic combination
+  # products (all metformin/DPP-4 combos here) stay priority 1.
   generic_names = c(
-    "CANAGLIFLOZIN",  # n=17,633,966 in MC Rx table
     "CANAGLIFLOZIN/METFORM",
     "CANAGLIFLOZIN/METFORMIN",
-    "DAPAGLIFLOZIN",
     "DAPAGLIFLOZIN/METFORMIN",
     "DAPAGLIFLOZIN/SAXAGLIPTIN",
-    "EMPAGLIFLOZIN",  # n=75,691,170 in MC Rx table
     "EMPAGLIFLOZIN/LINAGLIPTIN",  # n=2,418,949 in MC Rx table
     "EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN",
     "EMPAGLIFLOZIN/METFORMIN",
@@ -3202,13 +3370,18 @@ spec_antidiab_sglt2_v1 <- DrugSpec$new(
     "BEXAGLIFLOZIN",  # n=9,839 in MC Rx table
     "CANAGLIFLOZIN/METFORMIN HCL",  # n=2,366,509 in MC Rx table
     "DAPAGLIFLOZ PROPANED/METFORMIN",  # n=157,863 in MC Rx table
-    "DAPAGLIFLOZIN PROPANEDIOL",  # n=44,710,552 in MC Rx table
     "DAPAGLIFLOZIN/METFORMIN HCL",  # n=4,946,123 in MC Rx table
     "DAPAGLIFLOZIN/SAXAGLIPTIN HCL",  # n=59,138 in MC Rx table
     "EMPAGLIFLOZ/LINAGLIP/METFORMIN",  # n=443,960 in MC Rx table
     "EMPAGLIFLOZIN/METFORMIN HCL",  # n=5,909,272 in MC Rx table
     "ERTUGLIFLOZIN PIDOLATE",  # n=3,094,383 in MC Rx table
     "ERTUGLIFLOZIN/SITAGLIPTIN PHOS"  # n=29,822 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CANAGLIFLOZIN",  # n=17,633,966; NOTE: also FDA-approved for diabetic nephropathy with albuminuria (CREDENCE)
+    "DAPAGLIFLOZIN",  # NOTE: also FDA-approved for heart failure (HFrEF/HFpEF) and chronic kidney disease
+    "DAPAGLIFLOZIN PROPANEDIOL",  # n=44,710,552; NOTE: also FDA-approved for heart failure (HFrEF/HFpEF) and chronic kidney disease
+    "EMPAGLIFLOZIN"  # n=75,691,170; NOTE: also FDA-approved for heart failure (HFrEF/HFpEF) and chronic kidney disease
   )
 )
 
@@ -3436,6 +3609,25 @@ spec_diabetes <- CompositeDrugSpec$new(
 # Note: NDC 54569595100 maps to AMLODIPINE/ATORVASTATIN and NDC 55887036990 to
 # LOVASTATIN in some pharmacy files; those mappings are handled upstream.
 
+# Priority tiers reviewed (2026-08-23) for all lipid-lowering sub-specs
+# below: statins, ezetimibe, PCSK9 inhibitors, fibrates, and niacin also
+# carry cardiovascular event risk-reduction claims on their labels, but
+# that's treated as an extension of the hyperlipidemia/ASCVD-risk
+# indication itself rather than a distinct diagnosed condition (unlike,
+# e.g., heart failure or diabetic nephropathy for the antihypertensives
+# above), so these remain priority 1. See spec_ll_bile_acid_seq_v1 above
+# for the two exceptions found in this drug class (CHOLESTYRAMINE,
+# COLESEVELAM).
+# @BKB: this CV-risk-reduction-vs-distinct-condition line is more
+# subjective than the other tiering calls in this file -- please
+# spot-check the statin and PCSK9 inhibitor (spec_ll_pcsk9_v1, below)
+# entries in particular. Statins and PCSK9 inhibitors (e.g. EVOLOCUMAB,
+# ALIROCUMAB) carry FDA-approved indications for reducing the risk of MI,
+# stroke, and coronary revascularization in patients with established
+# cardiovascular disease -- if that's judged a distinct-enough condition
+# (comparable to how CAPTOPRIL/PERINDOPRIL were moved to probable for
+# heart-failure/stable-CAD claims above), some of these should move from
+# priority 1 to priority 2 rather than staying put.
 spec_ll_statin_v1 <- DrugSpec$new(
   "statin", "Statins (HMG-CoA Reductase Inhibitors)",
   version = "v1",
@@ -3517,16 +3709,24 @@ spec_ll_bile_acid_seq_v1 <- DrugSpec$new(
   "bile_acid_seq", "Bile Acid Sequestrants",
   version = "v1",
   defs    = "From the Perisphere lipid-lowering medication list.",
+  # 2026-08-23: priority tiers added (this spec previously had none).
+  # CHOLESTYRAMINE is also FDA-approved for pruritus associated with
+  # partial biliary obstruction, and COLESEVELAM is separately FDA-approved
+  # as an adjunct to improve glycemic control in T2D -- both distinct
+  # conditions from hyperlipidemia. COLESTIPOL has no other known
+  # US-approved indication.
   generic_names = c(
-    "CHOLESTYRAMINE",  # n=166,587 in MC Rx table
-    "CHOLESTYRAMINE (WITH SUGAR)",  # n=8,443,157 in MC Rx table
-    "CHOLESTYRAMINE/ASPARTAME",  # n=3,070,417 in MC Rx table
-    "CHOLESTYRAMINE/SUCROSE",  # n=105,327 in MC Rx table
-    "COLESEVELAM",
-    "COLESEVELAM HCL",  # n=8,444,448 in MC Rx table
     "COLESTIPOL",
     "COLESTIPOL HCL",  # n=6,982,208 in MC Rx table
     "COLESTIPOL HCL,MICRONIZED"  # n=29,249 in MC Rx table
+  ),
+  generic_names_probable = c(
+    "CHOLESTYRAMINE",  # n=166,587; NOTE: also FDA-approved for pruritus associated with partial biliary obstruction
+    "CHOLESTYRAMINE (WITH SUGAR)",  # n=8,443,157; NOTE: also FDA-approved for pruritus associated with partial biliary obstruction
+    "CHOLESTYRAMINE/ASPARTAME",  # n=3,070,417; NOTE: also FDA-approved for pruritus associated with partial biliary obstruction
+    "CHOLESTYRAMINE/SUCROSE",  # n=105,327; NOTE: also FDA-approved for pruritus associated with partial biliary obstruction
+    "COLESEVELAM",  # NOTE: also FDA-approved as adjunct therapy to improve glycemic control in T2D
+    "COLESEVELAM HCL"  # n=8,444,448; NOTE: also FDA-approved as adjunct therapy to improve glycemic control in T2D
   )
 )
 
@@ -3582,8 +3782,6 @@ spec_hyperlipidemia <- CompositeDrugSpec$new(
 usethis::use_data(
   # Hypertension
   spec_hypertension_v1,
-  # Ischemic stroke (not included b/c its in stroke)
-  # spec_isch_stroke_v1,
   # ASCVD composite
   spec_ascvd,
   # Heart failure
