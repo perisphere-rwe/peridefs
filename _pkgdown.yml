@@ -99,6 +99,12 @@ reference:
   contents:
   - get_depression_v1_codes
   - get_depression_v1_defs
+- title: 'Conditions: Musculoskeletal'
+  desc: |
+    Osteoarthritis (ICD-9 715.xx; ICD-10 M15-M19).
+  contents:
+  - get_osteoarthritis_v1_codes
+  - get_osteoarthritis_v1_defs
 - title: 'Drugs: Hypertension'
   desc: |
     ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
