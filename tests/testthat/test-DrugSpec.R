@@ -72,13 +72,13 @@ test_that("get_hypertension_generics(component = 'acei_v1') returns tibble tagge
 })
 
 test_that("get_hypertension_generics(component = 'acei_v1') includes expected GNNs", {
-  gnns <- get_hypertension_generics(component = "acei_v1")$generic
+  gnns <- get_hypertension_generics(component = "acei_v1", priority = 1:2)$generic
   expect_true("LISINOPRIL"  %in% gnns)
   expect_true("RAMIPRIL"    %in% gnns)
 })
 
 test_that("get_hypertension_generics(component = 'acei_v2') has FDB variants", {
-  gnns <- get_hypertension_generics(component = "acei_v2")$generic
+  gnns <- get_hypertension_generics(component = "acei_v2", priority = 1:2)$generic
   expect_true("FOSINIPRIL"  %in% gnns)
   expect_true("MOEXEPRIL"   %in% gnns)
 })
@@ -144,7 +144,7 @@ test_that("antihypertensive union-of-components test with versioned names", {
                         "central_v1", "renin_v1", "vasodilators_v1")
   all_comp <- unique(unlist(lapply(
     component_names,
-    \(nm) get_hypertension_generics(component = nm)$generic
+    \(nm) get_hypertension_generics(component = nm, priority = 1:2)$generic
   )))
   # v1 components only — should equal the explicit v1 subset
   expect_true(length(all_comp) > 0L)

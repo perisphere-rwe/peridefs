@@ -308,6 +308,21 @@ get_asthma_v1_codes <- make_code_getter(spec_asthma_v1)
 #' @export
 get_asthma_v1_defs <- make_def_getter(spec_asthma_v1)
 
+# ---- Osteoarthritis -----------------------------------------------------
+
+#' Retrieve ICD codes for osteoarthritis
+#' @inheritParams get_hypertension_v1_codes
+#' @seealso [get_osteoarthritis_v1_defs()], \code{spec_osteoarthritis_v1}
+#' @examples
+#' get_osteoarthritis_v1_codes()
+#' get_osteoarthritis_v1_codes(code_type = "dx_icd10")
+#' @export
+get_osteoarthritis_v1_codes <- make_code_getter(spec_osteoarthritis_v1)
+
+#' @rdname get_osteoarthritis_v1_codes
+#' @export
+get_osteoarthritis_v1_defs <- make_def_getter(spec_osteoarthritis_v1)
+
 # ---- Depression ---------------------------------------------------------
 
 #' Retrieve ICD codes for depression
