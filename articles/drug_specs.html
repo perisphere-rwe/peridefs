@@ -127,7 +127,7 @@ human-readable <code>label</code>
 <span><span class="co">#&gt;   `acei_v1`: ACE Inhibitors (10 GNNs)</span></span>
 <span><span class="co">#&gt;   `acei_v2`: ACE Inhibitors (31 GNNs)</span></span>
 <span><span class="co">#&gt;   `arb_v1`: Angiotensin Receptor Blockers (ARBs) (8 GNNs)</span></span>
-<span><span class="co">#&gt;   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (34 GNNs)</span></span>
+<span><span class="co">#&gt;   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (33 GNNs)</span></span>
 <span><span class="co">#&gt;   `alpha_v1`: Alpha-1 Blockers (7 GNNs)</span></span>
 <span><span class="co">#&gt;   `alpha_beta_v1`: Alpha-Beta Blockers (4 GNNs)</span></span>
 <span><span class="co">#&gt;   `alpha_beta_v2`: Alpha-Beta Blockers (3 GNNs)</span></span>
@@ -161,25 +161,17 @@ human-readable <code>label</code>
 <code>get_*_generics()</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
-<span><span class="co">#&gt;    generic      brand     priority condition class version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> BENAZEPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CAPTOPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ENALAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FOSINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> LISINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> MOEXIPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> PERINDOPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> QUINAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> RAMIPRIL     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRANDOLAPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
+<span><span class="co">#&gt;   generic    brand     priority condition class version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BENAZEPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MOEXIPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span></code></pre></div>
 <p>Omit <code>component</code> (or pass <code>"all"</code>) to retrieve
 every component’s GNNs at once, distinguished by the <code>class</code>
 and <code>version</code> columns:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 205</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 130</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="comparing-versions">Comparing versions<a class="anchor" aria-label="anchor" href="#comparing-versions"></a>
 </h3>
@@ -189,36 +181,35 @@ variants:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># v1 — Perisphere source</span></span>
 <span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
-<span><span class="co">#&gt;    generic      brand     priority condition class version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> BENAZEPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CAPTOPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> ENALAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> FOSINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> LISINOPRIL   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> MOEXIPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> PERINDOPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> QUINAPRIL    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> RAMIPRIL     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> TRANDOLAPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
+<span><span class="co">#&gt;   generic    brand     priority condition class version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> BENAZEPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> MOEXIPRIL  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v1</span></span>
 <span></span>
 <span><span class="co"># v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)</span></span>
 <span><span class="fu"><a href="../reference/get_hypertension_generics.html">get_hypertension_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"acei_v2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 31 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 18 × 6</span></span></span>
 <span><span class="co">#&gt;    generic                        brand     priority condition class version</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> AMLODIPINE BESYLATE/BENAZEPRIL <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> BENAZEPRIL                     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> BENAZEPRIL HCL                 <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> BENAZEPRIL/HYDROCHLOROTHIAZIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CAPTOPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CAPTOPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ENALAPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ENALAPRIL MALEATE              <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ENALAPRIL MALEATE/FELODIPINE   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ENALAPRIL MALEATE/HCTZ         <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 21 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CAPTOPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> ENALAPRIL MALEATE/FELODIPINE   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> ENALAPRIL MALEATE/HCTZ         <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ENALAPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ENALAPRILAT DIHYDRATE          <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> FOSINOPRIL/HYDROCHLOROTHIAZIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> LISINOPRIL/HYDROCHLOROTHIAZIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> MOEXEPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> MOEXIPRIL                      <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> MOEXIPRIL HCL                  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> MOEXIPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> PERINDOPRIL ARG/AMLODIPINE BES <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> QUINAPRIL/HYDROCHLOROTHIAZIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> TRANDOLAPRIL/VERAPAMIL HCL     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 <span style="color: #BB0000;">NA</span>        acei  v2</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -365,20 +356,28 @@ repeating it in <code>class</code> would be redundant:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INSULIN GLARGINE/LIXISENATIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_generics.html">get_diabetes_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 6</span></span></span>
 <span><span class="co">#&gt;    generic                             brand  priority condition class version</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CANAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CANAGLIFLOZIN/METFORM               <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CANAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> DAPAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> DAPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> DAPAGLIFLOZIN/SAXAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> EMPAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> EMPAGLIFLOZIN/LINAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> EMPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CANAGLIFLOZIN/METFORM               <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CANAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> DAPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> DAPAGLIFLOZIN/SAXAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> EMPAGLIFLOZIN/LINAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> EMPAGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> ERTUGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> ERTUGLIFLOZIN/METFORMIN             <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> ERTUGLIFLOZIN/SITAGLIPTIN           <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> BEXAGLIFLOZIN                       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> CANAGLIFLOZIN/METFORMIN HCL         <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> DAPAGLIFLOZ PROPANED/METFORMIN      <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> DAPAGLIFLOZIN/METFORMIN HCL         <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> DAPAGLIFLOZIN/SAXAGLIPTIN HCL       <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> EMPAGLIFLOZ/LINAGLIP/METFORMIN      <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> EMPAGLIFLOZIN/METFORMIN HCL         <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> ERTUGLIFLOZIN PIDOLATE              <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> ERTUGLIFLOZIN/SITAGLIPTIN PHOS      <span style="color: #949494;">&lt;chr&gt;</span>         1 <span style="color: #BB0000;">NA</span>        sglt2 v1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="creating-your-own-drug-spec">Creating your own drug spec<a class="anchor" aria-label="anchor" href="#creating-your-own-drug-spec"></a>

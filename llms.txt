@@ -244,6 +244,14 @@ Depression history (diagnosis or antidepressive medication).
   [`get_depression_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md)
   : Retrieve ICD codes for depression
 
+## Conditions: Musculoskeletal
+
+Osteoarthritis (ICD-9 715.xx; ICD-10 M15-M19).
+
+- [`get_osteoarthritis_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_osteoarthritis_v1_codes.md)
+  [`get_osteoarthritis_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_osteoarthritis_v1_codes.md)
+  : Retrieve ICD codes for osteoarthritis
+
 ## Drugs: Hypertension
 
 ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.

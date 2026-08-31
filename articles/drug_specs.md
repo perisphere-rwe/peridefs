@@ -31,7 +31,7 @@ spec_hypertension
 #>   `acei_v1`: ACE Inhibitors (10 GNNs)
 #>   `acei_v2`: ACE Inhibitors (31 GNNs)
 #>   `arb_v1`: Angiotensin Receptor Blockers (ARBs) (8 GNNs)
-#>   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (34 GNNs)
+#>   `arb_v2`: Angiotensin Receptor Blockers (ARBs) (33 GNNs)
 #>   `alpha_v1`: Alpha-1 Blockers (7 GNNs)
 #>   `alpha_beta_v1`: Alpha-Beta Blockers (4 GNNs)
 #>   `alpha_beta_v2`: Alpha-Beta Blockers (3 GNNs)
@@ -67,19 +67,11 @@ Pass the versioned component name to `get_*_generics()`:
 ``` r
 
 get_hypertension_generics(component = "acei_v1")
-#> # A tibble: 10 × 6
-#>    generic      brand     priority condition class version
-#>    <chr>        <list>       <int> <chr>     <chr> <chr>  
-#>  1 BENAZEPRIL   <chr [0]>        1 NA        acei  v1     
-#>  2 CAPTOPRIL    <chr [0]>        1 NA        acei  v1     
-#>  3 ENALAPRIL    <chr [0]>        1 NA        acei  v1     
-#>  4 FOSINOPRIL   <chr [0]>        1 NA        acei  v1     
-#>  5 LISINOPRIL   <chr [0]>        1 NA        acei  v1     
-#>  6 MOEXIPRIL    <chr [0]>        1 NA        acei  v1     
-#>  7 PERINDOPRIL  <chr [0]>        1 NA        acei  v1     
-#>  8 QUINAPRIL    <chr [0]>        1 NA        acei  v1     
-#>  9 RAMIPRIL     <chr [0]>        1 NA        acei  v1     
-#> 10 TRANDOLAPRIL <chr [0]>        1 NA        acei  v1
+#> # A tibble: 2 × 6
+#>   generic    brand     priority condition class version
+#>   <chr>      <list>       <int> <chr>     <chr> <chr>  
+#> 1 BENAZEPRIL <chr [0]>        1 NA        acei  v1     
+#> 2 MOEXIPRIL  <chr [0]>        1 NA        acei  v1
 ```
 
 Omit `component` (or pass `"all"`) to retrieve every component’s GNNs at
@@ -88,7 +80,7 @@ once, distinguished by the `class` and `version` columns:
 ``` r
 
 get_hypertension_generics() |> nrow()
-#> [1] 205
+#> [1] 130
 ```
 
 ### Comparing versions
@@ -100,36 +92,35 @@ list and v2 from First DataBank (FDB), which may add spelling variants:
 
 # v1 — Perisphere source
 get_hypertension_generics(component = "acei_v1")
-#> # A tibble: 10 × 6
-#>    generic      brand     priority condition class version
-#>    <chr>        <list>       <int> <chr>     <chr> <chr>  
-#>  1 BENAZEPRIL   <chr [0]>        1 NA        acei  v1     
-#>  2 CAPTOPRIL    <chr [0]>        1 NA        acei  v1     
-#>  3 ENALAPRIL    <chr [0]>        1 NA        acei  v1     
-#>  4 FOSINOPRIL   <chr [0]>        1 NA        acei  v1     
-#>  5 LISINOPRIL   <chr [0]>        1 NA        acei  v1     
-#>  6 MOEXIPRIL    <chr [0]>        1 NA        acei  v1     
-#>  7 PERINDOPRIL  <chr [0]>        1 NA        acei  v1     
-#>  8 QUINAPRIL    <chr [0]>        1 NA        acei  v1     
-#>  9 RAMIPRIL     <chr [0]>        1 NA        acei  v1     
-#> 10 TRANDOLAPRIL <chr [0]>        1 NA        acei  v1
+#> # A tibble: 2 × 6
+#>   generic    brand     priority condition class version
+#>   <chr>      <list>       <int> <chr>     <chr> <chr>  
+#> 1 BENAZEPRIL <chr [0]>        1 NA        acei  v1     
+#> 2 MOEXIPRIL  <chr [0]>        1 NA        acei  v1
 
 # v2 — FDB (adds FOSINIPRIL and MOEXEPRIL variants)
 get_hypertension_generics(component = "acei_v2")
-#> # A tibble: 31 × 6
+#> # A tibble: 18 × 6
 #>    generic                        brand     priority condition class version
 #>    <chr>                          <list>       <int> <chr>     <chr> <chr>  
 #>  1 AMLODIPINE BESYLATE/BENAZEPRIL <chr [0]>        1 NA        acei  v2     
 #>  2 BENAZEPRIL                     <chr [0]>        1 NA        acei  v2     
 #>  3 BENAZEPRIL HCL                 <chr [0]>        1 NA        acei  v2     
 #>  4 BENAZEPRIL/HYDROCHLOROTHIAZIDE <chr [0]>        1 NA        acei  v2     
-#>  5 CAPTOPRIL                      <chr [0]>        1 NA        acei  v2     
-#>  6 CAPTOPRIL/HYDROCHLOROTHIAZIDE  <chr [0]>        1 NA        acei  v2     
-#>  7 ENALAPRIL                      <chr [0]>        1 NA        acei  v2     
-#>  8 ENALAPRIL MALEATE              <chr [0]>        1 NA        acei  v2     
-#>  9 ENALAPRIL MALEATE/FELODIPINE   <chr [0]>        1 NA        acei  v2     
-#> 10 ENALAPRIL MALEATE/HCTZ         <chr [0]>        1 NA        acei  v2     
-#> # ℹ 21 more rows
+#>  5 CAPTOPRIL/HYDROCHLOROTHIAZIDE  <chr [0]>        1 NA        acei  v2     
+#>  6 ENALAPRIL MALEATE/FELODIPINE   <chr [0]>        1 NA        acei  v2     
+#>  7 ENALAPRIL MALEATE/HCTZ         <chr [0]>        1 NA        acei  v2     
+#>  8 ENALAPRIL/HYDROCHLOROTHIAZIDE  <chr [0]>        1 NA        acei  v2     
+#>  9 ENALAPRILAT DIHYDRATE          <chr [0]>        1 NA        acei  v2     
+#> 10 FOSINOPRIL/HYDROCHLOROTHIAZIDE <chr [0]>        1 NA        acei  v2     
+#> 11 LISINOPRIL/HYDROCHLOROTHIAZIDE <chr [0]>        1 NA        acei  v2     
+#> 12 MOEXEPRIL                      <chr [0]>        1 NA        acei  v2     
+#> 13 MOEXIPRIL                      <chr [0]>        1 NA        acei  v2     
+#> 14 MOEXIPRIL HCL                  <chr [0]>        1 NA        acei  v2     
+#> 15 MOEXIPRIL/HYDROCHLOROTHIAZIDE  <chr [0]>        1 NA        acei  v2     
+#> 16 PERINDOPRIL ARG/AMLODIPINE BES <chr [0]>        1 NA        acei  v2     
+#> 17 QUINAPRIL/HYDROCHLOROTHIAZIDE  <chr [0]>        1 NA        acei  v2     
+#> 18 TRANDOLAPRIL/VERAPAMIL HCL     <chr [0]>        1 NA        acei  v2
 ```
 
 ## Component labels
@@ -288,20 +279,28 @@ get_diabetes_generics(component = "glp1_v1")
 ``` r
 
 get_diabetes_generics(component = "sglt2_v1")
-#> # A tibble: 23 × 6
+#> # A tibble: 19 × 6
 #>    generic                             brand  priority condition class version
 #>    <chr>                               <list>    <int> <chr>     <chr> <chr>  
-#>  1 CANAGLIFLOZIN                       <chr>         1 NA        sglt2 v1     
-#>  2 CANAGLIFLOZIN/METFORM               <chr>         1 NA        sglt2 v1     
-#>  3 CANAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
-#>  4 DAPAGLIFLOZIN                       <chr>         1 NA        sglt2 v1     
-#>  5 DAPAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
-#>  6 DAPAGLIFLOZIN/SAXAGLIPTIN           <chr>         1 NA        sglt2 v1     
-#>  7 EMPAGLIFLOZIN                       <chr>         1 NA        sglt2 v1     
-#>  8 EMPAGLIFLOZIN/LINAGLIPTIN           <chr>         1 NA        sglt2 v1     
-#>  9 EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN <chr>         1 NA        sglt2 v1     
-#> 10 EMPAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
-#> # ℹ 13 more rows
+#>  1 CANAGLIFLOZIN/METFORM               <chr>         1 NA        sglt2 v1     
+#>  2 CANAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
+#>  3 DAPAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
+#>  4 DAPAGLIFLOZIN/SAXAGLIPTIN           <chr>         1 NA        sglt2 v1     
+#>  5 EMPAGLIFLOZIN/LINAGLIPTIN           <chr>         1 NA        sglt2 v1     
+#>  6 EMPAGLIFLOZIN/LINAGLIPTIN/METFORMIN <chr>         1 NA        sglt2 v1     
+#>  7 EMPAGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
+#>  8 ERTUGLIFLOZIN                       <chr>         1 NA        sglt2 v1     
+#>  9 ERTUGLIFLOZIN/METFORMIN             <chr>         1 NA        sglt2 v1     
+#> 10 ERTUGLIFLOZIN/SITAGLIPTIN           <chr>         1 NA        sglt2 v1     
+#> 11 BEXAGLIFLOZIN                       <chr>         1 NA        sglt2 v1     
+#> 12 CANAGLIFLOZIN/METFORMIN HCL         <chr>         1 NA        sglt2 v1     
+#> 13 DAPAGLIFLOZ PROPANED/METFORMIN      <chr>         1 NA        sglt2 v1     
+#> 14 DAPAGLIFLOZIN/METFORMIN HCL         <chr>         1 NA        sglt2 v1     
+#> 15 DAPAGLIFLOZIN/SAXAGLIPTIN HCL       <chr>         1 NA        sglt2 v1     
+#> 16 EMPAGLIFLOZ/LINAGLIP/METFORMIN      <chr>         1 NA        sglt2 v1     
+#> 17 EMPAGLIFLOZIN/METFORMIN HCL         <chr>         1 NA        sglt2 v1     
+#> 18 ERTUGLIFLOZIN PIDOLATE              <chr>         1 NA        sglt2 v1     
+#> 19 ERTUGLIFLOZIN/SITAGLIPTIN PHOS      <chr>         1 NA        sglt2 v1
 ```
 
 ## Creating your own drug spec
