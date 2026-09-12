@@ -209,27 +209,49 @@ get_obesity_v1_codes <- make_code_getter(spec_obesity_v1)
 #' @export
 get_obesity_v1_defs <- make_def_getter(spec_obesity_v1)
 
-# ---- Diabetes Mellitus --------------------------------------------------
+# ---- Type 1 Diabetes Mellitus -------------------------------------------
 
-#' Retrieve ICD codes for diabetes mellitus
+#' Retrieve ICD codes for Type 1 diabetes mellitus
 #'
 #' @description
-#' Returns code sets from a diabetes [CodeSpec]. The condition definition
-#' is diagnosis-based, with a medication criterion (see
-#' `spec_diabetes`) as an alternative qualifying path, and patients are
-#' further classified into four mutually exclusive categories (no diabetes;
-#' diabetes without antidiabetic medication; diabetes with oral
-#' antidiabetic; diabetes with insulin).
+#' Returns code sets from `spec_diabetes_type1_v1`. The definition is
+#' diagnosis-based (ICD-9 Type 1 codes 250.x1/250.x3 and ICD-10 E10.xx),
+#' with an alternative qualifying path of \eqn{\geq}1 pharmacy claim for
+#' insulin or an amylin analogue (see `spec_diabetes_type1`).
 #'
 #' @inheritParams get_hypertension_v1_codes
-#' @seealso [get_diabetes_v1_defs()], \code{spec_diabetes_v1}
+#' @seealso [get_diabetes_type1_v1_defs()], \code{spec_diabetes_type1_v1}
 #' @export
-get_diabetes_v1_codes <- make_code_getter(spec_diabetes_v1)
+get_diabetes_type1_v1_codes <- make_code_getter(spec_diabetes_type1_v1)
 
-#' @rdname get_diabetes_v1_codes
-#' @seealso [get_diabetes_v1_defs()]
+#' @rdname get_diabetes_type1_v1_codes
+#' @seealso [get_diabetes_type1_v1_codes()]
 #' @export
-get_diabetes_v1_defs <- make_def_getter(spec_diabetes_v1)
+get_diabetes_type1_v1_defs <- make_def_getter(spec_diabetes_type1_v1)
+
+# ---- Type 2 Diabetes Mellitus -------------------------------------------
+
+#' Retrieve ICD codes for Type 2 diabetes mellitus
+#'
+#' @description
+#' Returns code sets from `spec_diabetes_type2_v1`. The definition is
+#' diagnosis-based (ICD-9 Type 2/unspecified codes 250.x0/250.x2 plus
+#' complication codes 357.2, 362.0x, 366.41; and ICD-10 E11.xx, E08.xx,
+#' E09.xx, E13.xx), with an alternative qualifying path of \eqn{\geq}1
+#' pharmacy claim for an oral antidiabetic drug or insulin (see
+#' `spec_diabetes_type2`). Patients are further classified into four
+#' mutually exclusive categories (no diabetes; diabetes without antidiabetic
+#' medication; diabetes with oral antidiabetic; diabetes with insulin).
+#'
+#' @inheritParams get_hypertension_v1_codes
+#' @seealso [get_diabetes_type2_v1_defs()], \code{spec_diabetes_type2_v1}
+#' @export
+get_diabetes_type2_v1_codes <- make_code_getter(spec_diabetes_type2_v1)
+
+#' @rdname get_diabetes_type2_v1_codes
+#' @seealso [get_diabetes_type2_v1_codes()]
+#' @export
+get_diabetes_type2_v1_defs <- make_def_getter(spec_diabetes_type2_v1)
 
 # ---- COPD ---------------------------------------------------------------
 

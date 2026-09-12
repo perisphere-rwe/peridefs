@@ -64,13 +64,36 @@ get_hypertension_generics <- make_generic_getter(spec_hypertension, composite = 
 #' @export
 get_hypertension_meds_labels <- make_meds_labels_getter(spec_hypertension)
 
-# ---- Diabetes (composite) -----------------------------------------------
+# ---- Diabetes Type 1 (composite) ----------------------------------------
 
-#' Retrieve generic drug names for diabetes medications
+#' Retrieve generic drug names for Type 1 diabetes medications
 #'
 #' @description
-#' `spec_diabetes` is a [CompositeDrugSpec] containing all versioned
-#' antidiabetic leaf specs: `biguanide_v1`, `sulfonylurea_v1`,
+#' `spec_diabetes_type1` is a [CompositeDrugSpec] containing antidiabetic
+#' leaf specs with FDA approval for Type 1 diabetes: `insulin_v1`,
+#' `amylin_v1`. Note that both components also appear in
+#' `spec_diabetes_type2` because insulin and amylin are used in Type 2
+#' as well.
+#'
+#' @inheritParams drug_accessors
+#' @return `get_*_generics()`: a tibble with columns `generic`, `brand`,
+#'   `priority`, `condition`, `class`, and `version`. `get_*_meds_labels()`:
+#'   a tibble with columns `name` and `label`.
+#' @seealso \code{spec_diabetes_type1}
+#' @export
+get_diabetes_type1_generics <- make_generic_getter(spec_diabetes_type1, composite = TRUE)
+
+#' @rdname get_diabetes_type1_generics
+#' @export
+get_diabetes_type1_meds_labels <- make_meds_labels_getter(spec_diabetes_type1)
+
+# ---- Diabetes Type 2 (composite) ----------------------------------------
+
+#' Retrieve generic drug names for Type 2 diabetes medications
+#'
+#' @description
+#' `spec_diabetes_type2` is a [CompositeDrugSpec] containing all ten
+#' versioned antidiabetic leaf specs: `biguanide_v1`, `sulfonylurea_v1`,
 #' `meglitinide_v1`, `tzd_v1`, `alpha_glucosidase_v1`, `dpp4_v1`,
 #' `sglt2_v1`, `glp1_v1`, `insulin_v1`, `amylin_v1`.
 #'
@@ -78,13 +101,13 @@ get_hypertension_meds_labels <- make_meds_labels_getter(spec_hypertension)
 #' @return `get_*_generics()`: a tibble with columns `generic`, `brand`,
 #'   `priority`, `condition`, `class`, and `version`. `get_*_meds_labels()`:
 #'   a tibble with columns `name` and `label`.
-#' @seealso \code{spec_diabetes}
+#' @seealso \code{spec_diabetes_type2}
 #' @export
-get_diabetes_generics <- make_generic_getter(spec_diabetes, composite = TRUE)
+get_diabetes_type2_generics <- make_generic_getter(spec_diabetes_type2, composite = TRUE)
 
-#' @rdname get_diabetes_generics
+#' @rdname get_diabetes_type2_generics
 #' @export
-get_diabetes_meds_labels <- make_meds_labels_getter(spec_diabetes)
+get_diabetes_type2_meds_labels <- make_meds_labels_getter(spec_diabetes_type2)
 
 # ---- Obesity (composite) -------------------------------------------------
 
