@@ -75,8 +75,10 @@ reference:
   contents:
   - get_obesity_v1_codes
   - get_obesity_v1_defs
-  - get_diabetes_v1_codes
-  - get_diabetes_v1_defs
+  - get_diabetes_type1_v1_codes
+  - get_diabetes_type1_v1_defs
+  - get_diabetes_type2_v1_codes
+  - get_diabetes_type2_v1_defs
   - get_hyperlipidemia_v1_codes
   - get_hyperlipidemia_v1_defs
   - get_ckd_v1_codes
@@ -111,12 +113,18 @@ reference:
   contents:
   - get_hypertension_generics
   - get_hypertension_meds_labels
-- title: 'Drugs: Diabetes'
+- title: 'Drugs: Diabetes (Type 1)'
   desc: |
-    Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase inhibitors, DPP-4, SGLT-2, GLP-1, insulin, etc.
+    Insulin and amylin analogues (FDA-approved for Type 1 diabetes).
   contents:
-  - get_diabetes_generics
-  - get_diabetes_meds_labels
+  - get_diabetes_type1_generics
+  - get_diabetes_type1_meds_labels
+- title: 'Drugs: Diabetes (Type 2)'
+  desc: |
+    Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase inhibitors, DPP-4, SGLT-2, GLP-1, insulin, amylin, etc.
+  contents:
+  - get_diabetes_type2_generics
+  - get_diabetes_type2_meds_labels
 - title: 'Drugs: Obesity'
   desc: |
     Non-GLP-1 agents (`non_glp1_v1`: naltrexone/bupropion, orlistat) and GLP-1 receptor agonists (`glp1_v1`: exenatide, dulaglutide, semaglutide, liraglutide, tirzepatide).

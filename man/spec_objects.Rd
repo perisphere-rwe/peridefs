@@ -4,7 +4,8 @@
 \alias{spec_objects}
 \alias{spec_depression}
 \alias{spec_hyperlipidemia}
-\alias{spec_diabetes}
+\alias{spec_diabetes_type1}
+\alias{spec_diabetes_type2}
 \alias{spec_asthma_v1}
 \alias{spec_hypertension}
 \alias{spec_obesity}
@@ -12,7 +13,8 @@
 \alias{spec_ckd_v1}
 \alias{spec_copd_v1}
 \alias{spec_depression_v1}
-\alias{spec_diabetes_v1}
+\alias{spec_diabetes_type1_v1}
+\alias{spec_diabetes_type2_v1}
 \alias{spec_hf_v1}
 \alias{spec_hypertension_v1}
 \alias{spec_hyperlipidemia_v1}
@@ -45,7 +47,8 @@ available component names.
 \code{spec_hypertension_v1},
 \code{spec_hf_v1},
 \code{spec_obesity_v1},
-\code{spec_diabetes_v1},
+\code{spec_diabetes_type1_v1},
+\code{spec_diabetes_type2_v1},
 \code{spec_depression_v1},
 \code{spec_ckd_v1},
 \code{spec_copd_v1},
@@ -62,7 +65,7 @@ available component names.
 
 \section{Drug class composites (\link{CompositeDrugSpec})}{
 
-\code{spec_hypertension}, \code{spec_diabetes}, \code{spec_obesity},
+\code{spec_hypertension}, \code{spec_diabetes_type1}, \code{spec_diabetes_type2}, \code{spec_obesity},
 \code{spec_depression}, \code{spec_hyperlipidemia}
 }
 

@@ -128,25 +128,26 @@ example_spec$get_generics(priority = 1:3) |>
 
 ## Antidiabetic drug classes
 
-`spec_diabetes` groups all oral antidiabetic agents and insulin. Note that
-`class` values are unprefixed drug-mechanism names (e.g. `"biguanide"`, not
-`"antidiab_biguanide"`) — the composite's `condition` column already
+Diabetes medications are split into two composites. `spec_diabetes_type1`
+covers insulin and amylin analogues (the two classes with FDA approval for
+Type 1). `spec_diabetes_type2` covers all ten antidiabetic classes. Note
+that `class` values are unprefixed drug-mechanism names (e.g. `"biguanide"`,
+not `"antidiab_biguanide"`) — the composite's `condition` column already
 supplies the condition context, so repeating it in `class` would be
 redundant:
 
 ```{r antidiab-spec}
-spec_diabetes
+spec_diabetes_type1
+spec_diabetes_type2
 ```
 
 ```{r glp1}
-get_diabetes_generics(component = "glp1_v1")
+get_diabetes_type2_generics(component = "glp1_v1")
 ```
 
 ```{r sglt2}
-get_diabetes_generics(component = "sglt2_v1")
+get_diabetes_type2_generics(component = "sglt2_v1")
 ```
-
 ## Creating your own drug spec
 
 Use `drug_spec()` to define a custom drug class, or `modify_drug_spec()` to
-extend an existing component. See `vignette("custom_specs")` for details.

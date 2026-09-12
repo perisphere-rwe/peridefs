@@ -157,7 +157,13 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_meds_labels.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v2_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v2_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v3_codes.html</loc></url>
@@ -383,6 +389,8 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_debility.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_dementia.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_depression_v2.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v1.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v2.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v3.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_dialysis.html</loc></url>
