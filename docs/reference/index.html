@@ -65,7 +65,7 @@
       </dl></div><div class="section level2">
       <h2 id="conditions-cardiovascular">Conditions: Cardiovascular<a class="anchor" aria-label="anchor" href="#conditions-cardiovascular"></a></h2>
 
-      <div class="section-desc"><p>Hypertension, heart failure, and the ASCVD composite. ASCVD components (<code>chd_v1</code>, <code>stroke_v1</code>, <code>isch_stroke_v1</code>, <code>hf_v1</code>, <code>cerebrovasc_disease_v1</code>) are accessible via <code>get_ascvd_codes(component = ...)</code>.</p></div>
+      <div class="section-desc"><p>Hypertension, heart failure, and the ASCVD composite. ASCVD’s components (<code>chd_v1</code>, <code>stroke_v1</code>, <code>lead_pad_v1</code>, <code>cerebrovasc_disease_v1</code>) are also directly exported below, as thin wrappers around <code>get_ascvd_codes(component = ...)</code>/<code>get_ascvd_defs(component = ...)</code>.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -113,6 +113,62 @@
 
         </dt>
         <dd>Retrieve the narrative algorithm description for an ASCVD component</dd>
+
+        <dt>
+
+          <code><a href="get_chd_v1_codes.html">get_chd_v1_codes()</a></code>
+
+        </dt>
+        <dd>Retrieve ICD codes for coronary heart disease (CHD)</dd>
+
+        <dt>
+
+          <code><a href="get_chd_v1_defs.html">get_chd_v1_defs()</a></code>
+
+        </dt>
+        <dd>Retrieve the narrative algorithm description for coronary heart disease (CHD)</dd>
+
+        <dt>
+
+          <code><a href="get_stroke_v1_codes.html">get_stroke_v1_codes()</a></code>
+
+        </dt>
+        <dd>Retrieve ICD codes for stroke (any)</dd>
+
+        <dt>
+
+          <code><a href="get_stroke_v1_defs.html">get_stroke_v1_defs()</a></code>
+
+        </dt>
+        <dd>Retrieve the narrative algorithm description for stroke (any)</dd>
+
+        <dt>
+
+          <code><a href="get_lead_pad_v1_codes.html">get_lead_pad_v1_codes()</a></code>
+
+        </dt>
+        <dd>Retrieve ICD codes for lower extremity artery disease (LEAD) / peripheral artery disease (PAD)</dd>
+
+        <dt>
+
+          <code><a href="get_lead_pad_v1_defs.html">get_lead_pad_v1_defs()</a></code>
+
+        </dt>
+        <dd>Retrieve the narrative algorithm description for LEAD/PAD</dd>
+
+        <dt>
+
+          <code><a href="get_cerebrovasc_disease_v1_codes.html">get_cerebrovasc_disease_v1_codes()</a></code>
+
+        </dt>
+        <dd>Retrieve ICD codes for cerebrovascular disease</dd>
+
+        <dt>
+
+          <code><a href="get_cerebrovasc_disease_v1_defs.html">get_cerebrovasc_disease_v1_defs()</a></code>
+
+        </dt>
+        <dd>Retrieve the narrative algorithm description for cerebrovascular disease</dd>
       </dl></div><div class="section level2">
       <h2 id="conditions-metabolic-renal">Conditions: Metabolic &amp; Renal<a class="anchor" aria-label="anchor" href="#conditions-metabolic-renal"></a></h2>
 

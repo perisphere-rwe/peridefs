@@ -61,7 +61,7 @@ reference:
   contents: spec_objects
 - title: 'Conditions: Cardiovascular'
   desc: |
-    Hypertension, heart failure, and the ASCVD composite. ASCVD components (`chd_v1`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`, `cerebrovasc_disease_v1`) are accessible via `get_ascvd_codes(component = ...)`.
+    Hypertension, heart failure, and the ASCVD composite. ASCVD's components (`chd_v1`, `stroke_v1`, `lead_pad_v1`, `cerebrovasc_disease_v1`) are also directly exported below, as thin wrappers around `get_ascvd_codes(component = ...)`/`get_ascvd_defs(component = ...)`.
   contents:
   - get_hypertension_v1_codes
   - get_hypertension_v1_defs
@@ -69,6 +69,14 @@ reference:
   - get_hf_v1_defs
   - get_ascvd_codes
   - get_ascvd_defs
+  - get_chd_v1_codes
+  - get_chd_v1_defs
+  - get_stroke_v1_codes
+  - get_stroke_v1_defs
+  - get_lead_pad_v1_codes
+  - get_lead_pad_v1_defs
+  - get_cerebrovasc_disease_v1_codes
+  - get_cerebrovasc_disease_v1_defs
 - title: 'Conditions: Metabolic & Renal'
   desc: |
     Obesity, diabetes, hyperlipidemia, and CKD.
