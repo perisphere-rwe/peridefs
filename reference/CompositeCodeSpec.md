@@ -70,7 +70,8 @@ Create a new `CompositeCodeSpec`.
       label,
       defs = NULL,
       components = list(),
-      version = NULL
+      version = NULL,
+      components_by_variable_type = NULL
     )
 
 #### Arguments
@@ -96,6 +97,18 @@ Create a new `CompositeCodeSpec`.
 - `version`:
 
   Optional version label (typically `NULL` for composites).
+
+- `components_by_variable_type`:
+
+  Optional named list with elements `condition` and/or `outcome`, each a
+  character vector of component names (keys of `components`) to use as
+  the default set when `component` is omitted (or `"all"`) for that
+  `variable_type`. Lets a composite's default component set differ
+  between the condition and outcome definitions (e.g. ASCVD's condition
+  definition uses cerebrovascular disease while its outcome definition
+  uses stroke instead). Explicitly naming `component` always bypasses
+  this filter. `NULL` (default) means every component is used regardless
+  of `variable_type`.
 
 ------------------------------------------------------------------------
 
@@ -158,8 +171,9 @@ Retrieve codes from one or more components as a tidy data frame.
 - `component`:
 
   Optional component name(s), e.g. `"chd_v1"`. `NULL` (default) or
-  `"all"` returns every component, with a `class` column distinguishing
-  them.
+  `"all"` returns every component that applies to `variable_type` (see
+  `components_by_variable_type` in `$new()`), with a `class` column
+  distinguishing them.
 
 - `code_type`:
 
@@ -202,7 +216,8 @@ components.
 - `component`:
 
   Optional component name. `NULL` (default) or `"all"` renders every
-  component's description.
+  component that applies to `variable_type` (see
+  `components_by_variable_type` in `$new()`).
 
 - `variable_type`:
 

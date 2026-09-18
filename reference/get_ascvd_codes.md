@@ -3,11 +3,16 @@
 `spec_ascvd` is a
 [CompositeCodeSpec](https://perisphere-rwe.github.io/peridefs/reference/CompositeCodeSpec.md)
 containing all versioned components used across ASCVD definitions:
-`chd_v1`, `stroke_v1`, `cerebrovasc_disease_v1`.
+`chd_v1`, `stroke_v1`, `lead_pad_v1`, `cerebrovasc_disease_v1`.
 
 The `component` argument is optional; omit it (or pass `"all"`) to
-retrieve every component at once, distinguished by the `class` column.
-Print `spec_ascvd` to see all available component names.
+retrieve the components that apply to `variable_type`, distinguished by
+the `class` column. Per the definition book, the condition/history
+definition is CHD + cerebrovascular disease + LEAD/PAD, while the
+outcome definition is CHD + stroke + LEAD/PAD (`stroke_v1` and
+`cerebrovasc_disease_v1` are never combined by default — pass an
+explicit `component` to override this). Print `spec_ascvd` to see all
+available component names and the default sets per `variable_type`.
 
 ## Usage
 
@@ -105,4 +110,7 @@ spec_ascvd
 #>   `cerebrovasc_disease_v1`: Cerebrovascular Disease
 #> Use `component` = "chd_v1", "stroke_v1", "lead_pad_v1", and
 #> "cerebrovasc_disease_v1" in `get_*()` functions.
+#> Default components by variable_type:
+#>   condition: "chd_v1", "cerebrovasc_disease_v1", and "lead_pad_v1"
+#>   outcome: "chd_v1", "stroke_v1", and "lead_pad_v1"
 ```

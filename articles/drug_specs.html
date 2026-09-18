@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -311,22 +311,36 @@ every row with no recorded brand, which is most of them:</p>
 <div class="section level2">
 <h2 id="antidiabetic-drug-classes">Antidiabetic drug classes<a class="anchor" aria-label="anchor" href="#antidiabetic-drug-classes"></a>
 </h2>
-<p><code>spec_diabetes</code> groups all oral antidiabetic agents and
-insulin. Note that <code>class</code> values are unprefixed
-drug-mechanism names (e.g. <code>"biguanide"</code>, not
-<code>"antidiab_biguanide"</code>) — the composite’s
-<code>condition</code> column already supplies the condition context, so
-repeating it in <code>class</code> would be redundant:</p>
+<p>Diabetes medications are split into two composites.
+<code>spec_diabetes_type1</code> covers insulin and amylin analogues
+(the two classes with FDA approval for Type 1).
+<code>spec_diabetes_type2</code> covers all ten antidiabetic classes.
+Note that <code>class</code> values are unprefixed drug-mechanism names
+(e.g. <code>"biguanide"</code>, not <code>"antidiab_biguanide"</code>) —
+the composite’s <code>condition</code> column already supplies the
+condition context, so repeating it in <code>class</code> would be
+redundant:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spec_diabetes</span></span>
+<code class="sourceCode R"><span><span class="va">spec_diabetes_type1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Antidiabetic Medications </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Type 1 Diabetes Medications </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">─────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; Drug class: `antidiabetic`</span></span>
-<span><span class="co">#&gt; Condition: `diabetes`</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">Def:</span> All antidiabetic medication subclasses (v1): biguanides, sulfonylureas,</span></span>
-<span><span class="co">#&gt; meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4</span></span>
-<span><span class="co">#&gt; inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies,</span></span>
-<span><span class="co">#&gt; amylin analogues.</span></span>
+<span><span class="co">#&gt; Condition: `diabetes_type1`</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Def:</span> Antidiabetic medications used in Type 1 diabetes (v1): insulin and amylin</span></span>
+<span><span class="co">#&gt; analogues.</span></span>
+<span><span class="co">#&gt; 2 component(s):</span></span>
+<span><span class="co">#&gt;   `insulin_v1`: Insulin and Supplies (163 GNNs)</span></span>
+<span><span class="co">#&gt;   `amylin_v1`: Amylin Analogues (1 GNNs)</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Use `component` = </span><span style="color: #0000BB;">"insulin_v1"</span> and <span style="color: #0000BB;">"amylin_v1"</span> in `get_*()` functions.</span></span>
+<span><span class="va">spec_diabetes_type2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Type 2 Diabetes Medications </span><span style="color: #555555; font-weight: bold;">(composite)</span> <span style="color: #00BBBB;">─────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; Drug class: `antidiabetic`</span></span>
+<span><span class="co">#&gt; Condition: `diabetes_type2`</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Def:</span> All antidiabetic medication subclasses used in Type 2 diabetes (v1):</span></span>
+<span><span class="co">#&gt; biguanides, sulfonylureas, meglitinides, thiazolidinediones, alpha-glucosidase</span></span>
+<span><span class="co">#&gt; inhibitors, DPP-4 inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists,</span></span>
+<span><span class="co">#&gt; insulin and supplies, amylin analogues.</span></span>
 <span><span class="co">#&gt; 10 component(s):</span></span>
 <span><span class="co">#&gt;   `biguanide_v1`: Biguanides (3 GNNs)</span></span>
 <span><span class="co">#&gt;   `sulfonylurea_v1`: Sulfonylureas (11 GNNs)</span></span>
@@ -342,20 +356,20 @@ repeating it in <code>class</code> would be redundant:</p>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"tzd_v1"</span>, <span style="color: #0000BB;">"alpha_glucosidase_v1"</span>, <span style="color: #0000BB;">"dpp4_v1"</span>, <span style="color: #0000BB;">"sglt2_v1"</span>, <span style="color: #0000BB;">"glp1_v1"</span>,</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">"insulin_v1"</span>, and <span style="color: #0000BB;">"amylin_v1"</span> in `get_*()` functions.</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_generics.html">get_diabetes_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"glp1_v1"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_type2_generics.html">get_diabetes_type2_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"glp1_v1"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 6</span></span></span>
-<span><span class="co">#&gt;   generic                       brand     priority condition class version</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ALBIGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> DULAGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> EXENATIDE                     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> EXENATIDE EXTENDED-RELEASE    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> EXENATIDE MICROSPHERES        <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> LIXISENATIDE                  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> INSULIN DEGLUDEC/LIRAGLUTIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INSULIN GLARGINE/LIXISENATIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes  glp1  v1</span></span></code></pre></div>
+<span><span class="co">#&gt;   generic                       brand     priority condition      class version</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ALBIGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> DULAGLUTIDE                   <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> EXENATIDE                     <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> EXENATIDE EXTENDED-RELEASE    <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> EXENATIDE MICROSPHERES        <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> LIXISENATIDE                  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> INSULIN DEGLUDEC/LIRAGLUTIDE  <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> INSULIN GLARGINE/LIXISENATIDE <span style="color: #949494;">&lt;chr [0]&gt;</span>        1 diabetes_type2 glp1  v1</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_generics.html">get_diabetes_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_diabetes_type2_generics.html">get_diabetes_type2_generics</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"sglt2_v1"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 6</span></span></span>
 <span><span class="co">#&gt;    generic                             brand  priority condition class version</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
@@ -383,8 +397,7 @@ repeating it in <code>class</code> would be redundant:</p>
 <h2 id="creating-your-own-drug-spec">Creating your own drug spec<a class="anchor" aria-label="anchor" href="#creating-your-own-drug-spec"></a>
 </h2>
 <p>Use <code><a href="../reference/drug_spec.html">drug_spec()</a></code> to define a custom drug class, or
-<code><a href="../reference/modify_drug_spec.html">modify_drug_spec()</a></code> to extend an existing component. See
-<code>vignette("custom_specs")</code> for details.</p>
+<code><a href="../reference/modify_drug_spec.html">modify_drug_spec()</a></code> to</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

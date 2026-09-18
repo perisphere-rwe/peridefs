@@ -1,0 +1,25 @@
+# Retrieve the narrative algorithm description for cerebrovascular disease
+
+Direct access to the `cerebrovasc_disease_v1` component of `spec_ascvd`.
+Equivalent to
+`get_ascvd_defs(component = "cerebrovasc_disease_v1", ...)`.
+
+## Usage
+
+``` r
+get_cerebrovasc_disease_v1_defs(...)
+```
+
+## Arguments
+
+- component:
+
+  Not used (fixed to `"cerebrovasc_disease_v1"`); included only because
+  it is inherited from
+  [`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md).
+
+## See also
+
+[`get_cerebrovasc_disease_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_codes.md),
+[`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md),
+`spec_ascvd`

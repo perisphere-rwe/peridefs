@@ -167,6 +167,9 @@ spec_ascvd
 #>   `cerebrovasc_disease_v1`: Cerebrovascular Disease
 #> Use `component` = "chd_v1", "stroke_v1", "lead_pad_v1", and
 #> "cerebrovasc_disease_v1" in `get_*()` functions.
+#> Default components by variable_type:
+#>   condition: "chd_v1", "cerebrovasc_disease_v1", and "lead_pad_v1"
+#>   outcome: "chd_v1", "stroke_v1", and "lead_pad_v1"
 ```
 
 Retrieve codes for a single component:
@@ -196,7 +199,7 @@ once:
 ``` r
 
 get_ascvd_codes(code_type = "dx_icd10") |> nrow()
-#> [1] 609
+#> [1] 456
 ```
 
 ### Reading algorithm definitions

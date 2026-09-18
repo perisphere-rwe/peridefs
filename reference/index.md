@@ -11,7 +11,8 @@ component names.
 - [`spec_objects`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_depression`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hyperlipidemia`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_diabetes`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_diabetes_type1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_diabetes_type2`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_asthma_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hypertension`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_obesity`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
@@ -19,7 +20,8 @@ component names.
   [`spec_ckd_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_copd_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_depression_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
-  [`spec_diabetes_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_diabetes_type1_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
+  [`spec_diabetes_type2_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hf_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hypertension_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
   [`spec_hyperlipidemia_v1`](https://perisphere-rwe.github.io/peridefs/reference/spec_objects.md)
@@ -31,10 +33,10 @@ component names.
 
 ## Conditions: Cardiovascular
 
-Hypertension, heart failure, and the ASCVD composite. ASCVD components
-(`chd_v1`, `stroke_v1`, `isch_stroke_v1`, `hf_v1`,
-`cerebrovasc_disease_v1`) are accessible via
-`get_ascvd_codes(component = ...)`.
+Hypertension, heart failure, and the ASCVD composite. ASCVD’s components
+(`chd_v1`, `stroke_v1`, `lead_pad_v1`, `cerebrovasc_disease_v1`) are
+also directly exported below, as thin wrappers around
+`get_ascvd_codes(component = ...)`/`get_ascvd_defs(component = ...)`.
 
 - [`get_hypertension_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_v1_codes.md)
   : Retrieve ICD codes for hypertension
@@ -48,6 +50,25 @@ Hypertension, heart failure, and the ASCVD composite. ASCVD components
   : Retrieve codes for a named ASCVD component
 - [`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md)
   : Retrieve the narrative algorithm description for an ASCVD component
+- [`get_chd_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_chd_v1_codes.md)
+  : Retrieve ICD codes for coronary heart disease (CHD)
+- [`get_chd_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_chd_v1_defs.md)
+  : Retrieve the narrative algorithm description for coronary heart
+  disease (CHD)
+- [`get_stroke_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_stroke_v1_codes.md)
+  : Retrieve ICD codes for stroke (any)
+- [`get_stroke_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_stroke_v1_defs.md)
+  : Retrieve the narrative algorithm description for stroke (any)
+- [`get_lead_pad_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_v1_codes.md)
+  : Retrieve ICD codes for lower extremity artery disease (LEAD) /
+  peripheral artery disease (PAD)
+- [`get_lead_pad_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_v1_defs.md)
+  : Retrieve the narrative algorithm description for LEAD/PAD
+- [`get_cerebrovasc_disease_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_codes.md)
+  : Retrieve ICD codes for cerebrovascular disease
+- [`get_cerebrovasc_disease_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_defs.md)
+  : Retrieve the narrative algorithm description for cerebrovascular
+  disease
 
 ## Conditions: Metabolic & Renal
 
@@ -56,9 +77,12 @@ Obesity, diabetes, hyperlipidemia, and CKD.
 - [`get_obesity_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_v1_codes.md)
   [`get_obesity_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_v1_codes.md)
   : Retrieve ICD codes for obesity
-- [`get_diabetes_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  [`get_diabetes_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  : Retrieve ICD codes for diabetes mellitus
+- [`get_diabetes_type1_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_v1_codes.md)
+  [`get_diabetes_type1_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_v1_codes.md)
+  : Retrieve ICD codes for Type 1 diabetes mellitus
+- [`get_diabetes_type2_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_v1_codes.md)
+  [`get_diabetes_type2_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_v1_codes.md)
+  : Retrieve ICD codes for Type 2 diabetes mellitus
 - [`get_hyperlipidemia_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_v1_codes.md)
   [`get_hyperlipidemia_v1_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_hyperlipidemia_v1_codes.md)
   : Retrieve ICD codes for hyperlipidemia
@@ -107,14 +131,22 @@ ACE/ARBs, Beta-blockers, CCBs, diuretics, renin inhibitors, etc.
   [`get_hypertension_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_generics.md)
   : Retrieve generic drug names for hypertension medications
 
-## Drugs: Diabetes
+## Drugs: Diabetes (Type 1)
+
+Insulin and amylin analogues (FDA-approved for Type 1 diabetes).
+
+- [`get_diabetes_type1_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_generics.md)
+  [`get_diabetes_type1_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_generics.md)
+  : Retrieve generic drug names for Type 1 diabetes medications
+
+## Drugs: Diabetes (Type 2)
 
 Biguanides, sulfonylureas, meglitinides, TZDs, alpha-glucosidase
-inhibitors, DPP-4, SGLT-2, GLP-1, insulin, etc.
+inhibitors, DPP-4, SGLT-2, GLP-1, insulin, amylin, etc.
 
-- [`get_diabetes_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.md)
-  [`get_diabetes_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.md)
-  : Retrieve generic drug names for diabetes medications
+- [`get_diabetes_type2_generics()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_generics.md)
+  [`get_diabetes_type2_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_generics.md)
+  : Retrieve generic drug names for Type 2 diabetes medications
 
 ## Drugs: Obesity
 

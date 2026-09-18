@@ -1,5 +1,33 @@
 # Changelog
 
+## peridefs 0.3.1
+
+### Breaking changes
+
+- Split the unified diabetes spec into separate Type 1 and Type 2
+  objects (no deprecated aliases kept):
+  - `spec_diabetes_v1` → `spec_diabetes_type1_v1`,
+    `spec_diabetes_type2_v1`
+  - `spec_diabetes` → `spec_diabetes_type1`, `spec_diabetes_type2`
+  - `get_diabetes_v1_codes/defs()` →
+    `get_diabetes_type1/type2_v1_codes/defs()`
+  - `get_diabetes_generics/meds_labels()` →
+    `get_diabetes_type1/type2_generics/meds_labels()`
+- `spec_glp1_v1` condition tags updated from `"diabetes"` to
+  `"diabetes_type2"`.
+
+### ICD code changes
+
+- ICD-9 250.xx codes split by 5th digit (1/3 → Type 1; 0/2 → Type 2).
+  Non-type-specific complication codes (357.2, 362.0x, 366.41) placed in
+  Type 2 per convention.
+- ICD-10: E10.xx → Type 1; E11.xx + E08/E09/E13 → Type 2 per convention.
+- Ophthalmic codes (E10.3xx, E11.3xx) now dynamically expanded via
+  `children()` to capture all FY2020+ laterality-specific retinopathy
+  codes. Fixes a pre-existing omission of E11.37X1/X3/X9, removes 4
+  non-billable E11 codes, and adds missing neuropathy, angiopathy, and
+  nephropathy subtypes to both specs.
+
 ## peridefs (development version)
 
 ### Breaking changes
@@ -34,8 +62,7 @@
   exported wrapper functions were renamed to match:
   `get_hypertension_defs()` -\>
   [`get_hypertension_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_generics.md),
-  `get_diabetes_defs()` -\>
-  [`get_diabetes_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.md),
+  `get_diabetes_defs()` -\> `get_diabetes_meds_labels()`,
   `get_obesity_defs()` -\>
   [`get_obesity_meds_labels()`](https://perisphere-rwe.github.io/peridefs/reference/get_obesity_generics.md),
   `get_depression_defs()` -\>
@@ -89,10 +116,8 @@
   no longer has a `"chd_v2"` component (only `"chd_v1"`, now carrying
   the merged definition). Use `get_htn_v1_codes()`,
   [`get_depression_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_depression_v1_codes.md),
-  and
-  [`get_diabetes_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.md)
-  (and their `_defs()` counterparts) going forward — they now return the
-  most current definition.
+  and `get_diabetes_v1_codes()` (and their `_defs()` counterparts) going
+  forward — they now return the most current definition.
 
 - `CodeSpec$get_codes()`/`CompositeCodeSpec$get_codes()` output (and
   therefore

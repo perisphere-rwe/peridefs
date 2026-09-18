@@ -16,8 +16,8 @@ get_ascvd_defs(variable_type = c("condition", "outcome"), component = NULL)
 
 - component:
 
-  Optional component name. `NULL` (default) or `"all"` renders every
-  component. See
+  Optional component name. `NULL` (default) or `"all"` renders the
+  components that apply to `variable_type`. See
   [`get_ascvd_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.md).
 
 ## See also

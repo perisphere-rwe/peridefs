@@ -227,23 +227,36 @@ example_spec$get_generics(priority = 1:3) |>
 
 ## Antidiabetic drug classes
 
-`spec_diabetes` groups all oral antidiabetic agents and insulin. Note
-that `class` values are unprefixed drug-mechanism names
-(e.g. `"biguanide"`, not `"antidiab_biguanide"`) — the composite’s
-`condition` column already supplies the condition context, so repeating
-it in `class` would be redundant:
+Diabetes medications are split into two composites.
+`spec_diabetes_type1` covers insulin and amylin analogues (the two
+classes with FDA approval for Type 1). `spec_diabetes_type2` covers all
+ten antidiabetic classes. Note that `class` values are unprefixed
+drug-mechanism names (e.g. `"biguanide"`, not `"antidiab_biguanide"`) —
+the composite’s `condition` column already supplies the condition
+context, so repeating it in `class` would be redundant:
 
 ``` r
 
-spec_diabetes
+spec_diabetes_type1
 #> 
-#> ── Antidiabetic Medications (composite) ────────────────────────────────────────
+#> ── Type 1 Diabetes Medications (composite) ─────────────────────────────────────
 #> Drug class: `antidiabetic`
-#> Condition: `diabetes`
-#> Def: All antidiabetic medication subclasses (v1): biguanides, sulfonylureas,
-#> meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4
-#> inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies,
-#> amylin analogues.
+#> Condition: `diabetes_type1`
+#> Def: Antidiabetic medications used in Type 1 diabetes (v1): insulin and amylin
+#> analogues.
+#> 2 component(s):
+#>   `insulin_v1`: Insulin and Supplies (163 GNNs)
+#>   `amylin_v1`: Amylin Analogues (1 GNNs)
+#> Use `component` = "insulin_v1" and "amylin_v1" in `get_*()` functions.
+spec_diabetes_type2
+#> 
+#> ── Type 2 Diabetes Medications (composite) ─────────────────────────────────────
+#> Drug class: `antidiabetic`
+#> Condition: `diabetes_type2`
+#> Def: All antidiabetic medication subclasses used in Type 2 diabetes (v1):
+#> biguanides, sulfonylureas, meglitinides, thiazolidinediones, alpha-glucosidase
+#> inhibitors, DPP-4 inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists,
+#> insulin and supplies, amylin analogues.
 #> 10 component(s):
 #>   `biguanide_v1`: Biguanides (3 GNNs)
 #>   `sulfonylurea_v1`: Sulfonylureas (11 GNNs)
@@ -262,23 +275,23 @@ spec_diabetes
 
 ``` r
 
-get_diabetes_generics(component = "glp1_v1")
+get_diabetes_type2_generics(component = "glp1_v1")
 #> # A tibble: 8 × 6
-#>   generic                       brand     priority condition class version
-#>   <chr>                         <list>       <int> <chr>     <chr> <chr>  
-#> 1 ALBIGLUTIDE                   <chr [0]>        1 diabetes  glp1  v1     
-#> 2 DULAGLUTIDE                   <chr [0]>        1 diabetes  glp1  v1     
-#> 3 EXENATIDE                     <chr [0]>        1 diabetes  glp1  v1     
-#> 4 EXENATIDE EXTENDED-RELEASE    <chr [0]>        1 diabetes  glp1  v1     
-#> 5 EXENATIDE MICROSPHERES        <chr [0]>        1 diabetes  glp1  v1     
-#> 6 LIXISENATIDE                  <chr [0]>        1 diabetes  glp1  v1     
-#> 7 INSULIN DEGLUDEC/LIRAGLUTIDE  <chr [0]>        1 diabetes  glp1  v1     
-#> 8 INSULIN GLARGINE/LIXISENATIDE <chr [0]>        1 diabetes  glp1  v1
+#>   generic                       brand     priority condition      class version
+#>   <chr>                         <list>       <int> <chr>          <chr> <chr>  
+#> 1 ALBIGLUTIDE                   <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 2 DULAGLUTIDE                   <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 3 EXENATIDE                     <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 4 EXENATIDE EXTENDED-RELEASE    <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 5 EXENATIDE MICROSPHERES        <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 6 LIXISENATIDE                  <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 7 INSULIN DEGLUDEC/LIRAGLUTIDE  <chr [0]>        1 diabetes_type2 glp1  v1     
+#> 8 INSULIN GLARGINE/LIXISENATIDE <chr [0]>        1 diabetes_type2 glp1  v1
 ```
 
 ``` r
 
-get_diabetes_generics(component = "sglt2_v1")
+get_diabetes_type2_generics(component = "sglt2_v1")
 #> # A tibble: 19 × 6
 #>    generic                             brand  priority condition class version
 #>    <chr>                               <list>    <int> <chr>     <chr> <chr>  
@@ -309,5 +322,4 @@ Use
 [`drug_spec()`](https://perisphere-rwe.github.io/peridefs/reference/drug_spec.md)
 to define a custom drug class, or
 [`modify_drug_spec()`](https://perisphere-rwe.github.io/peridefs/reference/modify_drug_spec.md)
-to extend an existing component. See `vignette("custom_specs")` for
-details.
+to
