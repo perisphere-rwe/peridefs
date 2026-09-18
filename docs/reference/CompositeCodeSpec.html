@@ -39,7 +39,7 @@ condition and outcome codes are accessible.'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,7 +137,8 @@ condition and outcome codes are accessible.</p>
 <span>  <span class="va">label</span>,</span>
 <span>  defs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  components <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  version <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  version <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  components_by_variable_type <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
@@ -156,6 +157,18 @@ condition and outcome codes are accessible.</p>
 
       <dt><code>version</code></dt>
 <dd><p>Optional version label (typically <code>NULL</code> for composites).</p></dd>
+
+      <dt><code>components_by_variable_type</code></dt>
+<dd><p>Optional named list with elements
+<code>condition</code> and/or <code>outcome</code>, each a character vector of component
+names (keys of <code>components</code>) to use as the default set when
+<code>component</code> is omitted (or <code>"all"</code>) for that <code>variable_type</code>. Lets a
+composite's default component set differ between the condition and
+outcome definitions (e.g. ASCVD's condition definition uses
+cerebrovascular disease while its outcome definition uses stroke
+instead). Explicitly naming <code>component</code> always bypasses this
+filter. <code>NULL</code> (default) means every component is used regardless
+of <code>variable_type</code>.</p></dd>
 
 
 </dl><p></p></div>
@@ -212,8 +225,9 @@ data frame.</p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>component</code></dt>
 <dd><p>Optional component name(s), e.g. <code>"chd_v1"</code>. <code>NULL</code>
-(default) or <code>"all"</code> returns every component, with a <code>class</code> column
-distinguishing them.</p></dd>
+(default) or <code>"all"</code> returns every component that applies to
+<code>variable_type</code> (see <code>components_by_variable_type</code> in <code>$new()</code>), with
+a <code>class</code> column distinguishing them.</p></dd>
 
       <dt><code>code_type</code></dt>
 <dd><p>Optional character vector of code types to filter.</p></dd>
@@ -253,7 +267,8 @@ more components.</p><div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>component</code></dt>
 <dd><p>Optional component name. <code>NULL</code> (default) or <code>"all"</code>
-renders every component's description.</p></dd>
+renders every component that applies to <code>variable_type</code> (see
+<code>components_by_variable_type</code> in <code>$new()</code>).</p></dd>
 
       <dt><code>variable_type</code></dt>
 <dd><p><code>"condition"</code> (default) or <code>"outcome"</code>.</p></dd>

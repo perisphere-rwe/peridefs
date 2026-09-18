@@ -131,8 +131,12 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_central_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_central_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_central_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_chd_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_chd_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_chd_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_chd_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ckd_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ckd_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_ckd_v1_codes.html</loc></url>
@@ -157,7 +161,13 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_meds_labels.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type1_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_generics.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_type2_v1_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v2_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v2_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_diabetes_v3_codes.html</loc></url>
@@ -241,6 +251,8 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lab_tests_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_lowering_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_lowering_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_lipid_lowering_generics.html</loc></url>
@@ -324,6 +336,8 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_statin_simvastatin_generics.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_stroke_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_stroke_defs.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_stroke_v1_codes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_stroke_v1_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_vasodilators_codes.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_vasodilators_defs.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/get_vasodilators_generics.html</loc></url>
@@ -383,6 +397,8 @@
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_debility.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_dementia.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_depression_v2.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes.html</loc></url>
+<url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v1.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v2.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_diabetes_v3.html</loc></url>
 <url><loc>https://perisphere-rwe.github.io/peridefs/reference/spec_dialysis.html</loc></url>

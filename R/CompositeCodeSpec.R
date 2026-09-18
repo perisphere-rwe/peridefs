@@ -31,7 +31,8 @@ CompositeCodeSpec <- R6::R6Class(
     .version    = NULL,
     .label      = NULL,
     .defs       = NULL,
-    .components = NULL
+    .components = NULL,
+    .components_by_variable_type = NULL
   ),
 
   active = list(
@@ -51,13 +52,24 @@ CompositeCodeSpec <- R6::R6Class(
     #' @param components Named list of [CodeSpec] objects, keyed by
     #'   `"name_vX"` strings.
     #' @param version Optional version label (typically `NULL` for composites).
+    #' @param components_by_variable_type Optional named list with elements
+    #'   `condition` and/or `outcome`, each a character vector of component
+    #'   names (keys of `components`) to use as the default set when
+    #'   `component` is omitted (or `"all"`) for that `variable_type`. Lets a
+    #'   composite's default component set differ between the condition and
+    #'   outcome definitions (e.g. ASCVD's condition definition uses
+    #'   cerebrovascular disease while its outcome definition uses stroke
+    #'   instead). Explicitly naming `component` always bypasses this
+    #'   filter. `NULL` (default) means every component is used regardless
+    #'   of `variable_type`.
     initialize = function(condition, label, defs = NULL, components = list(),
-                          version = NULL) {
+                          version = NULL, components_by_variable_type = NULL) {
       private$.condition  <- condition
       private$.version    <- version
       private$.label      <- label
       private$.defs       <- defs
       private$.components <- components
+      private$.components_by_variable_type <- components_by_variable_type
       invisible(self)
     },
 
@@ -78,6 +90,14 @@ CompositeCodeSpec <- R6::R6Class(
           "Use {.arg component} = {.val {names(comps)}} in {.fn get_*} functions."
         ))
       }
+      if (length(private$.components_by_variable_type)) {
+        cli::cli_text("{.strong Default components by variable_type:}")
+        for (vt in names(private$.components_by_variable_type)) {
+          cli::cli_bullets(c(
+            " " = "{.field {vt}}: {.val {private$.components_by_variable_type[[vt]]}}"
+          ))
+        }
+      }
       invisible(self)
     },
 
@@ -94,8 +114,9 @@ CompositeCodeSpec <- R6::R6Class(
     #' @description Retrieve codes from one or more components as a tidy
     #'   data frame.
     #' @param component Optional component name(s), e.g. `"chd_v1"`. `NULL`
-    #'   (default) or `"all"` returns every component, with a `class` column
-    #'   distinguishing them.
+    #'   (default) or `"all"` returns every component that applies to
+    #'   `variable_type` (see `components_by_variable_type` in `$new()`), with
+    #'   a `class` column distinguishing them.
     #' @param code_type Optional character vector of code types to filter.
     #' @param variable_type `"condition"` (default) or `"outcome"`.
     #' @param periods Logical. `FALSE` (default) = short format.
@@ -116,7 +137,7 @@ CompositeCodeSpec <- R6::R6Class(
         .validate_components(component, self)
       }
       comps <- if (is.null(component) || identical(component, "all")) {
-        names(private$.components)
+        private$.components_by_variable_type[[vt]] %||% names(private$.components)
       } else {
         component
       }
@@ -135,7 +156,8 @@ CompositeCodeSpec <- R6::R6Class(
     #' @description Retrieve the narrative algorithm description from one or
     #'   more components.
     #' @param component Optional component name. `NULL` (default) or `"all"`
-    #'   renders every component's description.
+    #'   renders every component that applies to `variable_type` (see
+    #'   `components_by_variable_type` in `$new()`).
     #' @param variable_type `"condition"` (default) or `"outcome"`.
     #' @return Character string, or (for `"all"`/`NULL`) an invisible named
     #'   list rendered to the console.
@@ -144,8 +166,8 @@ CompositeCodeSpec <- R6::R6Class(
       vt <- match.arg(variable_type)
 
       if (is.null(component) || identical(component, "all")) {
-        defs <- lapply(stats::setNames(names(private$.components),
-                                       names(private$.components)),
+        comps <- private$.components_by_variable_type[[vt]] %||% names(private$.components)
+        defs <- lapply(stats::setNames(comps, comps),
                        function(nm) {
                          d <- private$.components[[nm]]$get_defs(variable_type = vt)
                          if (!is.null(d)) {

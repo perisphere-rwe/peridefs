@@ -1341,6 +1341,13 @@ spec_ascvd <- CompositeCodeSpec$new(
     stroke_v1              = spec_stroke_v1,
     lead_pad_v1            = spec_lead_pad_v1,
     cerebrovasc_disease_v1 = spec_cerebrovasc_disease_v1
+  ),
+  # Per the definition book: the condition/history definition uses
+  # cerebrovascular disease (not stroke), while the outcome definition uses
+  # stroke (not cerebrovascular disease). CHD and LEAD/PAD apply to both.
+  components_by_variable_type = list(
+    condition = c("chd_v1", "cerebrovasc_disease_v1", "lead_pad_v1"),
+    outcome   = c("chd_v1", "stroke_v1", "lead_pad_v1")
   )
 )
 
@@ -1676,136 +1683,156 @@ spec_depression_v1 <- CodeSpec$new(
 # meeting version 2's criteria into four categories; see the note on
 # spec_diabetes_v1 below.)
 
-diab_icd9 <- unique(c(
-  expand9("250"),
-  # diabetes mellitus and all subcodes
-  "3572",
-  # polyneuropathy in diabetes (357.2)
-  expand9("3620"),
-  # diabetic retinopathy (362.0x)
-  "36641"            # diabetic cataract (366.41)
+# ICD-9 250.xx: the 5th digit encodes type — 1 or 3 = Type 1; 0 or 2 = Type 2
+# (or unspecified). ICD-9 complication codes 357.2, 362.0x, and 366.41 do not
+# specify diabetes type; placed in Type 2 per project convention (non-type-1
+# codes default to Type 2).
+diab_250_all <- expand9("250")
+diab_icd9_t1 <- diab_250_all[
+  endsWith(diab_250_all, "1") | endsWith(diab_250_all, "3")
+]
+diab_icd9_t2 <- unique(c(
+  diab_250_all[endsWith(diab_250_all, "0") | endsWith(diab_250_all, "2")],
+  "3572",        # polyneuropathy in diabetes (357.2) — type-unspecified → T2
+  expand9("3620"), # diabetic retinopathy (362.0x) — type-unspecified → T2
+  "36641"        # diabetic cataract (366.41) — type-unspecified → T2
 ))
 
+# ICD-10 codes split by category:
+#   E10.xx = Type 1 diabetes mellitus
+#   E11.xx = Type 2 diabetes mellitus
+#   E08.xx = DM due to underlying condition  \
+#   E09.xx = Drug/chemical-induced DM         } not type-specific → T2 per convention
+#   E13.xx = Other specified DM              /
+#
+# E10.3xx / E11.3xx (ophthalmic complications): expanded dynamically via
+# children() to capture all billable laterality-specific retinopathy codes
+# added in FY2020+ (e.g. E10.3211 = T1 mild nonproliferative DR with macular
+# edema, right eye). Filtering to billable = TRUE excludes non-specific parent
+# codes (e.g. E11.329) that have been superseded by the laterality expansion.
+diab_e10_ophthalmic <- {
+  codes <- unname(unclass(children(as.icd10cm("E103"), defined = TRUE)))
+  codes[is_billable(as.icd10cm(codes))]
+}
+diab_e11_ophthalmic <- {
+  codes <- unname(unclass(children(as.icd10cm("E113"), defined = TRUE)))
+  codes[is_billable(as.icd10cm(codes))]
+}
 
-
-# ICD-10 codes listed explicitly in the document (already short format)
-diab_icd10 <- c(
-  "E0836",
-  "E0842",
-  "E0936",
-  "E0942",
-  "E1010",
-  "E1011",
+diab_icd10_t1 <- c(
+  # E10.1: ketoacidosis
+  "E1010", "E1011",
+  # E10.2: kidney complications
+  "E1021", "E1022",  # diabetic nephropathy / CKD — added 2026-09-12 (absent from source doc)
   "E1029",
-  "E10311",
-  "E10319",
-  "E1036",
-  "E1039",
+  # E10.3: ophthalmic complications — all billable, dynamically expanded
+  diab_e10_ophthalmic,
+  # E10.4: neurological complications
   "E1040",
+  "E1041", "E1043", "E1044", "E1049",  # neuropathy subtypes — added 2026-09-12
   "E1042",
+  # E10.5: circulatory complications
   "E1051",
-  "E10618",
-  "E10620",
-  "E10621",
-  "E10622",
-  "E10628",
-  "E10630",
-  "E10638",
-  "E10641",
-  "E10649",
-  "E1065",
-  "E1069",
-  "E108",
-  "E109",
-  "E1037X1",
-  "E1037X2",
-  "E1037X3",
-  "E1037X9",
-  "E1100",
-  "E1101",
-  "E1110",
-  "E1111",
+  "E1052", "E1059",  # angiopathy with gangrene / other — added 2026-09-12
+  # E10.6: other specified complications
+  "E10610",  # neuropathic arthropathy — added 2026-09-12
+  "E10618", "E10620", "E10621", "E10622", "E10628",
+  "E10630", "E10638", "E10641", "E10649",
+  "E1065", "E1069",
+  # E10.8 / E10.9
+  "E108", "E109"
+)
+
+diab_icd10_t2 <- c(
+  # E08: DM due to underlying condition (not type-specific → T2)
+  "E0836", "E0842",
+  # E09: drug/chemical-induced DM (not type-specific → T2)
+  "E0936", "E0942",
+  # E11: Type 2 diabetes mellitus
+  # E11.0: hyperosmolarity
+  "E1100", "E1101",
+  # E11.1: ketoacidosis
+  "E1110", "E1111",
+  # E11.2: kidney complications
+  "E1121", "E1122",  # diabetic nephropathy / CKD — added 2026-09-12
   "E1129",
-  "E11311",
-  "E11319",
-  "E11329",
-  "E11339",
-  "E11349",
-  "E11359",
-  "E1136",
-  "E1139",
+  # E11.3: ophthalmic complications — all billable, dynamically expanded
+  # (also fixes pre-existing asymmetry: E11.37X1/X3/X9 were absent while
+  # E10.37X1/X3/X9 were present; and removes non-billable E11.329/339/349/359)
+  diab_e11_ophthalmic,
+  # E11.4: neurological complications
   "E1140",
+  "E1141", "E1143", "E1144", "E1149",  # neuropathy subtypes — added 2026-09-12
   "E1142",
+  # E11.5: circulatory complications
   "E1151",
-  "E11618",
-  "E11620",
-  "E11621",
-  "E11622",
-  "E11628",
-  "E11630",
-  "E11638",
-  "E11641",
-  "E11649",
-  "E1165",
-  "E1169",
-  "E118",
-  "E119",
-  "E113291",
-  "E113292",
-  "E113293",
-  "E113299",
-  "E113391",
-  "E113392",
-  "E113393",
-  "E113399",
-  "E113491",
-  "E113492",
-  "E113493",
-  "E113499",
-  "E113591",
-  "E113592",
-  "E113593",
-  "E113599",
-  "E1137X2",
-  "E1310",
-  "E1336",
-  "E1342"
+  "E1152", "E1159",  # angiopathy with gangrene / other — added 2026-09-12
+  # E11.6: other specified complications
+  "E11610",  # neuropathic arthropathy — added 2026-09-12
+  "E11618", "E11620", "E11621", "E11622", "E11628",
+  "E11630", "E11638", "E11641", "E11649",
+  "E1165", "E1169",
+  # E11.8 / E11.9
+  "E118", "E119",
+  # E13: other specified DM (not type-specific → T2)
+  "E1310", "E1336", "E1342"
 )
 
-
-
-diab_codes <- list(
-  dx_icd9  = make_key_condition_only(diab_icd9),
-  dx_icd10 = make_key_condition_only(diab_icd10)
+diab_type1_codes <- list(
+  dx_icd9  = make_key_condition_only(diab_icd9_t1),
+  dx_icd10 = make_key_condition_only(diab_icd10_t1)
+)
+diab_type2_codes <- list(
+  dx_icd9  = make_key_condition_only(diab_icd9_t2),
+  dx_icd10 = make_key_condition_only(diab_icd10_t2)
 )
 
-# Shared base bullets (criteria a and b) used across all three diabetes versions.
-diab_defs_base <- c(
-  "i" = "Any of the following:",
-  "*" = paste0(
-    "\u22651 inpatient claim with a discharge ICD-9 diagnosis of {.strong 250.xx}, ",
-    "{.strong 357.2}, {.strong 362.0x}, or {.strong 366.41}, or an ICD-10 diagnosis ",
-    "from the diabetes code set in any discharge diagnosis position."
-  ),
-  "*" = paste0(
-    "\u22652 carrier/outpatient claims with the same ICD codes in any position, ",
-    "linked to an E&M claim, occurring at least 7 days apart."
-  )
-)
+# (2026-09-12) Split from the former unified spec_diabetes_v1 into separate
+# Type 1 and Type 2 specs. The algorithmic criteria (inpatient/outpatient
+# claim counts, E&M linkage, 7-day gap) are identical; only the code sets
+# and medication alternative criterion differ.
 
-# Collapsed to a single version (2026-08-15, issue #4): v1/v2/v3 shared
-# identical codes (diab_codes) and differed only in the condition
-# definition narrative (v2 added the medication criterion; v3 added the
-# four-category sub-classification note). Now there's a single version
-# carrying the most complete (formerly v3) narrative.
-spec_diabetes_v1 <- CodeSpec$new(
-  condition = "diabetes",
+spec_diabetes_type1_v1 <- CodeSpec$new(
+  condition = "diabetes_type1",
   version = "v1",
-  label = "Diabetes Mellitus",
+  label = "Type 1 Diabetes Mellitus",
   defs  = list(
     condition = c(
-      diab_defs_base,
-      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes}).",
+      "i" = "Any of the following:",
+      "*" = paste0(
+        "\u22651 inpatient claim with a discharge ICD-9 Type 1 diabetes diagnosis ",
+        "({.strong 250.x1}, {.strong 250.x3}) or an ICD-10 Type 1 diagnosis (E10.xx) ",
+        "in any discharge position."
+      ),
+      "*" = paste0(
+        "\u22652 carrier/outpatient claims with the same ICD codes in any position, ",
+        "linked to an E&M claim, occurring at least 7 days apart."
+      ),
+      "*" = "\u22651 pharmacy claim for insulin or an amylin analogue (see {.strong spec_diabetes_type1})."
+    ),
+    outcome = NULL
+  ),
+  codes = diab_type1_codes
+)
+
+spec_diabetes_type2_v1 <- CodeSpec$new(
+  condition = "diabetes_type2",
+  version = "v1",
+  label = "Type 2 Diabetes Mellitus",
+  defs  = list(
+    condition = c(
+      "i" = "Any of the following:",
+      "*" = paste0(
+        "\u22651 inpatient claim with a discharge ICD-9 Type 2/unspecified diabetes diagnosis ",
+        "({.strong 250.x0}, {.strong 250.x2}, {.strong 357.2}, {.strong 362.0x}, {.strong 366.41}) ",
+        "or an ICD-10 Type 2 or unspecified diagnosis (E11.xx, E08.xx, E09.xx, E13.xx) ",
+        "in any discharge position."
+      ),
+      "*" = paste0(
+        "\u22652 carrier/outpatient claims with the same ICD codes in any position, ",
+        "linked to an E&M claim, occurring at least 7 days apart."
+      ),
+      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes_type2}).",
       "i" = paste0(
         "Patients are then classified into four mutually exclusive categories: ",
         "no diabetes; diabetes without antidiabetic medication; ",
@@ -1814,7 +1841,7 @@ spec_diabetes_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = diab_codes
+  codes = diab_type2_codes
 )
 
 ## Chronic kidney disease ----
@@ -2361,27 +2388,27 @@ spec_glp1_v1 <- DrugSpec$new(
   #     indications"; exenatide "indicated to improve glycemic control ...
   #     This agent has no established effects on other organ systems")
   generic_defs = tibble::tribble(
-    ~generic,                      ~priority, ~condition, ~brand,
-    "LIRAGLUTIDE",                 2L,        "obesity",  "Saxenda",
-    "LIRAGLUTIDE",                 2L,        "diabetes", "Victoza",
-    "SEMAGLUTIDE",                 2L,        "obesity",  "Wegovy",
-    "SEMAGLUTIDE",                 2L,        "diabetes", "Ozempic",
-    "TIRZEPATIDE",                 2L,        "obesity",  "Zepbound",
-    "TIRZEPATIDE",                 2L,        "diabetes", "Mounjaro",
-    "ALBIGLUTIDE",                 3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "ALBIGLUTIDE",                 1L,        "diabetes", NA,
-    "DULAGLUTIDE",                 3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "DULAGLUTIDE",                 1L,        "diabetes", NA,
-    "EXENATIDE",                   3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "EXENATIDE",                   1L,        "diabetes", NA,
-    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "EXENATIDE EXTENDED-RELEASE",  1L,        "diabetes", NA,
-    "EXENATIDE MICROSPHERES",      3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "EXENATIDE MICROSPHERES",      1L,        "diabetes", NA,
-    "LIXISENATIDE",                3L,        "obesity",  NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
-    "LIXISENATIDE",                1L,        "diabetes", NA,
-    "INSULIN DEGLUDEC/LIRAGLUTIDE",  1L, "diabetes", NA,
-    "INSULIN GLARGINE/LIXISENATIDE", 1L, "diabetes", NA
+    ~generic,                      ~priority, ~condition,        ~brand,
+    "LIRAGLUTIDE",                 2L,        "obesity",         "Saxenda",
+    "LIRAGLUTIDE",                 2L,        "diabetes_type2",  "Victoza",
+    "SEMAGLUTIDE",                 2L,        "obesity",         "Wegovy",
+    "SEMAGLUTIDE",                 2L,        "diabetes_type2",  "Ozempic",
+    "TIRZEPATIDE",                 2L,        "obesity",         "Zepbound",
+    "TIRZEPATIDE",                 2L,        "diabetes_type2",  "Mounjaro",
+    "ALBIGLUTIDE",                 3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "ALBIGLUTIDE",                 1L,        "diabetes_type2",  NA,
+    "DULAGLUTIDE",                 3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "DULAGLUTIDE",                 1L,        "diabetes_type2",  NA,
+    "EXENATIDE",                   3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "EXENATIDE",                   1L,        "diabetes_type2",  NA,
+    "EXENATIDE EXTENDED-RELEASE",  3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "EXENATIDE EXTENDED-RELEASE",  1L,        "diabetes_type2",  NA,
+    "EXENATIDE MICROSPHERES",      3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "EXENATIDE MICROSPHERES",      1L,        "diabetes_type2",  NA,
+    "LIXISENATIDE",                3L,        "obesity",         NA,  # @BKB: see note above tribble -- no obesity indication found anywhere
+    "LIXISENATIDE",                1L,        "diabetes_type2",  NA,
+    "INSULIN DEGLUDEC/LIRAGLUTIDE",  1L, "diabetes_type2",  NA,
+    "INSULIN GLARGINE/LIXISENATIDE", 1L, "diabetes_type2",  NA
   )
 )
 # Rx counts (for reference): LIRAGLUTIDE n=37,296,377; SEMAGLUTIDE
@@ -3616,17 +3643,41 @@ spec_antidiab_amylin_v1 <- DrugSpec$new(
   )
 )
 
-## Antidiabetic medication composite ----
+## Antidiabetic medication composites ----
+#
+# (2026-09-12) Former spec_diabetes (single composite, condition = "diabetes")
+# split into spec_diabetes_type1 and spec_diabetes_type2.
+#
+# spec_diabetes_type1: insulin and amylin analogues — the two drug classes
+#   with FDA approval for Type 1 diabetes. Both also appear in spec_diabetes_type2
+#   because insulin and amylin are used in Type 2 as well.
+#
+# spec_diabetes_type2: the full ten-class antidiabetic drug list. Includes
+#   insulin and amylin (shared with type 1) plus the eight classes that are
+#   Type 2-specific (biguanides, sulfonylureas, meglitinides, TZDs,
+#   alpha-glucosidase inhibitors, DPP-4 inhibitors, SGLT-2 inhibitors, GLP-1s).
 
-spec_diabetes <- CompositeDrugSpec$new(
+spec_diabetes_type1 <- CompositeDrugSpec$new(
   drug_class = "antidiabetic",
-  label      = "Antidiabetic Medications",
+  label      = "Type 1 Diabetes Medications",
+  defs       = "Antidiabetic medications used in Type 1 diabetes (v1): insulin and amylin analogues.",
+  condition  = "diabetes_type1",
+  components = list(
+    insulin_v1 = spec_antidiab_insulin_v1,
+    amylin_v1  = spec_antidiab_amylin_v1
+  )
+)
+
+spec_diabetes_type2 <- CompositeDrugSpec$new(
+  drug_class = "antidiabetic",
+  label      = "Type 2 Diabetes Medications",
   defs       = paste0(
-    "All antidiabetic medication subclasses (v1): biguanides, sulfonylureas, ",
-    "meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4 inhibitors, ",
-    "SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies, amylin analogues."
+    "All antidiabetic medication subclasses used in Type 2 diabetes (v1): biguanides, ",
+    "sulfonylureas, meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, ",
+    "DPP-4 inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies, ",
+    "amylin analogues."
   ),
-  condition  = "diabetes",
+  condition  = "diabetes_type2",
   components = list(
     biguanide_v1         = spec_antidiab_biguanide_v1,
     sulfonylurea_v1      = spec_antidiab_sulfonylurea_v1,
@@ -3832,7 +3883,8 @@ usethis::use_data(
   # Depression
   spec_depression_v1,
   # Diabetes
-  spec_diabetes_v1,
+  spec_diabetes_type1_v1,
+  spec_diabetes_type2_v1,
   # CKD
   spec_ckd_v1,
   # Sleep apnea
@@ -3851,8 +3903,9 @@ usethis::use_data(
   spec_obesity,
   # Antihypertensive composites
   spec_hypertension,
-  # Antidiabetic composite
-  spec_diabetes,
+  # Antidiabetic composites
+  spec_diabetes_type1,
+  spec_diabetes_type2,
   # Antidepressive composite
   spec_depression,
   # Lipid-lowering composite
