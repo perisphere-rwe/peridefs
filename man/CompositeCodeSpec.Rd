@@ -60,7 +60,8 @@ condition and outcome codes are accessible.
   label,
   defs = NULL,
   components = list(),
-  version = NULL
+  version = NULL,
+  components_by_variable_type = NULL
 )}
     \if{html}{\out{</div>}}
   }
@@ -73,6 +74,16 @@ condition and outcome codes are accessible.
       \item{\code{components}}{Named list of \link{CodeSpec} objects, keyed by
 \code{"name_vX"} strings.}
       \item{\code{version}}{Optional version label (typically \code{NULL} for composites).}
+      \item{\code{components_by_variable_type}}{Optional named list with elements
+\code{condition} and/or \code{outcome}, each a character vector of component
+names (keys of \code{components}) to use as the default set when
+\code{component} is omitted (or \code{"all"}) for that \code{variable_type}. Lets a
+composite's default component set differ between the condition and
+outcome definitions (e.g. ASCVD's condition definition uses
+cerebrovascular disease while its outcome definition uses stroke
+instead). Explicitly naming \code{component} always bypasses this
+filter. \code{NULL} (default) means every component is used regardless
+of \code{variable_type}.}
     }
     \if{html}{\out{</div>}}
   }
@@ -141,8 +152,9 @@ data frame.
     \if{html}{\out{<div class="arguments">}}
     \describe{
       \item{\code{component}}{Optional component name(s), e.g. \code{"chd_v1"}. \code{NULL}
-(default) or \code{"all"} returns every component, with a \code{class} column
-distinguishing them.}
+(default) or \code{"all"} returns every component that applies to
+\code{variable_type} (see \code{components_by_variable_type} in \verb{$new()}), with
+a \code{class} column distinguishing them.}
       \item{\code{code_type}}{Optional character vector of code types to filter.}
       \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
       \item{\code{periods}}{Logical. \code{FALSE} (default) = short format.}
@@ -177,7 +189,8 @@ more components.
     \if{html}{\out{<div class="arguments">}}
     \describe{
       \item{\code{component}}{Optional component name. \code{NULL} (default) or \code{"all"}
-renders every component's description.}
+renders every component that applies to \code{variable_type} (see
+\code{components_by_variable_type} in \verb{$new()}).}
       \item{\code{variable_type}}{\code{"condition"} (default) or \code{"outcome"}.}
     }
     \if{html}{\out{</div>}}

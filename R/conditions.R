@@ -161,11 +161,16 @@ get_hf_v1_defs <- make_def_getter(spec_hf_v1)
 #' @description
 #' `spec_ascvd` is a [CompositeCodeSpec] containing all versioned components
 #' used across ASCVD definitions:
-#' `chd_v1`, `stroke_v1`, `cerebrovasc_disease_v1`.
+#' `chd_v1`, `stroke_v1`, `lead_pad_v1`, `cerebrovasc_disease_v1`.
 #'
 #' The `component` argument is optional; omit it (or pass `"all"`) to
-#' retrieve every component at once, distinguished by the `class` column.
-#' Print `spec_ascvd` to see all available component names.
+#' retrieve the components that apply to `variable_type`, distinguished by
+#' the `class` column. Per the definition book, the condition/history
+#' definition is CHD + cerebrovascular disease + LEAD/PAD, while the outcome
+#' definition is CHD + stroke + LEAD/PAD (`stroke_v1` and
+#' `cerebrovasc_disease_v1` are never combined by default — pass an explicit
+#' `component` to override this). Print `spec_ascvd` to see all available
+#' component names and the default sets per `variable_type`.
 #'
 #' @inheritParams get_hypertension_v1_codes
 #' @param component Optional component name(s), e.g. `"chd_v1"`,
@@ -185,10 +190,137 @@ get_ascvd_codes <- make_code_getter(spec_ascvd, composite = TRUE)
 #'
 #' @param variable_type `"condition"` (default) or `"outcome"`.
 #' @param component Optional component name. `NULL` (default) or `"all"`
-#'   renders every component. See [get_ascvd_codes()].
+#'   renders the components that apply to `variable_type`. See
+#'   [get_ascvd_codes()].
 #' @seealso [get_ascvd_codes()], \code{spec_ascvd}
 #' @export
 get_ascvd_defs <- make_def_getter(spec_ascvd, composite = TRUE)
+
+# ---- ASCVD components (direct access) -----------------------------------
+#
+# Thin wrappers around get_ascvd_codes()/get_ascvd_defs() with `component`
+# pinned, so each ASCVD component can be reached directly (e.g.
+# get_stroke_v1_codes()) instead of requiring
+# get_ascvd_codes(component = "stroke_v1"). No new spec-lookup logic is
+# introduced here; `...` forwards every other argument unchanged.
+
+#' Retrieve ICD codes for coronary heart disease (CHD)
+#'
+#' @description
+#' Direct access to the `chd_v1` component of `spec_ascvd`. Equivalent to
+#' `get_ascvd_codes(component = "chd_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_codes
+#' @param component Not used (fixed to `"chd_v1"`); included only because it
+#'   is inherited from [get_ascvd_codes()].
+#' @seealso [get_chd_v1_defs()], [get_ascvd_codes()], \code{spec_ascvd}
+#' @examples
+#' get_chd_v1_codes()
+#' @export
+get_chd_v1_codes <- function(...) get_ascvd_codes(component = "chd_v1", ...)
+
+#' Retrieve the narrative algorithm description for coronary heart disease (CHD)
+#'
+#' @description
+#' Direct access to the `chd_v1` component of `spec_ascvd`. Equivalent to
+#' `get_ascvd_defs(component = "chd_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_defs
+#' @param component Not used (fixed to `"chd_v1"`); included only because it
+#'   is inherited from [get_ascvd_defs()].
+#' @seealso [get_chd_v1_codes()], [get_ascvd_defs()], \code{spec_ascvd}
+#' @export
+get_chd_v1_defs <- function(...) get_ascvd_defs(component = "chd_v1", ...)
+
+#' Retrieve ICD codes for stroke (any)
+#'
+#' @description
+#' Direct access to the `stroke_v1` component of `spec_ascvd`. Equivalent to
+#' `get_ascvd_codes(component = "stroke_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_codes
+#' @param component Not used (fixed to `"stroke_v1"`); included only because
+#'   it is inherited from [get_ascvd_codes()].
+#' @seealso [get_stroke_v1_defs()], [get_ascvd_codes()], \code{spec_ascvd}
+#' @examples
+#' get_stroke_v1_codes()
+#' @export
+get_stroke_v1_codes <- function(...) get_ascvd_codes(component = "stroke_v1", ...)
+
+#' Retrieve the narrative algorithm description for stroke (any)
+#'
+#' @description
+#' Direct access to the `stroke_v1` component of `spec_ascvd`. Equivalent to
+#' `get_ascvd_defs(component = "stroke_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_defs
+#' @param component Not used (fixed to `"stroke_v1"`); included only because
+#'   it is inherited from [get_ascvd_defs()].
+#' @seealso [get_stroke_v1_codes()], [get_ascvd_defs()], \code{spec_ascvd}
+#' @export
+get_stroke_v1_defs <- function(...) get_ascvd_defs(component = "stroke_v1", ...)
+
+#' Retrieve ICD codes for lower extremity artery disease (LEAD) / peripheral artery disease (PAD)
+#'
+#' @description
+#' Direct access to the `lead_pad_v1` component of `spec_ascvd`. Equivalent
+#' to `get_ascvd_codes(component = "lead_pad_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_codes
+#' @param component Not used (fixed to `"lead_pad_v1"`); included only
+#'   because it is inherited from [get_ascvd_codes()].
+#' @seealso [get_lead_pad_v1_defs()], [get_ascvd_codes()], \code{spec_ascvd}
+#' @examples
+#' get_lead_pad_v1_codes()
+#' @export
+get_lead_pad_v1_codes <- function(...) get_ascvd_codes(component = "lead_pad_v1", ...)
+
+#' Retrieve the narrative algorithm description for LEAD/PAD
+#'
+#' @description
+#' Direct access to the `lead_pad_v1` component of `spec_ascvd`. Equivalent
+#' to `get_ascvd_defs(component = "lead_pad_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_defs
+#' @param component Not used (fixed to `"lead_pad_v1"`); included only
+#'   because it is inherited from [get_ascvd_defs()].
+#' @seealso [get_lead_pad_v1_codes()], [get_ascvd_defs()], \code{spec_ascvd}
+#' @export
+get_lead_pad_v1_defs <- function(...) get_ascvd_defs(component = "lead_pad_v1", ...)
+
+#' Retrieve ICD codes for cerebrovascular disease
+#'
+#' @description
+#' Direct access to the `cerebrovasc_disease_v1` component of `spec_ascvd`.
+#' Equivalent to `get_ascvd_codes(component = "cerebrovasc_disease_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_codes
+#' @param component Not used (fixed to `"cerebrovasc_disease_v1"`); included
+#'   only because it is inherited from [get_ascvd_codes()].
+#' @seealso [get_cerebrovasc_disease_v1_defs()], [get_ascvd_codes()],
+#'   \code{spec_ascvd}
+#' @examples
+#' get_cerebrovasc_disease_v1_codes()
+#' @export
+get_cerebrovasc_disease_v1_codes <- function(...) {
+  get_ascvd_codes(component = "cerebrovasc_disease_v1", ...)
+}
+
+#' Retrieve the narrative algorithm description for cerebrovascular disease
+#'
+#' @description
+#' Direct access to the `cerebrovasc_disease_v1` component of `spec_ascvd`.
+#' Equivalent to `get_ascvd_defs(component = "cerebrovasc_disease_v1", ...)`.
+#'
+#' @inheritParams get_ascvd_defs
+#' @param component Not used (fixed to `"cerebrovasc_disease_v1"`); included
+#'   only because it is inherited from [get_ascvd_defs()].
+#' @seealso [get_cerebrovasc_disease_v1_codes()], [get_ascvd_defs()],
+#'   \code{spec_ascvd}
+#' @export
+get_cerebrovasc_disease_v1_defs <- function(...) {
+  get_ascvd_defs(component = "cerebrovasc_disease_v1", ...)
+}
 
 # ---- Obesity ------------------------------------------------------------
 

@@ -1341,6 +1341,13 @@ spec_ascvd <- CompositeCodeSpec$new(
     stroke_v1              = spec_stroke_v1,
     lead_pad_v1            = spec_lead_pad_v1,
     cerebrovasc_disease_v1 = spec_cerebrovasc_disease_v1
+  ),
+  # Per the definition book: the condition/history definition uses
+  # cerebrovascular disease (not stroke), while the outcome definition uses
+  # stroke (not cerebrovascular disease). CHD and LEAD/PAD apply to both.
+  components_by_variable_type = list(
+    condition = c("chd_v1", "cerebrovasc_disease_v1", "lead_pad_v1"),
+    outcome   = c("chd_v1", "stroke_v1", "lead_pad_v1")
   )
 )
 

@@ -129,8 +129,14 @@ test_that("get_depression_generics(component = 'all') defaults to priority = 1 (
   expect_true("TRANYLCYPROMINE" %in% result$generic)
 })
 
-test_that("spec_diabetes has expected components", {
-  comp_names <- names(spec_diabetes$components())
+test_that("spec_diabetes_type1 has expected components", {
+  comp_names <- names(spec_diabetes_type1$components())
+  expect_true("insulin_v1" %in% comp_names)
+  expect_true("amylin_v1"  %in% comp_names)
+})
+
+test_that("spec_diabetes_type2 has expected components", {
+  comp_names <- names(spec_diabetes_type2$components())
   expect_true("biguanide_v1"    %in% comp_names)
   expect_true("sglt2_v1"        %in% comp_names)
   expect_true("insulin_v1"      %in% comp_names)

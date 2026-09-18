@@ -33,11 +33,16 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 \description{
 \code{spec_ascvd} is a \link{CompositeCodeSpec} containing all versioned components
 used across ASCVD definitions:
-\code{chd_v1}, \code{stroke_v1}, \code{cerebrovasc_disease_v1}.
+\code{chd_v1}, \code{stroke_v1}, \code{lead_pad_v1}, \code{cerebrovasc_disease_v1}.
 
 The \code{component} argument is optional; omit it (or pass \code{"all"}) to
-retrieve every component at once, distinguished by the \code{class} column.
-Print \code{spec_ascvd} to see all available component names.
+retrieve the components that apply to \code{variable_type}, distinguished by
+the \code{class} column. Per the definition book, the condition/history
+definition is CHD + cerebrovascular disease + LEAD/PAD, while the outcome
+definition is CHD + stroke + LEAD/PAD (\code{stroke_v1} and
+\code{cerebrovasc_disease_v1} are never combined by default — pass an explicit
+\code{component} to override this). Print \code{spec_ascvd} to see all available
+component names and the default sets per \code{variable_type}.
 }
 \examples{
 get_ascvd_codes(component = "chd_v1")
