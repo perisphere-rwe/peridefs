@@ -70,6 +70,73 @@ make_key_condition_only <- function(codes) {
 
 # Specifications for comorbidities/outcomes ----
 
+## Obesity ----
+
+### history, version 1 ----
+#
+# ICD-10-CM diagnosis codes (any position), inpatient or outpatient. Same
+# code set applies to both the condition and outcome definitions.
+#
+# E66.01, E66.09, E66.1, E66.2, E66.3, E66.811, E66.812, E66.813, E66.89,
+# E66.9, R93.9, Z68.25-Z68.29, Z68.30-Z68.39, Z68.41-Z68.45
+#
+# E66.09, E66.1, E66.2, E66.811, E66.812, E66.813, and E66.89 were added
+# 2026-09-24 after a web search of the current ICD-10-CM E66 (overweight and
+# obesity) category confirmed these billable subcodes were missing from the
+# original source list (which only had E66.01, E66.3, E66.9). E66.811-813
+# are the newer (FY2025) obesity-class codes intended to be used alongside
+# the existing Z68 BMI codes.
+
+obesity_icd10 <- c(
+  "E6601", "E6609", "E661", "E662", "E663",
+  "E66811", "E66812", "E66813", "E6689", "E669",
+  "R939",
+  "Z6825", "Z6826", "Z6827", "Z6828", "Z6829",
+  "Z6830", "Z6831", "Z6832", "Z6833", "Z6834",
+  "Z6835", "Z6836", "Z6837", "Z6838", "Z6839",
+  "Z6841", "Z6842", "Z6843", "Z6844", "Z6845"
+)
+
+# ICD-9-CM diagnosis codes (short format, no periods), added 2026-09-24 for
+# consistency with other conditions' dual ICD-9/ICD-10 code sets. 278.00-
+# 278.03 are the ICD-9 obesity category (mapping to E66.9, E66.01, E66.3,
+# and E66.2, respectively); V85.21-V85.45 are the adult BMI codes mirroring
+# the Z68.25-Z68.45 block above. There is no ICD-9 equivalent for
+# E66.09/E66.1/E66.811-813/E66.89 (all newer ICD-10-only subcodes) or R93.9
+# (introduced with ICD-10-CM in 2015).
+obesity_icd9 <- c(
+  "27800", "27801", "27802", "27803",
+  "V8521", "V8522", "V8523", "V8524", "V8525",
+  "V8530", "V8531", "V8532", "V8533", "V8534",
+  "V8535", "V8536", "V8537", "V8538", "V8539",
+  "V8541", "V8542", "V8543", "V8544", "V8545"
+)
+
+obesity_defs_shared <- c(
+  "*" = paste0(
+    "\u22651 inpatient or outpatient claim with an ICD-9 diagnosis of ",
+    "{.strong 278.00}\u2013{.strong 278.03}, {.strong V85.21}\u2013",
+    "{.strong V85.25}, {.strong V85.30}\u2013{.strong V85.39}, or ",
+    "{.strong V85.41}\u2013{.strong V85.45}, or an ICD-10 diagnosis of ",
+    "{.strong E66.01}, {.strong E66.09}, {.strong E66.1}, {.strong E66.2}, ",
+    "{.strong E66.3}, {.strong E66.811}, {.strong E66.812}, ",
+    "{.strong E66.813}, {.strong E66.89}, {.strong E66.9}, ",
+    "{.strong R93.9}, {.strong Z68.25}\u2013{.strong Z68.29}, ",
+    "{.strong Z68.30}\u2013{.strong Z68.39}, or ",
+    "{.strong Z68.41}\u2013{.strong Z68.45} in any diagnosis position."
+  )
+)
+
+spec_obesity_v1 <- CodeSpec$new(
+  condition = "obesity", version = "v1", label = "Obesity",
+  defs  = list(condition = obesity_defs_shared, outcome = obesity_defs_shared),
+  codes = list(
+    dx_icd9  = make_key(obesity_icd9),
+    dx_icd10 = make_key(obesity_icd10)
+  )
+)
+
+
 ## Hypertension ----
 
 ### history, source versions 1-2 (not separately exported) ----
@@ -1459,42 +1526,6 @@ spec_hf_v1 <- CodeSpec$new(
     dx_icd10 = make_key(hf_icd10)
   )
 )
-
-## Obesity ----
-
-### history, version 1 ----
-#
-# ICD-10-CM diagnosis codes (any position), inpatient or outpatient:
-#
-# E66.01, E66.3, E66.9, R93.9,
-# Z68.25–Z68.29, Z68.30–Z68.39, Z68.41–Z68.45
-
-obesity_icd10 <- c(
-  "E6601",
-  "E663",
-  "E669",
-  "R939",
-  "Z6825", "Z6826", "Z6827", "Z6828", "Z6829",
-  "Z6830", "Z6831", "Z6832", "Z6833", "Z6834",
-  "Z6835", "Z6836", "Z6837", "Z6838", "Z6839",
-  "Z6841", "Z6842", "Z6843", "Z6844", "Z6845"
-)
-
-obesity_defs_condition <- c(
-  "*" = paste0(
-    "\u22651 inpatient or outpatient claim with an ICD-10 diagnosis of ",
-    "{.strong E66.01}, {.strong E66.3}, {.strong E66.9}, {.strong R93.9}, ",
-    "{.strong Z68.25}\u2013{.strong Z68.29}, {.strong Z68.30}\u2013{.strong Z68.39}, ",
-    "or {.strong Z68.41}\u2013{.strong Z68.45} in any diagnosis position."
-  )
-)
-
-spec_obesity_v1 <- CodeSpec$new(
-  condition = "obesity", version = "v1", label = "Obesity",
-  defs  = list(condition = obesity_defs_condition, outcome = NULL),
-  codes = list(dx_icd10 = make_key_condition_only(obesity_icd10))
-)
-
 
 ## Depression ----
 
