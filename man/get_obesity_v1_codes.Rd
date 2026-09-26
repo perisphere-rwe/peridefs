@@ -29,11 +29,14 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \description{
-Returns code sets from the obesity \link{CodeSpec} (\code{spec_obesity_v1}).
-Condition only — no outcome definition.
+Returns code sets from the obesity \link{CodeSpec} (\code{spec_obesity_v1}). The
+same ICD-9 and ICD-10 code sets are used for both the condition and
+outcome definitions.
 }
 \examples{
 get_obesity_v1_codes()
+get_obesity_v1_codes(code_type = "dx_icd9")
+get_obesity_v1_codes(variable_type = "outcome")
 }
 \seealso{
 \code{\link[=get_obesity_v1_defs]{get_obesity_v1_defs()}}, \code{spec_obesity_v1}

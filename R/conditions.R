@@ -327,13 +327,16 @@ get_cerebrovasc_disease_v1_defs <- function(...) {
 #' Retrieve ICD codes for obesity
 #'
 #' @description
-#' Returns code sets from the obesity [CodeSpec] (`spec_obesity_v1`).
-#' Condition only — no outcome definition.
+#' Returns code sets from the obesity [CodeSpec] (`spec_obesity_v1`). The
+#' same ICD-9 and ICD-10 code sets are used for both the condition and
+#' outcome definitions.
 #'
 #' @inheritParams get_hypertension_v1_codes
 #' @seealso [get_obesity_v1_defs()], \code{spec_obesity_v1}
 #' @examples
 #' get_obesity_v1_codes()
+#' get_obesity_v1_codes(code_type = "dx_icd9")
+#' get_obesity_v1_codes(variable_type = "outcome")
 #' @export
 get_obesity_v1_codes <- make_code_getter(spec_obesity_v1)
 
