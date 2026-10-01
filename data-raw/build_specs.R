@@ -114,7 +114,8 @@ obesity_icd10 <- c(
   "Z6842",
   "Z6843",
   "Z6844",
-  "Z6845"
+  "Z6845",
+  "ZOHNO"
 )
 
 # ICD-9-CM diagnosis codes (short format, no periods), added 2026-09-24 for
