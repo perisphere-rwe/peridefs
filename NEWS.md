@@ -1,3 +1,45 @@
+# peridefs 0.3.2
+
+## New features
+
+* Every `get_*_codes()` result now has a fifth column, `definition`, with a
+  text description of each code (`NA` when none is available). Composite
+  results (e.g. `get_ascvd_codes()`) place `class` after `definition`.
+  Definitions are looked up at build time and stored in the spec objects, so
+  there are no runtime lookups. Sources: CMS FY2026 files (ICD-10-CM,
+  ICD-10-PCS), CMS v32 files (ICD-9-CM diagnoses and procedures), and the NLM
+  Clinical Tables API (HCPCS Level II). CPT descriptions are paraphrased, not
+  AMA text.
+* `CodeSpec` keeps an optional `definitions` vector parallel to `codes`;
+  `add_codes()` pads it with `NA` and `remove_codes()` subsets it.
+* Direct access to the ASCVD components: `get_chd_v1_codes()`,
+  `get_stroke_v1_codes()`, `get_lead_pad_v1_codes()`,
+  `get_cerebrovasc_disease_v1_codes()`, and the matching `*_defs()`
+  functions. These wrap `get_ascvd_codes()`/`get_ascvd_defs()` with
+  `component` fixed.
+* `CompositeCodeSpec$new()` gains `components_by_variable_type`, which sets
+  different default components for the condition and outcome definitions.
+
+## Behavior changes
+
+* `get_ascvd_codes()` and `get_ascvd_defs()` no longer return every
+  component by default. The condition definition uses CHD + cerebrovascular
+  disease + LEAD/PAD, and the outcome definition uses CHD + stroke +
+  LEAD/PAD. Pass `component` explicitly to override this.
+* Obesity (`spec_obesity_v1`) now uses a strict BMI >= 30 definition.
+  Excluded ICD-10 `E66.1`, `E66.3`, `R93.9`, and `Z68.25`-`Z68.29`. Added
+  ICD-9 codes (excluding `278.02` and `V85.21`-`V85.25`). The same code sets
+  apply to both condition and outcome definitions.
+* CHD: removed `33515` (not a valid CPT code) from the HCPCS list; the range
+  is now 33510-33514 and 33516-33519.
+* Definition-book text now says "outpatient physician" claim/visit instead of
+  "evaluation and management".
+
+## Known gaps
+
+* No definition for `F3331`, the retired ICD-9 procedure codes (`360`,
+  `3601`, `3602`, `3605`, `3608`, `3618`), or retired HCPCS `G0290`/`G0291`.
+
 # peridefs 0.3.1
 
 ## Breaking changes
