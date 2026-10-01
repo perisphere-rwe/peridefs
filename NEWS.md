@@ -52,22 +52,6 @@
     - `get_diabetes_generics/meds_labels()` → `get_diabetes_type1/type2_generics/meds_labels()`
 * `spec_glp1_v1` condition tags updated from `"diabetes"` to `"diabetes_type2"`.
 
-## ICD code changes
-
-* ICD-9 250.xx codes split by 5th digit (1/3 → Type 1; 0/2 → Type 2).
-  Non-type-specific complication codes (357.2, 362.0x, 366.41) placed in
-  Type 2 per convention.
-* ICD-10: E10.xx → Type 1; E11.xx + E08/E09/E13 → Type 2 per convention.
-* Ophthalmic codes (E10.3xx, E11.3xx) now dynamically expanded via
-  `children()` to capture all FY2020+ laterality-specific retinopathy codes.
-  Fixes a pre-existing omission of E11.37X1/X3/X9, removes 4 non-billable
-  E11 codes, and adds missing neuropathy, angiopathy, and nephropathy
-  subtypes to both specs.
-
-# peridefs (development version)
-
-## Breaking changes
-
 * Renamed all condition- and drug-related objects/functions built around
   hypertension and hyperlipidemia so they use the full condition name
   everywhere, instead of mixing an abbreviation (`htn`) with a
@@ -118,6 +102,18 @@
   identifier (and therefore the `class` output column) — the underlying
   R object variable names in `data-raw/build_specs.R` (e.g.
   `spec_antidiab_biguanide_v1`, `spec_ll_statin_v1`) are unchanged.
+
+## ICD code changes
+
+* ICD-9 250.xx codes split by 5th digit (1/3 → Type 1; 0/2 → Type 2).
+  Non-type-specific complication codes (357.2, 362.0x, 366.41) placed in
+  Type 2 per convention.
+* ICD-10: E10.xx → Type 1; E11.xx + E08/E09/E13 → Type 2 per convention.
+* Ophthalmic codes (E10.3xx, E11.3xx) now dynamically expanded via
+  `children()` to capture all FY2020+ laterality-specific retinopathy codes.
+  Fixes a pre-existing omission of E11.37X1/X3/X9, removes 4 non-billable
+  E11 codes, and adds missing neuropathy, angiopathy, and nephropathy
+  subtypes to both specs.
 
 # peridefs 0.3.0
 
