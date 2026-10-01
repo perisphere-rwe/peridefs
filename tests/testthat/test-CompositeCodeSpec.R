@@ -89,7 +89,7 @@ test_that("get_codes() code_type filter works", {
 test_that("get_codes() returns a tibble with expected columns", {
   result <- toy_composite$get_codes(component = "a_v1")
   expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("type", "code", "priority", "version", "class"))
+  expect_equal(names(result), c("type", "code", "priority", "version", "definition", "class"))
 })
 
 test_that("get_codes() applies periods to ICD codes", {

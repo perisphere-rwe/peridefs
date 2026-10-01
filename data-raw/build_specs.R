@@ -49,20 +49,26 @@ hcpcs_range <- function(a, b) {
   as.character(seq(as.integer(a), as.integer(b)))
 }
 
-# Helper to build a standard key-level list
-make_key <- function(codes,
+# ---- Key builders ---------------------------------------------------------
+# Definition lookups (icd9_defs(), icd10_defs(), ...) live in build_definitions.R.
+source("data-raw/build_definitions.R")
+
+# Build a standard key-level list. `type` is the code-type key (e.g. "dx_icd10")
+# and selects which source supplies the definition for each code.
+make_key <- function(type, codes,
                      condition = rep(TRUE, length(codes)),
                      outcome   = rep(TRUE, length(codes))) {
   list(
-    codes     = codes,
-    condition = condition,
-    outcome   = outcome
+    codes       = codes,
+    condition   = condition,
+    outcome     = outcome,
+    definitions = code_defs(type, codes)
   )
 }
 
-make_key_condition_only <- function(codes) {
+make_key_condition_only <- function(type, codes) {
   make_key(
-    codes,
+    type, codes,
     condition = rep(TRUE,  length(codes)),
     outcome   = rep(FALSE, length(codes))
   )
@@ -166,12 +172,13 @@ obesity_defs_shared <- c(
   )
 )
 
+
 spec_obesity_v1 <- CodeSpec$new(
   condition = "obesity", version = "v1", label = "Obesity",
   defs  = list(condition = obesity_defs_shared, outcome = obesity_defs_shared),
   codes = list(
-    dx_icd9  = make_key(obesity_icd9),
-    dx_icd10 = make_key(obesity_icd10)
+    dx_icd9  = make_key("dx_icd9", obesity_icd9),
+    dx_icd10 = make_key("dx_icd10", obesity_icd10)
   )
 )
 
@@ -194,7 +201,7 @@ spec_obesity_v1 <- CodeSpec$new(
 # 403.1x, 403.9x, or an ICD-10 discharge diagnosis code of I10, I11.x, I12.x,
 # I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position
 #
-# b)	≥2 physician evaluation and management visits (page 7) claims with an ICD-9
+# b)	≥2 outpatient physician visit claims (page 7) with an ICD-9
 # diagnosis code of 401.x, 403.0x, 403.1x, 403.9x, or an ICD-10 diagnosis code
 # of I10, I11.x, I12.x, I13.x, I15.x, I12.0, I12.9, I16.x, in any position at
 # least 30 days apart.
@@ -229,7 +236,7 @@ htn_v1_defs_condition <- c(
     "in any discharge diagnosis position."
   ),
   "*" = paste0(
-    "\u22652 physician E&M visit claims with the same diagnosis codes, ",
+    "\u22652 outpatient physician visit claims with the same diagnosis codes, ",
     "at least 30 days apart."
   )
 )
@@ -243,8 +250,8 @@ htn_v2_defs_condition <- c(
 )
 
 htn_codes <- list(
-  dx_icd9  = make_key_condition_only(htn_icd9),
-  dx_icd10 = make_key_condition_only(htn_icd10)
+  dx_icd9  = make_key_condition_only("dx_icd9", htn_icd9),
+  dx_icd10 = make_key_condition_only("dx_icd10", htn_icd10)
 )
 
 # Collapsed to a single version (2026-08-15, issue #4): v1/v2 previously
@@ -275,7 +282,7 @@ spec_hypertension_v1 <- CodeSpec$new(
 # I208, I209, I240, I241, I248, I252, I255, I2582, I2583, I2584, I2589, I259, in
 # any position.
 #
-# (b) At least 1 outpatient physician evaluation and management claim (page 7)
+# (b) At least 1 outpatient physician claim (page 7)
 # with an ICD-9 diagnosis code of 410.xx-414.xx, V45.81 or V45.82, or an ICD-10
 # diagnosis code of I21.xxx, I22.xxx, I25.10, I25.810, I25.811, I25.812, I25.3,
 # I25.41, I25.42, Z95.1, Z9861, I200, I201, I208, I209, I240, I241, I248, I252,
@@ -285,7 +292,7 @@ spec_hypertension_v1 <- CodeSpec$new(
 # 00.66, 36.0, 36.01-36.19, 36.2, or an ICD-10 procedure code of '0210xxx',
 # '0211xxx', '0212xxx', ‘0213xxx', '0270xxx', '0271xxx', '0272xxx',
 # '0273xxx','02C0xxx', '02C1xxx', '02C2xxx', '02C3xxx', '3E07xxx', or a HCPCS
-# code of 33510-33519, 33521-33523, 33530, 33533-33536, 92980-92982, 92984,
+# code of 33510-33514, 33516-33519, 33521-33523, 33530, 33533-33536, 92980-92982, 92984,
 # 92995, 92996, 92920, 92921, 92924, 92925, 92928, 92929, 92933, 92934, 92937,
 # 92938, 92941, 92943, 92944, 92973, C9600, C9601, C9602, C9603, C9604, C9605,
 # C9606, C9607, C9608, G0290, G0291.
@@ -310,7 +317,7 @@ spec_hypertension_v1 <- CodeSpec$new(
 # ICD-9 code 410.xx, except 410.x2, which represent a subsequent episode of
 # care, or an ICD-10 of code I21.xx, I22.xx) in the primary discharge diagnosis
 # position or an inpatient or outpatient claim with a procedure code for
-# coronary revascularization, including a HCPCS code of 33510-33519,
+# coronary revascularization, including a HCPCS code of 33510-33514, 33516-33519,
 # 33521-33523, 33530, 33533-33536, 92980-92982, 92984, 92995, 92996, 92920,
 # 92921, 92924, 92925, 92928, 92929, 92933, 92934, 92937, 92938, 92941, 92943,
 # 92944, 92973, C9600, C9601, C9602, C9603, C9604, C9605, C9606, C9607, C9608,
@@ -418,7 +425,9 @@ chd_proc_icd10 <- expand_pcs(chd_pcs_patterns)
 
 # HCPCS codes for coronary revascularization
 chd_hcpcs <- c(
-  hcpcs_range("33510", "33519"),
+  # 33515 is not a valid CPT code, so the 33510-33519 range is split around it.
+  hcpcs_range("33510", "33514"),
+  hcpcs_range("33516", "33519"),
   hcpcs_range("33521", "33523"),
   "33530",
   hcpcs_range("33533", "33536"),
@@ -465,7 +474,7 @@ spec_chd_v1 <- CodeSpec$new(
         "{.strong I25}/{.strong I20}/{.strong I24} codes in any position."
       ),
       "*" = paste0(
-        "\u22651 outpatient E&M claim with the same ICD codes in any position."
+        "\u22651 outpatient claim with the same ICD codes in any position."
       ),
       "*" = paste0(
         "\u22651 inpatient or outpatient claim with an ICD-9 procedure code of ",
@@ -502,15 +511,15 @@ spec_chd_v1 <- CodeSpec$new(
     )
   ),
   codes = list(
-    dx_icd9    = make_key(chd_icd9_dx_cond,
+    dx_icd9    = make_key("dx_icd9", chd_icd9_dx_cond,
                           condition = rep(TRUE, length(chd_icd9_dx_cond)),
                           outcome   = chd_icd9_dx_cond %in% chd_icd9_dx_out),
-    dx_icd10   = make_key(chd_icd10_dx_cond,
+    dx_icd10   = make_key("dx_icd10", chd_icd10_dx_cond,
                           condition = rep(TRUE, length(chd_icd10_dx_cond)),
                           outcome   = chd_icd10_dx_cond %in% chd_icd10_dx_out),
-    proc_icd9  = make_key(chd_proc_icd9),
-    proc_icd10 = make_key(chd_proc_icd10),
-    hcpcs      = make_key(chd_hcpcs)
+    proc_icd9  = make_key("proc_icd9", chd_proc_icd9),
+    proc_icd10 = make_key("proc_icd10", chd_proc_icd10),
+    hcpcs      = make_key("hcpcs", chd_hcpcs)
   )
 )
 
@@ -579,7 +588,7 @@ spec_stroke_v1 <- CodeSpec$new(
         "ICD-10: {.strong I60.xx}, {.strong I61.xx}, {.strong I63.xx}, {.strong I67.89}, ",
         "{.strong I67850}, {.strong I67858}) in any discharge diagnosis position."
       ),
-      "*" = "\u22652 E&M-linked outpatient claims on separate days with the same codes."
+      "*" = "\u22652 outpatient claims on separate days with the same codes."
     ),
     outcome = c(
       "*" = paste0(
@@ -590,8 +599,8 @@ spec_stroke_v1 <- CodeSpec$new(
     )
   ),
   codes = list(
-    dx_icd9  = make_key(stroke_icd9),
-    dx_icd10 = make_key(stroke_icd10)
+    dx_icd9  = make_key("dx_icd9", stroke_icd9),
+    dx_icd10 = make_key("dx_icd10", stroke_icd10)
   )
 )
 
@@ -639,8 +648,8 @@ spec_isch_stroke_v1 <- CodeSpec$new(
     )
   ),
   codes = list(
-    dx_icd9  = make_key(isch_stroke_icd9),
-    dx_icd10 = make_key(isch_stroke_icd10)
+    dx_icd9  = make_key("dx_icd9", isch_stroke_icd9),
+    dx_icd10 = make_key("dx_icd10", isch_stroke_icd10)
   )
 )
 
@@ -659,7 +668,7 @@ spec_isch_stroke_v1 <- CodeSpec$new(
 # 440.20, 440.21, 440.22, 440.23, 440.24, 440.29, 440.3, 440.30, 440.31, 440.32,
 # 440.4, 443.9) in any discharge diagnosis position.
 #
-# b)	≥2 physician evaluation and management visits (page 7) with a diagnosis
+# b)	≥2 outpatient physician visits (page 7) with a diagnosis
 # code of atherosclerosis or thrombosis of arteries of the extremities (ICD-9-CM
 # diagnosis code of 440.2, 440.20, 440.21, 440.22, 440.23, 440.24, 440.29,
 # 440.3, 440.30, 440.31, 440.32, 440.4, 443.9) in any discharge position on
@@ -707,7 +716,7 @@ spec_isch_stroke_v1 <- CodeSpec$new(
 # I70.769, I70.79, I70.791, I70.792, I70.793, I70.798, I70.799, I70.9, I70.92,
 # I739) in any discharge diagnosis position.
 #
-# b)	≥2 physician evaluation and management visits (page 7) with a diagnosis
+# b)	≥2 outpatient physician visits (page 7) with a diagnosis
 # code of atherosclerosis or thrombosis of arteries of the extremities
 # (ICD-10-CM diagnosis code of I70.2, I70.20, I70.201, I70.202, I70.203,
 # I70.208, I70.209, I70.21, I70.211, I70.212, I70.213, I70.218, I70.219, I70.22,
@@ -1274,7 +1283,7 @@ spec_lead_pad_v1 <- CodeSpec$new(
       "*" = paste0("\u22651 hospitalization with a discharge diagnosis code ",
                    "of atherosclerosis or thrombosis of arteries of the ",
                    "extremities in any discharge diagnosis position."),
-      "*" = paste0("\u22652 physician E&M visits with a diagnosis code of ",
+      "*" = paste0("\u22652 outpatient physician visits with a diagnosis code of ",
                    "atherosclerosis or thrombosis of arteries of the ",
                    " extremities in any discharge position on separate days."),
       "*" = paste0("\u22651 CPT code of {.strong 37205}, {.strong 75962}, ",
@@ -1283,9 +1292,9 @@ spec_lead_pad_v1 <- CodeSpec$new(
     )
   ),
   codes = list(
-    dx_icd9  = make_key_condition_only(lead_icd9),
-    dx_icd10 = make_key_condition_only(lead_icd10),
-    cpt = make_key_condition_only(lead_cpt)
+    dx_icd9  = make_key_condition_only("dx_icd9", lead_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", lead_icd10),
+    cpt = make_key_condition_only("cpt", lead_cpt)
   )
 )
 
@@ -1327,7 +1336,7 @@ spec_lead_pad_v1 <- CodeSpec$new(
 # '03RN4JZ', '03RN4KZ'.
 #
 # (g)	A CPT code for carotid revascularization: 35301, 35390, 37215, 37216,
-# 0005T, 0075T, or 0076.
+# 0005T, 0075T, or 0076T.
 
 cerebrovasc_proc_icd9 <- c("3842", "3812", "3990", "0063")
 
@@ -1387,7 +1396,7 @@ cerebrovasc_pcs_patterns <- c(
 )
 cerebrovasc_proc_icd10 <- expand_pcs(cerebrovasc_pcs_patterns)
 
-cerebrovasc_cpt <- c("35301", "35390", "37215", "37216", "0005T", "0075T", "0076")
+cerebrovasc_cpt <- c("35301", "35390", "37215", "37216", "0005T", "0075T", "0076T")
 
 spec_cerebrovasc_disease_v1 <- CodeSpec$new(
   condition = "cerebrovasc_disease", version = "v1",
@@ -1399,24 +1408,24 @@ spec_cerebrovasc_disease_v1 <- CodeSpec$new(
         "\u22651 inpatient claim with an ICD-9 diagnosis of {.strong 433.x1} or ",
         "{.strong 434.x1}, or an ICD-10 diagnosis of {.strong I63.xx} in any position."
       ),
-      "*" = "\u22651 outpatient or carrier claim with the same codes linked to an E&M claim.",
+      "*" = "\u22651 outpatient or carrier claim with the same codes.",
       "*" = "\u22651 claim with the same codes in HHA, DME, Hospice, or SNF files.",
       "*" = paste0(
         "\u22651 inpatient/outpatient claim with an ICD-9 procedure code for carotid ",
         "endarterectomy or revascularization ({.strong 38.42}, {.strong 38.12}, ",
         "{.strong 39.90}, {.strong 00.63}), an ICD-10-PCS code for carotid stenting, ",
         "or a CPT code for carotid revascularization ({.strong 35301}, {.strong 35390}, ",
-        "{.strong 37215}, {.strong 37216}, {.strong 0005T}, {.strong 0075T}, {.strong 0076})."
+        "{.strong 37215}, {.strong 37216}, {.strong 0005T}, {.strong 0075T}, {.strong 0076T})."
       )
     ),
     outcome = NULL
   ),
   codes = list(
-    dx_icd9    = make_key_condition_only(isch_stroke_icd9),
-    dx_icd10   = make_key_condition_only(isch_stroke_icd10),
-    proc_icd9  = make_key_condition_only(cerebrovasc_proc_icd9),
-    proc_icd10 = make_key_condition_only(cerebrovasc_proc_icd10),
-    cpt        = make_key_condition_only(cerebrovasc_cpt)
+    dx_icd9    = make_key_condition_only("dx_icd9", isch_stroke_icd9),
+    dx_icd10   = make_key_condition_only("dx_icd10", isch_stroke_icd10),
+    proc_icd9  = make_key_condition_only("proc_icd9", cerebrovasc_proc_icd9),
+    proc_icd10 = make_key_condition_only("proc_icd10", cerebrovasc_proc_icd10),
+    cpt        = make_key_condition_only("cpt", cerebrovasc_cpt)
   )
 )
 
@@ -1551,7 +1560,7 @@ spec_hf_v1 <- CodeSpec$new(
         "{.strong I50.20}\u2013{.strong I50.43}, {.strong I50.9}, or specified {.strong I508xx} ",
         "codes in any diagnosis position."
       ),
-      "*" = "\u22652 E&M-linked outpatient claims at least 30 days apart with the same codes."
+      "*" = "\u22652 outpatient claims at least 30 days apart with the same codes."
     ),
     outcome = c(
       "*" = paste0(
@@ -1561,8 +1570,8 @@ spec_hf_v1 <- CodeSpec$new(
     )
   ),
   codes = list(
-    dx_icd9  = make_key(hf_icd9),
-    dx_icd10 = make_key(hf_icd10)
+    dx_icd9  = make_key("dx_icd9", hf_icd9),
+    dx_icd10 = make_key("dx_icd10", hf_icd10)
   )
 )
 
@@ -1577,7 +1586,7 @@ spec_hf_v1 <- CodeSpec$new(
 # F31.77, F31.78, F31.81, F32.3 or F33.3, F34.1, F43.21 or F32.9 in any
 # position.
 #
-# (b) At least 1 outpatient physician evaluation and management claim (page 7)
+# (b) At least 1 outpatient physician claim (page 7)
 # with ICD-9 diagnosis code of 296.20-296.26, 296.30-296.36, 296.51-296.56,
 # 296.60-296.66, 296.89, 298.0, 300.4, 309.1 or 311, or an ICD-10 diagnosis code
 # of F32.9, F32.0-F32.5, F33.9, F33.0-F33.3, F33.41, F33.42, F33.31, F31.32,
@@ -1591,7 +1600,7 @@ spec_hf_v1 <- CodeSpec$new(
 # F33.41, F33.42, F33.31, F31.32, F31.4, F31.5, F31.75, F31.76, F31.60-F31.64,
 # F31.77, F31.78, F31.81, F32.3 or F33.3, F34.1, F43.21 in any position.
 #
-# (b) At least 1 outpatient physician evaluation and management claim (page 7)
+# (b) At least 1 outpatient physician claim (page 7)
 # with ICD-9 diagnosis code of 296.20-296.26, 296.30-296.36, 296.51-296.56,
 # 296.60-296.66, 296.89, 298.0, 300.4, 309.1 or 311, or an ICD-10 diagnosis code
 # of F32.9, F32.0-F32.5, F33.9, F33.0-F33.3, F33.41, F33.42, F33.31, F31.32,
@@ -1637,8 +1646,8 @@ depress_icd10 <- unique(c(
 ))
 
 depress_codes <- list(
-  dx_icd9  = make_key_condition_only(depress_icd9),
-  dx_icd10 = make_key_condition_only(depress_icd10)
+  dx_icd9  = make_key_condition_only("dx_icd9", depress_icd9),
+  dx_icd10 = make_key_condition_only("dx_icd10", depress_icd10)
 )
 
 depress_defs_base <- c(
@@ -1651,7 +1660,7 @@ depress_defs_base <- c(
     "from the depression code set, in any diagnosis position."
   ),
   "*" = paste0(
-    "\u22651 outpatient physician evaluation and management (E&M) claim with ",
+    "\u22651 outpatient physician claim with ",
     "the same ICD codes in any diagnosis position."
   )
 )
@@ -1712,7 +1721,7 @@ spec_depression_v1 <- CodeSpec$new(
 #
 # (b)	At least 2 carrier claims, carrier line or outpatient claims with ICD-9
 # diagnoses (any position) of 250.xx, 357.2, 362.0x, or 366.41, linked by
-# CLAIM_ID to an ambulatory physician evaluation and management claim (page 7),
+# CLAIM_ID to an ambulatory physician claim (page 7),
 # with the 2 claims occurring at least 7 days apart.
 #
 # Algorithm based on ICD-10 codes:
@@ -1849,17 +1858,17 @@ diab_icd10_t2 <- c(
 )
 
 diab_type1_codes <- list(
-  dx_icd9  = make_key_condition_only(diab_icd9_t1),
-  dx_icd10 = make_key_condition_only(diab_icd10_t1)
+  dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t1),
+  dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t1)
 )
 diab_type2_codes <- list(
-  dx_icd9  = make_key_condition_only(diab_icd9_t2),
-  dx_icd10 = make_key_condition_only(diab_icd10_t2)
+  dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t2),
+  dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t2)
 )
 
 # (2026-09-12) Split from the former unified spec_diabetes_v1 into separate
 # Type 1 and Type 2 specs. The algorithmic criteria (inpatient/outpatient
-# claim counts, E&M linkage, 7-day gap) are identical; only the code sets
+# claim counts, 7-day gap) are identical; only the code sets
 # and medication alternative criterion differ.
 
 spec_diabetes_type1_v1 <- CodeSpec$new(
@@ -1876,7 +1885,7 @@ spec_diabetes_type1_v1 <- CodeSpec$new(
       ),
       "*" = paste0(
         "\u22652 carrier/outpatient claims with the same ICD codes in any position, ",
-        "linked to an E&M claim, occurring at least 7 days apart."
+        "occurring at least 7 days apart."
       ),
       "*" = "\u22651 pharmacy claim for insulin or an amylin analogue (see {.strong spec_diabetes_type1})."
     ),
@@ -1900,7 +1909,7 @@ spec_diabetes_type2_v1 <- CodeSpec$new(
       ),
       "*" = paste0(
         "\u22652 carrier/outpatient claims with the same ICD codes in any position, ",
-        "linked to an E&M claim, occurring at least 7 days apart."
+        "occurring at least 7 days apart."
       ),
       "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes_type2}).",
       "i" = paste0(
@@ -1928,7 +1937,7 @@ spec_diabetes_type2_v1 <- CodeSpec$new(
 #  440.1, 442.1, 447.3, 572.4, 580.xx–588.xx, 591, 642.1x, 646.2x, 753.12–753.17,
 #  753.19, 753.2x, 794.4) in any discharge diagnosis position.
 #
-#  (b)	≥1 physician evaluation and management visit (page 7) with a diagnosis code
+#  (b)	≥1 outpatient physician visit (page 7) with a diagnosis code
 #  of chronic kidney disease (ICD-9-CM diagnosis code of 016.0x, 095.4, 189.0,
 #  189.9, 223.0, 236.91, 250.4x, 271.4, 274.1x, 283.11, 403.x1, 403.x0, 404.x2,
 #  404.x3, 404.x0, 404.x1, 440.1, 442.1, 447.3, 572.4, 580.xx–588.xx, 591, 642.1x,
@@ -1948,7 +1957,7 @@ spec_diabetes_type2_v1 <- CodeSpec$new(
 #  'Q6210', 'Q6211', 'Q6212', 'Q6231', 'Q6239', 'R944') in any discharge
 #  diagnosis position.
 #
-#  (b)	≥1 physician evaluation and management visit (page 7) with a diagnosis code
+#  (b)	≥1 outpatient physician visit (page 7) with a diagnosis code
 #  of chronic kidney disease (ICD-10-CM diagnosis code of ‘A1811', 'A5275',
 #  'C649', 'C689', 'D3000', 'D4100', 'D4120', 'D593', 'E1021’,  'E1029', 'E1121’,
 #  'E1129', 'E748', 'I120', 'I129', 'I130', 'I1310', 'I1311', 'I132', I701',
@@ -2091,7 +2100,7 @@ ckd_defs_condition <- c(
     "chronic kidney disease in any discharge diagnosis position."
   ),
   "*" = paste0(
-    "\u22651 physician E&M visit with an ICD-9 or ICD-10 CKD diagnosis code ",
+    "\u22651 outpatient physician visit with an ICD-9 or ICD-10 CKD diagnosis code ",
     "in any position."
   ),
   "i" = paste0(
@@ -2104,8 +2113,8 @@ spec_ckd_v1 <- CodeSpec$new(
   condition = "ckd", version = "v1", label = "Chronic Kidney Disease (CKD)",
   defs  = list(condition = ckd_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(ckd_icd9),
-    dx_icd10 = make_key_condition_only(ckd_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", ckd_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", ckd_icd10)
   )
 )
 
@@ -2145,8 +2154,8 @@ spec_osa_v1 <- CodeSpec$new(
   label = "Obstructive sleep apnea",
   defs  = list(condition = osa_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(osa_icd9),
-    dx_icd10 = make_key_condition_only(osa_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", osa_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", osa_icd10)
   )
 )
 
@@ -2174,8 +2183,8 @@ spec_ohs_v1 <- CodeSpec$new(
   label     = "Obesity Hypoventilation Syndrome",
   defs  = list(condition = ohs_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(ohs_icd9),
-    dx_icd10 = make_key_condition_only(ohs_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", ohs_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", ohs_icd10)
   )
 )
 
@@ -2188,13 +2197,13 @@ spec_ohs_v1 <- CodeSpec$new(
 # settings:
 #
 # (a)	≥2 claims on separate calendar days with ICD-9 diagnoses (any position)
-# of 272.0, 272.1, 272.2, 272.3, 272.4 linked to a physician E&M code.
+# of 272.0, 272.1, 272.2, 272.3, 272.4 linked to an outpatient physician claim.
 #
 # (b)	≥2 claims on separate calendar days with ICD-9 diagnoses (any position)
 # of 272.0, 272.1, 272.2, 272.3, 272.4.
 #
 # (c)	≥2 claims on separate calendar days with ICD-10 diagnoses (any position)
-# of E78.0, E78.1, E78.2, E78.3, E78.4, E78.5 linked to a physician E&M code.
+# of E78.0, E78.1, E78.2, E78.3, E78.4, E78.5 linked to an outpatient physician claim.
 #
 # (d)	≥2 claims on separate calendar days with ICD-10 diagnoses (any position)
 # of E78.0, E78.1, E78.2, E78.3, E78.4, E78.5.
@@ -2212,14 +2221,13 @@ spec_hyperlipidemia_v1 <- CodeSpec$new(
         "{.strong 272.0}\u2013{.strong 272.4}, or ICD-10 diagnoses of {.strong E78.0}, ",
         "{.strong E78.1}, {.strong E78.2}, {.strong E78.3}, {.strong E78.4}, or {.strong E78.5} ",
         "in any diagnosis position (carrier, outpatient, inpatient, SNF, or HHA)."
-      ),
-      "i" = "Carrier and outpatient claims must be linked to a physician E&M code."
+      )
     ),
     outcome = NULL
   ),
   codes = list(
-    dx_icd9  = make_key_condition_only(hyp_icd9),
-    dx_icd10 = make_key_condition_only(hyp_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", hyp_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", hyp_icd10)
   )
 )
 
@@ -2235,7 +2243,7 @@ spec_hyperlipidemia_v1 <- CodeSpec$new(
 # 492.0x, 492.8x, 491.20, 491.21, 491.22, 494.0x, 494.1x, 496.xx.
 #
 # (b)	≥2 outpatient, or carrier claim with ICD-9 diagnoses (any position) linked
-# to physician E&M code of 490.xx, 491.0x, 491.1x, 491.8x, 491.9x, 492.0x,
+# to an outpatient physician claim with a diagnosis of 490.xx, 491.0x, 491.1x, 491.8x, 491.9x, 492.0x,
 # 492.8x, 491.20, 491.21, 491.22, 494.0x, 494.1x, 496.xx.
 #
 # (c)	≥1 inpatient, skilled nursing facility, home health agency claim with
@@ -2244,7 +2252,7 @@ spec_hyperlipidemia_v1 <- CodeSpec$new(
 # 'J471', 'J479', J4481, J4489
 #
 # (d)	≥2 outpatient, or carrier claim with ICD-10 diagnoses (any position)
-# linked to physician E&M code of 'J40', 'J410', 'J411', 'J418', 'J42', 'J430',
+# linked to an outpatient physician claim with a diagnosis of 'J40', 'J410', 'J411', 'J418', 'J42', 'J430',
 # 'J431', 'J432', 'J438', 'J439', 'J440', 'J441', 'J449', 'J470', 'J471',
 # 'J479', J4481, J4489
 #
@@ -2299,8 +2307,7 @@ copd_defs_condition <- c(
     "{.strong J4481}, or {.strong J4489} in any position."
   ),
   "*" = paste0(
-    "\u22652 outpatient or carrier claims with the same ICD codes in any position, ",
-    "linked to a physician E&M claim."
+    "\u22652 outpatient or carrier claims with the same ICD codes in any position."
   )
 )
 
@@ -2309,8 +2316,8 @@ spec_copd_v1 <- CodeSpec$new(
   label = "Chronic Obstructive Pulmonary Disease (COPD)",
   defs  = list(condition = copd_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(copd_icd9),
-    dx_icd10 = make_key_condition_only(copd_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", copd_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", copd_icd10)
   )
 )
 
@@ -2326,8 +2333,7 @@ asthma_defs_condition <- c(
     "ICD-10 diagnosis of {.strong J45.xx} in any position."
   ),
   "*" = paste0(
-    "\u22652 outpatient or carrier claims with the same ICD codes in any position, ",
-    "linked to a physician E&M claim."
+    "\u22652 outpatient or carrier claims with the same ICD codes in any position."
   )
 )
 
@@ -2336,8 +2342,8 @@ spec_asthma_v1 <- CodeSpec$new(
   label = "Asthma",
   defs  = list(condition = asthma_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(asthma_icd9),
-    dx_icd10 = make_key_condition_only(asthma_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", asthma_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", asthma_icd10)
   )
 )
 
@@ -2367,8 +2373,7 @@ oa_defs_condition <- c(
     "unspecified osteoarthritis) in any position."
   ),
   "*" = paste0(
-    "\u22652 outpatient or carrier claims with the same ICD codes in any position, ",
-    "linked to a physician E&M claim."
+    "\u22652 outpatient or carrier claims with the same ICD codes in any position."
   )
 )
 
@@ -2377,8 +2382,8 @@ spec_osteoarthritis_v1 <- CodeSpec$new(
   label = "Osteoarthritis",
   defs  = list(condition = oa_defs_condition, outcome = NULL),
   codes = list(
-    dx_icd9  = make_key_condition_only(oa_icd9),
-    dx_icd10 = make_key_condition_only(oa_icd10)
+    dx_icd9  = make_key_condition_only("dx_icd9", oa_icd9),
+    dx_icd10 = make_key_condition_only("dx_icd10", oa_icd10)
   )
 )
 

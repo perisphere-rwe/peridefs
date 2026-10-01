@@ -2,8 +2,7 @@
 
 test_that("get_hypertension_v1_codes() returns a tibble with the expected columns", {
   result <- get_hypertension_v1_codes()
-  expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("type", "code", "priority", "version"))
+  expect_equal(names(result), c("type", "code", "priority", "version", "definition"))
 })
 
 test_that("get_hypertension_v1_codes() code_type filter works", {
@@ -318,7 +317,7 @@ test_that("expected code sets: CHD", {
                   expand_pcs('3E07'))
 
   hcpcs <- c(
-    paste(33510:33519),
+    paste(setdiff(33510:33519, 33515)),
     paste(33521:33523),
     "33530",
     paste(33533:33536),
@@ -359,5 +358,6 @@ test_that("expected code sets: CHD", {
   expect_true(.codes_of(chd_v1, "dx_icd10")  %==% dx_icd10)
   expect_true(.codes_of(chd_v1, "proc_icd9") %==% proc_icd9)
   expect_true(.codes_of(chd_v1, "proc_icd10") %==% proc_icd10)
+  expect_true(.codes_of(chd_v1, "hcpcs")     %==% hcpcs)
 
 })

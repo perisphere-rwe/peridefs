@@ -12,6 +12,7 @@ condition: logical vector parallel to codes; TRUE if the code
 belongs to the condition/history definition.
 outcome: logical vector parallel to codes; TRUE if the code
 belongs to the outcome definition.
+definitions: optional character vector of code definitions, parallel to codes.
 exclusions: optional character string describing codes to exclude.
 
 
@@ -28,6 +29,7 @@ condition: logical vector parallel to codes; TRUE if the code
 belongs to the condition/history definition.
 outcome: logical vector parallel to codes; TRUE if the code
 belongs to the outcome definition.
+definitions: optional character vector of code definitions, parallel to codes.
 exclusions: optional character string describing codes to exclude.
 
 
@@ -92,6 +94,7 @@ a narrative algorithm description string (or <code>NULL</code> if not defined).<
 belongs to the condition/history definition.</p></li>
 <li><p><code>outcome</code>: logical vector parallel to <code>codes</code>; <code>TRUE</code> if the code
 belongs to the outcome definition.</p></li>
+<li><p><code>definitions</code>: optional character vector of code definitions, parallel to <code>codes</code>.</p></li>
 <li><p><code>exclusions</code>: optional character string describing codes to exclude.</p></li>
 </ul></li>
 </ul></div>
@@ -217,7 +220,7 @@ spec has no codes flagged for <code>"outcome"</code>, falls back to <code>"condi
 </dl><p></p></div>
 </div><p></p><div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p>A tibble with columns <code>type</code>, <code>code</code>, <code>priority</code>, and <code>version</code>.</p>
+<p>A tibble with columns <code>type</code>, <code>code</code>, <code>priority</code>, <code>version</code>, and <code>definition</code>.</p>
 </div>
 
 </div>

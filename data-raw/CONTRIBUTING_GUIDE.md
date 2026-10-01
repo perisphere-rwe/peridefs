@@ -392,7 +392,7 @@ keys become the `type` column values in `get_*_codes()` output:
 | `specialty` | Physician specialty codes (document in defs; no ICD representation) |
 
 **There is no encounter-type suffix** (`_inpt`, `_outpt`). The defs text
-explains encounter requirements (e.g., "≥1 inpatient OR ≥2 outpatient E&M
+explains encounter requirements (e.g., "≥1 inpatient OR ≥2 outpatient
 claims"). Encounter logic is an analysis-time concern, not a code-set concern.
 
 ---
@@ -718,7 +718,7 @@ Some TOC items are not representable as code/drug specs:
 | Statin intolerance | Drug adherence/switching counting algorithm |
 | Frailty | Weighted ICD score requiring coefficient tables |
 | Very high-risk ASCVD | Event-counting logic (implement as CompositeCodeSpec for codes only; document counting in defs) |
-| Cardiologist/Nephrology/ Neurology/Pulmonary/ Primary care/Geriatrics ambulatory visits | Physician specialty codes — store the E&M HCPCS codes from `spec_hcpcs_em` in the code set and document the specialty code in defs |
+| Cardiologist/Nephrology/ Neurology/Pulmonary/ Primary care/Geriatrics ambulatory visits | Physician specialty codes — store the outpatient visit HCPCS codes from `spec_hcpcs_em` in the code set and document the specialty code in defs |
 | Dialysis | BETOS codes — store empty code set, document in defs |
 | Discharge to hospice/SNF | Discharge status codes — not medical codes |
 

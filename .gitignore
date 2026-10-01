@@ -7,3 +7,5 @@
 docs
 AGENTS.md
 market_clarity*
+
+data-raw/.cache/
