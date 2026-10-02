@@ -15,6 +15,7 @@
 #'     belongs to the condition/history definition.
 #'   - `outcome`: logical vector parallel to `codes`; `TRUE` if the code
 #'     belongs to the outcome definition.
+#'   - `definitions`: optional character vector of code definitions, parallel to `codes`.
 #'   - `exclusions`: optional character string describing codes to exclude.
 #'
 #' @export
@@ -28,7 +29,7 @@ CodeSpec <- R6::R6Class(
     .defs      = NULL,
     .codes     = NULL,
 
-    # Build a tidy tibble (type, code, priority, version) for one variable_type.
+    # Build a tidy tibble (type, code, priority, version, definition) for one variable_type.
     build_tibble = function(code_type, variable_type, periods) {
       keys <- names(private$.codes)
       if (!is.null(code_type)) keys <- keys[keys %in% code_type]
@@ -39,19 +40,24 @@ CodeSpec <- R6::R6Class(
         cd   <- kd$codes[mask]
         if (!length(cd)) return(NULL)
         if (periods) cd <- add_periods_icd(cd)
+        
+        defs <- if (!is.null(kd$definitions)) kd$definitions[mask] else rep(NA_character_, length(cd))
+        
         tibble::tibble(
-          type     = k,
-          code     = cd,
-          priority = 1L,
-          version  = private$.version %||% NA_character_
+          type       = k,
+          code       = cd,
+          priority   = 1L,
+          version    = private$.version %||% NA_character_,
+          definition = defs
         )
       })
 
       result <- do.call(rbind, Filter(Negate(is.null), rows))
       if (is.null(result)) {
         result <- tibble::tibble(
-          type = character(0L), code = character(0L),
-          priority = integer(0L), version = character(0L)
+          type       = character(0L), code = character(0L),
+          priority   = integer(0L), version = character(0L),
+          definition = character(0L)
         )
       }
       result
@@ -155,7 +161,7 @@ CodeSpec <- R6::R6Class(
     #'   (e.g., `"401.0"`). Default `FALSE` returns short format (`"4010"`).
     #' @param priority Integer vector subsetting confidence tiers to include
     #'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
-    #' @return A tibble with columns `type`, `code`, `priority`, and `version`.
+    #' @return A tibble with columns `type`, `code`, `priority`, `version`, and `definition`.
     get_codes = function(code_type = NULL,
                          variable_type = c("condition", "outcome"),
                          periods = FALSE,

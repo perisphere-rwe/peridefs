@@ -150,6 +150,10 @@ add_codes <- function(spec,
 
         priv$.codes[[k]]$condition   <- c(existing$condition, rep(cond_flag, length(to_add)))
         priv$.codes[[k]]$outcome     <- c(existing$outcome,   rep(out_flag,  length(to_add)))
+        if (!is.null(existing$definitions)) {
+          priv$.codes[[k]]$definitions <- c(existing$definitions,
+                                            rep(NA_character_, length(to_add)))
+        }
       }
     } else {
       priv$.codes[[k]] <- list(
@@ -194,6 +198,10 @@ remove_codes <- function(spec, ...) {
 
     priv$.codes[[k]]$condition   <- priv$.codes[[k]]$condition[keep]
     priv$.codes[[k]]$outcome     <- priv$.codes[[k]]$outcome[keep]
+    
+    if (!is.null(priv$.codes[[k]]$definitions)) {
+      priv$.codes[[k]]$definitions <- priv$.codes[[k]]$definitions[keep]
+    }
   }
 
   cloned

@@ -20,6 +20,7 @@ a narrative algorithm description string (or \code{NULL} if not defined).
 belongs to the condition/history definition.
 \item \code{outcome}: logical vector parallel to \code{codes}; \code{TRUE} if the code
 belongs to the outcome definition.
+\item \code{definitions}: optional character vector of code definitions, parallel to \code{codes}.
 \item \code{exclusions}: optional character string describing codes to exclude.
 }
 }
@@ -136,7 +137,7 @@ spec has no codes flagged for \code{"outcome"}, falls back to \code{"condition"}
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    A tibble with columns \code{type}, \code{code}, \code{priority}, and \code{version}.
+    A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version}, and \code{definition}.
   }
 }
 

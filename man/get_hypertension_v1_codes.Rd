@@ -26,7 +26,7 @@ is defined as a condition only; \code{"outcome"} falls back to condition codes.}
 (\code{1} = core, \code{2} = probable, \code{3} = cautious). Default \code{1}.}
 }
 \value{
-A tibble with columns \code{type}, \code{code}, \code{priority}, and \code{version}.
+A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version}, and \code{definition}.
 }
 \description{
 Returns code sets from a hypertension \link{CodeSpec}. The condition

@@ -112,7 +112,7 @@ make_meds_labels_getter <- function(spec) {
 #'   (e.g., `"4010"`). `TRUE` returns decimal-format codes (e.g., `"401.0"`).
 #' @param priority Integer vector subsetting confidence tiers to include
 #'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
-#' @return A tibble with columns `type`, `code`, `priority`, and `version`.
+#' @return A tibble with columns `type`, `code`, `priority`, `version`, and `definition`.
 #' @seealso [get_hypertension_v1_defs()], \code{spec_hypertension_v1}
 #' @examples
 #' get_hypertension_v1_codes()

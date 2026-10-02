@@ -37,7 +37,7 @@ test_that("active bindings return correct values", {
 test_that("get_codes() returns a tibble with the expected columns", {
   result <- toy_spec$get_codes()
   expect_s3_class(result, "tbl_df")
-  expect_equal(names(result), c("type", "code", "priority", "version"))
+  expect_equal(names(result), c("type", "code", "priority", "version", "definition"))
 })
 
 test_that("get_codes() filters by variable_type = 'condition'", {
