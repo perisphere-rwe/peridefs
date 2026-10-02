@@ -9,7 +9,7 @@ Equivalent to get_ascvd_codes(component = "cerebrovasc_disease_v1", ...).'></hea
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,19 +78,19 @@ only because it is inherited from <code><a href="get_ascvd_codes.html">get_ascvd
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_cerebrovasc_disease_v1_codes</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 187 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    type    code  priority version class              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> dx_icd9 43301        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> dx_icd9 4331         1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> dx_icd9 43311        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> dx_icd9 43321        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> dx_icd9 43331        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> dx_icd9 43381        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> dx_icd9 43391        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> dx_icd9 43401        1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dx_icd9 4341         1 v1      cerebrovasc_disease</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dx_icd9 43411        1 v1      cerebrovasc_disease</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 187 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    type    code  priority version definition                               class</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> dx_icd9 43301        1 v1      Occlusion and stenosis of basilar arter… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> dx_icd9 4331         1 v1      Occlusion and stenosis of precerebral a… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> dx_icd9 43311        1 v1      Occlusion and stenosis of carotid arter… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> dx_icd9 43321        1 v1      Occlusion and stenosis of vertebral art… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> dx_icd9 43331        1 v1      Occlusion and stenosis of multiple and … cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> dx_icd9 43381        1 v1      Occlusion and stenosis of other specifi… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> dx_icd9 43391        1 v1      Occlusion and stenosis of unspecified p… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> dx_icd9 43401        1 v1      Cerebral thrombosis with cerebral infar… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> dx_icd9 4341         1 v1      Occlusion of cerebral arteries: Cerebra… cere…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> dx_icd9 43411        1 v1      Cerebral embolism with cerebral infarct… cere…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 177 more rows</span></span>
 </code></pre></div>
     </div>

@@ -41,7 +41,8 @@ get_hypertension_v1_codes(
 
 ## Value
 
-A tibble with columns `type`, `code`, `priority`, and `version`.
+A tibble with columns `type`, `code`, `priority`, `version`, and
+`definition`.
 
 ## See also
 
@@ -52,33 +53,33 @@ A tibble with columns `type`, `code`, `priority`, and `version`.
 
 ``` r
 get_hypertension_v1_codes()
-#> # A tibble: 36 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 401          1 v1     
-#>  2 dx_icd9 4010         1 v1     
-#>  3 dx_icd9 4011         1 v1     
-#>  4 dx_icd9 4019         1 v1     
-#>  5 dx_icd9 4030         1 v1     
-#>  6 dx_icd9 40300        1 v1     
-#>  7 dx_icd9 40301        1 v1     
-#>  8 dx_icd9 4031         1 v1     
-#>  9 dx_icd9 40310        1 v1     
-#> 10 dx_icd9 40311        1 v1     
+#> # A tibble: 36 × 5
+#>    type    code  priority version definition                                    
+#>    <chr>   <chr>    <int> <chr>   <chr>                                         
+#>  1 dx_icd9 401          1 v1      Essential hypertension                        
+#>  2 dx_icd9 4010         1 v1      Malignant essential hypertension              
+#>  3 dx_icd9 4011         1 v1      Benign essential hypertension                 
+#>  4 dx_icd9 4019         1 v1      Unspecified essential hypertension            
+#>  5 dx_icd9 4030         1 v1      Hypertensive chronic kidney disease: Malignant
+#>  6 dx_icd9 40300        1 v1      Hypertensive chronic kidney disease, malignan…
+#>  7 dx_icd9 40301        1 v1      Hypertensive chronic kidney disease, malignan…
+#>  8 dx_icd9 4031         1 v1      Hypertensive chronic kidney disease: Benign   
+#>  9 dx_icd9 40310        1 v1      Hypertensive chronic kidney disease, benign, …
+#> 10 dx_icd9 40311        1 v1      Hypertensive chronic kidney disease, benign, …
 #> # ℹ 26 more rows
 get_hypertension_v1_codes(code_type = "dx_icd10", periods = TRUE)
-#> # A tibble: 23 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 I10          1 v1     
-#>  2 dx_icd10 I11          1 v1     
-#>  3 dx_icd10 I11.0        1 v1     
-#>  4 dx_icd10 I11.9        1 v1     
-#>  5 dx_icd10 I12          1 v1     
-#>  6 dx_icd10 I12.0        1 v1     
-#>  7 dx_icd10 I12.9        1 v1     
-#>  8 dx_icd10 I13          1 v1     
-#>  9 dx_icd10 I13.0        1 v1     
-#> 10 dx_icd10 I13.1        1 v1     
+#> # A tibble: 23 × 5
+#>    type     code  priority version definition                                   
+#>    <chr>    <chr>    <int> <chr>   <chr>                                        
+#>  1 dx_icd10 I10          1 v1      Essential (primary) hypertension             
+#>  2 dx_icd10 I11          1 v1      Hypertensive heart disease                   
+#>  3 dx_icd10 I11.0        1 v1      Hypertensive heart disease with heart failure
+#>  4 dx_icd10 I11.9        1 v1      Hypertensive heart disease without heart fai…
+#>  5 dx_icd10 I12          1 v1      Hypertensive chronic kidney disease          
+#>  6 dx_icd10 I12.0        1 v1      Hypertensive chronic kidney disease with sta…
+#>  7 dx_icd10 I12.9        1 v1      Hypertensive chronic kidney disease with sta…
+#>  8 dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease
+#>  9 dx_icd10 I13.0        1 v1      Hypertensive heart and chronic kidney diseas…
+#> 10 dx_icd10 I13.1        1 v1      Hypertensive heart and chronic kidney diseas…
 #> # ℹ 13 more rows
 ```

@@ -1,11 +1,66 @@
 # Changelog
 
+## peridefs 0.3.2
+
+### New features
+
+- Every `get_*_codes()` result now has a fifth column, `definition`,
+  with a text description of each code (`NA` when none is available).
+  Composite results
+  (e.g. [`get_ascvd_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.md))
+  place `class` after `definition`. Definitions are looked up at build
+  time and stored in the spec objects, so there are no runtime lookups.
+  Sources: CMS FY2026 files (ICD-10-CM, ICD-10-PCS), CMS v32 files
+  (ICD-9-CM diagnoses and procedures), and the NLM Clinical Tables API
+  (HCPCS Level II). CPT descriptions are paraphrased, not AMA text.
+- `CodeSpec` keeps an optional `definitions` vector parallel to `codes`;
+  [`add_codes()`](https://perisphere-rwe.github.io/peridefs/reference/add_codes.md)
+  pads it with `NA` and
+  [`remove_codes()`](https://perisphere-rwe.github.io/peridefs/reference/remove_codes.md)
+  subsets it.
+- Direct access to the ASCVD components:
+  [`get_chd_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_chd_v1_codes.md),
+  [`get_stroke_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_stroke_v1_codes.md),
+  [`get_lead_pad_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_lead_pad_v1_codes.md),
+  [`get_cerebrovasc_disease_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_cerebrovasc_disease_v1_codes.md),
+  and the matching `*_defs()` functions. These wrap
+  [`get_ascvd_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.md)/[`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md)
+  with `component` fixed.
+- `CompositeCodeSpec$new()` gains `components_by_variable_type`, which
+  sets different default components for the condition and outcome
+  definitions.
+
+### Behavior changes
+
+- [`get_ascvd_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.md)
+  and
+  [`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md)
+  no longer return every component by default. The condition definition
+  uses CHD + cerebrovascular disease + LEAD/PAD, and the outcome
+  definition uses CHD + stroke + LEAD/PAD. Pass `component` explicitly
+  to override this.
+- Obesity (`spec_obesity_v1`) now uses a strict BMI \>= 30 definition.
+  Excluded ICD-10 `E66.1`, `E66.3`, `R93.9`, and `Z68.25`-`Z68.29`.
+  Added ICD-9 codes (excluding `278.02` and `V85.21`-`V85.25`). The same
+  code sets apply to both condition and outcome definitions.
+- CHD: removed `33515` (not a valid CPT code) from the HCPCS list; the
+  range is now 33510-33514 and 33516-33519.
+- Definition-book text now says “outpatient physician” claim/visit
+  instead of “evaluation and management”.
+
+### Known gaps
+
+- No definition for `F3331`, the retired ICD-9 procedure codes (`360`,
+  `3601`, `3602`, `3605`, `3608`, `3618`), or retired HCPCS
+  `G0290`/`G0291`.
+
 ## peridefs 0.3.1
 
 ### Breaking changes
 
 - Split the unified diabetes spec into separate Type 1 and Type 2
   objects (no deprecated aliases kept):
+
   - `spec_diabetes_v1` → `spec_diabetes_type1_v1`,
     `spec_diabetes_type2_v1`
   - `spec_diabetes` → `spec_diabetes_type1`, `spec_diabetes_type2`
@@ -13,30 +68,16 @@
     `get_diabetes_type1/type2_v1_codes/defs()`
   - `get_diabetes_generics/meds_labels()` →
     `get_diabetes_type1/type2_generics/meds_labels()`
+
 - `spec_glp1_v1` condition tags updated from `"diabetes"` to
   `"diabetes_type2"`.
-
-### ICD code changes
-
-- ICD-9 250.xx codes split by 5th digit (1/3 → Type 1; 0/2 → Type 2).
-  Non-type-specific complication codes (357.2, 362.0x, 366.41) placed in
-  Type 2 per convention.
-- ICD-10: E10.xx → Type 1; E11.xx + E08/E09/E13 → Type 2 per convention.
-- Ophthalmic codes (E10.3xx, E11.3xx) now dynamically expanded via
-  `children()` to capture all FY2020+ laterality-specific retinopathy
-  codes. Fixes a pre-existing omission of E11.37X1/X3/X9, removes 4
-  non-billable E11 codes, and adds missing neuropathy, angiopathy, and
-  nephropathy subtypes to both specs.
-
-## peridefs (development version)
-
-### Breaking changes
 
 - Renamed all condition- and drug-related objects/functions built around
   hypertension and hyperlipidemia so they use the full condition name
   everywhere, instead of mixing an abbreviation (`htn`) with a
   drug-mechanism name (`lipid_lowering`) on one side and full condition
   names on the other:
+
   - `spec_htn_v1` -\> `spec_hypertension_v1`; `get_htn_v1_codes()` -\>
     [`get_hypertension_v1_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_hypertension_v1_codes.md);
     `get_htn_v1_defs()` -\>
@@ -57,6 +98,7 @@
     see below). Each object’s `drug_class` field
     (e.g. `"antihypertensive"`) is unchanged – it remains a distinct,
     drug-mechanism-based identifier, separate from `condition`.
+
 - `CompositeDrugSpec$get_defs()` was replaced by
   `CompositeDrugSpec$get_meds_labels()`, and the five corresponding
   exported wrapper functions were renamed to match:
@@ -82,6 +124,7 @@
   [`get_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_defs.md)
   (the general low-level dispatcher) still works on a
   `CompositeDrugSpec`, now returning this same tibble.
+
 - The `class` column of `get_*_generics()` for the diabetes and
   hyperlipidemia composites no longer redundantly encodes the condition
   (e.g. `"antidiab_biguanide"`, `"ll_statin"`); it’s now just the
@@ -93,6 +136,18 @@
   identifier (and therefore the `class` output column) — the underlying
   R object variable names in `data-raw/build_specs.R` (e.g.
   `spec_antidiab_biguanide_v1`, `spec_ll_statin_v1`) are unchanged.
+
+### ICD code changes
+
+- ICD-9 250.xx codes split by 5th digit (1/3 → Type 1; 0/2 → Type 2).
+  Non-type-specific complication codes (357.2, 362.0x, 366.41) placed in
+  Type 2 per convention.
+- ICD-10: E10.xx → Type 1; E11.xx + E08/E09/E13 → Type 2 per convention.
+- Ophthalmic codes (E10.3xx, E11.3xx) now dynamically expanded via
+  `children()` to capture all FY2020+ laterality-specific retinopathy
+  codes. Fixes a pre-existing omission of E11.37X1/X3/X9, removes 4
+  non-billable E11 codes, and adds missing neuropathy, angiopathy, and
+  nephropathy subtypes to both specs.
 
 ## peridefs 0.3.0
 

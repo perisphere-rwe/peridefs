@@ -48,33 +48,33 @@ get_hf_v1_codes(
 
 ``` r
 get_hf_v1_codes()
-#> # A tibble: 54 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 40201        1 v1     
-#>  2 dx_icd9 40211        1 v1     
-#>  3 dx_icd9 40291        1 v1     
-#>  4 dx_icd9 40401        1 v1     
-#>  5 dx_icd9 40403        1 v1     
-#>  6 dx_icd9 40411        1 v1     
-#>  7 dx_icd9 40413        1 v1     
-#>  8 dx_icd9 40491        1 v1     
-#>  9 dx_icd9 40493        1 v1     
-#> 10 dx_icd9 428          1 v1     
+#> # A tibble: 54 × 5
+#>    type    code  priority version definition                                    
+#>    <chr>   <chr>    <int> <chr>   <chr>                                         
+#>  1 dx_icd9 40201        1 v1      Malignant hypertensive heart disease with hea…
+#>  2 dx_icd9 40211        1 v1      Benign hypertensive heart disease with heart …
+#>  3 dx_icd9 40291        1 v1      Unspecified hypertensive heart disease with h…
+#>  4 dx_icd9 40401        1 v1      Hypertensive heart and chronic kidney disease…
+#>  5 dx_icd9 40403        1 v1      Hypertensive heart and chronic kidney disease…
+#>  6 dx_icd9 40411        1 v1      Hypertensive heart and chronic kidney disease…
+#>  7 dx_icd9 40413        1 v1      Hypertensive heart and chronic kidney disease…
+#>  8 dx_icd9 40491        1 v1      Hypertensive heart and chronic kidney disease…
+#>  9 dx_icd9 40493        1 v1      Hypertensive heart and chronic kidney disease…
+#> 10 dx_icd9 428          1 v1      Heart failure                                 
 #> # ℹ 44 more rows
 get_hf_v1_codes(variable_type = "outcome")
-#> # A tibble: 54 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 40201        1 v1     
-#>  2 dx_icd9 40211        1 v1     
-#>  3 dx_icd9 40291        1 v1     
-#>  4 dx_icd9 40401        1 v1     
-#>  5 dx_icd9 40403        1 v1     
-#>  6 dx_icd9 40411        1 v1     
-#>  7 dx_icd9 40413        1 v1     
-#>  8 dx_icd9 40491        1 v1     
-#>  9 dx_icd9 40493        1 v1     
-#> 10 dx_icd9 428          1 v1     
+#> # A tibble: 54 × 5
+#>    type    code  priority version definition                                    
+#>    <chr>   <chr>    <int> <chr>   <chr>                                         
+#>  1 dx_icd9 40201        1 v1      Malignant hypertensive heart disease with hea…
+#>  2 dx_icd9 40211        1 v1      Benign hypertensive heart disease with heart …
+#>  3 dx_icd9 40291        1 v1      Unspecified hypertensive heart disease with h…
+#>  4 dx_icd9 40401        1 v1      Hypertensive heart and chronic kidney disease…
+#>  5 dx_icd9 40403        1 v1      Hypertensive heart and chronic kidney disease…
+#>  6 dx_icd9 40411        1 v1      Hypertensive heart and chronic kidney disease…
+#>  7 dx_icd9 40413        1 v1      Hypertensive heart and chronic kidney disease…
+#>  8 dx_icd9 40491        1 v1      Hypertensive heart and chronic kidney disease…
+#>  9 dx_icd9 40493        1 v1      Hypertensive heart and chronic kidney disease…
+#> 10 dx_icd9 428          1 v1      Heart failure                                 
 #> # ℹ 44 more rows
 ```

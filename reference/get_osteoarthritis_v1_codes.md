@@ -46,33 +46,33 @@ get_osteoarthritis_v1_defs(variable_type = c("condition", "outcome"))
 
 ``` r
 get_osteoarthritis_v1_codes()
-#> # A tibble: 176 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 715          1 v1     
-#>  2 dx_icd9 7150         1 v1     
-#>  3 dx_icd9 71500        1 v1     
-#>  4 dx_icd9 71504        1 v1     
-#>  5 dx_icd9 71509        1 v1     
-#>  6 dx_icd9 7151         1 v1     
-#>  7 dx_icd9 71510        1 v1     
-#>  8 dx_icd9 71511        1 v1     
-#>  9 dx_icd9 71512        1 v1     
-#> 10 dx_icd9 71513        1 v1     
+#> # A tibble: 176 × 5
+#>    type    code  priority version definition                                    
+#>    <chr>   <chr>    <int> <chr>   <chr>                                         
+#>  1 dx_icd9 715          1 v1      Osteoarthrosis and allied disorders           
+#>  2 dx_icd9 7150         1 v1      Osteoarthrosis and allied disorders: Osteoart…
+#>  3 dx_icd9 71500        1 v1      Osteoarthrosis, generalized, site unspecified 
+#>  4 dx_icd9 71504        1 v1      Osteoarthrosis, generalized, hand             
+#>  5 dx_icd9 71509        1 v1      Osteoarthrosis, generalized, multiple sites   
+#>  6 dx_icd9 7151         1 v1      Osteoarthrosis and allied disorders: Osteoart…
+#>  7 dx_icd9 71510        1 v1      Osteoarthrosis, localized, primary, site unsp…
+#>  8 dx_icd9 71511        1 v1      Osteoarthrosis, localized, primary, shoulder …
+#>  9 dx_icd9 71512        1 v1      Osteoarthrosis, localized, primary, upper arm 
+#> 10 dx_icd9 71513        1 v1      Osteoarthrosis, localized, primary, forearm   
 #> # ℹ 166 more rows
 get_osteoarthritis_v1_codes(code_type = "dx_icd10")
-#> # A tibble: 128 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 M15          1 v1     
-#>  2 dx_icd10 M150         1 v1     
-#>  3 dx_icd10 M151         1 v1     
-#>  4 dx_icd10 M152         1 v1     
-#>  5 dx_icd10 M153         1 v1     
-#>  6 dx_icd10 M154         1 v1     
-#>  7 dx_icd10 M158         1 v1     
-#>  8 dx_icd10 M159         1 v1     
-#>  9 dx_icd10 M16          1 v1     
-#> 10 dx_icd10 M160         1 v1     
+#> # A tibble: 128 × 5
+#>    type     code  priority version definition                             
+#>    <chr>    <chr>    <int> <chr>   <chr>                                  
+#>  1 dx_icd10 M15          1 v1      Polyosteoarthritis                     
+#>  2 dx_icd10 M150         1 v1      Primary generalized (osteo)arthritis   
+#>  3 dx_icd10 M151         1 v1      Heberden's nodes (with arthropathy)    
+#>  4 dx_icd10 M152         1 v1      Bouchard's nodes (with arthropathy)    
+#>  5 dx_icd10 M153         1 v1      Secondary multiple arthritis           
+#>  6 dx_icd10 M154         1 v1      Erosive (osteo)arthritis               
+#>  7 dx_icd10 M158         1 v1      Other polyosteoarthritis               
+#>  8 dx_icd10 M159         1 v1      Polyosteoarthritis, unspecified        
+#>  9 dx_icd10 M16          1 v1      Osteoarthritis of hip                  
+#> 10 dx_icd10 M160         1 v1      Bilateral primary osteoarthritis of hip
 #> # ℹ 118 more rows
 ```

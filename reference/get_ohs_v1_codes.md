@@ -46,9 +46,9 @@ get_ohs_v1_defs(variable_type = c("condition", "outcome"))
 
 ``` r
 get_ohs_v1_codes()
-#> # A tibble: 2 × 4
-#>   type     code  priority version
-#>   <chr>    <chr>    <int> <chr>  
-#> 1 dx_icd9  27803        1 v1     
-#> 2 dx_icd10 E662         1 v1     
+#> # A tibble: 2 × 5
+#>   type     code  priority version definition                                    
+#>   <chr>    <chr>    <int> <chr>   <chr>                                         
+#> 1 dx_icd9  27803        1 v1      Obesity hypoventilation syndrome              
+#> 2 dx_icd10 E662         1 v1      Morbid (severe) obesity with alveolar hypoven…
 ```

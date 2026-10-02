@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,19 +98,19 @@ algorithm version. Every <code>get_*</code> function in
 <code>peridefs</code> returns a tidy data frame:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 4</span></span></span>
-<span><span class="co">#&gt;    type    code  priority version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd9 401          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd9 4010         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd9 4011         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd9 4019         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd9 4030         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd9 40300        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd9 40301        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd9 4031         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd9 40310        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd9 40311        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 36 × 5</span></span></span>
+<span><span class="co">#&gt;    type    code  priority version definition                                    </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd9 401          1 v1      Essential hypertension                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd9 4010         1 v1      Malignant essential hypertension              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd9 4011         1 v1      Benign essential hypertension                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd9 4019         1 v1      Unspecified essential hypertension            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd9 4030         1 v1      Hypertensive chronic kidney disease: Malignant</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd9 40300        1 v1      Hypertensive chronic kidney disease, malignan…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd9 40301        1 v1      Hypertensive chronic kidney disease, malignan…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd9 4031         1 v1      Hypertensive chronic kidney disease: Benign   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd9 40310        1 v1      Hypertensive chronic kidney disease, benign, …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd9 40311        1 v1      Hypertensive chronic kidney disease, benign, …</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 26 more rows</span></span></span></code></pre></div>
 <p>The <code>priority</code> column reflects our confidence that a code
 belongs in the definition (<code>1</code> = core, <code>2</code> =
@@ -128,26 +128,27 @@ code list. Supprted values are <code>"dx_icd9"</code>,
 and <code>"proc_icd10"</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 4</span></span></span>
-<span><span class="co">#&gt;    type     code  priority version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I110         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I119         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I120         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I129         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I130         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I131         1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 5</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version definition                                   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1      Essential (primary) hypertension             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1      Hypertensive heart disease                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I110         1 v1      Hypertensive heart disease with heart failure</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I119         1 v1      Hypertensive heart disease without heart fai…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1      Hypertensive chronic kidney disease          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I120         1 v1      Hypertensive chronic kidney disease with sta…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I129         1 v1      Hypertensive chronic kidney disease with sta…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I130         1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I131         1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
 <p>Note that if you ask for a code type that isn’t stored in the object,
 you get an empty tibble.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">'proc_icd10'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 4</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 variables: type &lt;chr&gt;, code &lt;chr&gt;, priority &lt;int&gt;, version &lt;chr&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 variables: type &lt;chr&gt;, code &lt;chr&gt;, priority &lt;int&gt;, version &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   definition &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="adding-periods-to-codes">Adding periods to codes<a class="anchor" aria-label="anchor" href="#adding-periods-to-codes"></a>
@@ -157,19 +158,19 @@ as this is a common format in claims data. Set
 <code>periods = TRUE</code> to add them to your codes:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hypertension_v1_codes.html">get_hypertension_v1_codes</a></span><span class="op">(</span>code_type <span class="op">=</span> <span class="st">"dx_icd10"</span>, periods <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 4</span></span></span>
-<span><span class="co">#&gt;    type     code  priority version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I11.0        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I11.9        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I12.0        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I12.9        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I13.0        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I13.1        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 5</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version definition                                   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I10          1 v1      Essential (primary) hypertension             </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I11          1 v1      Hypertensive heart disease                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I11.0        1 v1      Hypertensive heart disease with heart failure</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I11.9        1 v1      Hypertensive heart disease without heart fai…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I12          1 v1      Hypertensive chronic kidney disease          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I12.0        1 v1      Hypertensive chronic kidney disease with sta…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I12.9        1 v1      Hypertensive chronic kidney disease with sta…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I13.0        1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I13.1        1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre></div>
 <p>Note that this feature is not perfect - it just adds a period after
 the third character. Periods appear after the third character in ICD-10
@@ -186,19 +187,19 @@ exactly right is not a high priority at the moment.</p>
 select one:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_hf_v1_codes.html">get_hf_v1_codes</a></span><span class="op">(</span>variable_type <span class="op">=</span> <span class="st">"outcome"</span>, code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 4</span></span></span>
-<span><span class="co">#&gt;    type     code  priority version</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I110         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I130         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I132         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I501         1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I5020        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I5021        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I5022        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I5023        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I5030        1 v1     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I5031        1 v1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 26 × 5</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version definition                                   </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I110         1 v1      Hypertensive heart disease with heart failure</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I130         1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I132         1 v1      Hypertensive heart and chronic kidney diseas…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I501         1 v1      Left ventricular failure, unspecified        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I5020        1 v1      Unspecified systolic (congestive) heart fail…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I5021        1 v1      Acute systolic (congestive) heart failure    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I5022        1 v1      Chronic systolic (congestive) heart failure  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I5023        1 v1      Acute on chronic systolic (congestive) heart…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I5030        1 v1      Unspecified diastolic (congestive) heart fai…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I5031        1 v1      Acute diastolic (congestive) heart failure   </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more rows</span></span></span></code></pre></div>
 <p>The default (<code>variable_type = "condition"</code>) retrieves the
 condition definition.</p>
@@ -239,19 +240,19 @@ see all available component names:</p>
 <p>Retrieve codes for a single component:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_ascvd_codes.html">get_ascvd_codes</a></span><span class="op">(</span>component <span class="op">=</span> <span class="st">"chd_v1"</span>, code_type <span class="op">=</span> <span class="st">"dx_icd10"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 46 × 5</span></span></span>
-<span><span class="co">#&gt;    type     code  priority version class</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I21          1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I210         1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I2101        1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I2102        1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I2109        1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I211         1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I2111        1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I2119        1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I212         1 v1      chd  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I2121        1 v1      chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 46 × 6</span></span></span>
+<span><span class="co">#&gt;    type     code  priority version definition                              class</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> dx_icd10 I21          1 v1      Acute myocardial infarction             chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> dx_icd10 I210         1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> dx_icd10 I2101        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> dx_icd10 I2102        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> dx_icd10 I2109        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> dx_icd10 I211         1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> dx_icd10 I2111        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> dx_icd10 I2119        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> dx_icd10 I212         1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> dx_icd10 I2121        1 v1      ST elevation (STEMI) myocardial infarc… chd  </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 36 more rows</span></span></span></code></pre></div>
 <p>Omit <code>component</code> (or pass <code>"all"</code>) to get every
 component’s codes at once:</p>
@@ -272,8 +273,8 @@ the algorithm used to define each condition:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">403.1x</span>, or <span style="font-weight: bold;">403.9x</span>, or ICD-10 discharge diagnosis code of <span style="font-weight: bold;">I10</span>, <span style="font-weight: bold;">I11.x</span>, <span style="font-weight: bold;">I12.x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 outpatient physician visit claims with the same diagnosis codes, at least</span></span>
+<span><span class="co">#&gt;   30 days apart.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)</span></span></code></pre></div>
 <p>For composite specs, pass the component name:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -282,7 +283,7 @@ the algorithm used to define each condition:</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 diagnosis code of <span style="font-weight: bold;">410.xx</span>–<span style="font-weight: bold;">414.xx</span>, <span style="font-weight: bold;">V45.81</span>, or</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">V45.82</span>, or an ICD-10 diagnosis code of <span style="font-weight: bold;">I21.xxx</span>, <span style="font-weight: bold;">I22.xxx</span>, or specified</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">I25</span>/<span style="font-weight: bold;">I20</span>/<span style="font-weight: bold;">I24</span> codes in any position.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 outpatient E&amp;M claim with the same ICD codes in any position.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 outpatient claim with the same ICD codes in any position.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient or outpatient claim with an ICD-9 procedure code of <span style="font-weight: bold;">00.66</span>, <span style="font-weight: bold;">36.0</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">36.01</span>–<span style="font-weight: bold;">36.19</span>, or <span style="font-weight: bold;">36.2</span>; an ICD-10-PCS code for CABG or PCI; or a HCPCS code for</span></span>
 <span><span class="co">#&gt;   coronary revascularization.</span></span></code></pre></div>
@@ -317,8 +318,8 @@ data object. You can inspect it directly to see codes, definitions, and
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥1 inpatient claim with an ICD-9 discharge diagnosis of <span style="font-weight: bold;">401.x</span>, <span style="font-weight: bold;">403.0x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">403.1x</span>, or <span style="font-weight: bold;">403.9x</span>, or ICD-10 discharge diagnosis code of <span style="font-weight: bold;">I10</span>, <span style="font-weight: bold;">I11.x</span>, <span style="font-weight: bold;">I12.x</span>,</span></span>
 <span><span class="co">#&gt;   <span style="font-weight: bold;">I13.x</span>, <span style="font-weight: bold;">I15.x</span>, <span style="font-weight: bold;">I12.0</span>, <span style="font-weight: bold;">I12.9</span>, <span style="font-weight: bold;">I16.x</span> in any discharge diagnosis position.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 physician E&amp;M visit claims with the same diagnosis codes, at least 30 days</span></span>
-<span><span class="co">#&gt;   apart.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 outpatient physician visit claims with the same diagnosis codes, at least</span></span>
+<span><span class="co">#&gt;   30 days apart.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Code sets:</span></span>

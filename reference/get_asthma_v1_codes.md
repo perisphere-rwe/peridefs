@@ -46,33 +46,33 @@ get_asthma_v1_defs(variable_type = c("condition", "outcome"))
 
 ``` r
 get_asthma_v1_codes()
-#> # A tibble: 46 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 493          1 v1     
-#>  2 dx_icd9 4930         1 v1     
-#>  3 dx_icd9 49300        1 v1     
-#>  4 dx_icd9 49301        1 v1     
-#>  5 dx_icd9 49302        1 v1     
-#>  6 dx_icd9 4931         1 v1     
-#>  7 dx_icd9 49310        1 v1     
-#>  8 dx_icd9 49311        1 v1     
-#>  9 dx_icd9 49312        1 v1     
-#> 10 dx_icd9 4932         1 v1     
+#> # A tibble: 46 × 5
+#>    type    code  priority version definition                                
+#>    <chr>   <chr>    <int> <chr>   <chr>                                     
+#>  1 dx_icd9 493          1 v1      Asthma                                    
+#>  2 dx_icd9 4930         1 v1      Asthma: Extrinsic asthma                  
+#>  3 dx_icd9 49300        1 v1      Extrinsic asthma, unspecified             
+#>  4 dx_icd9 49301        1 v1      Extrinsic asthma with status asthmaticus  
+#>  5 dx_icd9 49302        1 v1      Extrinsic asthma with (acute) exacerbation
+#>  6 dx_icd9 4931         1 v1      Asthma: Intrinsic asthma                  
+#>  7 dx_icd9 49310        1 v1      Intrinsic asthma, unspecified             
+#>  8 dx_icd9 49311        1 v1      Intrinsic asthma with status asthmaticus  
+#>  9 dx_icd9 49312        1 v1      Intrinsic asthma with (acute) exacerbation
+#> 10 dx_icd9 4932         1 v1      Asthma: Chronic obstructive asthma        
 #> # ℹ 36 more rows
 get_asthma_v1_codes(code_type = "dx_icd10")
-#> # A tibble: 26 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 J45          1 v1     
-#>  2 dx_icd10 J452         1 v1     
-#>  3 dx_icd10 J4520        1 v1     
-#>  4 dx_icd10 J4521        1 v1     
-#>  5 dx_icd10 J4522        1 v1     
-#>  6 dx_icd10 J453         1 v1     
-#>  7 dx_icd10 J4530        1 v1     
-#>  8 dx_icd10 J4531        1 v1     
-#>  9 dx_icd10 J4532        1 v1     
-#> 10 dx_icd10 J454         1 v1     
+#> # A tibble: 26 × 5
+#>    type     code  priority version definition                                   
+#>    <chr>    <chr>    <int> <chr>   <chr>                                        
+#>  1 dx_icd10 J45          1 v1      Asthma                                       
+#>  2 dx_icd10 J452         1 v1      Mild intermittent asthma                     
+#>  3 dx_icd10 J4520        1 v1      Mild intermittent asthma, uncomplicated      
+#>  4 dx_icd10 J4521        1 v1      Mild intermittent asthma with (acute) exacer…
+#>  5 dx_icd10 J4522        1 v1      Mild intermittent asthma with status asthmat…
+#>  6 dx_icd10 J453         1 v1      Mild persistent asthma                       
+#>  7 dx_icd10 J4530        1 v1      Mild persistent asthma, uncomplicated        
+#>  8 dx_icd10 J4531        1 v1      Mild persistent asthma with (acute) exacerba…
+#>  9 dx_icd10 J4532        1 v1      Mild persistent asthma with status asthmatic…
+#> 10 dx_icd10 J454         1 v1      Moderate persistent asthma                   
 #> # ℹ 16 more rows
 ```

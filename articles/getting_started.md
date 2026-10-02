@@ -21,19 +21,19 @@ a tidy data frame:
 ``` r
 
 get_hypertension_v1_codes()
-#> # A tibble: 36 × 4
-#>    type    code  priority version
-#>    <chr>   <chr>    <int> <chr>  
-#>  1 dx_icd9 401          1 v1     
-#>  2 dx_icd9 4010         1 v1     
-#>  3 dx_icd9 4011         1 v1     
-#>  4 dx_icd9 4019         1 v1     
-#>  5 dx_icd9 4030         1 v1     
-#>  6 dx_icd9 40300        1 v1     
-#>  7 dx_icd9 40301        1 v1     
-#>  8 dx_icd9 4031         1 v1     
-#>  9 dx_icd9 40310        1 v1     
-#> 10 dx_icd9 40311        1 v1     
+#> # A tibble: 36 × 5
+#>    type    code  priority version definition                                    
+#>    <chr>   <chr>    <int> <chr>   <chr>                                         
+#>  1 dx_icd9 401          1 v1      Essential hypertension                        
+#>  2 dx_icd9 4010         1 v1      Malignant essential hypertension              
+#>  3 dx_icd9 4011         1 v1      Benign essential hypertension                 
+#>  4 dx_icd9 4019         1 v1      Unspecified essential hypertension            
+#>  5 dx_icd9 4030         1 v1      Hypertensive chronic kidney disease: Malignant
+#>  6 dx_icd9 40300        1 v1      Hypertensive chronic kidney disease, malignan…
+#>  7 dx_icd9 40301        1 v1      Hypertensive chronic kidney disease, malignan…
+#>  8 dx_icd9 4031         1 v1      Hypertensive chronic kidney disease: Benign   
+#>  9 dx_icd9 40310        1 v1      Hypertensive chronic kidney disease, benign, …
+#> 10 dx_icd9 40311        1 v1      Hypertensive chronic kidney disease, benign, …
 #> # ℹ 26 more rows
 ```
 
@@ -53,19 +53,19 @@ are `"dx_icd9"`, `"dx_icd10"`, `"hcpcs"`, `"proc_icd9"`, and
 ``` r
 
 get_hypertension_v1_codes(code_type = "dx_icd10")
-#> # A tibble: 23 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 I10          1 v1     
-#>  2 dx_icd10 I11          1 v1     
-#>  3 dx_icd10 I110         1 v1     
-#>  4 dx_icd10 I119         1 v1     
-#>  5 dx_icd10 I12          1 v1     
-#>  6 dx_icd10 I120         1 v1     
-#>  7 dx_icd10 I129         1 v1     
-#>  8 dx_icd10 I13          1 v1     
-#>  9 dx_icd10 I130         1 v1     
-#> 10 dx_icd10 I131         1 v1     
+#> # A tibble: 23 × 5
+#>    type     code  priority version definition                                   
+#>    <chr>    <chr>    <int> <chr>   <chr>                                        
+#>  1 dx_icd10 I10          1 v1      Essential (primary) hypertension             
+#>  2 dx_icd10 I11          1 v1      Hypertensive heart disease                   
+#>  3 dx_icd10 I110         1 v1      Hypertensive heart disease with heart failure
+#>  4 dx_icd10 I119         1 v1      Hypertensive heart disease without heart fai…
+#>  5 dx_icd10 I12          1 v1      Hypertensive chronic kidney disease          
+#>  6 dx_icd10 I120         1 v1      Hypertensive chronic kidney disease with sta…
+#>  7 dx_icd10 I129         1 v1      Hypertensive chronic kidney disease with sta…
+#>  8 dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease
+#>  9 dx_icd10 I130         1 v1      Hypertensive heart and chronic kidney diseas…
+#> 10 dx_icd10 I131         1 v1      Hypertensive heart and chronic kidney diseas…
 #> # ℹ 13 more rows
 ```
 
@@ -75,8 +75,9 @@ you get an empty tibble.
 ``` r
 
 get_hypertension_v1_codes(code_type = 'proc_icd10')
-#> # A tibble: 0 × 4
-#> # ℹ 4 variables: type <chr>, code <chr>, priority <int>, version <chr>
+#> # A tibble: 0 × 5
+#> # ℹ 5 variables: type <chr>, code <chr>, priority <int>, version <chr>,
+#> #   definition <chr>
 ```
 
 #### Adding periods to codes
@@ -88,19 +89,19 @@ codes:
 ``` r
 
 get_hypertension_v1_codes(code_type = "dx_icd10", periods = TRUE)
-#> # A tibble: 23 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 I10          1 v1     
-#>  2 dx_icd10 I11          1 v1     
-#>  3 dx_icd10 I11.0        1 v1     
-#>  4 dx_icd10 I11.9        1 v1     
-#>  5 dx_icd10 I12          1 v1     
-#>  6 dx_icd10 I12.0        1 v1     
-#>  7 dx_icd10 I12.9        1 v1     
-#>  8 dx_icd10 I13          1 v1     
-#>  9 dx_icd10 I13.0        1 v1     
-#> 10 dx_icd10 I13.1        1 v1     
+#> # A tibble: 23 × 5
+#>    type     code  priority version definition                                   
+#>    <chr>    <chr>    <int> <chr>   <chr>                                        
+#>  1 dx_icd10 I10          1 v1      Essential (primary) hypertension             
+#>  2 dx_icd10 I11          1 v1      Hypertensive heart disease                   
+#>  3 dx_icd10 I11.0        1 v1      Hypertensive heart disease with heart failure
+#>  4 dx_icd10 I11.9        1 v1      Hypertensive heart disease without heart fai…
+#>  5 dx_icd10 I12          1 v1      Hypertensive chronic kidney disease          
+#>  6 dx_icd10 I12.0        1 v1      Hypertensive chronic kidney disease with sta…
+#>  7 dx_icd10 I12.9        1 v1      Hypertensive chronic kidney disease with sta…
+#>  8 dx_icd10 I13          1 v1      Hypertensive heart and chronic kidney disease
+#>  9 dx_icd10 I13.0        1 v1      Hypertensive heart and chronic kidney diseas…
+#> 10 dx_icd10 I13.1        1 v1      Hypertensive heart and chronic kidney diseas…
 #> # ℹ 13 more rows
 ```
 
@@ -119,19 +120,19 @@ Some `specs` carry separate code sets for identifying a **condition**
 ``` r
 
 get_hf_v1_codes(variable_type = "outcome", code_type = "dx_icd10")
-#> # A tibble: 26 × 4
-#>    type     code  priority version
-#>    <chr>    <chr>    <int> <chr>  
-#>  1 dx_icd10 I110         1 v1     
-#>  2 dx_icd10 I130         1 v1     
-#>  3 dx_icd10 I132         1 v1     
-#>  4 dx_icd10 I501         1 v1     
-#>  5 dx_icd10 I5020        1 v1     
-#>  6 dx_icd10 I5021        1 v1     
-#>  7 dx_icd10 I5022        1 v1     
-#>  8 dx_icd10 I5023        1 v1     
-#>  9 dx_icd10 I5030        1 v1     
-#> 10 dx_icd10 I5031        1 v1     
+#> # A tibble: 26 × 5
+#>    type     code  priority version definition                                   
+#>    <chr>    <chr>    <int> <chr>   <chr>                                        
+#>  1 dx_icd10 I110         1 v1      Hypertensive heart disease with heart failure
+#>  2 dx_icd10 I130         1 v1      Hypertensive heart and chronic kidney diseas…
+#>  3 dx_icd10 I132         1 v1      Hypertensive heart and chronic kidney diseas…
+#>  4 dx_icd10 I501         1 v1      Left ventricular failure, unspecified        
+#>  5 dx_icd10 I5020        1 v1      Unspecified systolic (congestive) heart fail…
+#>  6 dx_icd10 I5021        1 v1      Acute systolic (congestive) heart failure    
+#>  7 dx_icd10 I5022        1 v1      Chronic systolic (congestive) heart failure  
+#>  8 dx_icd10 I5023        1 v1      Acute on chronic systolic (congestive) heart…
+#>  9 dx_icd10 I5030        1 v1      Unspecified diastolic (congestive) heart fai…
+#> 10 dx_icd10 I5031        1 v1      Acute diastolic (congestive) heart failure   
 #> # ℹ 16 more rows
 ```
 
@@ -177,19 +178,19 @@ Retrieve codes for a single component:
 ``` r
 
 get_ascvd_codes(component = "chd_v1", code_type = "dx_icd10")
-#> # A tibble: 46 × 5
-#>    type     code  priority version class
-#>    <chr>    <chr>    <int> <chr>   <chr>
-#>  1 dx_icd10 I21          1 v1      chd  
-#>  2 dx_icd10 I210         1 v1      chd  
-#>  3 dx_icd10 I2101        1 v1      chd  
-#>  4 dx_icd10 I2102        1 v1      chd  
-#>  5 dx_icd10 I2109        1 v1      chd  
-#>  6 dx_icd10 I211         1 v1      chd  
-#>  7 dx_icd10 I2111        1 v1      chd  
-#>  8 dx_icd10 I2119        1 v1      chd  
-#>  9 dx_icd10 I212         1 v1      chd  
-#> 10 dx_icd10 I2121        1 v1      chd  
+#> # A tibble: 46 × 6
+#>    type     code  priority version definition                              class
+#>    <chr>    <chr>    <int> <chr>   <chr>                                   <chr>
+#>  1 dx_icd10 I21          1 v1      Acute myocardial infarction             chd  
+#>  2 dx_icd10 I210         1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  3 dx_icd10 I2101        1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  4 dx_icd10 I2102        1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  5 dx_icd10 I2109        1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  6 dx_icd10 I211         1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  7 dx_icd10 I2111        1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  8 dx_icd10 I2119        1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#>  9 dx_icd10 I212         1 v1      ST elevation (STEMI) myocardial infarc… chd  
+#> 10 dx_icd10 I2121        1 v1      ST elevation (STEMI) myocardial infarc… chd  
 #> # ℹ 36 more rows
 ```
 
@@ -215,8 +216,8 @@ get_hypertension_v1_defs()
 #> • ≥1 inpatient claim with an ICD-9 discharge diagnosis of 401.x, 403.0x,
 #>   403.1x, or 403.9x, or ICD-10 discharge diagnosis code of I10, I11.x, I12.x,
 #>   I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position.
-#> • ≥2 physician E&M visit claims with the same diagnosis codes, at least 30 days
-#>   apart.
+#> • ≥2 outpatient physician visit claims with the same diagnosis codes, at least
+#>   30 days apart.
 #> • ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)
 ```
 
@@ -229,7 +230,7 @@ get_ascvd_defs(component = "chd_v1", variable_type = "condition")
 #> • ≥1 inpatient claim with an ICD-9 diagnosis code of 410.xx–414.xx, V45.81, or
 #>   V45.82, or an ICD-10 diagnosis code of I21.xxx, I22.xxx, or specified
 #>   I25/I20/I24 codes in any position.
-#> • ≥1 outpatient E&M claim with the same ICD codes in any position.
+#> • ≥1 outpatient claim with the same ICD codes in any position.
 #> • ≥1 inpatient or outpatient claim with an ICD-9 procedure code of 00.66, 36.0,
 #>   36.01–36.19, or 36.2; an ICD-10-PCS code for CABG or PCI; or a HCPCS code for
 #>   coronary revascularization.
@@ -264,8 +265,8 @@ spec_hypertension_v1
 #> • ≥1 inpatient claim with an ICD-9 discharge diagnosis of 401.x, 403.0x,
 #>   403.1x, or 403.9x, or ICD-10 discharge diagnosis code of I10, I11.x, I12.x,
 #>   I13.x, I15.x, I12.0, I12.9, I16.x in any discharge diagnosis position.
-#> • ≥2 physician E&M visit claims with the same diagnosis codes, at least 30 days
-#>   apart.
+#> • ≥2 outpatient physician visit claims with the same diagnosis codes, at least
+#>   30 days apart.
 #> • ≥2 pharmacy fills for an antihypertensive medication (see spec_hypertension)
 #> 
 #> Code sets:

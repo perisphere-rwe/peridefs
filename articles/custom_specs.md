@@ -46,10 +46,10 @@ tibble:
 ``` r
 
 my_htn$get_codes(code_type = "dx_icd10")
-#> # A tibble: 1 × 4
-#>   type     code  priority version
-#>   <chr>    <chr>    <int> <chr>  
-#> 1 dx_icd10 I10          1 v1
+#> # A tibble: 1 × 5
+#>   type     code  priority version definition
+#>   <chr>    <chr>    <int> <chr>   <chr>     
+#> 1 dx_icd10 I10          1 v1      NA
 ```
 
 ## Creating a new DrugSpec

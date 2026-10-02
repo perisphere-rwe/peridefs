@@ -27,18 +27,18 @@ get_chd_v1_codes(...)
 
 ``` r
 get_chd_v1_codes()
-#> # A tibble: 766 × 5
-#>    type    code  priority version class
-#>    <chr>   <chr>    <int> <chr>   <chr>
-#>  1 dx_icd9 410          1 v1      chd  
-#>  2 dx_icd9 4100         1 v1      chd  
-#>  3 dx_icd9 41000        1 v1      chd  
-#>  4 dx_icd9 41001        1 v1      chd  
-#>  5 dx_icd9 41002        1 v1      chd  
-#>  6 dx_icd9 4101         1 v1      chd  
-#>  7 dx_icd9 41010        1 v1      chd  
-#>  8 dx_icd9 41011        1 v1      chd  
-#>  9 dx_icd9 41012        1 v1      chd  
-#> 10 dx_icd9 4102         1 v1      chd  
-#> # ℹ 756 more rows
+#> # A tibble: 765 × 6
+#>    type    code  priority version definition                               class
+#>    <chr>   <chr>    <int> <chr>   <chr>                                    <chr>
+#>  1 dx_icd9 410          1 v1      Acute myocardial infarction              chd  
+#>  2 dx_icd9 4100         1 v1      Acute myocardial infarction: Of anterol… chd  
+#>  3 dx_icd9 41000        1 v1      Acute myocardial infarction of anterola… chd  
+#>  4 dx_icd9 41001        1 v1      Acute myocardial infarction of anterola… chd  
+#>  5 dx_icd9 41002        1 v1      Acute myocardial infarction of anterola… chd  
+#>  6 dx_icd9 4101         1 v1      Acute myocardial infarction: Of other a… chd  
+#>  7 dx_icd9 41010        1 v1      Acute myocardial infarction of other an… chd  
+#>  8 dx_icd9 41011        1 v1      Acute myocardial infarction of other an… chd  
+#>  9 dx_icd9 41012        1 v1      Acute myocardial infarction of other an… chd  
+#> 10 dx_icd9 4102         1 v1      Acute myocardial infarction: Of inferol… chd  
+#> # ℹ 755 more rows
 ```

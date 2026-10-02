@@ -64,34 +64,34 @@ get_ascvd_codes(
 
 ``` r
 get_ascvd_codes(component = "chd_v1")
-#> # A tibble: 766 × 5
-#>    type    code  priority version class
-#>    <chr>   <chr>    <int> <chr>   <chr>
-#>  1 dx_icd9 410          1 v1      chd  
-#>  2 dx_icd9 4100         1 v1      chd  
-#>  3 dx_icd9 41000        1 v1      chd  
-#>  4 dx_icd9 41001        1 v1      chd  
-#>  5 dx_icd9 41002        1 v1      chd  
-#>  6 dx_icd9 4101         1 v1      chd  
-#>  7 dx_icd9 41010        1 v1      chd  
-#>  8 dx_icd9 41011        1 v1      chd  
-#>  9 dx_icd9 41012        1 v1      chd  
-#> 10 dx_icd9 4102         1 v1      chd  
-#> # ℹ 756 more rows
+#> # A tibble: 765 × 6
+#>    type    code  priority version definition                               class
+#>    <chr>   <chr>    <int> <chr>   <chr>                                    <chr>
+#>  1 dx_icd9 410          1 v1      Acute myocardial infarction              chd  
+#>  2 dx_icd9 4100         1 v1      Acute myocardial infarction: Of anterol… chd  
+#>  3 dx_icd9 41000        1 v1      Acute myocardial infarction of anterola… chd  
+#>  4 dx_icd9 41001        1 v1      Acute myocardial infarction of anterola… chd  
+#>  5 dx_icd9 41002        1 v1      Acute myocardial infarction of anterola… chd  
+#>  6 dx_icd9 4101         1 v1      Acute myocardial infarction: Of other a… chd  
+#>  7 dx_icd9 41010        1 v1      Acute myocardial infarction of other an… chd  
+#>  8 dx_icd9 41011        1 v1      Acute myocardial infarction of other an… chd  
+#>  9 dx_icd9 41012        1 v1      Acute myocardial infarction of other an… chd  
+#> 10 dx_icd9 4102         1 v1      Acute myocardial infarction: Of inferol… chd  
+#> # ℹ 755 more rows
 get_ascvd_codes(component = "stroke_v1", variable_type = "outcome")
-#> # A tibble: 167 × 5
-#>    type    code  priority version class 
-#>    <chr>   <chr>    <int> <chr>   <chr> 
-#>  1 dx_icd9 430          1 v1      stroke
-#>  2 dx_icd9 431          1 v1      stroke
-#>  3 dx_icd9 43301        1 v1      stroke
-#>  4 dx_icd9 4331         1 v1      stroke
-#>  5 dx_icd9 43311        1 v1      stroke
-#>  6 dx_icd9 43321        1 v1      stroke
-#>  7 dx_icd9 43331        1 v1      stroke
-#>  8 dx_icd9 43381        1 v1      stroke
-#>  9 dx_icd9 43391        1 v1      stroke
-#> 10 dx_icd9 43401        1 v1      stroke
+#> # A tibble: 167 × 6
+#>    type    code  priority version definition                               class
+#>    <chr>   <chr>    <int> <chr>   <chr>                                    <chr>
+#>  1 dx_icd9 430          1 v1      Subarachnoid hemorrhage                  stro…
+#>  2 dx_icd9 431          1 v1      Intracerebral hemorrhage                 stro…
+#>  3 dx_icd9 43301        1 v1      Occlusion and stenosis of basilar arter… stro…
+#>  4 dx_icd9 4331         1 v1      Occlusion and stenosis of precerebral a… stro…
+#>  5 dx_icd9 43311        1 v1      Occlusion and stenosis of carotid arter… stro…
+#>  6 dx_icd9 43321        1 v1      Occlusion and stenosis of vertebral art… stro…
+#>  7 dx_icd9 43331        1 v1      Occlusion and stenosis of multiple and … stro…
+#>  8 dx_icd9 43381        1 v1      Occlusion and stenosis of other specifi… stro…
+#>  9 dx_icd9 43391        1 v1      Occlusion and stenosis of unspecified p… stro…
+#> 10 dx_icd9 43401        1 v1      Cerebral thrombosis with cerebral infar… stro…
 #> # ℹ 157 more rows
 
 # See all available components

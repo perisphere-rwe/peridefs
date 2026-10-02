@@ -21,6 +21,9 @@ The spec stores:
   - `outcome`: logical vector parallel to `codes`; `TRUE` if the code
     belongs to the outcome definition.
 
+  - `definitions`: optional character vector of code definitions,
+    parallel to `codes`.
+
   - `exclusions`: optional character string describing codes to exclude.
 
 ## Active bindings
@@ -161,7 +164,8 @@ Retrieve codes from the spec as a tidy data frame.
 
 #### Returns
 
-A tibble with columns `type`, `code`, `priority`, and `version`.
+A tibble with columns `type`, `code`, `priority`, `version`, and
+`definition`.
 
 ------------------------------------------------------------------------
 
