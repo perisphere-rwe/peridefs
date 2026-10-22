@@ -39,44 +39,48 @@
 # GNNs on the same day)
 
 # ICD-9 codes (short format, no periods)
-depress_icd9 <- unique(c(
-  paste(29620:29626),   # 296.20–296.26
-  paste(29630:29636),   # 296.30–296.36
-  paste(29651:29656),   # 296.51–296.56
-  paste(29660:29666),   # 296.60–296.66
-  "29689",              # 296.89
-  "2980",               # 298.0
-  "3004",               # 300.4
-  "3091",               # 309.1
-  "311"                 # 311
-))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# depress_icd9 <- unique(c(
+#   paste(29620:29626),   # 296.20–296.26
+#   paste(29630:29636),   # 296.30–296.36
+#   paste(29651:29656),   # 296.51–296.56
+#   paste(29660:29666),   # 296.60–296.66
+#   "29689",              # 296.89
+#   "2980",               # 298.0
+#   "3004",               # 300.4
+#   "3091",               # 309.1
+#   "311"                 # 311
+# ))
 
 # ICD-10 codes (short format, no periods)
-depress_icd10 <- unique(c(
-  "F329",                                           # F32.9
-  "F320", "F321", "F322", "F323", "F324", "F325",  # F32.0–F32.5
-  "F339",                                           # F33.9
-  "F330", "F331", "F332", "F333",                  # F33.0–F33.3
-  "F3341",                                          # F33.41
-  "F3342",                                          # F33.42
-  "F3331",                                          # F33.31
-  "F3132",                                          # F31.32
-  "F314",                                           # F31.4
-  "F315",                                           # F31.5
-  "F3175",                                          # F31.75
-  "F3176",                                          # F31.76
-  "F3160", "F3161", "F3162", "F3163", "F3164",     # F31.60–F31.64
-  "F3177",                                          # F31.77
-  "F3178",                                          # F31.78
-  "F3181",                                          # F31.81
-  "F341",                                           # F34.1
-  "F4321"                                           # F43.21
-))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# depress_icd10 <- unique(c(
+#   "F329",                                           # F32.9
+#   "F320", "F321", "F322", "F323", "F324", "F325",  # F32.0–F32.5
+#   "F339",                                           # F33.9
+#   "F330", "F331", "F332", "F333",                  # F33.0–F33.3
+#   "F3341",                                          # F33.41
+#   "F3342",                                          # F33.42
+#   "F3331",                                          # F33.31
+#   "F3132",                                          # F31.32
+#   "F314",                                           # F31.4
+#   "F315",                                           # F31.5
+#   "F3175",                                          # F31.75
+#   "F3176",                                          # F31.76
+#   "F3160", "F3161", "F3162", "F3163", "F3164",     # F31.60–F31.64
+#   "F3177",                                          # F31.77
+#   "F3178",                                          # F31.78
+#   "F3181",                                          # F31.81
+#   "F341",                                           # F34.1
+#   "F4321"                                           # F43.21
+# ))
 
-depress_codes <- list(
-  dx_icd9  = make_key_condition_only("dx_icd9", depress_icd9),
-  dx_icd10 = make_key_condition_only("dx_icd10", depress_icd10)
-)
+# depress_codes <- list(
+#   dx_icd9  = make_key_condition_only("dx_icd9", depress_icd9),
+#   dx_icd10 = make_key_condition_only("dx_icd10", depress_icd10)
+# )
 
 depress_defs_base <- c(
   "i" = "Any of the following:",
@@ -111,5 +115,5 @@ spec_depression_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = depress_codes
+  codes = read_codeset("depression_v1")
 )

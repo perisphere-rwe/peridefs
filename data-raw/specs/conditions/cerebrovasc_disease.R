@@ -96,65 +96,69 @@ spec_isch_stroke_v1 <- CodeSpec$new(
 # (g)	A CPT code for carotid revascularization: 35301, 35390, 37215, 37216,
 # 0005T, 0075T, or 0076T.
 
-cerebrovasc_proc_icd9 <- c("3842", "3812", "3990", "0063")
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# cerebrovasc_proc_icd9 <- c("3842", "3812", "3990", "0063")
 
 
 # ICD-10-PCS carotid stenting codes — listed explicitly in the Word document.
 # expand_pcs() validates each against the FY2026 reference table and returns
 # only those that are valid billable codes.
-cerebrovasc_pcs_patterns <- c(
-  "03CH0ZZ",
-  "03CH4ZZ",
-  "03CJ0ZZ",
-  "03CJ4ZZ",
-  "03CK0ZZ",
-  "03CK4ZZ",
-  "03CL0ZZ",
-  "03CL4ZZ",
-  "03CM0ZZ",
-  "03CM4ZZ",
-  "03CN0ZZ",
-  "03CN4ZZ",
-  "03RH07Z",
-  "03RH0JZ",
-  "03RH0KZ",
-  "03RH47Z",
-  "03RH4JZ",
-  "03RH4KZ",
-  "03RJ07Z",
-  "03RJ0JZ",
-  "03RJ0KZ",
-  "03RJ47Z",
-  "03RJ4JZ",
-  "03RJ4KZ",
-  "03RK07Z",
-  "03RK0JZ",
-  "03RK0KZ",
-  "03RK47Z",
-  "03RK4JZ",
-  "03RK4KZ",
-  "03RL07Z",
-  "03RL0JZ",
-  "03RL0KZ",
-  "03RL47Z",
-  "03RL4JZ",
-  "03RL4KZ",
-  "03RM07Z",
-  "03RM0JZ",
-  "03RM0KZ",
-  "03RM47Z",
-  "03RM4JZ",
-  "03RM4KZ",
-  "03RN07Z",
-  "03RN0JZ",
-  "03RN0KZ",
-  "03RN47Z",
-  "03RN4JZ",
-  "03RN4KZ"
-)
-cerebrovasc_proc_icd10 <- expand_pcs(cerebrovasc_pcs_patterns)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# cerebrovasc_pcs_patterns <- c(
+#   "03CH0ZZ",
+#   "03CH4ZZ",
+#   "03CJ0ZZ",
+#   "03CJ4ZZ",
+#   "03CK0ZZ",
+#   "03CK4ZZ",
+#   "03CL0ZZ",
+#   "03CL4ZZ",
+#   "03CM0ZZ",
+#   "03CM4ZZ",
+#   "03CN0ZZ",
+#   "03CN4ZZ",
+#   "03RH07Z",
+#   "03RH0JZ",
+#   "03RH0KZ",
+#   "03RH47Z",
+#   "03RH4JZ",
+#   "03RH4KZ",
+#   "03RJ07Z",
+#   "03RJ0JZ",
+#   "03RJ0KZ",
+#   "03RJ47Z",
+#   "03RJ4JZ",
+#   "03RJ4KZ",
+#   "03RK07Z",
+#   "03RK0JZ",
+#   "03RK0KZ",
+#   "03RK47Z",
+#   "03RK4JZ",
+#   "03RK4KZ",
+#   "03RL07Z",
+#   "03RL0JZ",
+#   "03RL0KZ",
+#   "03RL47Z",
+#   "03RL4JZ",
+#   "03RL4KZ",
+#   "03RM07Z",
+#   "03RM0JZ",
+#   "03RM0KZ",
+#   "03RM47Z",
+#   "03RM4JZ",
+#   "03RM4KZ",
+#   "03RN07Z",
+#   "03RN0JZ",
+#   "03RN0KZ",
+#   "03RN47Z",
+#   "03RN4JZ",
+#   "03RN4KZ"
+# )
+# cerebrovasc_proc_icd10 <- expand_pcs(cerebrovasc_pcs_patterns)
 
-cerebrovasc_cpt <- c("35301", "35390", "37215", "37216", "0005T", "0075T", "0076T")
+# cerebrovasc_cpt <- c("35301", "35390", "37215", "37216", "0005T", "0075T", "0076T")
 
 spec_cerebrovasc_disease_v1 <- CodeSpec$new(
   condition = "cerebrovasc_disease", version = "v1",
@@ -178,11 +182,5 @@ spec_cerebrovasc_disease_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = list(
-    dx_icd9    = make_key_condition_only("dx_icd9", isch_stroke_icd9),
-    dx_icd10   = make_key_condition_only("dx_icd10", isch_stroke_icd10),
-    proc_icd9  = make_key_condition_only("proc_icd9", cerebrovasc_proc_icd9),
-    proc_icd10 = make_key_condition_only("proc_icd10", cerebrovasc_proc_icd10),
-    cpt        = make_key_condition_only("cpt", cerebrovasc_cpt)
-  )
+  codes = read_codeset("cerebrovasc_disease_v1")
 )

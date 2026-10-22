@@ -14,13 +14,15 @@
 #
 # ICD-10 diagnosis code of G47.30, G47.31, G47.33, G47.37, G47.39.
 #
-osa_icd9  <- c("32720",
-               "32723",
-               "32729",
-               "78057")
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# osa_icd9  <- c("32720",
+#                "32723",
+#                "32729",
+#                "78057")
 
 
-osa_icd10 <- c("G4730", "G4733", "G4739")
+# osa_icd10 <- c("G4730", "G4733", "G4739")
 
 osa_defs_condition <- c(
   "*" = paste0(
@@ -37,8 +39,5 @@ spec_osa_v1 <- CodeSpec$new(
   version = "v1",
   label = "Obstructive sleep apnea",
   defs  = list(condition = osa_defs_condition, outcome = NULL),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", osa_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", osa_icd10)
-  )
+  codes = read_codeset("osa_v1")
 )

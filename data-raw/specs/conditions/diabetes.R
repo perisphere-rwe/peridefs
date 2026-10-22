@@ -82,16 +82,18 @@
 # (or unspecified). ICD-9 complication codes 357.2, 362.0x, and 366.41 do not
 # specify diabetes type; placed in Type 2 per project convention (non-type-1
 # codes default to Type 2).
-diab_250_all <- expand9("250")
-diab_icd9_t1 <- diab_250_all[
-  endsWith(diab_250_all, "1") | endsWith(diab_250_all, "3")
-]
-diab_icd9_t2 <- unique(c(
-  diab_250_all[endsWith(diab_250_all, "0") | endsWith(diab_250_all, "2")],
-  "3572",        # polyneuropathy in diabetes (357.2) — type-unspecified → T2
-  expand9("3620"), # diabetic retinopathy (362.0x) — type-unspecified → T2
-  "36641"        # diabetic cataract (366.41) — type-unspecified → T2
-))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# diab_250_all <- expand9("250")
+# diab_icd9_t1 <- diab_250_all[
+#   endsWith(diab_250_all, "1") | endsWith(diab_250_all, "3")
+# ]
+# diab_icd9_t2 <- unique(c(
+#   diab_250_all[endsWith(diab_250_all, "0") | endsWith(diab_250_all, "2")],
+#   "3572",        # polyneuropathy in diabetes (357.2) — type-unspecified → T2
+#   expand9("3620"), # diabetic retinopathy (362.0x) — type-unspecified → T2
+#   "36641"        # diabetic cataract (366.41) — type-unspecified → T2
+# ))
 
 # ICD-10 codes split by category:
 #   E10.xx = Type 1 diabetes mellitus
@@ -105,82 +107,84 @@ diab_icd9_t2 <- unique(c(
 # added in FY2020+ (e.g. E10.3211 = T1 mild nonproliferative DR with macular
 # edema, right eye). Filtering to billable = TRUE excludes non-specific parent
 # codes (e.g. E11.329) that have been superseded by the laterality expansion.
-diab_e10_ophthalmic <- {
-  codes <- unname(unclass(children(as.icd10cm("E103"), defined = TRUE)))
-  codes[is_billable(as.icd10cm(codes))]
-}
-diab_e11_ophthalmic <- {
-  codes <- unname(unclass(children(as.icd10cm("E113"), defined = TRUE)))
-  codes[is_billable(as.icd10cm(codes))]
-}
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# diab_e10_ophthalmic <- {
+#   codes <- unname(unclass(children(as.icd10cm("E103"), defined = TRUE)))
+#   codes[is_billable(as.icd10cm(codes))]
+# }
+# diab_e11_ophthalmic <- {
+#   codes <- unname(unclass(children(as.icd10cm("E113"), defined = TRUE)))
+#   codes[is_billable(as.icd10cm(codes))]
+# }
 
-diab_icd10_t1 <- c(
-  # E10.1: ketoacidosis
-  "E1010", "E1011",
-  # E10.2: kidney complications
-  "E1021", "E1022",  # diabetic nephropathy / CKD — added 2026-09-12 (absent from source doc)
-  "E1029",
-  # E10.3: ophthalmic complications — all billable, dynamically expanded
-  diab_e10_ophthalmic,
-  # E10.4: neurological complications
-  "E1040",
-  "E1041", "E1043", "E1044", "E1049",  # neuropathy subtypes — added 2026-09-12
-  "E1042",
-  # E10.5: circulatory complications
-  "E1051",
-  "E1052", "E1059",  # angiopathy with gangrene / other — added 2026-09-12
-  # E10.6: other specified complications
-  "E10610",  # neuropathic arthropathy — added 2026-09-12
-  "E10618", "E10620", "E10621", "E10622", "E10628",
-  "E10630", "E10638", "E10641", "E10649",
-  "E1065", "E1069",
-  # E10.8 / E10.9
-  "E108", "E109"
-)
+# diab_icd10_t1 <- c(
+#   # E10.1: ketoacidosis
+#   "E1010", "E1011",
+#   # E10.2: kidney complications
+#   "E1021", "E1022",  # diabetic nephropathy / CKD — added 2026-09-12 (absent from source doc)
+#   "E1029",
+#   # E10.3: ophthalmic complications — all billable, dynamically expanded
+#   diab_e10_ophthalmic,
+#   # E10.4: neurological complications
+#   "E1040",
+#   "E1041", "E1043", "E1044", "E1049",  # neuropathy subtypes — added 2026-09-12
+#   "E1042",
+#   # E10.5: circulatory complications
+#   "E1051",
+#   "E1052", "E1059",  # angiopathy with gangrene / other — added 2026-09-12
+#   # E10.6: other specified complications
+#   "E10610",  # neuropathic arthropathy — added 2026-09-12
+#   "E10618", "E10620", "E10621", "E10622", "E10628",
+#   "E10630", "E10638", "E10641", "E10649",
+#   "E1065", "E1069",
+#   # E10.8 / E10.9
+#   "E108", "E109"
+# )
 
-diab_icd10_t2 <- c(
-  # E08: DM due to underlying condition (not type-specific → T2)
-  "E0836", "E0842",
-  # E09: drug/chemical-induced DM (not type-specific → T2)
-  "E0936", "E0942",
-  # E11: Type 2 diabetes mellitus
-  # E11.0: hyperosmolarity
-  "E1100", "E1101",
-  # E11.1: ketoacidosis
-  "E1110", "E1111",
-  # E11.2: kidney complications
-  "E1121", "E1122",  # diabetic nephropathy / CKD — added 2026-09-12
-  "E1129",
-  # E11.3: ophthalmic complications — all billable, dynamically expanded
-  # (also fixes pre-existing asymmetry: E11.37X1/X3/X9 were absent while
-  # E10.37X1/X3/X9 were present; and removes non-billable E11.329/339/349/359)
-  diab_e11_ophthalmic,
-  # E11.4: neurological complications
-  "E1140",
-  "E1141", "E1143", "E1144", "E1149",  # neuropathy subtypes — added 2026-09-12
-  "E1142",
-  # E11.5: circulatory complications
-  "E1151",
-  "E1152", "E1159",  # angiopathy with gangrene / other — added 2026-09-12
-  # E11.6: other specified complications
-  "E11610",  # neuropathic arthropathy — added 2026-09-12
-  "E11618", "E11620", "E11621", "E11622", "E11628",
-  "E11630", "E11638", "E11641", "E11649",
-  "E1165", "E1169",
-  # E11.8 / E11.9
-  "E118", "E119",
-  # E13: other specified DM (not type-specific → T2)
-  "E1310", "E1336", "E1342"
-)
+# diab_icd10_t2 <- c(
+#   # E08: DM due to underlying condition (not type-specific → T2)
+#   "E0836", "E0842",
+#   # E09: drug/chemical-induced DM (not type-specific → T2)
+#   "E0936", "E0942",
+#   # E11: Type 2 diabetes mellitus
+#   # E11.0: hyperosmolarity
+#   "E1100", "E1101",
+#   # E11.1: ketoacidosis
+#   "E1110", "E1111",
+#   # E11.2: kidney complications
+#   "E1121", "E1122",  # diabetic nephropathy / CKD — added 2026-09-12
+#   "E1129",
+#   # E11.3: ophthalmic complications — all billable, dynamically expanded
+#   # (also fixes pre-existing asymmetry: E11.37X1/X3/X9 were absent while
+#   # E10.37X1/X3/X9 were present; and removes non-billable E11.329/339/349/359)
+#   diab_e11_ophthalmic,
+#   # E11.4: neurological complications
+#   "E1140",
+#   "E1141", "E1143", "E1144", "E1149",  # neuropathy subtypes — added 2026-09-12
+#   "E1142",
+#   # E11.5: circulatory complications
+#   "E1151",
+#   "E1152", "E1159",  # angiopathy with gangrene / other — added 2026-09-12
+#   # E11.6: other specified complications
+#   "E11610",  # neuropathic arthropathy — added 2026-09-12
+#   "E11618", "E11620", "E11621", "E11622", "E11628",
+#   "E11630", "E11638", "E11641", "E11649",
+#   "E1165", "E1169",
+#   # E11.8 / E11.9
+#   "E118", "E119",
+#   # E13: other specified DM (not type-specific → T2)
+#   "E1310", "E1336", "E1342"
+# )
 
-diab_type1_codes <- list(
-  dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t1),
-  dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t1)
-)
-diab_type2_codes <- list(
-  dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t2),
-  dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t2)
-)
+# diab_type1_codes <- list(
+#   dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t1),
+#   dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t1)
+# )
+# diab_type2_codes <- list(
+#   dx_icd9  = make_key_condition_only("dx_icd9", diab_icd9_t2),
+#   dx_icd10 = make_key_condition_only("dx_icd10", diab_icd10_t2)
+# )
 
 # (2026-09-12) Split from the former unified spec_diabetes_v1 into separate
 # Type 1 and Type 2 specs. The algorithmic criteria (inpatient/outpatient
@@ -207,7 +211,7 @@ spec_diabetes_type1_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = diab_type1_codes
+  codes = read_codeset("diabetes_type1_v1")
 )
 
 spec_diabetes_type2_v1 <- CodeSpec$new(
@@ -236,5 +240,5 @@ spec_diabetes_type2_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = diab_type2_codes
+  codes = read_codeset("diabetes_type2_v1")
 )

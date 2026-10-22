@@ -42,48 +42,50 @@
 # diagnosis position.
 #
 
-hf_icd9 <- c(
-  "40201",
-  "40211",
-  "40291",
-  "40401",
-  "40403",
-  "40411",
-  "40413",
-  "40491",
-  "40493",
-  expand9("428")
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# hf_icd9 <- c(
+#   "40201",
+#   "40211",
+#   "40291",
+#   "40401",
+#   "40403",
+#   "40411",
+#   "40413",
+#   "40491",
+#   "40493",
+#   expand9("428")
+# )
 
 
-hf_icd10 <- c(
-  "I110",
-  "I130",
-  "I132",
-  "I501",
-  "I5020",
-  "I5021",
-  "I5022",
-  "I5023",
-  "I5030",
-  "I5031",
-  "I5032",
-  "I5033",
-  "I5040",
-  "I5041",
-  "I5042",
-  "I5043",
-  "I509",
-  "I50810",
-  "I50814",
-  "I50811",
-  "I50812",
-  "I50813",
-  "I5082",
-  "I5083",
-  "I5084",
-  "I5089"
-)
+# hf_icd10 <- c(
+#   "I110",
+#   "I130",
+#   "I132",
+#   "I501",
+#   "I5020",
+#   "I5021",
+#   "I5022",
+#   "I5023",
+#   "I5030",
+#   "I5031",
+#   "I5032",
+#   "I5033",
+#   "I5040",
+#   "I5041",
+#   "I5042",
+#   "I5043",
+#   "I509",
+#   "I50810",
+#   "I50814",
+#   "I50811",
+#   "I50812",
+#   "I50813",
+#   "I5082",
+#   "I5083",
+#   "I5084",
+#   "I5089"
+# )
 spec_hf_v1 <- CodeSpec$new(
   condition = "hf", version = "v1", label = "Heart Failure",
   defs = list(
@@ -106,8 +108,5 @@ spec_hf_v1 <- CodeSpec$new(
       )
     )
   ),
-  codes = list(
-    dx_icd9  = make_key("dx_icd9", hf_icd9),
-    dx_icd10 = make_key("dx_icd10", hf_icd10)
-  )
+  codes = read_codeset("hf_v1")
 )

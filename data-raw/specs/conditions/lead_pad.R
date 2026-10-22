@@ -569,59 +569,65 @@
 # I70.749, I70.75, I70.76, I70.761, I70.762, I70.763, I70.768, I70.769, I70.79,
 # I70.791, I70.792, I70.793, I70.798, I70.799, I70.92, I73.9.
 
-lead_icd9 <- c("4402",
-               "44020",
-               "44021",
-               "44022",
-               "44023",
-               "44024",
-               "44029",
-               "4403",
-               "44030",
-               "44031",
-               "44032",
-               "4404",
-               "4439")
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# lead_icd9 <- c("4402",
+#                "44020",
+#                "44021",
+#                "44022",
+#                "44023",
+#                "44024",
+#                "44029",
+#                "4403",
+#                "44030",
+#                "44031",
+#                "44032",
+#                "4404",
+#                "4439")
 
 # ICD-10 codes for LEAD/PAD history (v1): I70.2xx–I70.7xx, I70.9x, I73.9
-lead_icd10 <- c(
-  expand10("I702"),   # I70.2x atherosclerosis of native arteries of extremities
-  expand10("I703"),   # I70.3x atherosclerosis of unspecified type bypass graft
-  expand10("I704"),   # I70.4x atherosclerosis of autologous vein bypass graft
-  expand10("I705"),   # I70.5x atherosclerosis of nonautologous biological bypass graft
-  expand10("I706"),   # I70.6x atherosclerosis of nonbiological bypass graft
-  expand10("I707"),   # I70.7x atherosclerosis of other type bypass graft
-  expand10("I709"),   # I70.9x other and unspecified atherosclerosis (incl. I70.92)
-  "I739"              # I73.9 peripheral vascular disease, unspecified
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# lead_icd10 <- c(
+#   expand10("I702"),   # I70.2x atherosclerosis of native arteries of extremities
+#   expand10("I703"),   # I70.3x atherosclerosis of unspecified type bypass graft
+#   expand10("I704"),   # I70.4x atherosclerosis of autologous vein bypass graft
+#   expand10("I705"),   # I70.5x atherosclerosis of nonautologous biological bypass graft
+#   expand10("I706"),   # I70.6x atherosclerosis of nonbiological bypass graft
+#   expand10("I707"),   # I70.7x atherosclerosis of other type bypass graft
+#   expand10("I709"),   # I70.9x other and unspecified atherosclerosis (incl. I70.92)
+#   "I739"              # I73.9 peripheral vascular disease, unspecified
+# )
 
-lead_cpt <- c("37205", "75962", "36902", "36905", "37246", "37247")
+# lead_cpt <- c("37205", "75962", "36902", "36905", "37246", "37247")
 
 # LEAD/PAD outcome-specific codes (NOT IMPLEMENTED YET)
-lead_out_icd9_isch  <- c("4440", "44401", "44409", "44422", "44481")
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# lead_out_icd9_isch  <- c("4440", "44401", "44409", "44422", "44481")
 
-lead_out_icd10_isch <- c("I7401", "I7409", "I743", "I745")
+# lead_out_icd10_isch <- c("I7401", "I7409", "I743", "I745")
 
-lead_out_cpt_emb    <- c("34201", "34203")
+# lead_out_cpt_emb    <- c("34201", "34203")
 
-lead_out_icd9_amp   <- c("8413", "8414", "8415", "8416", "8417")
+# lead_out_icd9_amp   <- c("8413", "8414", "8415", "8416", "8417")
 
-lead_out_cpt_amp    <- c("27590", "27591", "27592", "27598", "27880", "27881",
-                         "27882", "27888")
+# lead_out_cpt_amp    <- c("27590", "27591", "27592", "27598", "27880", "27881",
+#                          "27882", "27888")
 
-lead_out_icd9_rev   <- c("3808", "3816", "3818", "3838", "3848", "3868",
-                         "3888", "3925", "3929")
+# lead_out_icd9_rev   <- c("3808", "3816", "3818", "3838", "3848", "3868",
+#                          "3888", "3925", "3929")
 
-lead_out_icd10_rev  <- c("0312096", "0312097", "0312098", "0312099", "031209B",
-                         "031209C", "03120A6", "03120A7", "03120A8", "03120A9",
-                         "03120AB", "03120AC", "03120J6", "03120J7", "03120J8",
-                         "03120J9", "03120JB", "03120JC")
+# lead_out_icd10_rev  <- c("0312096", "0312097", "0312098", "0312099", "031209B",
+#                          "031209C", "03120A6", "03120A7", "03120A8", "03120A9",
+#                          "03120AB", "03120AC", "03120J6", "03120J7", "03120J8",
+#                          "03120J9", "03120JB", "03120JC")
 
-lead_out_icd9_throm <- "9910"
+# lead_out_icd9_throm <- "9910"
 
-lead_out_icd10_throm <- c("3E03317", "3E04317", "3E05317", "3E06317", "3E08317")
+# lead_out_icd10_throm <- c("3E03317", "3E04317", "3E05317", "3E06317", "3E08317")
 
-lead_out_cpt_throm  <- c("37184", "37211", "37213")
+# lead_out_cpt_throm  <- c("37184", "37211", "37213")
 
 spec_lead_pad_v1 <- CodeSpec$new(
   condition = "lead_pad",
@@ -641,9 +647,5 @@ spec_lead_pad_v1 <- CodeSpec$new(
                    "or {.strong 37247.}")
     )
   ),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", lead_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", lead_icd10),
-    cpt = make_key_condition_only("cpt", lead_cpt)
-  )
+  codes = read_codeset("lead_pad_v1")
 )

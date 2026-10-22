@@ -28,43 +28,45 @@
 # 'J479', J4481, J4489
 #
 
-copd_icd9 <- unique(
-  c(
-    expand9("490"),
-    expand9("4910"),
-    expand9("4911"),
-    expand9("4918"),
-    expand9("4919"),
-    "49120",
-    "49121",
-    "49122",
-    expand9("4920"),
-    expand9("4928"),
-    expand9("4940"),
-    expand9("4941"),
-    expand9("496")
-  )
-)
-copd_icd10 <- c(
-  "J40",
-  "J410",
-  "J411",
-  "J418",
-  "J42",
-  "J430",
-  "J431",
-  "J432",
-  "J438",
-  "J439",
-  "J440",
-  "J441",
-  "J449",
-  "J470",
-  "J471",
-  "J479",
-  "J4481",
-  "J4489"
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# copd_icd9 <- unique(
+#   c(
+#     expand9("490"),
+#     expand9("4910"),
+#     expand9("4911"),
+#     expand9("4918"),
+#     expand9("4919"),
+#     "49120",
+#     "49121",
+#     "49122",
+#     expand9("4920"),
+#     expand9("4928"),
+#     expand9("4940"),
+#     expand9("4941"),
+#     expand9("496")
+#   )
+# )
+# copd_icd10 <- c(
+#   "J40",
+#   "J410",
+#   "J411",
+#   "J418",
+#   "J42",
+#   "J430",
+#   "J431",
+#   "J432",
+#   "J438",
+#   "J439",
+#   "J440",
+#   "J441",
+#   "J449",
+#   "J470",
+#   "J471",
+#   "J479",
+#   "J4481",
+#   "J4489"
+# )
 
 copd_defs_condition <- c(
   "i" = "Any of the following:",
@@ -86,8 +88,5 @@ spec_copd_v1 <- CodeSpec$new(
   condition = "copd", version = "v1",
   label = "Chronic Obstructive Pulmonary Disease (COPD)",
   defs  = list(condition = copd_defs_condition, outcome = NULL),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", copd_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", copd_icd10)
-  )
+  codes = read_codeset("copd_v1")
 )

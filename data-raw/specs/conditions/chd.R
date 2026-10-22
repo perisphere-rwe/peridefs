@@ -85,107 +85,113 @@
 #
 
 
-chd_icd9_dx_cond <- c(
-  range9("410", "414"),
-  expand9("V4581"),
-  expand9("V4582")
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# chd_icd9_dx_cond <- c(
+#   range9("410", "414"),
+#   expand9("V4581"),
+#   expand9("V4582")
+# )
 
-chd_icd10_dx_cond <- c(
-  expand10("I21"),
-  expand10("I22"),
-  "I2510",
-  "I25810",
-  "I25811",
-  "I25812",
-  "I253",
-  "I2541",
-  "I2542",
-  "Z951",
-  "Z9861",
-  "I200",
-  "I201",
-  "I208",
-  "I209",
-  "I240",
-  "I241",
-  "I248",
-  "I252",
-  "I255",
-  "I2582",
-  "I2583",
-  "I2584",
-  "I2589",
-  "I259"
-)
+# chd_icd10_dx_cond <- c(
+#   expand10("I21"),
+#   expand10("I22"),
+#   "I2510",
+#   "I25810",
+#   "I25811",
+#   "I25812",
+#   "I253",
+#   "I2541",
+#   "I2542",
+#   "Z951",
+#   "Z9861",
+#   "I200",
+#   "I201",
+#   "I208",
+#   "I209",
+#   "I240",
+#   "I241",
+#   "I248",
+#   "I252",
+#   "I255",
+#   "I2582",
+#   "I2583",
+#   "I2584",
+#   "I2589",
+#   "I259"
+# )
 
-chd_icd9_dx_out <- c(expand9("410")) %>%
-  enframe() %>%
-  # 410.x2 represent subsequent episode of care
-  filter_out(str_detect(value, "410\\d2")) %>%
-  deframe()
+# chd_icd9_dx_out <- c(expand9("410")) %>%
+#   enframe() %>%
+#   # 410.x2 represent subsequent episode of care
+#   filter_out(str_detect(value, "410\\d2")) %>%
+#   deframe()
 
-chd_icd10_dx_out <- c(expand10("I21"), expand10("I22"))
+# chd_icd10_dx_out <- c(expand10("I21"), expand10("I22"))
 
-chd_proc_icd9 <- c(
-  "0066",
-  "360",
-  paste(3601:3619),
-  "362"
-)
+# chd_proc_icd9 <- c(
+#   "0066",
+#   "360",
+#   paste(3601:3619),
+#   "362"
+# )
 
 # ICD-10-PCS procedure codes — expanded from prefix patterns using the
 # CMS FY2026 ICD-10-PCS reference table bundled in R/sysdata.rda.
-chd_pcs_patterns <- c(
-  "0210xxx",
-  "0211xxx",
-  "0212xxx",
-  "0213xxx",
-  # CABG variants
-  "0270xxx",
-  "0271xxx",
-  "0272xxx",
-  "0273xxx",
-  # dilation (PCI) variants
-  "02C0xxx",
-  "02C1xxx",
-  "02C2xxx",
-  "02C3xxx",
-  # extirpation (PCI)
-  "3E07xxx"                                    # administration (thrombolytics)
-)
-chd_proc_icd10 <- expand_pcs(chd_pcs_patterns)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# chd_pcs_patterns <- c(
+#   "0210xxx",
+#   "0211xxx",
+#   "0212xxx",
+#   "0213xxx",
+#   # CABG variants
+#   "0270xxx",
+#   "0271xxx",
+#   "0272xxx",
+#   "0273xxx",
+#   # dilation (PCI) variants
+#   "02C0xxx",
+#   "02C1xxx",
+#   "02C2xxx",
+#   "02C3xxx",
+#   # extirpation (PCI)
+#   "3E07xxx"                                    # administration (thrombolytics)
+# )
+# chd_proc_icd10 <- expand_pcs(chd_pcs_patterns)
 
 # HCPCS codes for coronary revascularization
-chd_hcpcs <- c(
-  # 33515 is not a valid CPT code, so the 33510-33519 range is split around it.
-  hcpcs_range("33510", "33514"),
-  hcpcs_range("33516", "33519"),
-  hcpcs_range("33521", "33523"),
-  "33530",
-  hcpcs_range("33533", "33536"),
-  hcpcs_range("92980", "92982"),
-  "92984",
-  "92995",
-  "92996",
-  "92920",
-  "92921",
-  "92924",
-  "92925",
-  "92928",
-  "92929",
-  "92933",
-  "92934",
-  "92937",
-  "92938",
-  "92941",
-  "92943",
-  "92944",
-  "92973",
-  paste0("C", hcpcs_range("9600", "9608")),
-  "G0290",
-  "G0291"
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# chd_hcpcs <- c(
+#   # 33515 is not a valid CPT code, so the 33510-33519 range is split around it.
+#   hcpcs_range("33510", "33514"),
+#   hcpcs_range("33516", "33519"),
+#   hcpcs_range("33521", "33523"),
+#   "33530",
+#   hcpcs_range("33533", "33536"),
+#   hcpcs_range("92980", "92982"),
+#   "92984",
+#   "92995",
+#   "92996",
+#   "92920",
+#   "92921",
+#   "92924",
+#   "92925",
+#   "92928",
+#   "92929",
+#   "92933",
+#   "92934",
+#   "92937",
+#   "92938",
+#   "92941",
+#   "92943",
+#   "92944",
+#   "92973",
+#   paste0("C", hcpcs_range("9600", "9608")),
+#   "G0290",
+#   "G0291"
+# )
 
 # Collapsed to a single version (2026-08-15, issue #4): v1/v2 shared
 # identical codes and differed only in the outcome definition narrative
@@ -243,15 +249,5 @@ spec_chd_v1 <- CodeSpec$new(
       )
     )
   ),
-  codes = list(
-    dx_icd9    = make_key("dx_icd9", chd_icd9_dx_cond,
-                          condition = rep(TRUE, length(chd_icd9_dx_cond)),
-                          outcome   = chd_icd9_dx_cond %in% chd_icd9_dx_out),
-    dx_icd10   = make_key("dx_icd10", chd_icd10_dx_cond,
-                          condition = rep(TRUE, length(chd_icd10_dx_cond)),
-                          outcome   = chd_icd10_dx_cond %in% chd_icd10_dx_out),
-    proc_icd9  = make_key("proc_icd9", chd_proc_icd9),
-    proc_icd10 = make_key("proc_icd10", chd_proc_icd10),
-    hcpcs      = make_key("hcpcs", chd_hcpcs)
-  )
+  codes = read_codeset("chd_v1")
 )

@@ -152,6 +152,15 @@ The section header word determines the `condition` / `outcome` flags:
 
 ### 4.1 ICD code formats used in the document
 
+The expansion helpers (`expand9()`, `expand10()`, `range9()`, `range10()`,
+`billable10()`, defined in `data-raw/specs/_helpers.R`) read official
+reference files, not the unmaintained `icd` package: the CMS FY2026 ICD-10-CM
+order file (cached in `data-raw/.cache/`) and
+`data-raw/reference/icd9cm_hierarchy.csv` for ICD-9-CM. They return every
+valid code under a prefix, including non-billable headers (e.g. `"I21"`).
+Use them only to author a **new** version; released versions read frozen
+codes (Section 11).
+
 | Document notation | Meaning | Expansion function |
 |---|---|---|
 | `410.xx` | Any defined subcode of 410 | `expand9("410")` |
@@ -216,8 +225,8 @@ fall_e_codes <- unique(c(
 ))
 ```
 
-Note: `range9("8800", "8889")` may fail if not all codes in the range are
-defined. Expand individual parent codes instead.
+`range9("8800", "8889")` also works: endpoints do not need to be defined
+codes, and every code under the last endpoint is included.
 
 ### 4.5 ICD-10-PCS procedure codes
 
@@ -456,16 +465,18 @@ spec_my_condition <- CodeSpec$new(
   ),
   codes = list(
     dx_icd9  = make_key(
-      my_icd9,  c("580.xx-588.xx"),   # abbreviated form for display
+      "dx_icd9", my_icd9,
       condition = rep(TRUE, length(my_icd9)),
       outcome   = rep(FALSE, length(my_icd9))
     ),
-    dx_icd10 = make_key(
-      my_icd10, my_icd10             # ICD-10 often already specific; use as-is
-    )
+    dx_icd10 = make_key("dx_icd10", my_icd10)  # condition and outcome both TRUE
   )
 )
 ```
+
+While a version is unreleased, its `codes` are derived like this. When it is
+released, its codes are frozen to a CSV and `codes =` switches to
+`read_codeset()` (see "Releasing a new version" in Section 11).
 
 If a v2 exists with the same codes but a different narrative, construct a
 second `CodeSpec$new(..., version = "v2", ...)` object reusing the same code
@@ -723,12 +734,58 @@ column) are not frozen, so they can be refreshed from newer CMS/NLM files.
   documented correction, and record it in `NEWS.md`.
 - **Releasing a new version:** add its id to `.released_condition_specs`
   (`"<condition>_<version>"`) or `.released_drug_specs`
-  (`"<composite object>/<component>"`) in that test file, run the tests
+  (`"<composite object>/<component>"`) in
+  `tests/testthat/helper-released-versions.R`, run the tests
   once to record its snapshot, review the new files, and commit them. A
   version that exists in the package but is missing from a manifest fails
   the tests, as does a released version that has been removed.
 - Adding a component to a composite changes `composites.txt`; review that
   diff before accepting it, since it can change a composite's defaults.
+
+### Frozen code sets
+
+Released condition versions do not re-derive their codes at build time. Each
+reads its exact code set (code types, codes, order, and condition/outcome
+flags) from `data-raw/codesets/<condition>_<version>.csv`:
+
+```r
+spec_chd_v1 <- CodeSpec$new(
+  condition = "chd", version = "v1", ...,
+  codes = read_codeset("chd_v1")
+)
+```
+
+So a released version can't drift when reference files are updated, and the
+build doesn't depend on the `icd` package. The code that originally derived
+each v1 code set is kept, commented out, in the condition's script as a
+record of how it was built. Definitions (the `definition` column) are still
+looked up at build time.
+
+`tests/testthat/test-codesets.R` checks that every released condition version
+has a CSV, that each CSV matches the built spec exactly, and that there are no
+CSVs for unreleased versions. **Never edit a released CSV.**
+
+### Releasing a new version (e.g. `diabetes_type2_v2`)
+
+1. In `data-raw/specs/conditions/diabetes.R`, add `spec_diabetes_type2_v2`
+   next to v1, deriving its codes with the expansion helpers (Section 4).
+   Leave v1 untouched.
+2. Add the exported wrappers (`get_diabetes_type2_v2_codes()` /
+   `_defs()`) to `R/conditions.R`, and the new object to `use_data()` in
+   `data-raw/build_specs.R`.
+3. Rebuild (`source("data-raw/build_specs.R")`) and review the codes.
+4. Freeze the code set:
+   ```r
+   source("data-raw/freeze_codeset.R")
+   freeze_codeset(spec_diabetes_type2_v2)   # writes data-raw/codesets/diabetes_type2_v2.csv
+   ```
+5. Replace the v2 `codes = list(...)` with
+   `codes = read_codeset("diabetes_type2_v2")`, and comment out the
+   derivation code above it.
+6. Add `"diabetes_type2_v2"` to `.released_condition_specs` in
+   `tests/testthat/helper-released-versions.R`.
+7. Rebuild, run `devtools::test()` to record the new snapshots, review them,
+   and commit the CSV, the snapshots, and the code together.
 
 ---
 
@@ -775,11 +832,12 @@ committed `data/*.rda` files still returned old-shaped output (missing the
 `priority`/`type`/`class` columns, or erroring on the new `priority=` argument)
 until `build_specs.R` was re-run.
 
-### Pitfall 2: `range9()` / `range10()` failing on undefined endpoints
+### Pitfall 2: Expansion helpers include non-billable headers
 
-These functions use `icd::expand_range()` with `defined = TRUE`. If either
-endpoint is not in the ICD reference database, the call errors. Fall back to
-individual `expand9()` calls on parent codes.
+`expand10("I21")` returns `"I21"`, `"I210"`, and so on as well as the billable
+leaf codes, matching how released code sets were built. Wrap the result in
+`billable10()` if a definition should only contain billable ICD-10-CM codes.
+`range9()` / `range10()` accept endpoints that are not themselves valid codes.
 
 ### Pitfall 3: Abbreviated vs. codes not parallel
 
@@ -849,7 +907,10 @@ i <- tail(idx, 1)
 | File | Purpose |
 |---|---|
 | `data-raw/build_specs.R` | **Main build script.** Sources the helpers and every spec script (in the order listed in `build_scripts`), then saves the public specs with `usethis::use_data()`. Run it to rebuild `data/*.rda`. |
-| `data-raw/specs/_helpers.R` | Shared build helpers: `expand9()`/`expand10()`, `range9()`/`range10()`, `hcpcs_range()`, `make_key()`, `make_key_condition_only()`. Sources `build_definitions.R`. |
+| `data-raw/specs/_helpers.R` | Shared build helpers: `expand9()`/`expand10()`, `range9()`/`range10()`, `billable10()` (CMS-file based), `hcpcs_range()`, `make_key()`, `make_key_condition_only()`, `read_codeset()`. Sources `build_definitions.R`. |
+| `data-raw/codesets/*.csv` | Frozen code sets of released condition versions (`type`, `code`, `condition`, `outcome`). Never edited. |
+| `data-raw/freeze_codeset.R` | `freeze_codeset(spec)`: writes a newly released version's CSV. Refuses to overwrite. |
+| `data-raw/reference/icd9cm_hierarchy.csv` | Every defined ICD-9-CM diagnosis code with its description (exported once from `icd::icd9cm_hierarchy`). Used for ICD-9 expansion and parent-code descriptions. |
 | `data-raw/specs/conditions/*.R` | One script per condition, holding every version of it. |
 | `data-raw/specs/drugs/*.R` | One script per medication group: leaf `DrugSpec`s plus the group's `CompositeDrugSpec`. |
 | `data-raw/download_pcs_codes.R` | Downloads FY ICD-10-PCS reference from CMS. Run when updating fiscal year. |
@@ -867,7 +928,7 @@ i <- tail(idx, 1)
 | `R/code_spec_api.R` | Exported user API: `code_spec()`, `drug_spec()`, `add_codes()`, `remove_codes()`, `modify_code_spec()`, `modify_drug_spec()`. |
 | `data/spec_*.rda` | Pre-built spec objects (one file per spec). **Must be regenerated by re-running `build_specs.R` after any class change** — see Pitfall 1. |
 | `R/sysdata.rda` | Internal: `pcs_codes` (79,115 valid ICD-10-PCS codes, FY2026). |
-| `tests/testthat/` | Test files. Run `devtools::test()` after every change. |
+| `tests/testthat/` | Test files. Run `devtools::test()` after every change. `helper-released-versions.R` holds the release manifests; `test-frozen-versions.R` and `test-codesets.R` enforce them. |
 
 There is no longer a `get_codes()`/`get_generics()`/`get_ndc()` top-level
 dispatcher file — those were dead, unexported code from an earlier design and

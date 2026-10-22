@@ -23,8 +23,10 @@
 # of E78.0, E78.1, E78.2, E78.3, E78.4, E78.5.
 #
 
-hyp_icd9  <- c("2720", "2721", "2722", "2723", "2724")
-hyp_icd10 <- c("E780", "E781", "E782", "E783", "E784", "E785")
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# hyp_icd9  <- c("2720", "2721", "2722", "2723", "2724")
+# hyp_icd10 <- c("E780", "E781", "E782", "E783", "E784", "E785")
 
 spec_hyperlipidemia_v1 <- CodeSpec$new(
   condition = "hyperlipidemia", version = "v1", label = "Hyperlipidemia",
@@ -39,8 +41,5 @@ spec_hyperlipidemia_v1 <- CodeSpec$new(
     ),
     outcome = NULL
   ),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", hyp_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", hyp_icd10)
-  )
+  codes = read_codeset("hyperlipidemia_v1")
 )

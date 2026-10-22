@@ -9,8 +9,10 @@
 # ICD-10 E66.2 (Morbid (severe) obesity with alveolar hypoventilation) is the
 # direct map; it also covers Pickwickian syndrome as an included term.
 
-ohs_icd9  <- "27803"   # 278.03 — Obesity hypoventilation syndrome
-ohs_icd10 <- "E662"    # E66.2  — Morbid (severe) obesity with alveolar hypoventilation
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# ohs_icd9  <- "27803"   # 278.03 — Obesity hypoventilation syndrome
+# ohs_icd10 <- "E662"    # E66.2  — Morbid (severe) obesity with alveolar hypoventilation
 
 ohs_defs_condition <- c(
   "*" = paste0(
@@ -25,8 +27,5 @@ spec_ohs_v1 <- CodeSpec$new(
   version   = "v1",
   label     = "Obesity Hypoventilation Syndrome",
   defs  = list(condition = ohs_defs_condition, outcome = NULL),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", ohs_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", ohs_icd10)
-  )
+  codes = read_codeset("ohs_v1")
 )

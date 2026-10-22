@@ -31,31 +31,33 @@
 # subsequent hospitalization.
 #
 
-stroke_icd9 <- unique(c(
-  expand9("430"),
-  # subarachnoid hemorrhage
-  expand9("431"),
-  # intracerebral hemorrhage
-  Filter(\(x) endsWith(x, "1"), expand9("433")),
-  # 433.x1
-  Filter(\(x) endsWith(x, "1"), expand9("434")),
-  # 434.x1
-  expand9("436")
-))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# stroke_icd9 <- unique(c(
+#   expand9("430"),
+#   # subarachnoid hemorrhage
+#   expand9("431"),
+#   # intracerebral hemorrhage
+#   Filter(\(x) endsWith(x, "1"), expand9("433")),
+#   # 433.x1
+#   Filter(\(x) endsWith(x, "1"), expand9("434")),
+#   # 434.x1
+#   expand9("436")
+# ))
 
-stroke_icd10 <- unique(c(
-  expand10("I60"),
-  # subarachnoid hemorrhage
-  expand10("I61"),
-  # intracerebral hemorrhage
-  expand10("I63"),
-  # cerebral infarction
-  "I6789",
-  # I67.89 — other cerebrovascular disease
-  "I67850",
-  # cerebrovascular disease NOS subtypes
-  "I67858"
-))
+# stroke_icd10 <- unique(c(
+#   expand10("I60"),
+#   # subarachnoid hemorrhage
+#   expand10("I61"),
+#   # intracerebral hemorrhage
+#   expand10("I63"),
+#   # cerebral infarction
+#   "I6789",
+#   # I67.89 — other cerebrovascular disease
+#   "I67850",
+#   # cerebrovascular disease NOS subtypes
+#   "I67858"
+# ))
 
 spec_stroke_v1 <- CodeSpec$new(
   condition = "stroke", version = "v1", label = "Stroke (Any)",
@@ -78,8 +80,5 @@ spec_stroke_v1 <- CodeSpec$new(
       )
     )
   ),
-  codes = list(
-    dx_icd9  = make_key("dx_icd9", stroke_icd9),
-    dx_icd10 = make_key("dx_icd10", stroke_icd10)
-  )
+  codes = read_codeset("stroke_v1")
 )

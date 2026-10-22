@@ -5,19 +5,21 @@
 
 ## Osteoarthritis ----
 
-oa_icd9  <- unique(expand9("715"))
-oa_icd10 <- unique(c(
-  expand10(c(
-    "M15",   # polyosteoarthritis
-    "M16",   # osteoarthritis of hip
-    "M17",   # osteoarthritis of knee
-    "M18",   # osteoarthritis of first carpometacarpal joint
-    "M19"    # other and unspecified osteoarthritis
-  )),
-  # M19.09 (Primary osteoarthritis, other specified site) is absent from the
-  # icd package's ICD-10-CM reference table and must be added manually.
-  "M1909"
-))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# oa_icd9  <- unique(expand9("715"))
+# oa_icd10 <- unique(c(
+#   expand10(c(
+#     "M15",   # polyosteoarthritis
+#     "M16",   # osteoarthritis of hip
+#     "M17",   # osteoarthritis of knee
+#     "M18",   # osteoarthritis of first carpometacarpal joint
+#     "M19"    # other and unspecified osteoarthritis
+#   )),
+#   # M19.09 (Primary osteoarthritis, other specified site) is absent from the
+#   # icd package's ICD-10-CM reference table and must be added manually.
+#   "M1909"
+# ))
 
 oa_defs_condition <- c(
   "i" = "Any of the following:",
@@ -37,8 +39,5 @@ spec_osteoarthritis_v1 <- CodeSpec$new(
   condition = "osteoarthritis", version = "v1",
   label = "Osteoarthritis",
   defs  = list(condition = oa_defs_condition, outcome = NULL),
-  codes = list(
-    dx_icd9  = make_key_condition_only("dx_icd9", oa_icd9),
-    dx_icd10 = make_key_condition_only("dx_icd10", oa_icd10)
-  )
+  codes = read_codeset("osteoarthritis_v1")
 )

@@ -31,19 +31,21 @@
 # c)	Two or more pharmacy fills for an antihypertensive medication:
 
 
-htn_icd9 <- c(expand9("401"),
-              expand9("4030"),
-              expand9("4031"),
-              expand9("4039"))
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# htn_icd9 <- c(expand9("401"),
+#               expand9("4030"),
+#               expand9("4031"),
+#               expand9("4039"))
 
-htn_icd10 <- unique(c("I10",
-                      expand10("I11"),
-                      expand10("I12"),
-                      expand10("I13"),
-                      expand10("I15"),
-                      "I120",
-                      "I129",
-                      expand10("I16")))
+# htn_icd10 <- unique(c("I10",
+#                       expand10("I11"),
+#                       expand10("I12"),
+#                       expand10("I13"),
+#                       expand10("I15"),
+#                       "I120",
+#                       "I129",
+#                       expand10("I16")))
 
 
 htn_v1_defs_condition <- c(
@@ -69,10 +71,12 @@ htn_v2_defs_condition <- c(
   )
 )
 
-htn_codes <- list(
-  dx_icd9  = make_key_condition_only("dx_icd9", htn_icd9),
-  dx_icd10 = make_key_condition_only("dx_icd10", htn_icd10)
-)
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# htn_codes <- list(
+#   dx_icd9  = make_key_condition_only("dx_icd9", htn_icd9),
+#   dx_icd10 = make_key_condition_only("dx_icd10", htn_icd10)
+# )
 
 # Collapsed to a single version (2026-08-15, issue #4): v1/v2 previously
 # shared identical codes and differed only in the condition definition
@@ -84,5 +88,5 @@ spec_hypertension_v1 <- CodeSpec$new(
   label = "Hypertension",
   defs  = list(condition = htn_v2_defs_condition,
                outcome = NULL),
-  codes = htn_codes
+  codes = read_codeset("hypertension_v1")
 )

@@ -13,11 +13,12 @@
 ## (and usethis::use_data() below) can see them. Two scripts defining the same
 ## `spec_*` name is an error.
 ##
-## Requires the 'icd' package for ICD diagnosis code expansion.
-## icd::children() is called with defined = TRUE to return only codes that
-## exist in the ICD-9-CM / ICD-10-CM reference tables.
+## Released versions read their exact codes from data-raw/codesets/*.csv
+## (see read_codeset() in specs/_helpers.R). New versions are derived with
+## expand9()/expand10()/range9()/range10(), which use the CMS ICD-10-CM order
+## file and data-raw/reference/icd9cm_hierarchy.csv. The icd package is no
+## longer needed.
 
-library(icd)
 library(tidyverse)
 devtools::load_all()
 
