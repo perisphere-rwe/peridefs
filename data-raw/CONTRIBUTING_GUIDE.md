@@ -235,7 +235,7 @@ chd_proc_icd10 <- expand_pcs(c("0210xxx", "0211xxx", "0212xxx", "0213xxx"))
 ### 4.6 HCPCS code ranges
 
 ```r
-# Helper defined in build_specs.R:
+# Helper defined in data-raw/specs/_helpers.R:
 hcpcs_range <- function(a, b) as.character(seq(as.integer(a), as.integer(b)))
 hcpcs_range("33510", "33519")   # → c("33510","33511",...,"33519")
 ```
@@ -424,9 +424,14 @@ my_icd10 <- c("N181","N182","N183","N184","N185","N186","N189","N19")
 cat("ICD-9:", length(my_icd9), "| ICD-10:", length(my_icd10), "\n")
 ```
 
-### Step 3 — Write the spec in `data-raw/build_specs.R`
+### Step 3 — Write the spec in `data-raw/specs/conditions/<condition>.R`
 
-Add the new spec **before** the `usethis::use_data(...)` call at the bottom.
+Each condition has its own script under `data-raw/specs/conditions/`, holding
+every version of that condition (v1, v2, ...). For a new condition, create the
+file and add it to `build_scripts` in `data-raw/build_specs.R` (after any
+script whose `spec_*` objects it uses). Each script runs in its own
+environment: helper vectors such as `my_icd9` stay local to the file, and only
+objects named `spec_*` are passed on to later scripts and to `use_data()`.
 Each version is its own `CodeSpec$new()` call (there is no `versions = list()`
 wrapper in the current API):
 
@@ -466,7 +471,7 @@ If a v2 exists with the same codes but a different narrative, construct a
 second `CodeSpec$new(..., version = "v2", ...)` object reusing the same code
 vectors (see Section 11).
 
-### Step 4 — Add to `usethis::use_data()` at the bottom of build_specs.R
+### Step 4 — Add to `usethis::use_data()` at the bottom of `data-raw/build_specs.R`
 
 ```r
 usethis::use_data(
@@ -566,7 +571,12 @@ for (j in i:(i + 20)) {
 
 Determine which format is used (Section 5.1) and collect GNNs accordingly.
 
-### Step 2 — Write the DrugSpec in `data-raw/build_specs.R`
+### Step 2 — Write the DrugSpec in `data-raw/specs/drugs/<group>.R`
+
+Each medication group (e.g. antihypertensives) has one script under
+`data-raw/specs/drugs/` holding its leaf `DrugSpec`s and its
+`CompositeDrugSpec`. A new group needs a new file added to `build_scripts` in
+`data-raw/build_specs.R`.
 
 Each version is its own `DrugSpec$new()` call. There is no `ndc` argument —
 `DrugSpec` no longer carries NDC codes:
@@ -681,12 +691,18 @@ get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, c
   argument to `CodeSpec$new()` / `DrugSpec$new()`.
 - The document signals version differences with "(with medications)", "(without
   medications)", "from anti-hypertensive medication list", "from FDB", etc.
-- Only bump the version number (`_v2`, `_v3`, ...) when the code set or
-  generic list actually changes. If two candidate versions would share
-  identical codes/generics and differ only in the narrative `defs` text
-  (e.g., whether a medication criterion is mentioned), do **not** create a
-  second version — just update the single version's `defs` in place to the
-  most current narrative (see issue #4).
+- Bump the version number (`_v2`, `_v3`, ...) for any change that could
+  change which patients a definition selects: codes added or removed,
+  condition/outcome flags, generics or their priority tiers, or the
+  algorithm described in `defs` (number of claims, claim/file types,
+  diagnosis position, days apart, look-back window, medication criteria).
+- Edits to `defs` that leave the algorithm unchanged (typos, wording,
+  formatting) may be made in place on a released version. The frozen-version
+  tests will fail on the spec's `_meta.txt` snapshot; confirm the diff is
+  wording only, accept it with `testthat::snapshot_accept("frozen-versions")`,
+  and note it in `NEWS.md`.
+- Do not create two versions that share identical codes/generics and an
+  equivalent algorithm (see issue #4).
 - There is no `"latest"` version resolution mechanism — every exported wrapper
   function (`get_hypertension_v1_codes()`, `get_acei_v2_codes()`, etc.) is bound to one
   specific spec object at `R/conditions.R`/`R/drugs.R` authoring time.
@@ -832,7 +848,10 @@ i <- tail(idx, 1)
 
 | File | Purpose |
 |---|---|
-| `data-raw/build_specs.R` | **Main build script.** Add new spec definitions here, then run it. |
+| `data-raw/build_specs.R` | **Main build script.** Sources the helpers and every spec script (in the order listed in `build_scripts`), then saves the public specs with `usethis::use_data()`. Run it to rebuild `data/*.rda`. |
+| `data-raw/specs/_helpers.R` | Shared build helpers: `expand9()`/`expand10()`, `range9()`/`range10()`, `hcpcs_range()`, `make_key()`, `make_key_condition_only()`. Sources `build_definitions.R`. |
+| `data-raw/specs/conditions/*.R` | One script per condition, holding every version of it. |
+| `data-raw/specs/drugs/*.R` | One script per medication group: leaf `DrugSpec`s plus the group's `CompositeDrugSpec`. |
 | `data-raw/download_pcs_codes.R` | Downloads FY ICD-10-PCS reference from CMS. Run when updating fiscal year. |
 | `data-raw/parse_docx.R` | Helper functions for reading the Word document XML. |
 | `R/CodeSpec.R` | R6 class for condition code specs. `get_codes()` returns a tibble (`type`, `code`, `priority`, `version`) and handles outcome→condition fallback internally. |
@@ -954,12 +973,13 @@ distinctive. Do not duplicate across sub-specs.
 
 ### 17.5 Step 4 — Check for cross-spec overlaps
 
-After editing `build_specs.R`, confirm no `GNRC_NM` appears in more than one
+After editing the drug scripts in `data-raw/specs/drugs/`, confirm no `GNRC_NM` appears in more than one
 distinct sub-spec class. Overlaps within v1/v2 pairs of the same class are
 expected and fine.
 
 ```r
-lines       <- readLines("data-raw/build_specs.R")
+drug_files  <- list.files("data-raw/specs/drugs", pattern = "\\.R$", full.names = TRUE)
+lines       <- unlist(lapply(drug_files, readLines, encoding = "UTF-8"))
 spec_starts <- which(str_detect(lines, "DrugSpec\\$new\\(") &
                      !str_detect(lines, "CompositeDrugSpec\\$new\\("))
 spec_names  <- str_extract(lines[spec_starts], "^(\\w+)\\s*<-") |>
@@ -1018,8 +1038,6 @@ library(stringr)
 
 gnrc_lookup <- setNames(mc_gnrc$n, mc_gnrc$GNRC_NM)
 fmt_n <- function(n) format(n, big.mark = ",", scientific = FALSE, trim = TRUE)
-lines <- readLines("data-raw/build_specs.R")
-
 uparen <- function(s) {
   s2 <- str_replace_all(s, '"[^"]*"', "")
   str_count(s2, fixed("(")) - str_count(s2, fixed(")"))
@@ -1054,54 +1072,59 @@ BLOCK_PAT <- paste0(
   "^\\s*(", DRUG_CLASS_NAMES, ")\\s*=\\s*c\\("
 )
 
-in_block <- FALSE; depth <- 0L
-out <- vector("list", length(lines) + 600L); oi <- 0L
-push <- function(x) { oi <<- oi + 1L; out[[oi]] <<- x }
+# Annotate every drug script in place.
+drug_files <- list.files("data-raw/specs/drugs", pattern = "\\.R$", full.names = TRUE)
+for (path in drug_files) {
+  lines <- readLines(path, encoding = "UTF-8")
+  in_block <- FALSE; depth <- 0L
+  out <- vector("list", length(lines) + 600L); oi <- 0L
+  push <- function(x) { oi <<- oi + 1L; out[[oi]] <<- x }
 
-for (line in lines) {
-  is_start <- str_detect(line, BLOCK_PAT)
-  pd       <- uparen(line)
-  if (!in_block && !is_start) { push(line); next }
-  if (!in_block) {
-    depth <- pd; in_block <- (depth > 0L)
-  } else {
-    depth <- depth + pd
-    if (depth <= 0L) in_block <- FALSE
-  }
-  line_nc <- strip_comment(line)
-  strs    <- str_extract_all(line_nc, '"([^"]*)"')[[1L]] |> str_sub(2L, -2L)
-  if (length(strs) == 0L) { push(line); next }
-  masked      <- str_replace_all(line_nc, '"[^"]*"', "")
-  close_comma <- str_detect(masked, "\\),\\s*$")
-  indent      <- str_extract(line_nc, "^\\s*")
-  emit_close  <- (is_start && pd <= 0L) || (!is_start && pd < 0L)
-  if (length(strs) == 1L) {
-    gnn <- strs[[1L]]
-    if (gnn %in% names(gnrc_lookup)) {
-      ec  <- trailing_comment(line)
-      cmt <- if (!is.na(ec) && !str_detect(ec, "n=[0-9,]+ in MC Rx table"))
-               paste0("  ", ec, "; n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-             else
-               paste0("  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-      push(paste0(line_nc, cmt))
-    } else { push(line) }
-  } else {
-    if (is_start) {
-      prefix     <- str_extract(line_nc, "^.*=\\s*c\\(")
-      str_indent <- paste0(str_extract(prefix, "^\\s*"), "  ")
-      push(prefix)
-    } else { str_indent <- indent }
-    for (j in seq_along(strs)) {
-      gnn   <- strs[[j]]
-      sline <- paste0(str_indent, '"', gnn, '",');
-      if (gnn %in% names(gnrc_lookup))
-        sline <- paste0(sline, "  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-      push(sline)
+  for (line in lines) {
+    is_start <- str_detect(line, BLOCK_PAT)
+    pd       <- uparen(line)
+    if (!in_block && !is_start) { push(line); next }
+    if (!in_block) {
+      depth <- pd; in_block <- (depth > 0L)
+    } else {
+      depth <- depth + pd
+      if (depth <= 0L) in_block <- FALSE
     }
-    if (emit_close) push(paste0(indent, if (close_comma) ")," else ")"))
+    line_nc <- strip_comment(line)
+    strs    <- str_extract_all(line_nc, '"([^"]*)"')[[1L]] |> str_sub(2L, -2L)
+    if (length(strs) == 0L) { push(line); next }
+    masked      <- str_replace_all(line_nc, '"[^"]*"', "")
+    close_comma <- str_detect(masked, "\\),\\s*$")
+    indent      <- str_extract(line_nc, "^\\s*")
+    emit_close  <- (is_start && pd <= 0L) || (!is_start && pd < 0L)
+    if (length(strs) == 1L) {
+      gnn <- strs[[1L]]
+      if (gnn %in% names(gnrc_lookup)) {
+        ec  <- trailing_comment(line)
+        cmt <- if (!is.na(ec) && !str_detect(ec, "n=[0-9,]+ in MC Rx table"))
+                 paste0("  ", ec, "; n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+               else
+                 paste0("  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+        push(paste0(line_nc, cmt))
+      } else { push(line) }
+    } else {
+      if (is_start) {
+        prefix     <- str_extract(line_nc, "^.*=\\s*c\\(")
+        str_indent <- paste0(str_extract(prefix, "^\\s*"), "  ")
+        push(prefix)
+      } else { str_indent <- indent }
+      for (j in seq_along(strs)) {
+        gnn   <- strs[[j]]
+        sline <- paste0(str_indent, '"', gnn, '",');
+        if (gnn %in% names(gnrc_lookup))
+          sline <- paste0(sline, "  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+        push(sline)
+      }
+      if (emit_close) push(paste0(indent, if (close_comma) ")," else ")"))
+    }
   }
+  writeLines(unlist(out[seq_len(oi)]), path, useBytes = TRUE)
 }
-writeLines(unlist(out[seq_len(oi)]), "data-raw/build_specs.R")
 ```
 
 **Notes on interpreting annotations:**
@@ -1132,7 +1155,7 @@ medications_11262026.docx`):
    `data-raw/parse_docx.R`.
 2. Reload the `texts` vector into the R session (Section 2).
 3. For each changed definition, find the new section content, update the code
-   expansion and defs text in `build_specs.R`.
+   expansion and defs text in the relevant script under `data-raw/specs/`.
 4. If the ICD-10-PCS fiscal year has changed, run `data-raw/download_pcs_codes.R`
    first to update `R/sysdata.rda`.
 5. Re-run `build_specs.R`, reload, run tests, run check.
