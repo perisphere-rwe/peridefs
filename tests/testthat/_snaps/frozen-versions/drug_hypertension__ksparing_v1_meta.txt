@@ -1,0 +1,7 @@
+drug_class: diuretics_ksparing
+version: v1
+label: Diuretics (Potassium-Sparing)
+
+[defs]
+Potassium-sparing diuretics from the Perisphere antihypertensive medication list.
+

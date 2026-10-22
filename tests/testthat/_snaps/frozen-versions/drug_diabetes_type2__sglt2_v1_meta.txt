@@ -1,0 +1,7 @@
+drug_class: sglt2
+version: v1
+label: SGLT-2 Inhibitors
+
+[defs]
+SGLT-2 inhibitor antidiabetic agents (gliflozins), including fixed-dose combinations. From the Perisphere antidiabetic medication list.
+

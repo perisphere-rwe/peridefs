@@ -1,0 +1,11 @@
+condition: ohs
+version: v1
+label: Obesity Hypoventilation Syndrome
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+*: ≥1 claim with an ICD-9 diagnosis of {.strong 278.03}, or an ICD-10 diagnosis of {.strong E66.2} in any diagnosis position from inpatient, outpatient, carrier, or line files.
+
+[defs: outcome]
+<none>
+

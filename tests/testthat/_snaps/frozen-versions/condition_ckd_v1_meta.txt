@@ -1,0 +1,14 @@
+condition: ckd
+version: v1
+label: Chronic Kidney Disease (CKD)
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with a discharge ICD-9 or ICD-10 diagnosis code for chronic kidney disease in any discharge diagnosis position.
+*: ≥1 outpatient physician visit with an ICD-9 or ICD-10 CKD diagnosis code in any position.
+i: For Medicare data, {.strong ESRD_IND = 'Y'} in the Master Beneficiary Summary File additionally qualifies a participant as having CKD history.
+
+[defs: outcome]
+<none>
+

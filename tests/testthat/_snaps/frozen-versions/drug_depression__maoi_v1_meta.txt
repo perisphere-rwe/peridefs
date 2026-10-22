@@ -1,0 +1,7 @@
+drug_class: maoi
+version: v1
+label: MAOIs
+
+[defs]
+Monoamine oxidase inhibitors (MAOIs).
+

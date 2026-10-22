@@ -1,0 +1,7 @@
+drug_class: diuretics_ksparing
+version: v2
+label: Diuretics (Potassium-Sparing)
+
+[defs]
+Potassium-sparing diuretics from FDB. Adds spelling variants.
+

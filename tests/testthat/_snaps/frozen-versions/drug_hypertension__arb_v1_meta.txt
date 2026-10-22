@@ -1,0 +1,7 @@
+drug_class: arb
+version: v1
+label: Angiotensin Receptor Blockers (ARBs)
+
+[defs]
+From the Perisphere antihypertensive medication list.
+

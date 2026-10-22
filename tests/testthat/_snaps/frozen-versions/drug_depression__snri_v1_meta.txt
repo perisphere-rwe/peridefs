@@ -1,0 +1,7 @@
+drug_class: snri
+version: v1
+label: SNRIs
+
+[defs]
+Serotonin-norepinephrine reuptake inhibitors (SNRIs).
+

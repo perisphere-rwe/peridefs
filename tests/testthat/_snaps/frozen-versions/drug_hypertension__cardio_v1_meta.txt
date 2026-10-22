@@ -1,0 +1,7 @@
+drug_class: beta_cardio
+version: v1
+label: Beta Blockers (Cardioselective)
+
+[defs]
+Cardioselective beta blockers from the Perisphere antihypertensive medication list.
+

@@ -1,0 +1,11 @@
+condition: hyperlipidemia
+version: v1
+label: Hyperlipidemia
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+*: ≥2 claims on separate calendar days with ICD-9 diagnoses {.strong 272.0}–{.strong 272.4}, or ICD-10 diagnoses of {.strong E78.0}, {.strong E78.1}, {.strong E78.2}, {.strong E78.3}, {.strong E78.4}, or {.strong E78.5} in any diagnosis position (carrier, outpatient, inpatient, SNF, or HHA).
+
+[defs: outcome]
+<none>
+

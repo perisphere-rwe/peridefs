@@ -1,0 +1,7 @@
+drug_class: amylin
+version: v1
+label: Amylin Analogues
+
+[defs]
+Amylin analogue antidiabetic agents. From the Perisphere antidiabetic medication list.
+

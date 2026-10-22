@@ -1,0 +1,7 @@
+drug_class: diuretics_thiazide
+version: v2
+label: Diuretics (Thiazide and Thiazide-Type)
+
+[defs]
+Thiazide diuretics from FDB. Includes additional agents and spelling variants.
+

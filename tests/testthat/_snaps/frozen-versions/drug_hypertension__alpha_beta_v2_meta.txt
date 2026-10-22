@@ -1,0 +1,7 @@
+drug_class: alpha_beta
+version: v2
+label: Alpha-Beta Blockers
+
+[defs]
+From First Data Bank (FDB). Adds LABETOLOL spelling variant.
+

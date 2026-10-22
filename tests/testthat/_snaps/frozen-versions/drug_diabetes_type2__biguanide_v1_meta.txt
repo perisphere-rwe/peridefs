@@ -1,0 +1,7 @@
+drug_class: biguanide
+version: v1
+label: Biguanides
+
+[defs]
+Biguanide antidiabetic agents. From the Perisphere antidiabetic medication list.
+

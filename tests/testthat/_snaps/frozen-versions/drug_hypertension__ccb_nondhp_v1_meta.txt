@@ -1,0 +1,7 @@
+drug_class: ccb_nondhp
+version: v1
+label: Calcium Channel Blockers (Non-Dihydropyridines)
+
+[defs]
+Non-dihydropyridine CCBs from the Perisphere antihypertensive medication list.
+

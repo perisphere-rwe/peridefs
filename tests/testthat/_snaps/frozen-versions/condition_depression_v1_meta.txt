@@ -1,0 +1,14 @@
+condition: depression
+version: v1
+label: Depression
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis of {.strong 296.20–296.26}, {.strong 296.30–296.36}, {.strong 296.51–296.56}, {.strong 296.60–296.66}, {.strong 296.89}, {.strong 298.0}, {.strong 300.4}, {.strong 309.1}, or {.strong 311}, or an ICD-10 diagnosis from the depression code set, in any diagnosis position.
+*: ≥1 outpatient physician claim with the same ICD codes in any diagnosis position.
+*: ≥2 pharmacy claims for a depression medication (see {.strong spec_depression}); 2 different GNNs on the same day are permitted.
+
+[defs: outcome]
+<none>
+

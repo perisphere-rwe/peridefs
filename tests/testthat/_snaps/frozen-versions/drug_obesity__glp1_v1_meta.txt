@@ -1,0 +1,7 @@
+drug_class: glp1
+version: v1
+label: GLP-1
+
+[defs]
+GLP-1 receptor agonists, shared across the antiobesity and antidiabetic composites.
+

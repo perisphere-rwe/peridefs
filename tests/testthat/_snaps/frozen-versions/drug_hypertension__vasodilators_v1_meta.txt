@@ -1,0 +1,7 @@
+drug_class: vasodilators
+version: v1
+label: Direct Vasodilators
+
+[defs]
+Direct vasodilators from the Perisphere antihypertensive medication list.
+

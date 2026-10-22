@@ -1,0 +1,11 @@
+condition: osa
+version: v1
+label: Obstructive sleep apnea
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+*: ≥1 claim with an ICD-9 diagnosis of {.strong 327.20}, {.strong 327.23}, {.strong 327.29}, or {.strong 780.57}, or an ICD-10 diagnosis of {.strong G47.30}, {.strong G47.33}, or {.strong G47.39} in any  diagnosis position from inpatient, outpatient, carrier, or line files.
+
+[defs: outcome]
+<none>
+

@@ -1,0 +1,7 @@
+drug_class: aldo
+version: v1
+label: Aldosterone Antagonists
+
+[defs]
+From the Perisphere antihypertensive medication list.
+

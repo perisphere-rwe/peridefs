@@ -1,0 +1,7 @@
+drug_class: alpha
+version: v1
+label: Alpha-1 Blockers
+
+[defs]
+From the Perisphere antihypertensive medication list.
+

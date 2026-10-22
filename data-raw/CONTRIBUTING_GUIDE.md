@@ -691,6 +691,29 @@ get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, c
   function (`get_hypertension_v1_codes()`, `get_acei_v2_codes()`, etc.) is bound to one
   specific spec object at `R/conditions.R`/`R/drugs.R` authoring time.
 
+### Frozen released versions
+
+Released versions are locked by `tests/testthat/test-frozen-versions.R`.
+Every released leaf spec (condition code sets with their condition/outcome
+flags, drug generics with priority/condition/brands, and each spec's
+narrative `defs`) is written to a text snapshot in
+`tests/testthat/_snaps/frozen-versions/`, along with the component
+structure of every composite spec. Code descriptions (the `definition`
+column) are not frozen, so they can be refreshed from newer CMS/NLM files.
+
+- **Changing a released version fails the tests.** Revert the change and
+  create a new version (`_v2`) instead. Accept a changed snapshot
+  (`testthat::snapshot_accept("frozen-versions")`) only for a deliberate,
+  documented correction, and record it in `NEWS.md`.
+- **Releasing a new version:** add its id to `.released_condition_specs`
+  (`"<condition>_<version>"`) or `.released_drug_specs`
+  (`"<composite object>/<component>"`) in that test file, run the tests
+  once to record its snapshot, review the new files, and commit them. A
+  version that exists in the package but is missing from a manifest fails
+  the tests, as does a released version that has been removed.
+- Adding a component to a composite changes `composites.txt`; review that
+  diff before accepting it, since it can change a composite's defaults.
+
 ---
 
 ## 12. Narrative defs text guidelines

@@ -1,0 +1,13 @@
+condition: hf
+version: v1
+label: Heart Failure
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis of {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, {.strong 404.01}, {.strong 404.03}, {.strong 404.11}, {.strong 404.13}, {.strong 404.91}, {.strong 404.93}, or {.strong 428.x}, or an ICD-10 diagnosis of {.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.1}, {.strong I50.20}–{.strong I50.43}, {.strong I50.9}, or specified {.strong I508xx} codes in any diagnosis position.
+*: ≥2 outpatient claims at least 30 days apart with the same codes.
+
+[defs: outcome]
+*: Overnight hospitalization with a {.emph primary} discharge diagnosis for heart failure (same ICD codes as condition definition).
+

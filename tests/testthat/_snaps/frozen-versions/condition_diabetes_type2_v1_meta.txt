@@ -1,0 +1,15 @@
+condition: diabetes_type2
+version: v1
+label: Type 2 Diabetes Mellitus
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with a discharge ICD-9 Type 2/unspecified diabetes diagnosis ({.strong 250.x0}, {.strong 250.x2}, {.strong 357.2}, {.strong 362.0x}, {.strong 366.41}) or an ICD-10 Type 2 or unspecified diagnosis (E11.xx, E08.xx, E09.xx, E13.xx) in any discharge position.
+*: ≥2 carrier/outpatient claims with the same ICD codes in any position, occurring at least 7 days apart.
+*: ≥1 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes_type2}).
+i: Patients are then classified into four mutually exclusive categories: no diabetes; diabetes without antidiabetic medication; diabetes with oral antidiabetic (non-insulin); diabetes with insulin.
+
+[defs: outcome]
+<none>
+

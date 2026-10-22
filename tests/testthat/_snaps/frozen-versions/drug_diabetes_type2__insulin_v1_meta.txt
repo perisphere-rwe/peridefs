@@ -1,0 +1,7 @@
+drug_class: insulin
+version: v1
+label: Insulin and Supplies
+
+[defs]
+Insulin preparations and insulin administration supplies. From the Perisphere antidiabetic medication list.
+

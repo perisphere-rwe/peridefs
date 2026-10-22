@@ -1,0 +1,7 @@
+drug_class: diuretics_loop
+version: v2
+label: Diuretics (Loop)
+
+[defs]
+Loop diuretics from FDB. Adds ETHACRYNIC ACID.
+

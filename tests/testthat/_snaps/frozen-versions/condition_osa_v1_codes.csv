@@ -1,0 +1,8 @@
+type,code,condition,outcome
+"dx_icd10","G4730","TRUE","FALSE"
+"dx_icd10","G4733","TRUE","FALSE"
+"dx_icd10","G4739","TRUE","FALSE"
+"dx_icd9","32720","TRUE","FALSE"
+"dx_icd9","32723","TRUE","FALSE"
+"dx_icd9","32729","TRUE","FALSE"
+"dx_icd9","78057","TRUE","FALSE"
