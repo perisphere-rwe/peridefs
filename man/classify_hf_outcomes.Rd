@@ -56,14 +56,16 @@ short format (no periods).}
 position on the claim (\code{1} is primary).}
 
 \item{col_claim_setting}{Name of the column with the claim setting.
-Acute hospitalizations are taken from claims whose setting equals
-\code{inpatient_setting}.}
+Acute hospitalizations are taken from claims whose setting is one of the
+values in \code{inpatient_setting}.}
 
 \item{col_claim_date}{Name of the date column with the claim's start date
 (the admission date for inpatient claims, the visit date for others).}
 
-\item{inpatient_setting}{Value of the claim setting column that identifies
-overnight inpatient claims. Default \code{"inpatient"}.}
+\item{inpatient_setting}{One or more values of the claim setting column
+that identify overnight inpatient claims, e.g.
+\code{c("inpatient_a", "inpatient_b")} when inpatient stays are coded under
+several settings. Default \code{"inpatient"}.}
 }
 \value{
 A data frame (or lazy table, for lazy input) with one row per
@@ -86,7 +88,7 @@ Two outcomes are classified, both only from claims strictly after the
 patient's reference date plus \code{min_event_days}:
 \itemize{
 \item \code{acute_hf_hospitalization}: an inpatient claim (\code{claim_setting} equal to
-\code{inpatient_setting}) where either (a) the primary diagnosis is an acute
+any value of \code{inpatient_setting}) where either (a) the primary diagnosis is an acute
 or acute-on-chronic I50 code, or (b) the primary diagnosis is I11.0 and
 any I50 code is in a non-primary position, or the primary diagnosis is
 I13.0 or I13.2 and both an I50 and an N18 code are in non-primary
