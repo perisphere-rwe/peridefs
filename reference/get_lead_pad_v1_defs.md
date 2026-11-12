@@ -11,11 +11,10 @@ get_lead_pad_v1_defs(...)
 
 ## Arguments
 
-- component:
+- ...:
 
-  Not used (fixed to `"lead_pad_v1"`); included only because it is
-  inherited from
-  [`get_ascvd_defs()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_defs.md).
+  Further arguments passed to the underlying ASCVD getter (e.g.
+  `variable_type`). `component` is fixed and cannot be supplied.
 
 ## See also
 

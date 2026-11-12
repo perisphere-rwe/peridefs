@@ -1,5 +1,85 @@
 # Changelog
 
+## peridefs (development version)
+
+### New features
+
+- `get_version_diffs(condition, versions)` compares two or more versions
+  of a condition, e.g. `get_version_diffs("diabetes_type2", c(1, 2))`
+  (`versions` also accepts `c("v1", "v2")`; the default compares every
+  version). It returns one row per code, with a logical column per
+  version (`v1`, `v2`, …), `code`, `type`, `definition`, and a `change`
+  description (e.g. `"added in v2"`). It errors on unknown conditions,
+  versions that don’t exist, a repeated version, or fewer than two
+  versions. `format = "flextable"` returns a formatted table instead,
+  with rows shaded in GitHub’s diff colours (green added, red removed,
+  grey unchanged); flextable is a new suggested package.
+- [`classify_hf_outcomes()`](https://perisphere-rwe.github.io/peridefs/reference/classify_hf_outcomes.md)
+  classifies heart failure outcomes in diagnosis-level claims, as acute
+  heart failure hospitalizations and incident heart failure events,
+  using the version’s outcome code table (v2 only for now). Claims count
+  only if they fall strictly after `col_ref_date + min_event_days`. With
+  `exclude_prevalent_hf = TRUE` (the default) it errors if heart failure
+  claims appear before the reference date, since incident heart failure
+  is only meaningful for a cohort that excludes them; set it to `FALSE`
+  for recurrent-event studies. It works on local data frames and on lazy
+  tables (e.g., duckdb) through dplyr, which moves from Suggests to
+  Imports.
+- [`list_versions()`](https://perisphere-rwe.github.io/peridefs/reference/list_versions.md)
+  lists every released version of each condition, with its functions,
+  code count, and (after v1) release date and summary.
+- Each condition’s help page can now cover all of its versions, with a
+  generated “Version history” section listing the exact codes added and
+  removed in each version. Type 2 diabetes is the first:
+  [`?diabetes_type2_codes`](https://perisphere-rwe.github.io/peridefs/reference/diabetes_type2_codes.md)
+  (also
+  [`?get_diabetes_type2_v1_codes`](https://perisphere-rwe.github.io/peridefs/reference/diabetes_type2_codes.md)).
+
+### New definitions
+
+- Type 2 diabetes v2
+  ([`get_diabetes_type2_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/diabetes_type2_codes.md),
+  [`get_diabetes_type2_v2_defs()`](https://perisphere-rwe.github.io/peridefs/reference/diabetes_type2_codes.md),
+  `spec_diabetes_type2_v2`): ICD-10 type 2 diabetes (E11) codes only.
+  Compared with v1 it drops all 33 ICD-9 codes and the 7 E08/E09/E13
+  codes, and adds E11.A (in remission). Claims before October 1, 2015
+  cannot qualify through the diagnosis criteria. v1 is unchanged.
+- Heart failure v2
+  ([`get_hf_v2_codes()`](https://perisphere-rwe.github.io/peridefs/reference/hf_codes.md),
+  [`get_hf_v2_defs()`](https://perisphere-rwe.github.io/peridefs/reference/hf_codes.md),
+  `spec_hf_v2`): ICD-10 codes only; all 28 ICD-9 codes are dropped, so
+  claims and hospitalizations before October 1, 2015 cannot qualify. The
+  condition (history) definition is every billable I50 code; I11.0,
+  I13.0 and I13.2 are excluded because they require a secondary I50.x.
+  The outcome definition covers acute heart failure hospitalization (an
+  acute or acute-on-chronic I50 code as the primary diagnosis, or
+  I11.0/I13.0/I13.2 as primary with the required secondary codes) and
+  incident heart failure (any I50). Outcome code sets carry `acuity`,
+  `required_secondary` and `qualifies_as_primary` columns that describe
+  these rules; position rules themselves are applied outside the
+  package. All heart failure versions are documented together in
+  [`?hf_codes`](https://perisphere-rwe.github.io/peridefs/reference/hf_codes.md).
+  v1 is unchanged.
+
+### Internal
+
+- `CodeSpec` key lists can carry optional per-code `attributes` (a named
+  list of vectors parallel to `codes`, with `attributes_for` limiting
+  them to condition and/or outcome results). `get_codes()` appends them
+  after the five standard columns;
+  [`add_codes()`](https://perisphere-rwe.github.io/peridefs/reference/add_codes.md)
+  and
+  [`remove_codes()`](https://perisphere-rwe.github.io/peridefs/reference/remove_codes.md)
+  keep them aligned. `read_codeset()` reads extra columns of a frozen
+  code set CSV as attributes.
+- Released versions are frozen: `tests/testthat/test-frozen-versions.R`
+  snapshots every released spec, and released condition code sets are
+  built from `data-raw/codesets/*.csv`.
+- The build no longer uses the `icd` package; code expansion for new
+  versions uses the CMS ICD-10-CM file and a cached ICD-9-CM hierarchy.
+- `data-raw/build_specs.R` is split into one script per condition and
+  drug group under `data-raw/specs/`.
+
 ## peridefs 0.3.2
 
 ### New features

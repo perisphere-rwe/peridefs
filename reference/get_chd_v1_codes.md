@@ -11,11 +11,10 @@ get_chd_v1_codes(...)
 
 ## Arguments
 
-- component:
+- ...:
 
-  Not used (fixed to `"chd_v1"`); included only because it is inherited
-  from
-  [`get_ascvd_codes()`](https://perisphere-rwe.github.io/peridefs/reference/get_ascvd_codes.md).
+  Further arguments passed to the underlying ASCVD getter (e.g.
+  `variable_type`). `component` is fixed and cannot be supplied.
 
 ## See also
 

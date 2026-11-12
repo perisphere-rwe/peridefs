@@ -22,10 +22,11 @@ available component names.
 
 ## Condition specs (standalone, [CodeSpec](https://perisphere-rwe.github.io/peridefs/reference/CodeSpec.md))
 
-`spec_hypertension_v1`, `spec_hf_v1`, `spec_obesity_v1`,
+`spec_hypertension_v1`, `spec_hf_v1`, `spec_hf_v2`, `spec_obesity_v1`,
 `spec_diabetes_type1_v1`, `spec_diabetes_type2_v1`,
-`spec_depression_v1`, `spec_ckd_v1`, `spec_copd_v1`, `spec_asthma_v1`,
-`spec_osa_v1`, `spec_ohs_v1`, `spec_hyperlipidemia_v1`
+`spec_diabetes_type2_v2`, `spec_depression_v1`, `spec_ckd_v1`,
+`spec_copd_v1`, `spec_asthma_v1`, `spec_osa_v1`, `spec_ohs_v1`,
+`spec_osteoarthritis_v1`, `spec_hyperlipidemia_v1`
 
 ## ASCVD composite ([CompositeCodeSpec](https://perisphere-rwe.github.io/peridefs/reference/CompositeCodeSpec.md))
 

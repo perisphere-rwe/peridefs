@@ -24,6 +24,14 @@ The spec stores:
   - `definitions`: optional character vector of code definitions,
     parallel to `codes`.
 
+  - `attributes`: optional named list of extra per-code columns, each a
+    vector parallel to `codes` (e.g. `acuity`). They are appended after
+    the five standard columns of `get_codes()`.
+
+  - `attributes_for`: optional character vector (`"condition"` and/or
+    `"outcome"`) limiting which `variable_type` results include the
+    `attributes` columns. `NULL` (default) means both.
+
   - `exclusions`: optional character string describing codes to exclude.
 
 ## Active bindings
@@ -165,7 +173,8 @@ Retrieve codes from the spec as a tidy data frame.
 #### Returns
 
 A tibble with columns `type`, `code`, `priority`, `version`, and
-`definition`.
+`definition`, followed by any per-code `attributes` columns the spec
+defines for `variable_type`.
 
 ------------------------------------------------------------------------
 
