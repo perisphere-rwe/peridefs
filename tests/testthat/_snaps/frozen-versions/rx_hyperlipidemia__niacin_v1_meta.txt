@@ -1,0 +1,7 @@
+drug_class: niacin
+version: v1
+label: Niacin
+
+[defs]
+From the Perisphere lipid-lowering medication list. Includes GNNs containing 'NIACIN' (excluding niacinamide / 'NIACINA-') or 'NICOTINIC' (for nicotinic acid preparations).
+

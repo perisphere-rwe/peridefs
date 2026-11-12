@@ -1,0 +1,7 @@
+drug_class: tzd
+version: v1
+label: Thiazolidinediones (TZDs)
+
+[defs]
+Thiazolidinedione (TZD / glitazone) antidiabetic agents. From the Perisphere antidiabetic medication list.
+

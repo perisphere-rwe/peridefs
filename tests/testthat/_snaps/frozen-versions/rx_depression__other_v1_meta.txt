@@ -1,0 +1,7 @@
+drug_class: other
+version: v1
+label: Other Antidepressants
+
+[defs]
+Atypical and other-mechanism antidepressants, including NDRIs (bupropion), NaSSAs (mirtazapine), SARIs (nefazodone, trazodone), and serotonin modulators (vilazodone, vortioxetine). Note: perphenazine is intentionally excluded — see commented-out entry in generic_names.
+

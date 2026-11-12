@@ -1,0 +1,13 @@
+condition: copd
+version: v1
+label: Chronic Obstructive Pulmonary Disease (COPD)
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient, SNF, or home health agency claim with an ICD-9 diagnosis of {.strong 490.xx}, {.strong 491.0x}, {.strong 491.1x}, {.strong 491.8x}, {.strong 491.9x}, {.strong 491.20}–{.strong 491.22}, {.strong 492.0x}, {.strong 492.8x}, {.strong 494.0x}, {.strong 494.1x}, or {.strong 496.xx}, or an ICD-10 diagnosis of {.strong J40}, {.strong J410}–{.strong J418}, {.strong J42}, {.strong J430}–{.strong J439}, {.strong J440}–{.strong J449}, {.strong J470}–{.strong J479}, {.strong J4481}, or {.strong J4489} in any position.
+*: ≥2 outpatient or carrier claims with the same ICD codes in any position.
+
+[defs: outcome]
+<none>
+

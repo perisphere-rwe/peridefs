@@ -1,0 +1,7 @@
+drug_class: non_glp1
+version: v1
+label: Antiobesity (non GLP-1)
+
+[defs]
+From the Perisphere antiobesity (non GLP-1) medication list.
+

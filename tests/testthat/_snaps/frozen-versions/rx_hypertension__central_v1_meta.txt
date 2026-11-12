@@ -1,0 +1,7 @@
+drug_class: central
+version: v1
+label: Centrally Acting Agents
+
+[defs]
+Centrally acting antihypertensives from the Perisphere list. Note: exclude APRACLONIDINE when matching CLONIDINE.
+

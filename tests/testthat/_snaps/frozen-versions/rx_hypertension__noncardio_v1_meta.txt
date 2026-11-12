@@ -1,0 +1,7 @@
+drug_class: beta_noncardio
+version: v1
+label: Beta Blockers (Noncardioselective)
+
+[defs]
+Noncardioselective beta blockers from the Perisphere antihypertensive medication list.
+

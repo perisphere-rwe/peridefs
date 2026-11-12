@@ -1,0 +1,12 @@
+"type","code","condition","outcome"
+"dx_icd9","2720",TRUE,FALSE
+"dx_icd9","2721",TRUE,FALSE
+"dx_icd9","2722",TRUE,FALSE
+"dx_icd9","2723",TRUE,FALSE
+"dx_icd9","2724",TRUE,FALSE
+"dx_icd10","E780",TRUE,FALSE
+"dx_icd10","E781",TRUE,FALSE
+"dx_icd10","E782",TRUE,FALSE
+"dx_icd10","E783",TRUE,FALSE
+"dx_icd10","E784",TRUE,FALSE
+"dx_icd10","E785",TRUE,FALSE

@@ -1,0 +1,11 @@
+condition: obesity
+version: v1
+label: Obesity
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+*: ≥1 inpatient or outpatient claim with an ICD-9 diagnosis of {.strong 278.00}, {.strong 278.01}, {.strong 278.03}, {.strong V85.30}–{.strong V85.39}, or {.strong V85.41}–{.strong V85.45}, or an ICD-10 diagnosis of {.strong E66.0}, {.strong E66.01}, {.strong E66.09}, {.strong E66.2}, {.strong E66.811}, {.strong E66.812}, {.strong E66.813}, {.strong E66.89}, {.strong E66.9}, {.strong Z68.30}–{.strong Z68.39}, or {.strong Z68.41}–{.strong Z68.45} in any diagnosis position (BMI ≥30).
+
+[defs: outcome]
+*: ≥1 inpatient or outpatient claim with an ICD-9 diagnosis of {.strong 278.00}, {.strong 278.01}, {.strong 278.03}, {.strong V85.30}–{.strong V85.39}, or {.strong V85.41}–{.strong V85.45}, or an ICD-10 diagnosis of {.strong E66.0}, {.strong E66.01}, {.strong E66.09}, {.strong E66.2}, {.strong E66.811}, {.strong E66.812}, {.strong E66.813}, {.strong E66.89}, {.strong E66.9}, {.strong Z68.30}–{.strong Z68.39}, or {.strong Z68.41}–{.strong Z68.45} in any diagnosis position (BMI ≥30).
+

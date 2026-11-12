@@ -1,0 +1,13 @@
+condition: osteoarthritis
+version: v1
+label: Osteoarthritis
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis of {.strong 715.xx} (osteoarthrosis and allied disorders), or an ICD-10 diagnosis of {.strong M15.xx}–{.strong M19.xx} (polyosteoarthritis; osteoarthritis of hip, knee, first carpometacarpal joint; other and unspecified osteoarthritis) in any position.
+*: ≥2 outpatient or carrier claims with the same ICD codes in any position.
+
+[defs: outcome]
+<none>
+

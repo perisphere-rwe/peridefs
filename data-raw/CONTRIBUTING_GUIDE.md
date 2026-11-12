@@ -152,6 +152,15 @@ The section header word determines the `condition` / `outcome` flags:
 
 ### 4.1 ICD code formats used in the document
 
+The expansion helpers (`expand9()`, `expand10()`, `range9()`, `range10()`,
+`billable10()`, defined in `data-raw/specs/_helpers.R`) read official
+reference files, not the unmaintained `icd` package: the CMS FY2026 ICD-10-CM
+order file (cached in `data-raw/.cache/`) and
+`data-raw/reference/icd9cm_hierarchy.csv` for ICD-9-CM. They return every
+valid code under a prefix, including non-billable headers (e.g. `"I21"`).
+Use them only to author a **new** version; released versions read frozen
+codes (Section 11).
+
 | Document notation | Meaning | Expansion function |
 |---|---|---|
 | `410.xx` | Any defined subcode of 410 | `expand9("410")` |
@@ -216,8 +225,8 @@ fall_e_codes <- unique(c(
 ))
 ```
 
-Note: `range9("8800", "8889")` may fail if not all codes in the range are
-defined. Expand individual parent codes instead.
+`range9("8800", "8889")` also works: endpoints do not need to be defined
+codes, and every code under the last endpoint is included.
 
 ### 4.5 ICD-10-PCS procedure codes
 
@@ -235,7 +244,7 @@ chd_proc_icd10 <- expand_pcs(c("0210xxx", "0211xxx", "0212xxx", "0213xxx"))
 ### 4.6 HCPCS code ranges
 
 ```r
-# Helper defined in build_specs.R:
+# Helper defined in data-raw/specs/_helpers.R:
 hcpcs_range <- function(a, b) as.character(seq(as.integer(a), as.integer(b)))
 hcpcs_range("33510", "33519")   # → c("33510","33511",...,"33519")
 ```
@@ -424,9 +433,14 @@ my_icd10 <- c("N181","N182","N183","N184","N185","N186","N189","N19")
 cat("ICD-9:", length(my_icd9), "| ICD-10:", length(my_icd10), "\n")
 ```
 
-### Step 3 — Write the spec in `data-raw/build_specs.R`
+### Step 3 — Write the spec in `data-raw/specs/conditions/<condition>.R`
 
-Add the new spec **before** the `usethis::use_data(...)` call at the bottom.
+Each condition has its own script under `data-raw/specs/conditions/`, holding
+every version of that condition (v1, v2, ...). For a new condition, create the
+file and add it to `build_scripts` in `data-raw/build_specs.R` (after any
+script whose `spec_*` objects it uses). Each script runs in its own
+environment: helper vectors such as `my_icd9` stay local to the file, and only
+objects named `spec_*` are passed on to later scripts and to `use_data()`.
 Each version is its own `CodeSpec$new()` call (there is no `versions = list()`
 wrapper in the current API):
 
@@ -451,22 +465,24 @@ spec_my_condition <- CodeSpec$new(
   ),
   codes = list(
     dx_icd9  = make_key(
-      my_icd9,  c("580.xx-588.xx"),   # abbreviated form for display
+      "dx_icd9", my_icd9,
       condition = rep(TRUE, length(my_icd9)),
       outcome   = rep(FALSE, length(my_icd9))
     ),
-    dx_icd10 = make_key(
-      my_icd10, my_icd10             # ICD-10 often already specific; use as-is
-    )
+    dx_icd10 = make_key("dx_icd10", my_icd10)  # condition and outcome both TRUE
   )
 )
 ```
+
+While a version is unreleased, its `codes` are derived like this. When it is
+released, its codes are frozen to a CSV and `codes =` switches to
+`read_codeset()` (see "Releasing a new version" in Section 11).
 
 If a v2 exists with the same codes but a different narrative, construct a
 second `CodeSpec$new(..., version = "v2", ...)` object reusing the same code
 vectors (see Section 11).
 
-### Step 4 — Add to `usethis::use_data()` at the bottom of build_specs.R
+### Step 4 — Add to `usethis::use_data()` at the bottom of `data-raw/build_specs.R`
 
 ```r
 usethis::use_data(
@@ -566,7 +582,12 @@ for (j in i:(i + 20)) {
 
 Determine which format is used (Section 5.1) and collect GNNs accordingly.
 
-### Step 2 — Write the DrugSpec in `data-raw/build_specs.R`
+### Step 2 — Write the DrugSpec in `data-raw/specs/drugs/<group>.R`
+
+Each medication group (e.g. antihypertensives) has one script under
+`data-raw/specs/drugs/` holding its leaf `DrugSpec`s and its
+`CompositeDrugSpec`. A new group needs a new file added to `build_scripts` in
+`data-raw/build_specs.R`.
 
 Each version is its own `DrugSpec$new()` call. There is no `ndc` argument —
 `DrugSpec` no longer carries NDC codes:
@@ -681,15 +702,119 @@ get_my_drug_composite_defs     <- make_drug_def_getter(spec_my_drug_composite, c
   argument to `CodeSpec$new()` / `DrugSpec$new()`.
 - The document signals version differences with "(with medications)", "(without
   medications)", "from anti-hypertensive medication list", "from FDB", etc.
-- Only bump the version number (`_v2`, `_v3`, ...) when the code set or
-  generic list actually changes. If two candidate versions would share
-  identical codes/generics and differ only in the narrative `defs` text
-  (e.g., whether a medication criterion is mentioned), do **not** create a
-  second version — just update the single version's `defs` in place to the
-  most current narrative (see issue #4).
+- Bump the version number (`_v2`, `_v3`, ...) for any change that could
+  change which patients a definition selects: codes added or removed,
+  condition/outcome flags, generics or their priority tiers, or the
+  algorithm described in `defs` (number of claims, claim/file types,
+  diagnosis position, days apart, look-back window, medication criteria).
+- Edits to `defs` that leave the algorithm unchanged (typos, wording,
+  formatting) may be made in place on a released version. The frozen-version
+  tests will fail on the spec's `_meta.txt` snapshot; confirm the diff is
+  wording only, accept it with `testthat::snapshot_accept("frozen-versions")`,
+  and note it in `NEWS.md`.
+- Do not create two versions that share identical codes/generics and an
+  equivalent algorithm (see issue #4).
 - There is no `"latest"` version resolution mechanism — every exported wrapper
   function (`get_hypertension_v1_codes()`, `get_acei_v2_codes()`, etc.) is bound to one
   specific spec object at `R/conditions.R`/`R/drugs.R` authoring time.
+
+### Frozen released versions
+
+Released versions are locked by `tests/testthat/test-frozen-versions.R`.
+Every released leaf spec (condition code sets with their condition/outcome
+flags, drug generics with priority/condition/brands, and each spec's
+narrative `defs`) is written to a text snapshot in
+`tests/testthat/_snaps/frozen-versions/`, along with the component
+structure of every composite spec. Code descriptions (the `definition`
+column) are not frozen, so they can be refreshed from newer CMS/NLM files.
+
+- **Changing a released version fails the tests.** Revert the change and
+  create a new version (`_v2`) instead. Accept a changed snapshot
+  (`testthat::snapshot_accept("frozen-versions")`) only for a deliberate,
+  documented correction, and record it in `NEWS.md`.
+- **Releasing a new version:** add its id to `.released_condition_specs`
+  (`"<condition>_<version>"`) or `.released_drug_specs`
+  (`"<composite object>/<component>"`) in
+  `tests/testthat/helper-released-versions.R`, run the tests
+  once to record its snapshot, review the new files, and commit them. A
+  version that exists in the package but is missing from a manifest fails
+  the tests, as does a released version that has been removed.
+- Adding a component to a composite changes `composites.txt`; review that
+  diff before accepting it, since it can change a composite's defaults.
+
+### Frozen code sets
+
+Released condition versions do not re-derive their codes at build time. Each
+reads its exact code set (code types, codes, order, and condition/outcome
+flags) from `data-raw/codesets/<condition>_<version>.csv`:
+
+```r
+spec_chd_v1 <- CodeSpec$new(
+  condition = "chd", version = "v1", ...,
+  codes = read_codeset("chd_v1")
+)
+```
+
+So a released version can't drift when reference files are updated, and the
+build doesn't depend on the `icd` package. The code that originally derived
+each v1 code set is kept, commented out, in the condition's script as a
+record of how it was built. Definitions (the `definition` column) are still
+looked up at build time.
+
+`tests/testthat/test-codesets.R` checks that every released condition version
+has a CSV, that each CSV matches the built spec exactly, and that there are no
+CSVs for unreleased versions. **Never edit a released CSV.**
+
+### Releasing a new version (e.g. `diabetes_type2_v2`)
+
+1. In `data-raw/specs/conditions/diabetes.R`, add `spec_diabetes_type2_v2`
+   next to v1, deriving its codes with the expansion helpers (Section 4).
+   Leave v1 untouched.
+2. Add the exported wrappers (`get_diabetes_type2_v2_codes()` /
+   `_defs()`) to `R/conditions.R` on the condition's shared help page (see
+   "Documenting versions" below), and the new object to `use_data()` in
+   `data-raw/build_specs.R`. Add `spec_diabetes_type2_v2` to the list and
+   `@aliases` in `R/specs_data.R`, and the new functions to `_pkgdown.yml`.
+3. Rebuild (`source("data-raw/build_specs.R")`) and review the codes.
+4. Freeze the code set:
+   ```r
+   source("data-raw/freeze_codeset.R")
+   freeze_codeset(spec_diabetes_type2_v2)   # writes data-raw/codesets/diabetes_type2_v2.csv
+   ```
+5. Replace the v2 `codes = list(...)` with
+   `codes = read_codeset("diabetes_type2_v2")`, and comment out the
+   derivation code above it.
+6. Add `"diabetes_type2_v2"` to `.released_condition_specs` in
+   `tests/testthat/helper-released-versions.R`, and a row for it to
+   `.version_log` in `R/changelog.R` (date, one-line summary, rationale).
+   Tests fail until both are done.
+7. Rebuild, run `devtools::document()` and `devtools::test()` (which records
+   the new snapshots), review the snapshots and the help page, and commit the
+   CSV, the snapshots, and the code together. Add a `NEWS.md` entry.
+
+Check the result with `get_version_diffs("diabetes_type2", c(1, 2))` and
+`list_versions("diabetes_type2")`.
+
+### Documenting versions
+
+All versions of a condition share one help page, named `<condition>_codes`
+(e.g. `?diabetes_type2_codes`; `?get_diabetes_type2_v1_codes` still works
+because every function is an alias). The type 2 diabetes block in
+`R/conditions.R` is the template:
+
+- a `@name diabetes_type2_codes` block (documenting `NULL`) with a
+  version-neutral `@description`, a `@section Versions:` describing each
+  version in a sentence or two, and
+- `@section Version history:` containing only
+  `` `r .rd_version_history("diabetes_type2")` ``. This is generated at
+  `devtools::document()` time from `.version_log` plus
+  `get_version_diffs()`: release date, summary, rationale, and the exact
+  codes added and removed (by code type, separately for condition and
+  outcome codes when they differ). Never type code lists into the docs.
+- every getter, for every version, tagged `@rdname diabetes_type2_codes`.
+
+Conditions that still have only v1 keep their existing page. Convert a
+condition to this layout when you release its v2.
 
 ---
 
@@ -736,11 +861,12 @@ committed `data/*.rda` files still returned old-shaped output (missing the
 `priority`/`type`/`class` columns, or erroring on the new `priority=` argument)
 until `build_specs.R` was re-run.
 
-### Pitfall 2: `range9()` / `range10()` failing on undefined endpoints
+### Pitfall 2: Expansion helpers include non-billable headers
 
-These functions use `icd::expand_range()` with `defined = TRUE`. If either
-endpoint is not in the ICD reference database, the call errors. Fall back to
-individual `expand9()` calls on parent codes.
+`expand10("I21")` returns `"I21"`, `"I210"`, and so on as well as the billable
+leaf codes, matching how released code sets were built. Wrap the result in
+`billable10()` if a definition should only contain billable ICD-10-CM codes.
+`range9()` / `range10()` accept endpoints that are not themselves valid codes.
 
 ### Pitfall 3: Abbreviated vs. codes not parallel
 
@@ -809,7 +935,13 @@ i <- tail(idx, 1)
 
 | File | Purpose |
 |---|---|
-| `data-raw/build_specs.R` | **Main build script.** Add new spec definitions here, then run it. |
+| `data-raw/build_specs.R` | **Main build script.** Sources the helpers and every spec script (in the order listed in `build_scripts`), then saves the public specs with `usethis::use_data()`. Run it to rebuild `data/*.rda`. |
+| `data-raw/specs/_helpers.R` | Shared build helpers: `expand9()`/`expand10()`, `range9()`/`range10()`, `billable10()` (CMS-file based), `hcpcs_range()`, `make_key()`, `make_key_condition_only()`, `read_codeset()`. Sources `build_definitions.R`. |
+| `data-raw/codesets/*.csv` | Frozen code sets of released condition versions (`type`, `code`, `condition`, `outcome`). Never edited. |
+| `data-raw/freeze_codeset.R` | `freeze_codeset(spec)`: writes a newly released version's CSV. Refuses to overwrite. |
+| `data-raw/reference/icd9cm_hierarchy.csv` | Every defined ICD-9-CM diagnosis code with its description (exported once from `icd::icd9cm_hierarchy`). Used for ICD-9 expansion and parent-code descriptions. |
+| `data-raw/specs/conditions/*.R` | One script per condition, holding every version of it. |
+| `data-raw/specs/drugs/*.R` | One script per medication group: leaf `DrugSpec`s plus the group's `CompositeDrugSpec`. |
 | `data-raw/download_pcs_codes.R` | Downloads FY ICD-10-PCS reference from CMS. Run when updating fiscal year. |
 | `data-raw/parse_docx.R` | Helper functions for reading the Word document XML. |
 | `R/CodeSpec.R` | R6 class for condition code specs. `get_codes()` returns a tibble (`type`, `code`, `priority`, `version`) and handles outcome→condition fallback internally. |
@@ -825,7 +957,7 @@ i <- tail(idx, 1)
 | `R/code_spec_api.R` | Exported user API: `code_spec()`, `drug_spec()`, `add_codes()`, `remove_codes()`, `modify_code_spec()`, `modify_drug_spec()`. |
 | `data/spec_*.rda` | Pre-built spec objects (one file per spec). **Must be regenerated by re-running `build_specs.R` after any class change** — see Pitfall 1. |
 | `R/sysdata.rda` | Internal: `pcs_codes` (79,115 valid ICD-10-PCS codes, FY2026). |
-| `tests/testthat/` | Test files. Run `devtools::test()` after every change. |
+| `tests/testthat/` | Test files. Run `devtools::test()` after every change. `helper-released-versions.R` holds the release manifests; `test-frozen-versions.R` and `test-codesets.R` enforce them. |
 
 There is no longer a `get_codes()`/`get_generics()`/`get_ndc()` top-level
 dispatcher file — those were dead, unexported code from an earlier design and
@@ -931,12 +1063,13 @@ distinctive. Do not duplicate across sub-specs.
 
 ### 17.5 Step 4 — Check for cross-spec overlaps
 
-After editing `build_specs.R`, confirm no `GNRC_NM` appears in more than one
+After editing the drug scripts in `data-raw/specs/drugs/`, confirm no `GNRC_NM` appears in more than one
 distinct sub-spec class. Overlaps within v1/v2 pairs of the same class are
 expected and fine.
 
 ```r
-lines       <- readLines("data-raw/build_specs.R")
+drug_files  <- list.files("data-raw/specs/drugs", pattern = "\\.R$", full.names = TRUE)
+lines       <- unlist(lapply(drug_files, readLines, encoding = "UTF-8"))
 spec_starts <- which(str_detect(lines, "DrugSpec\\$new\\(") &
                      !str_detect(lines, "CompositeDrugSpec\\$new\\("))
 spec_names  <- str_extract(lines[spec_starts], "^(\\w+)\\s*<-") |>
@@ -995,8 +1128,6 @@ library(stringr)
 
 gnrc_lookup <- setNames(mc_gnrc$n, mc_gnrc$GNRC_NM)
 fmt_n <- function(n) format(n, big.mark = ",", scientific = FALSE, trim = TRUE)
-lines <- readLines("data-raw/build_specs.R")
-
 uparen <- function(s) {
   s2 <- str_replace_all(s, '"[^"]*"', "")
   str_count(s2, fixed("(")) - str_count(s2, fixed(")"))
@@ -1031,54 +1162,59 @@ BLOCK_PAT <- paste0(
   "^\\s*(", DRUG_CLASS_NAMES, ")\\s*=\\s*c\\("
 )
 
-in_block <- FALSE; depth <- 0L
-out <- vector("list", length(lines) + 600L); oi <- 0L
-push <- function(x) { oi <<- oi + 1L; out[[oi]] <<- x }
+# Annotate every drug script in place.
+drug_files <- list.files("data-raw/specs/drugs", pattern = "\\.R$", full.names = TRUE)
+for (path in drug_files) {
+  lines <- readLines(path, encoding = "UTF-8")
+  in_block <- FALSE; depth <- 0L
+  out <- vector("list", length(lines) + 600L); oi <- 0L
+  push <- function(x) { oi <<- oi + 1L; out[[oi]] <<- x }
 
-for (line in lines) {
-  is_start <- str_detect(line, BLOCK_PAT)
-  pd       <- uparen(line)
-  if (!in_block && !is_start) { push(line); next }
-  if (!in_block) {
-    depth <- pd; in_block <- (depth > 0L)
-  } else {
-    depth <- depth + pd
-    if (depth <= 0L) in_block <- FALSE
-  }
-  line_nc <- strip_comment(line)
-  strs    <- str_extract_all(line_nc, '"([^"]*)"')[[1L]] |> str_sub(2L, -2L)
-  if (length(strs) == 0L) { push(line); next }
-  masked      <- str_replace_all(line_nc, '"[^"]*"', "")
-  close_comma <- str_detect(masked, "\\),\\s*$")
-  indent      <- str_extract(line_nc, "^\\s*")
-  emit_close  <- (is_start && pd <= 0L) || (!is_start && pd < 0L)
-  if (length(strs) == 1L) {
-    gnn <- strs[[1L]]
-    if (gnn %in% names(gnrc_lookup)) {
-      ec  <- trailing_comment(line)
-      cmt <- if (!is.na(ec) && !str_detect(ec, "n=[0-9,]+ in MC Rx table"))
-               paste0("  ", ec, "; n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-             else
-               paste0("  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-      push(paste0(line_nc, cmt))
-    } else { push(line) }
-  } else {
-    if (is_start) {
-      prefix     <- str_extract(line_nc, "^.*=\\s*c\\(")
-      str_indent <- paste0(str_extract(prefix, "^\\s*"), "  ")
-      push(prefix)
-    } else { str_indent <- indent }
-    for (j in seq_along(strs)) {
-      gnn   <- strs[[j]]
-      sline <- paste0(str_indent, '"', gnn, '",');
-      if (gnn %in% names(gnrc_lookup))
-        sline <- paste0(sline, "  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
-      push(sline)
+  for (line in lines) {
+    is_start <- str_detect(line, BLOCK_PAT)
+    pd       <- uparen(line)
+    if (!in_block && !is_start) { push(line); next }
+    if (!in_block) {
+      depth <- pd; in_block <- (depth > 0L)
+    } else {
+      depth <- depth + pd
+      if (depth <= 0L) in_block <- FALSE
     }
-    if (emit_close) push(paste0(indent, if (close_comma) ")," else ")"))
+    line_nc <- strip_comment(line)
+    strs    <- str_extract_all(line_nc, '"([^"]*)"')[[1L]] |> str_sub(2L, -2L)
+    if (length(strs) == 0L) { push(line); next }
+    masked      <- str_replace_all(line_nc, '"[^"]*"', "")
+    close_comma <- str_detect(masked, "\\),\\s*$")
+    indent      <- str_extract(line_nc, "^\\s*")
+    emit_close  <- (is_start && pd <= 0L) || (!is_start && pd < 0L)
+    if (length(strs) == 1L) {
+      gnn <- strs[[1L]]
+      if (gnn %in% names(gnrc_lookup)) {
+        ec  <- trailing_comment(line)
+        cmt <- if (!is.na(ec) && !str_detect(ec, "n=[0-9,]+ in MC Rx table"))
+                 paste0("  ", ec, "; n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+               else
+                 paste0("  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+        push(paste0(line_nc, cmt))
+      } else { push(line) }
+    } else {
+      if (is_start) {
+        prefix     <- str_extract(line_nc, "^.*=\\s*c\\(")
+        str_indent <- paste0(str_extract(prefix, "^\\s*"), "  ")
+        push(prefix)
+      } else { str_indent <- indent }
+      for (j in seq_along(strs)) {
+        gnn   <- strs[[j]]
+        sline <- paste0(str_indent, '"', gnn, '",');
+        if (gnn %in% names(gnrc_lookup))
+          sline <- paste0(sline, "  # n=", fmt_n(gnrc_lookup[[gnn]]), " in MC Rx table")
+        push(sline)
+      }
+      if (emit_close) push(paste0(indent, if (close_comma) ")," else ")"))
+    }
   }
+  writeLines(unlist(out[seq_len(oi)]), path, useBytes = TRUE)
 }
-writeLines(unlist(out[seq_len(oi)]), "data-raw/build_specs.R")
 ```
 
 **Notes on interpreting annotations:**
@@ -1109,7 +1245,7 @@ medications_11262026.docx`):
    `data-raw/parse_docx.R`.
 2. Reload the `texts` vector into the R session (Section 2).
 3. For each changed definition, find the new section content, update the code
-   expansion and defs text in `build_specs.R`.
+   expansion and defs text in the relevant script under `data-raw/specs/`.
 4. If the ICD-10-PCS fiscal year has changed, run `data-raw/download_pcs_codes.R`
    first to update `R/sysdata.rda`.
 5. Re-run `build_specs.R`, reload, run tests, run check.

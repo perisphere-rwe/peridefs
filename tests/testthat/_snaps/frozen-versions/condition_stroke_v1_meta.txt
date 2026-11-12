@@ -1,0 +1,13 @@
+condition: stroke
+version: v1
+label: Stroke (Any)
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 overnight inpatient claim with a discharge diagnosis for stroke (ICD-9: {.strong 430.xx}, {.strong 431.xx}, {.strong 433.x1}, {.strong 434.x1}, {.strong 436.x}; ICD-10: {.strong I60.xx}, {.strong I61.xx}, {.strong I63.xx}, {.strong I67.89}, {.strong I67850}, {.strong I67858}) in any discharge diagnosis position.
+*: ≥2 outpatient claims on separate days with the same codes.
+
+[defs: outcome]
+*: Overnight inpatient claim with a {.emph primary} discharge diagnosis for stroke (same ICD codes as condition definition). Claims ≤1 day apart are combined into a single episode of care.
+

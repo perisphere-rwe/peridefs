@@ -1,0 +1,7 @@
+drug_class: sulfonylurea
+version: v1
+label: Sulfonylureas
+
+[defs]
+Sulfonylurea antidiabetic agents (first- and second-generation). From the Perisphere antidiabetic medication list.
+

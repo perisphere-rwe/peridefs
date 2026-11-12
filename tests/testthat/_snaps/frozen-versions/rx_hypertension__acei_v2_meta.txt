@@ -1,0 +1,7 @@
+drug_class: acei
+version: v2
+label: ACE Inhibitors
+
+[defs]
+From First Data Bank (FDB).
+

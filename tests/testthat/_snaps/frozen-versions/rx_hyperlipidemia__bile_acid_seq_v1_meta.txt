@@ -1,0 +1,7 @@
+drug_class: bile_acid_seq
+version: v1
+label: Bile Acid Sequestrants
+
+[defs]
+From the Perisphere lipid-lowering medication list.
+

@@ -103,3 +103,57 @@ test_that("spec_hypertension_v1's condition def includes the medication criterio
   # complete (formerly v2) narrative, which mentions spec_hypertension.
   expect_true(any(grepl("spec_hypertension", spec_hypertension_v1$get_defs("condition"))))
 })
+
+test_that("CodeSpec returns per-code attributes after the standard columns, honouring attributes_for", {
+  mk <- function(attributes_for = NULL) {
+    CodeSpec$new(
+      condition = "toy", label = "Toy", version = "v1",
+      codes = list(
+        dx_icd10 = list(
+          codes = c("A01", "A02", "A03"), condition = c(TRUE, TRUE, FALSE),
+          outcome = c(TRUE, TRUE, TRUE), definitions = c("a", "b", "c"),
+          attributes = list(grade = c("x", NA, "z"), flag = c(TRUE, FALSE, TRUE)),
+          attributes_for = attributes_for
+        ),
+        dx_icd9 = list(codes = "001", condition = TRUE, outcome = TRUE,
+                       definitions = "nine")
+      )
+    )
+  }
+  base <- c("type", "code", "priority", "version", "definition")
+
+  both <- mk()$get_codes(variable_type = "outcome")
+  expect_identical(names(both), c(base, "grade", "flag"))
+  expect_identical(both$grade, c("x", NA, "z", NA))
+  expect_identical(both$flag, c(TRUE, FALSE, TRUE, NA))
+
+  # Only the requested variable_type gets the extra columns
+  out_only <- mk("outcome")
+  expect_identical(names(out_only$get_codes(variable_type = "condition")), base)
+  expect_identical(names(out_only$get_codes(variable_type = "outcome")), c(base, "grade", "flag"))
+
+  # The attribute values follow the same mask as the codes
+  cond <- mk()$get_codes(variable_type = "condition", code_type = "dx_icd10")
+  expect_identical(cond$code, c("A01", "A02"))
+  expect_identical(cond$grade, c("x", NA))
+})
+
+test_that("add_codes() and remove_codes() keep attributes parallel to codes", {
+  spec <- CodeSpec$new(
+    condition = "toy", label = "Toy", version = "v1",
+    codes = list(dx_icd10 = list(
+      codes = c("A01", "A02"), condition = c(TRUE, TRUE), outcome = c(TRUE, TRUE),
+      attributes = list(grade = c("x", "y"), flag = c(TRUE, FALSE))
+    ))
+  )
+  added <- add_codes(spec, dx_icd10 = "A09")
+  at <- .private(added)$.codes$dx_icd10$attributes
+  expect_identical(at$grade, c("x", "y", NA))
+  expect_identical(at$flag, c(TRUE, FALSE, NA))
+
+  removed <- remove_codes(added, dx_icd10 = "A01")
+  at <- .private(removed)$.codes$dx_icd10$attributes
+  expect_identical(at$grade, c("y", NA))
+  expect_identical(at$flag, c(FALSE, NA))
+  expect_identical(removed$get_codes()$code, c("A02", "A09"))
+})

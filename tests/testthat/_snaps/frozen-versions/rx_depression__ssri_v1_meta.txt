@@ -1,0 +1,7 @@
+drug_class: ssri
+version: v1
+label: SSRIs
+
+[defs]
+Selective serotonin reuptake inhibitors (SSRIs).
+

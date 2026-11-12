@@ -21,6 +21,12 @@ belongs to the condition/history definition.
 \item \code{outcome}: logical vector parallel to \code{codes}; \code{TRUE} if the code
 belongs to the outcome definition.
 \item \code{definitions}: optional character vector of code definitions, parallel to \code{codes}.
+\item \code{attributes}: optional named list of extra per-code columns, each a
+vector parallel to \code{codes} (e.g. \code{acuity}). They are appended after the
+five standard columns of \code{get_codes()}.
+\item \code{attributes_for}: optional character vector (\code{"condition"} and/or
+\code{"outcome"}) limiting which \code{variable_type} results include the
+\code{attributes} columns. \code{NULL} (default) means both.
 \item \code{exclusions}: optional character string describing codes to exclude.
 }
 }
@@ -137,7 +143,9 @@ spec has no codes flagged for \code{"outcome"}, falls back to \code{"condition"}
     \if{html}{\out{</div>}}
   }
   \subsection{Returns}{
-    A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version}, and \code{definition}.
+    A tibble with columns \code{type}, \code{code}, \code{priority}, \code{version}, and
+\code{definition}, followed by any per-code \code{attributes} columns the spec
+defines for \code{variable_type}.
   }
 }
 

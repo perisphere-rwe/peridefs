@@ -1,0 +1,14 @@
+condition: diabetes_type1
+version: v1
+label: Type 1 Diabetes Mellitus
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with a discharge ICD-9 Type 1 diabetes diagnosis ({.strong 250.x1}, {.strong 250.x3}) or an ICD-10 Type 1 diagnosis (E10.xx) in any discharge position.
+*: ≥2 carrier/outpatient claims with the same ICD codes in any position, occurring at least 7 days apart.
+*: ≥1 pharmacy claim for insulin or an amylin analogue (see {.strong spec_diabetes_type1}).
+
+[defs: outcome]
+<none>
+

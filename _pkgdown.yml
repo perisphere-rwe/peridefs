@@ -59,6 +59,12 @@ reference:
   desc: |
     All exported `spec_*` data objects. Each version of a condition or drug class is a distinct `_vX`-named object. Composite specs contain named versioned components accessible via `component=` (or `component = "all"` to union everything). Print any spec to see its definitions and component names.
   contents: spec_objects
+- title: Comparing Versions
+  desc: |
+    Every released version of a condition stays available unchanged. List the versions of a condition and see exactly which codes changed between any of them.
+  contents:
+  - list_versions
+  - get_version_diffs
 - title: 'Conditions: Cardiovascular'
   desc: |
     Hypertension, heart failure, and the ASCVD composite. ASCVD's components (`chd_v1`, `stroke_v1`, `lead_pad_v1`, `cerebrovasc_disease_v1`) are also directly exported below, as thin wrappers around `get_ascvd_codes(component = ...)`/`get_ascvd_defs(component = ...)`.
@@ -67,6 +73,9 @@ reference:
   - get_hypertension_v1_defs
   - get_hf_v1_codes
   - get_hf_v1_defs
+  - get_hf_v2_codes
+  - get_hf_v2_defs
+  - classify_hf_outcomes
   - get_ascvd_codes
   - get_ascvd_defs
   - get_chd_v1_codes
@@ -87,6 +96,8 @@ reference:
   - get_diabetes_type1_v1_defs
   - get_diabetes_type2_v1_codes
   - get_diabetes_type2_v1_defs
+  - get_diabetes_type2_v2_codes
+  - get_diabetes_type2_v2_defs
   - get_hyperlipidemia_v1_codes
   - get_hyperlipidemia_v1_defs
   - get_ckd_v1_codes

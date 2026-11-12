@@ -1,0 +1,7 @@
+drug_class: beta_int_sym
+version: v2
+label: Beta Blockers (Intrinsic Sympathomimetic Activity)
+
+[defs]
+ISA beta blockers from FDB. Excludes CARTEOLOL and PENBUTOLOL.
+

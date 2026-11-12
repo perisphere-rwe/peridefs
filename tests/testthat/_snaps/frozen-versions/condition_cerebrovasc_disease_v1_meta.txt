@@ -1,0 +1,15 @@
+condition: cerebrovasc_disease
+version: v1
+label: Cerebrovascular Disease
+code types: dx_icd9, dx_icd10, proc_icd9, proc_icd10, cpt
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis of {.strong 433.x1} or {.strong 434.x1}, or an ICD-10 diagnosis of {.strong I63.xx} in any position.
+*: ≥1 outpatient or carrier claim with the same codes.
+*: ≥1 claim with the same codes in HHA, DME, Hospice, or SNF files.
+*: ≥1 inpatient/outpatient claim with an ICD-9 procedure code for carotid endarterectomy or revascularization ({.strong 38.42}, {.strong 38.12}, {.strong 39.90}, {.strong 00.63}), an ICD-10-PCS code for carotid stenting, or a CPT code for carotid revascularization ({.strong 35301}, {.strong 35390}, {.strong 37215}, {.strong 37216}, {.strong 0005T}, {.strong 0075T}, {.strong 0076T}).
+
+[defs: outcome]
+<none>
+

@@ -1,0 +1,7 @@
+drug_class: diuretics_thiazide
+version: v1
+label: Diuretics (Thiazide and Thiazide-Type)
+
+[defs]
+Thiazide diuretics from the Perisphere antihypertensive medication list.
+

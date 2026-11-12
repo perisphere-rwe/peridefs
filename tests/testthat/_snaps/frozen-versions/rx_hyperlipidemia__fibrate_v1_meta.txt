@@ -1,0 +1,7 @@
+drug_class: fibrate
+version: v1
+label: Fibrates
+
+[defs]
+From the Perisphere lipid-lowering medication list.
+

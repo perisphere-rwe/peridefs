@@ -1,0 +1,3 @@
+type,code,condition,outcome
+"dx_icd10","E662","TRUE","FALSE"
+"dx_icd9","27803","TRUE","FALSE"

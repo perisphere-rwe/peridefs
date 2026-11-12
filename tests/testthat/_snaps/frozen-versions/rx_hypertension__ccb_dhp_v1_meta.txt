@@ -1,0 +1,7 @@
+drug_class: ccb_dhp
+version: v1
+label: Calcium Channel Blockers (Dihydropyridines)
+
+[defs]
+Dihydropyridine CCBs from the Perisphere antihypertensive medication list and FDB.
+

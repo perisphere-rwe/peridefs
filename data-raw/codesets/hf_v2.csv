@@ -1,0 +1,27 @@
+"type","code","condition","outcome","acuity","required_secondary","qualifies_as_primary"
+"dx_icd10","I110",FALSE,TRUE,NA,"I50.x",TRUE
+"dx_icd10","I130",FALSE,TRUE,NA,"I50.x + N18.x",TRUE
+"dx_icd10","I132",FALSE,TRUE,NA,"I50.x + N18.x",TRUE
+"dx_icd10","I501",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5020",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5021",TRUE,TRUE,"acute","none",TRUE
+"dx_icd10","I5022",TRUE,TRUE,"chronic","none",FALSE
+"dx_icd10","I5023",TRUE,TRUE,"acute_on_chronic","none",TRUE
+"dx_icd10","I5030",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5031",TRUE,TRUE,"acute","none",TRUE
+"dx_icd10","I5032",TRUE,TRUE,"chronic","none",FALSE
+"dx_icd10","I5033",TRUE,TRUE,"acute_on_chronic","none",TRUE
+"dx_icd10","I5040",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5041",TRUE,TRUE,"acute","none",TRUE
+"dx_icd10","I5042",TRUE,TRUE,"chronic","none",FALSE
+"dx_icd10","I5043",TRUE,TRUE,"acute_on_chronic","none",TRUE
+"dx_icd10","I50810",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I50811",TRUE,TRUE,"acute","none",TRUE
+"dx_icd10","I50812",TRUE,TRUE,"chronic","none",FALSE
+"dx_icd10","I50813",TRUE,TRUE,"acute_on_chronic","none",TRUE
+"dx_icd10","I50814",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5082",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5083",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5084",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I5089",TRUE,TRUE,"unspecified","none",FALSE
+"dx_icd10","I509",TRUE,TRUE,"unspecified","none",FALSE

@@ -1,0 +1,14 @@
+condition: lead_pad
+version: v1
+label: lower extremity artery disease (LEAD) / peripheral artery disease (PAD)
+code types: dx_icd9, dx_icd10, cpt
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 hospitalization with a discharge diagnosis code of atherosclerosis or thrombosis of arteries of the extremities in any discharge diagnosis position.
+*: ≥2 outpatient physician visits with a diagnosis code of atherosclerosis or thrombosis of arteries of the  extremities in any discharge position on separate days.
+*: ≥1 CPT code of {.strong 37205}, {.strong 75962}, {.strong 36902}, {.strong 36905}, {.strong 37246}, or {.strong 37247.}
+
+[defs: outcome]
+<none>
+

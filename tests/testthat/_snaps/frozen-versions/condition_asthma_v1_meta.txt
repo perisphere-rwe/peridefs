@@ -1,0 +1,13 @@
+condition: asthma
+version: v1
+label: Asthma
+code types: dx_icd9, dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis of {.strong 493.xx}, or an ICD-10 diagnosis of {.strong J45.xx} in any position.
+*: ≥2 outpatient or carrier claims with the same ICD codes in any position.
+
+[defs: outcome]
+<none>
+

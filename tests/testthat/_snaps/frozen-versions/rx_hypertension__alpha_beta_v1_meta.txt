@@ -1,0 +1,7 @@
+drug_class: alpha_beta
+version: v1
+label: Alpha-Beta Blockers
+
+[defs]
+From the Perisphere antihypertensive medication list.
+

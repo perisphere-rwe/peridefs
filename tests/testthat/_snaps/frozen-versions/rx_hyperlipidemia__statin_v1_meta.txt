@@ -1,0 +1,7 @@
+drug_class: statin
+version: v1
+label: Statins (HMG-CoA Reductase Inhibitors)
+
+[defs]
+From the Perisphere lipid-lowering medication list.
+

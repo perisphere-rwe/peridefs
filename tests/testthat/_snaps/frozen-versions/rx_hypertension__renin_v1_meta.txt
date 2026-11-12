@@ -1,0 +1,7 @@
+drug_class: renin
+version: v1
+label: Direct Renin Inhibitors
+
+[defs]
+Direct renin inhibitors from the Perisphere antihypertensive medication list.
+

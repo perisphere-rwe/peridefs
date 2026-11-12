@@ -111,14 +111,17 @@ icd10_defs     <- function(codes) .defs_lookup(codes, .defs_icd10cm_table())
 icd10pcs_defs  <- function(codes) .defs_lookup(codes, .defs_icd10pcs_table())
 
 # The CMS v32 file lists only billable (5-digit/leaf) codes. Non-billable
-# parents (e.g. 250, 4030) fall back to the icd package hierarchy. Its
+# parents (e.g. 250, 4030) fall back to the ICD-9-CM hierarchy in
+# data-raw/reference/icd9cm_hierarchy.csv (exported once from the icd
+# package's icd9cm_hierarchy; ICD-9-CM no longer changes). Its
 # descriptions below the 3-digit level are fragments (e.g. "Malignant"), so
 # they are prefixed with the 3-digit category title.
 .defs_icd9_parent_table <- local({
   tbl <- NULL
   function() {
     if (is.null(tbl)) {
-      h <- icd::icd9cm_hierarchy
+      h <- utils::read.csv("data-raw/reference/icd9cm_hierarchy.csv",
+                           colClasses = "character", encoding = "UTF-8")
       three <- stats::setNames(h$long_desc[nchar(h$code) == 3L],
                                h$code[nchar(h$code) == 3L])
       desc <- ifelse(

@@ -1,0 +1,57 @@
+## spec_ascvd <CompositeCodeSpec>
+condition: ascvd
+components: chd_v1, stroke_v1, lead_pad_v1, cerebrovasc_disease_v1
+default components (condition): chd_v1, cerebrovasc_disease_v1, lead_pad_v1
+default components (outcome): chd_v1, stroke_v1, lead_pad_v1
+
+[defs]
+Composition of all ASCVD component specs: coronary heart disease (CHD), stroke, lower extremity artery disease (LEAD) / peripheral arterial disease (PAD), and cerebrovascular disease
+
+## spec_depression <CompositeDrugSpec>
+condition: depression
+components: ssri_v1, snri_v1, tca_v1, maoi_v1, other_v1
+default components: all
+
+[defs]
+Antidepressive medication subclasses (v1): SSRIs, SNRIs, tricyclic antidepressants, MAOIs, and other/atypical agents.
+
+## spec_diabetes_type1 <CompositeDrugSpec>
+condition: diabetes_type1
+components: insulin_v1, amylin_v1
+default components: all
+
+[defs]
+Antidiabetic medications used in Type 1 diabetes (v1): insulin and amylin analogues.
+
+## spec_diabetes_type2 <CompositeDrugSpec>
+condition: diabetes_type2
+components: biguanide_v1, sulfonylurea_v1, meglitinide_v1, tzd_v1, alpha_glucosidase_v1, dpp4_v1, sglt2_v1, glp1_v1, insulin_v1, amylin_v1
+default components: all
+
+[defs]
+All antidiabetic medication subclasses used in Type 2 diabetes (v1): biguanides, sulfonylureas, meglitinides, thiazolidinediones, alpha-glucosidase inhibitors, DPP-4 inhibitors, SGLT-2 inhibitors, GLP-1 receptor agonists, insulin and supplies, amylin analogues.
+
+## spec_hyperlipidemia <CompositeDrugSpec>
+condition: hyperlipidemia
+components: statin_v1, ezetimibe_v1, pcsk9_v1, fibrate_v1, bile_acid_seq_v1, niacin_v1
+default components: all
+
+[defs]
+Lipid-lowering medication subclasses (v1): statins (HMG-CoA reductase inhibitors), ezetimibe, PCSK9 inhibitors, fibrates, bile acid sequestrants, and niacin.
+
+## spec_hypertension <CompositeDrugSpec>
+condition: hypertension
+components: acei_v1, acei_v2, arb_v1, arb_v2, alpha_v1, alpha_beta_v1, alpha_beta_v2, cardio_v1, cardio_vasod_v1, int_sym_v1, int_sym_v2, noncardio_v1, ccb_dhp_v1, ccb_nondhp_v1, thiazide_v1, thiazide_v2, loop_v1, loop_v2, ksparing_v1, ksparing_v2, aldo_v1, central_v1, central_v2, renin_v1, vasodilators_v1
+default components: all
+
+[defs]
+All antihypertensive leaf components across versions (v1 = Perisphere list; v2 = FDB). Note for central agents: exclude APRACLONIDINE when matching CLONIDINE.
+
+## spec_obesity <CompositeDrugSpec>
+condition: obesity
+components: non_glp1_v1, glp1_v1
+default components: all
+
+[defs]
+Antiobesity medication subclasses (v1): non-GLP-1 agents and GLP-1 receptor agonists.
+

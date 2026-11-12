@@ -1,0 +1,7 @@
+drug_class: dpp4
+version: v1
+label: DPP-4 Inhibitors
+
+[defs]
+DPP-4 inhibitor (gliptin) antidiabetic agents, including fixed-dose combinations. From the Perisphere antidiabetic medication list.
+

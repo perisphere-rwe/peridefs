@@ -1,0 +1,7 @@
+drug_class: tca
+version: v1
+label: Tricyclic Antidepressants
+
+[defs]
+Tricyclic and tetracyclic antidepressants (TCAs).
+

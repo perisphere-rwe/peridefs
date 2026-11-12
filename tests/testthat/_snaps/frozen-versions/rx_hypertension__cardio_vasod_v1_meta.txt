@@ -1,0 +1,7 @@
+drug_class: beta_cardio_vasod
+version: v1
+label: Beta Blockers (Cardioselective, Vasodilatory)
+
+[defs]
+Cardioselective vasodilatory beta blocker from the Perisphere antihypertensive medication list.
+

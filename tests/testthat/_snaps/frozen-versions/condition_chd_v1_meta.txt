@@ -1,0 +1,19 @@
+condition: chd
+version: v1
+label: Coronary Heart Disease
+code types: dx_icd9, dx_icd10, proc_icd9, proc_icd10, hcpcs
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-9 diagnosis code of {.strong 410.xx}–{.strong 414.xx}, {.strong V45.81}, or {.strong V45.82}, or an ICD-10 diagnosis code of {.strong I21.xxx}, {.strong I22.xxx}, or specified {.strong I25}/{.strong I20}/{.strong I24} codes in any position.
+*: ≥1 outpatient claim with the same ICD codes in any position.
+*: ≥1 inpatient or outpatient claim with an ICD-9 procedure code of {.strong 00.66}, {.strong 36.0}, {.strong 36.01}–{.strong 36.19}, or {.strong 36.2}; an ICD-10-PCS code for CABG or PCI; or a HCPCS code for coronary revascularization.
+
+[defs: outcome]
+i: Any of the following:
+*: Overnight hospitalization with a {.emph primary} discharge diagnosis of AMI ({.strong 410.xx} excluding {.strong 410.x2}, or ICD-10 {.strong I21.xx} or {.strong I22.xx}).
+*: Inpatient or outpatient claim with a procedure code for coronary revascularization (see condition definition for procedure codes).
+i: Also includes coronary revascularizations occurring within 60 days of an MI hospitalization, if linked to a {.emph primary} discharge diagnosis for a non-elective CHD-related condition:
+*: ICD-9: {.strong 427.xx}, {.strong 402.01}, {.strong 402.11}, {.strong 402.91}, {.strong 404.01}–{.strong 404.93}, {.strong 428.x}, {.strong 411.xx}
+*: ICD-10: {.strong I47.1}, {.strong I47.2}, {.strong I47.9}, {.strong I48.91}, {.strong I48.92}, {.strong I49.x}, {.strong R00.1}, {.strong I46.9}, HF codes ({.strong I11.0}, {.strong I13.0}, {.strong I13.2}, {.strong I50.x}), {.strong I20.0}, {.strong I24.0}, {.strong I24.1}, {.strong I24.8}
+

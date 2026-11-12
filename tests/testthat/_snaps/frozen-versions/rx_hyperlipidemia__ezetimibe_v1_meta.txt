@@ -1,0 +1,7 @@
+drug_class: ezetimibe
+version: v1
+label: Ezetimibe
+
+[defs]
+From the Perisphere lipid-lowering medication list.
+

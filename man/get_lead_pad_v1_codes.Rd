@@ -7,8 +7,8 @@
 get_lead_pad_v1_codes(...)
 }
 \arguments{
-\item{component}{Not used (fixed to \code{"lead_pad_v1"}); included only
-because it is inherited from \code{\link[=get_ascvd_codes]{get_ascvd_codes()}}.}
+\item{...}{Further arguments passed to the underlying ASCVD getter
+(e.g. \code{variable_type}). \code{component} is fixed and cannot be supplied.}
 }
 \description{
 Direct access to the \code{lead_pad_v1} component of \code{spec_ascvd}. Equivalent
