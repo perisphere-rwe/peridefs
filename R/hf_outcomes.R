@@ -154,7 +154,7 @@
 #' patient's reference date plus `min_event_days`:
 #'
 #' - `acute_hf_hospitalization`: an inpatient claim (`claim_setting` equal to
-#'   `inpatient_setting`) where either (a) the primary diagnosis is an acute
+#'   any value of `inpatient_setting`) where either (a) the primary diagnosis is an acute
 #'   or acute-on-chronic I50 code, or (b) the primary diagnosis is I11.0 and
 #'   any I50 code is in a non-primary position, or the primary diagnosis is
 #'   I13.0 or I13.2 and both an I50 and an N18 code are in non-primary
@@ -204,12 +204,14 @@
 #' @param col_dx_position Name of the integer column with the diagnosis
 #'   position on the claim (`1` is primary).
 #' @param col_claim_setting Name of the column with the claim setting.
-#'   Acute hospitalizations are taken from claims whose setting equals
-#'   `inpatient_setting`.
+#'   Acute hospitalizations are taken from claims whose setting is one of the
+#'   values in `inpatient_setting`.
 #' @param col_claim_date Name of the date column with the claim's start date
 #'   (the admission date for inpatient claims, the visit date for others).
-#' @param inpatient_setting Value of the claim setting column that identifies
-#'   overnight inpatient claims. Default `"inpatient"`.
+#' @param inpatient_setting One or more values of the claim setting column
+#'   that identify overnight inpatient claims, e.g.
+#'   `c("inpatient_a", "inpatient_b")` when inpatient stays are coded under
+#'   several settings. Default `"inpatient"`.
 #'
 #' @return A data frame (or lazy table, for lazy input) with one row per
 #'   event and columns `patient_id`, `outcome`, `claim_id`, `claim_date` and
@@ -265,7 +267,11 @@ classify_hf_outcomes <- function(data,
   }
   min_event_days <- as.integer(min_event_days)
   .hf_check_flag(exclude_prevalent_hf, "exclude_prevalent_hf")
-  .hf_check_string(inpatient_setting, "inpatient_setting")
+  if (!is.character(inpatient_setting) || length(inpatient_setting) == 0L ||
+      anyNA(inpatient_setting) || !all(nzchar(inpatient_setting))) {
+    cli::cli_abort("{.arg inpatient_setting} must be one or more non-empty strings.")
+  }
+  inpatient_setting <- unique(inpatient_setting)
 
   cols <- c(patient_id = col_patient_id, claim_id = col_claim_id,
             dx_code = col_dx_code, dx_position = col_dx_position,
@@ -331,7 +337,7 @@ classify_hf_outcomes <- function(data,
 # ---- Outcome logic ------------------------------------------------------------
 
 .hf_acute_hospitalizations <- function(ev, rules, inpatient_setting) {
-  inp  <- dplyr::filter(ev, .data$claim_setting == !!inpatient_setting)
+  inp  <- dplyr::filter(ev, .data$claim_setting %in% !!inpatient_setting)
   prim <- dplyr::filter(inp, .data$dx_position == 1L)
   secondary <- dplyr::filter(inp, .data$dx_position != 1L)
   keys <- c("patient_id", "claim_id")

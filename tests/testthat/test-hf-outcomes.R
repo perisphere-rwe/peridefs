@@ -111,6 +111,29 @@ test_that("inpatient_setting is configurable and qualifying_code is the primary 
   expect_equal(out$outcome, "acute_hf_hospitalization")
 })
 
+test_that("inpatient_setting accepts several values", {
+  claims <- rbind(
+    .inpt(1, "a", "I5021", setting = "inpatient_a"),
+    .inpt(2, "b", "I5021", setting = "inpatient_b"),
+    .inpt(3, "c", "I5021", setting = "inpatient_c"),
+    .inpt(4, "d", "I5021", setting = "outpatient")
+  )
+  expect_equal(.acute(claims, inpatient_setting = c("inpatient_a", "inpatient_b"))$claim_id,
+               c("a", "b"))
+  # Repeated values are harmless; a single value still works
+  expect_equal(.acute(claims, inpatient_setting = c("inpatient_a", "inpatient_a"))$claim_id, "a")
+  expect_equal(.acute(claims, inpatient_setting = "inpatient_c")$claim_id, "c")
+
+  skip_if_not_installed("duckdb")
+  skip_if_not_installed("DBI")
+  skip_if_not_installed("dbplyr")
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
+  remote <- dplyr::copy_to(con, claims, "multi_setting")
+  out <- .acute(remote, inpatient_setting = c("inpatient_a", "inpatient_b"))
+  expect_equal(dplyr::collect(out)$claim_id, c("a", "b"))
+})
+
 test_that("only claims strictly after the reference date plus min_event_days are classified", {
   claims <- rbind(
     .inpt(1, "on_ref", "I5021", date = "2024-01-01"),
@@ -227,6 +250,10 @@ test_that("invalid input gives informative errors", {
   expect_error(classify_hf_outcomes(.toy, col_ref_date = "ref_date", outcomes = "recurrent"))
   expect_error(classify_hf_outcomes(.toy, col_ref_date = "ref_date", exclude_prevalent_hf = NA),
                "exclude_prevalent_hf")
+  for (bad in list(character(), NA_character_, "", c("inpatient", NA), 1)) {
+    expect_error(classify_hf_outcomes(.toy, col_ref_date = "ref_date", inpatient_setting = bad),
+                 "inpatient_setting")
+  }
 
   missing_ref <- .toy
   missing_ref$ref_date[2] <- NA
