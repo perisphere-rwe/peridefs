@@ -7,8 +7,8 @@
 get_cerebrovasc_disease_v1_defs(...)
 }
 \arguments{
-\item{component}{Not used (fixed to \code{"cerebrovasc_disease_v1"}); included
-only because it is inherited from \code{\link[=get_ascvd_defs]{get_ascvd_defs()}}.}
+\item{...}{Further arguments passed to the underlying ASCVD getter
+(e.g. \code{variable_type}). \code{component} is fixed and cannot be supplied.}
 }
 \description{
 Direct access to the \code{cerebrovasc_disease_v1} component of \code{spec_ascvd}.

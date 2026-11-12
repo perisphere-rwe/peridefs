@@ -1,0 +1,16 @@
+condition: diabetes_type2
+version: v2
+label: Type 2 Diabetes Mellitus
+code types: dx_icd10
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with a discharge ICD-10 type 2 diabetes diagnosis ({.strong E11.x}: any billable E11 code, including {.strong E11.A} for diabetes in remission) in any discharge position.
+*: ≥2 carrier/outpatient claims with the same ICD-10 codes in any position, occurring at least 7 days apart.
+*: ≥1 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes_type2}).
+i: Patients are then classified into four mutually exclusive categories: no diabetes; diabetes without antidiabetic medication; diabetes with oral antidiabetic (non-insulin); diabetes with insulin.
+!: ICD-10 only: claims before October 1, 2015 (ICD-9 era) cannot qualify through the diagnosis criteria.
+
+[defs: outcome]
+<none>
+

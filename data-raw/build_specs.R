@@ -96,6 +96,7 @@ usethis::use_data(
   spec_ascvd,
   # Heart failure
   spec_hf_v1,
+  spec_hf_v2,
   # Obesity
   spec_obesity_v1,
   # Depression
@@ -103,6 +104,7 @@ usethis::use_data(
   # Diabetes
   spec_diabetes_type1_v1,
   spec_diabetes_type2_v1,
+  spec_diabetes_type2_v2,
   # CKD
   spec_ckd_v1,
   # Sleep apnea

@@ -17,17 +17,25 @@
 .cms_cache <- file.path(.data_raw, ".cache", "icd10cm_2026.zip")
 
 .read_codeset_csv <- function(id) {
-  utils::read.csv(file.path(.codesets, paste0(id, ".csv")),
-                  colClasses = c("character", "character", "logical", "logical"),
-                  encoding = "UTF-8")
+  df <- utils::read.csv(file.path(.codesets, paste0(id, ".csv")),
+                        colClasses = "character", encoding = "UTF-8")
+  df$condition <- as.logical(df$condition)
+  df$outcome   <- as.logical(df$outcome)
+  # Extra columns are per-code attributes; TRUE/FALSE-only columns are logical.
+  for (nm in setdiff(names(df), c("type", "code", "condition", "outcome"))) {
+    if (all(df[[nm]] %in% c("TRUE", "FALSE", NA))) df[[nm]] <- as.logical(df[[nm]])
+  }
+  df
 }
 
 .spec_codeset <- function(spec) {
   codes <- .private(spec)$.codes
   do.call(rbind, lapply(names(codes), function(k) {
-    data.frame(type = k, code = as.vector(codes[[k]]$codes),
-               condition = codes[[k]]$condition, outcome = codes[[k]]$outcome,
-               stringsAsFactors = FALSE)
+    d <- data.frame(type = k, code = as.vector(codes[[k]]$codes),
+                    condition = codes[[k]]$condition, outcome = codes[[k]]$outcome,
+                    stringsAsFactors = FALSE)
+    for (nm in names(codes[[k]]$attributes)) d[[nm]] <- codes[[k]]$attributes[[nm]]
+    d
   }))
 }
 
@@ -95,6 +103,19 @@ test_that("read_codeset() reproduces a released spec's codes and flags", {
     expect_identical(ks[[k]]$outcome,   spec_codes[[k]]$outcome)
   }
   expect_error(withr::with_dir(.pkg_root, h$read_codeset("no_such_v9")), "No frozen code set")
+})
+
+test_that("read_codeset() reads per-code attribute columns (NA allowed)", {
+  skip_if_not(dir.exists(.codesets), "data-raw/codesets not available")
+  skip_if_not(file.exists(.cms_cache), "cached CMS files not available")
+  h  <- .build_helpers()
+  ks <- withr::with_dir(.pkg_root, h$read_codeset("hf_v2", attributes_for = "outcome"))
+  at <- ks$dx_icd10$attributes
+  expect_identical(names(at), c("acuity", "required_secondary", "qualifies_as_primary"))
+  expect_type(at$qualifies_as_primary, "logical")
+  expect_identical(ks$dx_icd10$attributes_for, "outcome")
+  expect_true(all(is.na(at$acuity[ks$dx_icd10$codes %in% c("I110", "I130", "I132")])))
+  expect_false(anyNA(at$required_secondary))
 })
 
 test_that("ICD-9 expansion uses the full hierarchy (parents included)", {

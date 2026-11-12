@@ -154,6 +154,11 @@ add_codes <- function(spec,
           priv$.codes[[k]]$definitions <- c(existing$definitions,
                                             rep(NA_character_, length(to_add)))
         }
+        if (length(existing$attributes)) {
+          priv$.codes[[k]]$attributes <- lapply(existing$attributes, function(a) {
+            c(a, rep(a[NA_integer_], length(to_add)))
+          })
+        }
       }
     } else {
       priv$.codes[[k]] <- list(
@@ -201,6 +206,10 @@ remove_codes <- function(spec, ...) {
     
     if (!is.null(priv$.codes[[k]]$definitions)) {
       priv$.codes[[k]]$definitions <- priv$.codes[[k]]$definitions[keep]
+    }
+    if (length(priv$.codes[[k]]$attributes)) {
+      priv$.codes[[k]]$attributes <- lapply(priv$.codes[[k]]$attributes,
+                                            function(a) a[keep])
     }
   }
 

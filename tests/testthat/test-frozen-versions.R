@@ -65,9 +65,12 @@
     if (length(kd$condition) != n || length(kd$outcome) != n) {
       stop("Flag vectors out of sync with codes for key ", k, call. = FALSE)
     }
-    data.frame(type = rep(k, n), code = kd$codes,
-               condition = kd$condition, outcome = kd$outcome,
-               stringsAsFactors = FALSE)
+    d <- data.frame(type = rep(k, n), code = kd$codes,
+                    condition = kd$condition, outcome = kd$outcome,
+                    stringsAsFactors = FALSE)
+    # Per-code attributes (if any) are frozen with the codes.
+    for (nm in names(kd$attributes)) d[[nm]] <- kd$attributes[[nm]]
+    d
   })
   df <- do.call(rbind, rows)
   if (is.null(df)) {
@@ -89,6 +92,11 @@
     paste0("version: ", spec$version),
     paste0("label: ", spec$label),
     paste0("code types: ", paste(names(codes), collapse = ", ")),
+    unlist(lapply(names(codes), function(k) {
+      if (is.null(codes[[k]]$attributes)) NULL else
+        paste0("attributes: ", k, " (", paste(names(codes[[k]]$attributes), collapse = ", "),
+               ") for ", paste(codes[[k]]$attributes_for %||% c("condition", "outcome"), collapse = "/"))
+    })),
     "",
     .text_block("defs: condition", p$.defs$condition),
     .text_block("defs: outcome", p$.defs$outcome),
@@ -215,9 +223,9 @@ for (.id in intersect(.released_drug_specs, names(.drug_specs))) {
   local({
     id   <- .id
     spec <- .drug_specs[[id]]
-    file <- gsub("/", "__", sub("^spec_", "drug_", id), fixed = TRUE)
+    file <- gsub("/", "__", sub("^spec_", "rx_", id), fixed = TRUE)
     test_that(paste0("released drug spec ", id, " is unchanged"), {
-      .expect_frozen(.drug_lines(spec), paste0(file, "_generics.csv"))
+      .expect_frozen(.drug_lines(spec), paste0(file, "_gen.csv"))
       .expect_frozen(.drug_meta_lines(spec), paste0(file, "_meta.txt"))
     })
   })
@@ -236,7 +244,11 @@ test_that("each get_<condition>_<vN>_codes() returns the condition and version i
   for (g in sort(getters, method = "radix")) {
     parts <- regmatches(g, regexec("^get_(.+)_(v[0-9]+)_codes$", g))[[1L]]
     f     <- getExportedValue("peridefs", g)
-    res   <- rbind(f(variable_type = "condition"), f(variable_type = "outcome"))
+    cnd   <- f(variable_type = "condition")
+    out   <- f(variable_type = "outcome")
+    # Outcome results can carry extra attribute columns; compare the shared ones.
+    shared <- intersect(names(cnd), names(out))
+    res   <- rbind(cnd[shared], out[shared])
 
     expect_gt(nrow(res), 0L, label = paste0("rows returned by ", g, "()"))
     expect_equal(unique(res$version), parts[3L], label = paste0(g, "() version"))

@@ -16,6 +16,12 @@
 #'   - `outcome`: logical vector parallel to `codes`; `TRUE` if the code
 #'     belongs to the outcome definition.
 #'   - `definitions`: optional character vector of code definitions, parallel to `codes`.
+#'   - `attributes`: optional named list of extra per-code columns, each a
+#'     vector parallel to `codes` (e.g. `acuity`). They are appended after the
+#'     five standard columns of `get_codes()`.
+#'   - `attributes_for`: optional character vector (`"condition"` and/or
+#'     `"outcome"`) limiting which `variable_type` results include the
+#'     `attributes` columns. `NULL` (default) means both.
 #'   - `exclusions`: optional character string describing codes to exclude.
 #'
 #' @export
@@ -43,16 +49,31 @@ CodeSpec <- R6::R6Class(
         
         defs <- if (!is.null(kd$definitions)) kd$definitions[mask] else rep(NA_character_, length(cd))
         
-        tibble::tibble(
+        out <- tibble::tibble(
           type       = k,
           code       = cd,
           priority   = 1L,
           version    = private$.version %||% NA_character_,
           definition = defs
         )
+
+        if (length(kd$attributes) &&
+            (is.null(kd$attributes_for) || variable_type %in% kd$attributes_for)) {
+          for (nm in names(kd$attributes)) out[[nm]] <- kd$attributes[[nm]][mask]
+        }
+        out
       })
 
-      result <- do.call(rbind, Filter(Negate(is.null), rows))
+      rows   <- Filter(Negate(is.null), rows)
+      # Keys may carry different attribute columns; fill gaps with NA.
+      std    <- c("type", "code", "priority", "version", "definition")
+      extras <- unique(unlist(lapply(rows, function(r) setdiff(names(r), std))))
+      rows   <- lapply(rows, function(r) {
+        for (nm in setdiff(extras, names(r))) r[[nm]] <- rep(NA, nrow(r))
+        r[c(std, extras)]
+      })
+
+      result <- do.call(rbind, rows)
       if (is.null(result)) {
         result <- tibble::tibble(
           type       = character(0L), code = character(0L),
@@ -161,7 +182,9 @@ CodeSpec <- R6::R6Class(
     #'   (e.g., `"401.0"`). Default `FALSE` returns short format (`"4010"`).
     #' @param priority Integer vector subsetting confidence tiers to include
     #'   (`1` = core, `2` = probable, `3` = cautious). Default `1`.
-    #' @return A tibble with columns `type`, `code`, `priority`, `version`, and `definition`.
+    #' @return A tibble with columns `type`, `code`, `priority`, `version`, and
+    #'   `definition`, followed by any per-code `attributes` columns the spec
+    #'   defines for `variable_type`.
     get_codes = function(code_type = NULL,
                          variable_type = c("condition", "outcome"),
                          periods = FALSE,

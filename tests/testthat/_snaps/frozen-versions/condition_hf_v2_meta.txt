@@ -1,0 +1,22 @@
+condition: hf
+version: v2
+label: Heart Failure
+code types: dx_icd10
+attributes: dx_icd10 (acuity, required_secondary, qualifies_as_primary) for outcome
+
+[defs: condition]
+i: Any of the following:
+*: ≥1 inpatient claim with an ICD-10 diagnosis of {.strong I11.0}, {.strong I13.0}, {.strong I13.2}, or {.strong I50.x} (any billable I50 code) in any diagnosis position.
+*: ≥2 outpatient claims at least 30 days apart with the same codes.
+!: I11.0, I13.0 and I13.2 are not used for history because they require a secondary I50.x code on the same claim.
+!: ICD-10 only: claims before October 1, 2015 (ICD-9 era) cannot qualify.
+
+[defs: outcome]
+i: Acute heart failure hospitalization: an overnight hospitalization with either:
+*: a {.emph primary} discharge diagnosis of an acute or acute-on-chronic I50 code ({.strong I50.21}, {.strong I50.23}, {.strong I50.31}, {.strong I50.33}, {.strong I50.41}, {.strong I50.43}, {.strong I50.811}, {.strong I50.813}); or
+*: a {.emph primary} diagnosis of {.strong I11.0} with any I50 code in a {.emph non-primary} position; or a {.emph primary} diagnosis of {.strong I13.0} or {.strong I13.2} with both any I50 code and any N18 code in {.emph non-primary} positions.
+!: I50 codes with chronic or unspecified acuity (e.g., I50.9, I50.22) do not qualify as the primary diagnosis, but any I50 code can be the secondary code in the I11.0/I13.x rule. I50.84 (end-stage) does not qualify as a primary diagnosis.
+i: Incident heart failure:
+*: any I50 code in any position during follow-up, with no I50, I11.0, I13.0 or I13.2 in the baseline period. Baseline and follow-up windows are defined by the study.
+!: ICD-10 only: hospitalizations before October 1, 2015 (ICD-9 era) cannot qualify. Position rules are applied outside the package; see the acuity, required_secondary and qualifies_as_primary columns of the outcome code set.
+

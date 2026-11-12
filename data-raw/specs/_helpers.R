@@ -104,15 +104,24 @@ hcpcs_range <- function(a, b) {
 
 # Build a standard key-level list. `type` is the code-type key (e.g. "dx_icd10")
 # and selects which source supplies the definition for each code.
+# Optional `attributes` is a named list of extra per-code columns (vectors
+# parallel to `codes`); `attributes_for` limits them to "condition" and/or
+# "outcome" results (NULL = both).
 make_key <- function(type, codes,
                      condition = rep(TRUE, length(codes)),
-                     outcome   = rep(TRUE, length(codes))) {
-  list(
+                     outcome   = rep(TRUE, length(codes)),
+                     attributes = NULL, attributes_for = NULL) {
+  key <- list(
     codes       = codes,
     condition   = condition,
     outcome     = outcome,
     definitions = code_defs(type, codes)
   )
+  if (length(attributes)) {
+    key$attributes     <- attributes
+    key$attributes_for <- attributes_for
+  }
+  key
 }
 
 make_key_condition_only <- function(type, codes) {
@@ -135,21 +144,33 @@ make_key_condition_only <- function(type, codes) {
 # Never edit a released CSV: create a new version (with its own CSV) instead.
 # tests/testthat/test-frozen-versions.R fails if a released code set changes.
 
-read_codeset <- function(id) {
+# Columns after `outcome` are per-code attributes (see make_key()); they may
+# contain NA. A column holding only TRUE/FALSE is read as logical, otherwise
+# as character. `attributes_for` limits them to "condition"/"outcome" results.
+read_codeset <- function(id, attributes_for = NULL) {
   path <- file.path("data-raw", "codesets", paste0(id, ".csv"))
   if (!file.exists(path)) {
     stop("No frozen code set for '", id, "' (expected ", path, ").", call. = FALSE)
   }
-  df <- utils::read.csv(path, colClasses = c("character", "character", "logical", "logical"),
+  df <- utils::read.csv(path, colClasses = "character", na.strings = "NA",
                         encoding = "UTF-8")
-  if (!identical(names(df), c("type", "code", "condition", "outcome")) || anyNA(df)) {
-    stop(path, " must have columns type, code, condition, outcome with no missing values.",
+  base <- c("type", "code", "condition", "outcome")
+  if (!identical(names(df)[1:4], base) || anyNA(df[base])) {
+    stop(path, " must start with columns type, code, condition, outcome, with no missing values in them.",
          call. = FALSE)
+  }
+  df$condition <- as.logical(df$condition)
+  df$outcome   <- as.logical(df$outcome)
+  attr_cols <- setdiff(names(df), base)
+  for (nm in attr_cols) {
+    if (all(df[[nm]] %in% c("TRUE", "FALSE", NA))) df[[nm]] <- as.logical(df[[nm]])
   }
   types <- unique(df$type)
   stats::setNames(lapply(types, function(k) {
     d <- df[df$type == k, , drop = FALSE]
-    make_key(k, d$code, condition = d$condition, outcome = d$outcome)
+    make_key(k, d$code, condition = d$condition, outcome = d$outcome,
+             attributes = if (length(attr_cols)) as.list(d[attr_cols]) else NULL,
+             attributes_for = attributes_for)
   }), types)
 }
 

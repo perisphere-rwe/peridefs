@@ -53,15 +53,18 @@ NULL
 #' @section Condition specs (standalone, [CodeSpec]):
 #'   `spec_hypertension_v1`,
 #'   `spec_hf_v1`,
+#'   `spec_hf_v2`,
 #'   `spec_obesity_v1`,
 #'   `spec_diabetes_type1_v1`,
 #'   `spec_diabetes_type2_v1`,
+#'   `spec_diabetes_type2_v2`,
 #'   `spec_depression_v1`,
 #'   `spec_ckd_v1`,
 #'   `spec_copd_v1`,
 #'   `spec_asthma_v1`,
 #'   `spec_osa_v1`,
 #'   `spec_ohs_v1`,
+#'   `spec_osteoarthritis_v1`,
 #'   `spec_hyperlipidemia_v1`
 #'
 #' @section ASCVD composite ([CompositeCodeSpec]):
@@ -72,6 +75,6 @@ NULL
 #'   `spec_depression`, `spec_hyperlipidemia`
 #'
 #' @name spec_objects
-#' @aliases spec_depression spec_hyperlipidemia spec_diabetes_type1 spec_diabetes_type2 spec_asthma_v1 spec_hypertension spec_obesity spec_ascvd spec_ckd_v1 spec_copd_v1 spec_depression_v1 spec_diabetes_type1_v1 spec_diabetes_type2_v1 spec_hf_v1 spec_hypertension_v1 spec_hyperlipidemia_v1 spec_isch_stroke_v1 spec_obesity_v1 spec_ohs_v1 spec_osa_v1
+#' @aliases spec_depression spec_hyperlipidemia spec_diabetes_type1 spec_diabetes_type2 spec_asthma_v1 spec_hypertension spec_obesity spec_ascvd spec_ckd_v1 spec_copd_v1 spec_depression_v1 spec_diabetes_type1_v1 spec_diabetes_type2_v1 spec_diabetes_type2_v2 spec_hf_v1 spec_hf_v2 spec_hypertension_v1 spec_hyperlipidemia_v1 spec_isch_stroke_v1 spec_obesity_v1 spec_ohs_v1 spec_osa_v1 spec_osteoarthritis_v1
 #' @keywords datasets
 NULL

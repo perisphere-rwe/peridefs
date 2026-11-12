@@ -771,8 +771,10 @@ CSVs for unreleased versions. **Never edit a released CSV.**
    next to v1, deriving its codes with the expansion helpers (Section 4).
    Leave v1 untouched.
 2. Add the exported wrappers (`get_diabetes_type2_v2_codes()` /
-   `_defs()`) to `R/conditions.R`, and the new object to `use_data()` in
-   `data-raw/build_specs.R`.
+   `_defs()`) to `R/conditions.R` on the condition's shared help page (see
+   "Documenting versions" below), and the new object to `use_data()` in
+   `data-raw/build_specs.R`. Add `spec_diabetes_type2_v2` to the list and
+   `@aliases` in `R/specs_data.R`, and the new functions to `_pkgdown.yml`.
 3. Rebuild (`source("data-raw/build_specs.R")`) and review the codes.
 4. Freeze the code set:
    ```r
@@ -783,9 +785,36 @@ CSVs for unreleased versions. **Never edit a released CSV.**
    `codes = read_codeset("diabetes_type2_v2")`, and comment out the
    derivation code above it.
 6. Add `"diabetes_type2_v2"` to `.released_condition_specs` in
-   `tests/testthat/helper-released-versions.R`.
-7. Rebuild, run `devtools::test()` to record the new snapshots, review them,
-   and commit the CSV, the snapshots, and the code together.
+   `tests/testthat/helper-released-versions.R`, and a row for it to
+   `.version_log` in `R/changelog.R` (date, one-line summary, rationale).
+   Tests fail until both are done.
+7. Rebuild, run `devtools::document()` and `devtools::test()` (which records
+   the new snapshots), review the snapshots and the help page, and commit the
+   CSV, the snapshots, and the code together. Add a `NEWS.md` entry.
+
+Check the result with `get_version_diffs("diabetes_type2", c(1, 2))` and
+`list_versions("diabetes_type2")`.
+
+### Documenting versions
+
+All versions of a condition share one help page, named `<condition>_codes`
+(e.g. `?diabetes_type2_codes`; `?get_diabetes_type2_v1_codes` still works
+because every function is an alias). The type 2 diabetes block in
+`R/conditions.R` is the template:
+
+- a `@name diabetes_type2_codes` block (documenting `NULL`) with a
+  version-neutral `@description`, a `@section Versions:` describing each
+  version in a sentence or two, and
+- `@section Version history:` containing only
+  `` `r .rd_version_history("diabetes_type2")` ``. This is generated at
+  `devtools::document()` time from `.version_log` plus
+  `get_version_diffs()`: release date, summary, rationale, and the exact
+  codes added and removed (by code type, separately for condition and
+  outcome codes when they differ). Never type code lists into the docs.
+- every getter, for every version, tagged `@rdname diabetes_type2_codes`.
+
+Conditions that still have only v1 keep their existing page. Convert a
+condition to this layout when you release its v2.
 
 ---
 

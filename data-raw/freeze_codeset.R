@@ -15,6 +15,9 @@
 ## `.released_condition_specs` in tests/testthat/test-frozen-versions.R, rebuild,
 ## and run devtools::test() to record its snapshot.
 ##
+## If a spec has per-code `attributes`, they are written as extra columns; pass
+## the same `attributes_for` to read_codeset().
+##
 ## Refuses to overwrite an existing CSV: released code sets never change.
 
 freeze_codeset <- function(spec, dir = "data-raw/codesets") {
@@ -30,9 +33,12 @@ freeze_codeset <- function(spec, dir = "data-raw/codesets") {
 
   codes <- spec$.__enclos_env__$private$.codes
   df <- do.call(rbind, lapply(names(codes), function(k) {
-    data.frame(type = k, code = codes[[k]]$codes,
-               condition = codes[[k]]$condition, outcome = codes[[k]]$outcome,
-               stringsAsFactors = FALSE)
+    d <- data.frame(type = k, code = codes[[k]]$codes,
+                    condition = codes[[k]]$condition, outcome = codes[[k]]$outcome,
+                    stringsAsFactors = FALSE)
+    # Per-code attribute columns follow the four standard ones.
+    for (nm in names(codes[[k]]$attributes)) d[[nm]] <- codes[[k]]$attributes[[nm]]
+    d
   }))
 
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)

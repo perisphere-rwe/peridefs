@@ -242,3 +242,52 @@ spec_diabetes_type2_v1 <- CodeSpec$new(
   ),
   codes = read_codeset("diabetes_type2_v1")
 )
+
+### Type 2, version 2 ----
+#
+# Released 2026-10-22. A more specific definition: ICD-10 type 2 diabetes
+# (E11) codes only.
+#   - Drops every ICD-9 code (250.x0/250.x2, 357.2, 362.0x, 366.41), so
+#     claims before 2015-10-01 can no longer qualify via diagnosis.
+#   - Drops E08 (due to underlying condition), E09 (drug/chemical induced)
+#     and E13 (other specified diabetes).
+#   - Keeps every billable E11 code: v1's 86 E11 codes plus E11.A (type 2
+#     diabetes without complications, in remission), which v1 lacked.
+#   - Same claim rules and medication criterion as v1; condition only.
+
+# Reference only, not run: how the released codes were derived. The build
+# reads them from data-raw/codesets/<condition>_<version>.csv instead.
+# diab_t2_v2_icd10 <- billable10(expand10("E11"))
+
+spec_diabetes_type2_v2 <- CodeSpec$new(
+  condition = "diabetes_type2",
+  version = "v2",
+  label = "Type 2 Diabetes Mellitus",
+  defs  = list(
+    condition = c(
+      "i" = "Any of the following:",
+      "*" = paste0(
+        "\u22651 inpatient claim with a discharge ICD-10 type 2 diabetes diagnosis ",
+        "({.strong E11.x}: any billable E11 code, including {.strong E11.A} for diabetes in remission) ",
+        "in any discharge position."
+      ),
+      "*" = paste0(
+        "\u22652 carrier/outpatient claims with the same ICD-10 codes in any position, ",
+        "occurring at least 7 days apart."
+      ),
+      "*" = "\u22651 pharmacy claim for an oral antidiabetic drug or insulin (see {.strong spec_diabetes_type2}).",
+      "i" = paste0(
+        "Patients are then classified into four mutually exclusive categories: ",
+        "no diabetes; diabetes without antidiabetic medication; ",
+        "diabetes with oral antidiabetic (non-insulin); diabetes with insulin."
+      ),
+      "!" = paste0(
+        "ICD-10 only: claims before October 1, 2015 (ICD-9 era) cannot qualify ",
+        "through the diagnosis criteria."
+      )
+    ),
+    outcome = NULL
+  ),
+  # Derived as make_key_condition_only("dx_icd10", diab_t2_v2_icd10)
+  codes = read_codeset("diabetes_type2_v2")
+)

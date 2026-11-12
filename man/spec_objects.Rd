@@ -15,13 +15,16 @@
 \alias{spec_depression_v1}
 \alias{spec_diabetes_type1_v1}
 \alias{spec_diabetes_type2_v1}
+\alias{spec_diabetes_type2_v2}
 \alias{spec_hf_v1}
+\alias{spec_hf_v2}
 \alias{spec_hypertension_v1}
 \alias{spec_hyperlipidemia_v1}
 \alias{spec_isch_stroke_v1}
 \alias{spec_obesity_v1}
 \alias{spec_ohs_v1}
 \alias{spec_osa_v1}
+\alias{spec_osteoarthritis_v1}
 \title{Condition and Drug Code Specification Objects}
 \description{
 \code{peridefs} exports one \verb{spec_*} object per medical condition version or
@@ -46,15 +49,18 @@ available component names.
 
 \code{spec_hypertension_v1},
 \code{spec_hf_v1},
+\code{spec_hf_v2},
 \code{spec_obesity_v1},
 \code{spec_diabetes_type1_v1},
 \code{spec_diabetes_type2_v1},
+\code{spec_diabetes_type2_v2},
 \code{spec_depression_v1},
 \code{spec_ckd_v1},
 \code{spec_copd_v1},
 \code{spec_asthma_v1},
 \code{spec_osa_v1},
 \code{spec_ohs_v1},
+\code{spec_osteoarthritis_v1},
 \code{spec_hyperlipidemia_v1}
 }
 
