@@ -7,7 +7,7 @@ see in the table is what is applied.
 Two outcomes are classified, both only from claims strictly after the
 patient's reference date plus min_event_days:
 acute_hf_hospitalization: an inpatient claim (claim_setting equal to
-inpatient_setting) where either (a) the primary diagnosis is an acute
+any value of inpatient_setting) where either (a) the primary diagnosis is an acute
 or acute-on-chronic I50 code, or (b) the primary diagnosis is I11.0 and
 any I50 code is in a non-primary position, or the primary diagnosis is
 I13.0 or I13.2 and both an I50 and an N18 code are in non-primary
@@ -26,7 +26,7 @@ see in the table is what is applied.
 Two outcomes are classified, both only from claims strictly after the
 patient's reference date plus min_event_days:
 acute_hf_hospitalization: an inpatient claim (claim_setting equal to
-inpatient_setting) where either (a) the primary diagnosis is an acute
+any value of inpatient_setting) where either (a) the primary diagnosis is an acute
 or acute-on-chronic I50 code, or (b) the primary diagnosis is I11.0 and
 any I50 code is in a non-primary position, or the primary diagnosis is
 I13.0 or I13.2 and both an I50 and an N18 code are in non-primary
@@ -94,7 +94,7 @@ code table (<code>get_hf_v2_codes(variable_type = "outcome")</code>), including 
 see in the table is what is applied.</p>
 <p>Two outcomes are classified, both only from claims strictly after the
 patient's reference date plus <code>min_event_days</code>:</p><ul><li><p><code>acute_hf_hospitalization</code>: an inpatient claim (<code>claim_setting</code> equal to
-<code>inpatient_setting</code>) where either (a) the primary diagnosis is an acute
+any value of <code>inpatient_setting</code>) where either (a) the primary diagnosis is an acute
 or acute-on-chronic I50 code, or (b) the primary diagnosis is I11.0 and
 any I50 code is in a non-primary position, or the primary diagnosis is
 I13.0 or I13.2 and both an I50 and an N18 code are in non-primary
@@ -183,8 +183,8 @@ position on the claim (<code>1</code> is primary).</p></dd>
 
 <dt id="arg-col-claim-setting">col_claim_setting<a class="anchor" aria-label="anchor" href="#arg-col-claim-setting"></a></dt>
 <dd><p>Name of the column with the claim setting.
-Acute hospitalizations are taken from claims whose setting equals
-<code>inpatient_setting</code>.</p></dd>
+Acute hospitalizations are taken from claims whose setting is one of the
+values in <code>inpatient_setting</code>.</p></dd>
 
 
 <dt id="arg-col-claim-date">col_claim_date<a class="anchor" aria-label="anchor" href="#arg-col-claim-date"></a></dt>
@@ -193,8 +193,10 @@ Acute hospitalizations are taken from claims whose setting equals
 
 
 <dt id="arg-inpatient-setting">inpatient_setting<a class="anchor" aria-label="anchor" href="#arg-inpatient-setting"></a></dt>
-<dd><p>Value of the claim setting column that identifies
-overnight inpatient claims. Default <code>"inpatient"</code>.</p></dd>
+<dd><p>One or more values of the claim setting column
+that identify overnight inpatient claims, e.g.
+<code>c("inpatient_a", "inpatient_b")</code> when inpatient stays are coded under
+several settings. Default <code>"inpatient"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

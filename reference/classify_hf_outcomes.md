@@ -10,11 +10,11 @@ Two outcomes are classified, both only from claims strictly after the
 patient's reference date plus `min_event_days`:
 
 - `acute_hf_hospitalization`: an inpatient claim (`claim_setting` equal
-  to `inpatient_setting`) where either (a) the primary diagnosis is an
-  acute or acute-on-chronic I50 code, or (b) the primary diagnosis is
-  I11.0 and any I50 code is in a non-primary position, or the primary
-  diagnosis is I13.0 or I13.2 and both an I50 and an N18 code are in
-  non-primary positions.
+  to any value of `inpatient_setting`) where either (a) the primary
+  diagnosis is an acute or acute-on-chronic I50 code, or (b) the primary
+  diagnosis is I11.0 and any I50 code is in a non-primary position, or
+  the primary diagnosis is I13.0 or I13.2 and both an I50 and an N18
+  code are in non-primary positions.
 
 - `incident_hf`: the first claim (any setting, any diagnosis position)
   with any I50 code. It is incident only if the cohort excludes patients
@@ -100,7 +100,8 @@ classify_hf_outcomes(
 - col_claim_setting:
 
   Name of the column with the claim setting. Acute hospitalizations are
-  taken from claims whose setting equals `inpatient_setting`.
+  taken from claims whose setting is one of the values in
+  `inpatient_setting`.
 
 - col_claim_date:
 
@@ -109,8 +110,10 @@ classify_hf_outcomes(
 
 - inpatient_setting:
 
-  Value of the claim setting column that identifies overnight inpatient
-  claims. Default `"inpatient"`.
+  One or more values of the claim setting column that identify overnight
+  inpatient claims, e.g. `c("inpatient_a", "inpatient_b")` when
+  inpatient stays are coded under several settings. Default
+  `"inpatient"`.
 
 ## Value
 
