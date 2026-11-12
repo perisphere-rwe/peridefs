@@ -1,6 +1,6 @@
 # Changelog
 
-## peridefs (development version)
+## peridefs 0.4.0
 
 ### New features
 

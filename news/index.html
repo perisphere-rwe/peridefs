@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">peridefs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,9 +48,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="peridefs-development-version">peridefs (development version)<a class="anchor" aria-label="anchor" href="#peridefs-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="peridefs-040">peridefs 0.4.0<a class="anchor" aria-label="anchor" href="#peridefs-040"></a></h2>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h3>
 <ul><li>
 <code>get_version_diffs(condition, versions)</code> compares two or more versions of a condition, e.g. <code>get_version_diffs("diabetes_type2", c(1, 2))</code> (<code>versions</code> also accepts <code>c("v1", "v2")</code>; the default compares every version). It returns one row per code, with a logical column per version (<code>v1</code>, <code>v2</code>, …), <code>code</code>, <code>type</code>, <code>definition</code>, and a <code>change</code> description (e.g. <code>"added in v2"</code>). It errors on unknown conditions, versions that don’t exist, a repeated version, or fewer than two versions. <code>format = "flextable"</code> returns a formatted table instead, with rows shaded in GitHub’s diff colours (green added, red removed, grey unchanged); flextable is a new suggested package.</li>
 <li>
@@ -60,12 +60,12 @@
 <li>Each condition’s help page can now cover all of its versions, with a generated “Version history” section listing the exact codes added and removed in each version. Type 2 diabetes is the first: <code><a href="../reference/diabetes_type2_codes.html">?diabetes_type2_codes</a></code> (also <code><a href="../reference/diabetes_type2_codes.html">?get_diabetes_type2_v1_codes</a></code>).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-definitions-development-version">New definitions<a class="anchor" aria-label="anchor" href="#new-definitions-development-version"></a></h3>
+<h3 id="new-definitions-0-4-0">New definitions<a class="anchor" aria-label="anchor" href="#new-definitions-0-4-0"></a></h3>
 <ul><li>Type 2 diabetes v2 (<code><a href="../reference/diabetes_type2_codes.html">get_diabetes_type2_v2_codes()</a></code>, <code><a href="../reference/diabetes_type2_codes.html">get_diabetes_type2_v2_defs()</a></code>, <code>spec_diabetes_type2_v2</code>): ICD-10 type 2 diabetes (E11) codes only. Compared with v1 it drops all 33 ICD-9 codes and the 7 E08/E09/E13 codes, and adds E11.A (in remission). Claims before October 1, 2015 cannot qualify through the diagnosis criteria. v1 is unchanged.</li>
 <li>Heart failure v2 (<code><a href="../reference/hf_codes.html">get_hf_v2_codes()</a></code>, <code><a href="../reference/hf_codes.html">get_hf_v2_defs()</a></code>, <code>spec_hf_v2</code>): ICD-10 codes only; all 28 ICD-9 codes are dropped, so claims and hospitalizations before October 1, 2015 cannot qualify. The condition (history) definition is every billable I50 code; I11.0, I13.0 and I13.2 are excluded because they require a secondary I50.x. The outcome definition covers acute heart failure hospitalization (an acute or acute-on-chronic I50 code as the primary diagnosis, or I11.0/I13.0/I13.2 as primary with the required secondary codes) and incident heart failure (any I50). Outcome code sets carry <code>acuity</code>, <code>required_secondary</code> and <code>qualifies_as_primary</code> columns that describe these rules; position rules themselves are applied outside the package. All heart failure versions are documented together in <code><a href="../reference/hf_codes.html">?hf_codes</a></code>. v1 is unchanged.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="internal-development-version">Internal<a class="anchor" aria-label="anchor" href="#internal-development-version"></a></h3>
+<h3 id="internal-0-4-0">Internal<a class="anchor" aria-label="anchor" href="#internal-0-4-0"></a></h3>
 <ul><li>
 <code>CodeSpec</code> key lists can carry optional per-code <code>attributes</code> (a named list of vectors parallel to <code>codes</code>, with <code>attributes_for</code> limiting them to condition and/or outcome results). <code>get_codes()</code> appends them after the five standard columns; <code><a href="../reference/add_codes.html">add_codes()</a></code> and <code><a href="../reference/remove_codes.html">remove_codes()</a></code> keep them aligned. <code>read_codeset()</code> reads extra columns of a frozen code set CSV as attributes.</li>
 <li>Released versions are frozen: <code>tests/testthat/test-frozen-versions.R</code> snapshots every released spec, and released condition code sets are built from <code>data-raw/codesets/*.csv</code>.</li>
